@@ -1,0 +1,13 @@
+month,division,product,event,effective_month,successor,gross_margin,reason
+2024-01,Hardware,HW-B200,PHASE_OUT_APPROVED,2024-03,HW-C300,0.0543,Trailing gross margin below 22% portfolio threshold
+2024-01,Hardware,HW-C300,REPLACEMENT_APPROVED,2024-05,,,Replacement for HW-B200
+2024-01,Spare Parts,SP-LEG-01,PHASE_OUT_APPROVED,2024-03,SP-NXT-01,0.1674,Trailing gross margin below 34% portfolio threshold
+2024-01,Spare Parts,SP-NXT-01,REPLACEMENT_APPROVED,2024-05,,,Replacement for SP-LEG-01
+2024-03,Hardware,HW-B200,PHASE_OUT_EFFECTIVE,2024-03,HW-C300,,Portfolio decision executed
+2024-03,Spare Parts,SP-LEG-01,PHASE_OUT_EFFECTIVE,2024-03,SP-NXT-01,,Portfolio decision executed
+2024-05,Hardware,HW-C300,PRODUCT_LAUNCH,2024-05,,,Replacement for HW-B200
+2024-05,Spare Parts,SP-NXT-01,PRODUCT_LAUNCH,2024-05,,,Replacement for SP-LEG-01
+2024-07,Hardware,HW-B100,PHASE_OUT_APPROVED,2024-09,,0.2153,Trailing gross margin below 22% portfolio threshold
+2024-07,Spare Parts,SP-LEG-02,PHASE_OUT_APPROVED,2024-09,,0.1991,Trailing gross margin below 34% portfolio threshold
+2024-09,Hardware,HW-B100,PHASE_OUT_EFFECTIVE,2024-09,,,Portfolio decision executed
+2024-09,Spare Parts,SP-LEG-02,PHASE_OUT_EFFECTIVE,2024-09,,,Portfolio decision executed

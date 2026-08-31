@@ -1,5 +1,12 @@
 {
   "journal_balance_max_gap": 0.0,
   "trial_balance_gap": 0.0,
-  "passed": true
+  "legal_balance_sheet_max_gap": 0.0,
+  "legal_ic_ar_ap_max_mismatch": 0.0,
+  "consolidated_balance_sheet_max_gap": 0.0,
+  "cash_flow_reconciliation_max_gap": 0.0,
+  "consolidation_revenue_max_gap": 0.0,
+  "consolidation_ebit_max_gap": 0.0,
+  "passed": true,
+  "forecast_lookahead_errors": 0
 }

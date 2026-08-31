@@ -1,0 +1,32 @@
+month,project,project_name,entity,division,event,amount,go_live,useful_life_months,capacity_increase_pct
+2025-02,CAPEX-001,Brno automated assembly line,CZ01,Hardware,SPEND,225502.03,2025-11,96,0.16
+2025-03,CAPEX-001,Brno automated assembly line,CZ01,Hardware,SPEND,471362.46,2025-11,96,0.16
+2025-04,CAPEX-001,Brno automated assembly line,CZ01,Hardware,SPEND,676906.5,2025-11,96,0.16
+2025-05,CAPEX-001,Brno automated assembly line,CZ01,Hardware,SPEND,824553.64,2025-11,96,0.16
+2025-06,CAPEX-001,Brno automated assembly line,CZ01,Hardware,SPEND,901675.38,2025-11,96,0.16
+2025-07,CAPEX-001,Brno automated assembly line,CZ01,Hardware,SPEND,901675.38,2025-11,96,0.16
+2025-08,CAPEX-001,Brno automated assembly line,CZ01,Hardware,SPEND,824553.64,2025-11,96,0.16
+2025-09,CAPEX-001,Brno automated assembly line,CZ01,Hardware,SPEND,676906.5,2025-11,96,0.16
+2025-10,CAPEX-001,Brno automated assembly line,CZ01,Hardware,SPEND,471362.46,2025-11,96,0.16
+2025-11,CAPEX-001,Brno automated assembly line,CZ01,Hardware,SPEND,225502.03,2025-11,96,0.16
+2025-11,CAPEX-001,Brno automated assembly line,CZ01,Hardware,GO_LIVE,6200000.0,2025-11,96,0.16
+2025-09,CAPEX-002,Suzhou SMT expansion,CN01,Hardware,SPEND,242084.41,2026-08,120,0.2
+2025-10,CAPEX-002,Suzhou SMT expansion,CN01,Hardware,SPEND,460631.74,2026-08,120,0.2
+2025-11,CAPEX-002,Suzhou SMT expansion,CN01,Hardware,SPEND,652742.08,2026-08,120,0.2
+2025-12,CAPEX-002,Suzhou SMT expansion,CN01,Hardware,SPEND,807389.65,2026-08,120,0.2
+2026-01,CAPEX-002,Suzhou SMT expansion,CN01,Hardware,SPEND,915698.79,2026-08,120,0.2
+2026-02,CAPEX-002,Suzhou SMT expansion,CN01,Hardware,SPEND,971453.32,2026-08,120,0.2
+2026-03,CAPEX-002,Suzhou SMT expansion,CN01,Hardware,SPEND,971453.32,2026-08,120,0.2
+2026-04,CAPEX-002,Suzhou SMT expansion,CN01,Hardware,SPEND,915698.79,2026-08,120,0.2
+2026-05,CAPEX-002,Suzhou SMT expansion,CN01,Hardware,SPEND,807389.65,2026-08,120,0.2
+2026-06,CAPEX-002,Suzhou SMT expansion,CN01,Hardware,SPEND,652742.08,2026-08,120,0.2
+2026-07,CAPEX-002,Suzhou SMT expansion,CN01,Hardware,SPEND,460631.74,2026-08,120,0.2
+2026-01,CAPEX-003,Cloud platform modernization,DE01,Software,SPEND,138747.05,2026-09,60,0.0
+2026-02,CAPEX-003,Cloud platform modernization,DE01,Software,SPEND,307431.64,2026-09,60,0.0
+2026-03,CAPEX-003,Cloud platform modernization,DE01,Software,SPEND,442899.98,2026-09,60,0.0
+2026-04,CAPEX-003,Cloud platform modernization,DE01,Software,SPEND,530515.46,2026-09,60,0.0
+2026-05,CAPEX-003,Cloud platform modernization,DE01,Software,SPEND,560811.74,2026-09,60,0.0
+2026-06,CAPEX-003,Cloud platform modernization,DE01,Software,SPEND,530515.46,2026-09,60,0.0
+2026-07,CAPEX-003,Cloud platform modernization,DE01,Software,SPEND,442899.98,2026-09,60,0.0
+2026-06,CAPEX-004,Global spare parts automation,ES01,Spare Parts,SPEND,97633.89,2027-01,72,0.0
+2026-07,CAPEX-004,Global spare parts automation,ES01,Spare Parts,SPEND,231656.94,2027-01,72,0.0

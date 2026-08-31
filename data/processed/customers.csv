@@ -1,0 +1,57 @@
+customer,customer_name,entity,division,customer_size,segment
+C001,Meridian DE01,DE01,Software,0.6845,Growth
+C002,Orion DE01,DE01,Software,0.6917,Growth
+C003,Atlas DE01,DE01,Software,1.0253,Core
+C004,Nimbus DE01,DE01,Software,0.7312,Growth
+C005,Summit DE01,DE01,Software,0.6976,Growth
+C006,Cobalt DE01,DE01,Software,0.7026,Growth
+C007,Nimbus DE01,DE01,Hardware,2.011,Strategic
+C008,Summit DE01,DE01,Hardware,1.6006,Strategic
+C009,Cobalt DE01,DE01,Hardware,1.0067,Core
+C010,Vertex DE01,DE01,Hardware,0.9155,Core
+C011,Nova DE01,DE01,Hardware,1.0537,Core
+C012,Keystone ES01,ES01,Hardware,0.8007,Growth
+C013,Axiom ES01,ES01,Hardware,0.8993,Core
+C014,Northstar ES01,ES01,Hardware,1.179,Core
+C015,Kestrel ES01,ES01,Hardware,0.9277,Core
+C016,Helix ES01,ES01,Hardware,0.8063,Growth
+C017,Meridian ES01,ES01,Events,1.4093,Strategic
+C018,Orion ES01,ES01,Events,0.7,Growth
+C019,Atlas ES01,ES01,Events,0.7306,Growth
+C020,Nimbus ES01,ES01,Events,0.5637,Growth
+C021,Atlas ES01,ES01,Spare Parts,2.1,Strategic
+C022,Nimbus ES01,ES01,Spare Parts,1.0976,Core
+C023,Summit ES01,ES01,Spare Parts,0.6703,Growth
+C024,Cobalt ES01,ES01,Spare Parts,1.3054,Core
+C025,Vertex ES01,ES01,Spare Parts,1.3372,Core
+C026,Pioneer US01,US01,Software,0.7339,Growth
+C027,Keystone US01,US01,Software,0.9727,Core
+C028,Axiom US01,US01,Software,0.7164,Growth
+C029,Northstar US01,US01,Software,1.4379,Strategic
+C030,Kestrel US01,US01,Software,0.55,Growth
+C031,Helix US01,US01,Software,0.865,Core
+C032,Northstar US01,US01,Hardware,0.8812,Core
+C033,Kestrel US01,US01,Hardware,1.4331,Strategic
+C034,Helix US01,US01,Hardware,1.1197,Core
+C035,Vector US01,US01,Hardware,1.4341,Strategic
+C036,Redwood US01,US01,Hardware,0.55,Growth
+C037,Atlas US01,US01,Events,1.2217,Core
+C038,Nimbus US01,US01,Events,0.8044,Growth
+C039,Summit US01,US01,Events,1.7932,Strategic
+C040,Cobalt US01,US01,Events,2.0193,Strategic
+C041,Summit JP01,JP01,Software,1.0468,Core
+C042,Cobalt JP01,JP01,Software,0.7194,Growth
+C043,Vertex JP01,JP01,Software,2.1,Strategic
+C044,Nova JP01,JP01,Software,1.2093,Core
+C045,Meridian JP01,JP01,Software,0.7973,Growth
+C046,Orion JP01,JP01,Software,1.5674,Strategic
+C047,Nova JP01,JP01,Hardware,1.7206,Strategic
+C048,Meridian JP01,JP01,Hardware,1.6738,Strategic
+C049,Orion JP01,JP01,Hardware,1.1256,Core
+C050,Atlas JP01,JP01,Hardware,0.7779,Growth
+C051,Nimbus JP01,JP01,Hardware,0.8768,Core
+C052,Helix JP01,JP01,Spare Parts,0.6988,Growth
+C053,Vector JP01,JP01,Spare Parts,0.9204,Core
+C054,Redwood JP01,JP01,Spare Parts,0.8745,Core
+C055,Pioneer JP01,JP01,Spare Parts,0.8075,Growth
+C056,Keystone JP01,JP01,Spare Parts,1.9339,Strategic

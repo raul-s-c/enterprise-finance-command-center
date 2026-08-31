@@ -1,0 +1,15 @@
+{
+  "fx": {
+    "preferred_source": "ECB Data Portal EXR monthly reference rates",
+    "fallback": "deterministic synthetic FX curves",
+    "live_rows": 36
+  },
+  "economic_drivers": {
+    "current": "deterministic macro indices calibrated to plausible ranges",
+    "planned": [
+      "Eurostat industrial production",
+      "Eurostat HICP",
+      "World Bank commodity indices"
+    ]
+  }
+}

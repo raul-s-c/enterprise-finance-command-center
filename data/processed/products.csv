@@ -1,0 +1,19 @@
+product,division,name,base_price,base_cost,base_demand,variable_sell_pct,fixed_prod_pct,successor,initial_active
+SW-CORE,Software,Aureon Core Platform,1420.0,250.0,18.0,0.035,0.045,,True
+SW-EDGE,Software,Aureon Edge Suite,1960.0,360.0,13.0,0.045,0.05,,True
+SW-ANL,Software,Aureon Analytics,1160.0,190.0,11.0,0.03,0.04,,True
+HW-A100,Hardware,A100 Control Unit,17600.0,10800.0,3.8,0.055,0.055,,True
+HW-A200,Hardware,A200 Secure Controller,28900.0,17700.0,2.9,0.05,0.06,,True
+HW-B100,Hardware,B100 Edge Appliance,23900.0,15700.0,3.2,0.06,0.06,,True
+HW-B200,Hardware,B200 Legacy Appliance,20500.0,16750.0,2.4,0.065,0.06,HW-C300,True
+HW-C300,Hardware,C300 NextGen Appliance,26800.0,15900.0,3.4,0.05,0.055,,False
+EVT-INT,Events,Integration Event,155000.0,76000.0,0.58,0.065,0.055,,True
+EVT-TRN,Events,Training Program,82000.0,40500.0,0.82,0.055,0.05,,True
+EVT-LCH,Events,Launch Experience,225000.0,118000.0,0.42,0.075,0.06,,True
+SP-MOD-01,Spare Parts,Control Module S1,1420.0,690.0,32.0,0.075,0.035,,True
+SP-MOD-02,Spare Parts,Control Module S2,2180.0,1080.0,22.0,0.07,0.035,,True
+SP-KIT-01,Spare Parts,Maintenance Kit K1,730.0,315.0,44.0,0.08,0.03,,True
+SP-KIT-02,Spare Parts,Maintenance Kit K2,990.0,430.0,35.0,0.075,0.03,,True
+SP-LEG-01,Spare Parts,Legacy Service Board,1250.0,890.0,18.0,0.085,0.035,SP-NXT-01,True
+SP-LEG-02,Spare Parts,Legacy Interface Kit,860.0,585.0,20.0,0.085,0.035,,True
+SP-NXT-01,Spare Parts,NextGen Service Board,1540.0,720.0,25.0,0.07,0.03,,False

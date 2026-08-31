@@ -1,0 +1,25 @@
+account,statement,line,account_type
+1000_CASH,Balance Sheet,Cash,Asset
+1100_AR,Balance Sheet,Trade Receivables,Asset
+1150_IC_AR,Balance Sheet,Intercompany Receivables,Asset
+1200_INVENTORY,Balance Sheet,Inventory,Asset
+1500_PPE,Balance Sheet,Property Plant & Equipment,Asset
+1510_CIP,Balance Sheet,Construction in Progress,Asset
+1590_ACCUM_DEP,Balance Sheet,Accumulated Depreciation,Contra Asset
+2100_AP,Balance Sheet,Trade Payables,Liability
+2150_IC_AP,Balance Sheet,Intercompany Payables,Liability
+2200_TAX_PAYABLE,Balance Sheet,Tax Payable,Liability
+2500_DEBT,Balance Sheet,Borrowings,Liability
+3000_SHARE_CAPITAL,Balance Sheet,Share Capital,Equity
+3200_RETAINED_EARNINGS,Balance Sheet,Retained Earnings,Equity
+4000_EXTERNAL_REVENUE,P&L,External Revenue,Revenue
+4100_IC_REVENUE,P&L,Intercompany Revenue,Revenue
+5000_EXTERNAL_COGS,P&L,External Cost of Sales,Expense
+5050_SERVICE_DELIVERY,P&L,Service Delivery Cost,Expense
+5200_FACTORY_COST,P&L,Factory Manufacturing Cost,Expense
+5300_VARIABLE_SELLING,P&L,Variable Selling & Logistics,Expense
+5400_FIXED_PRODUCTION,P&L,Fixed Production Cost,Expense
+6000_OPEX,P&L,Operating Expenses,Expense
+6100_DEPRECIATION,P&L,Depreciation,Expense
+7000_INTEREST,P&L,Net Interest,Expense
+7100_TAX,P&L,Income Tax,Expense
