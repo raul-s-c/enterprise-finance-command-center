@@ -13,6 +13,13 @@ from .forecasting import build_forecast_vintages, forecast_accuracy, latest_fore
 from .macro import build_macro, source_manifest
 from .model import simulate_operations
 from .reporting import consolidation_bridge, group_balance_sheet, management_commentary, management_pnl, price_volume_mix, profitability, validate_all, working_capital
+from .working_capital_detail import (
+    ar_aging_summary,
+    build_ar_aging,
+    build_inventory_aging,
+    inventory_aging_summary,
+    validate_working_capital_schedules,
+)
 
 
 @dataclass(frozen=True)
@@ -85,7 +92,24 @@ def _hierarchy_summaries(product_profit: pd.DataFrame, products: pd.DataFrame) -
     return family.fillna(0.0), quality.fillna(0.0), catalog
 
 
-def _dashboard_payload(*, end_month: str, management: pd.DataFrame, group_bs: pd.DataFrame, cf: pd.DataFrame, wc: pd.DataFrame, latest_fc: pd.DataFrame, product_profit: pd.DataFrame, customer_profit: pd.DataFrame, products: pd.DataFrame, pvm: pd.DataFrame, intercompany: pd.DataFrame, factory: pd.DataFrame, capex: pd.DataFrame, portfolio_events: pd.DataFrame, forecast_acc: pd.DataFrame, commentary: list[dict], checks: dict, sources: dict) -> dict:
+def _inventory_family_summary(inventory_aging: pd.DataFrame, end_month: str) -> pd.DataFrame:
+    if inventory_aging.empty:
+        return pd.DataFrame()
+    latest = inventory_aging[inventory_aging.month.eq(end_month)]
+    if latest.empty:
+        return pd.DataFrame()
+    out = latest.groupby(["division", "product_family"], as_index=False).agg(
+        inventory_value=("inventory_value", "sum"),
+        slow_moving_value=("slow_moving_value", "sum"),
+        obsolescence_risk_value=("obsolescence_risk_value", "sum"),
+        sku_count=("product", "nunique"),
+    )
+    out["slow_moving_pct"] = out.slow_moving_value / out.inventory_value.replace(0, pd.NA)
+    out["obsolescence_risk_pct"] = out.obsolescence_risk_value / out.inventory_value.replace(0, pd.NA)
+    return out.fillna(0.0)
+
+
+def _dashboard_payload(*, end_month: str, management: pd.DataFrame, group_bs: pd.DataFrame, cf: pd.DataFrame, wc: pd.DataFrame, ar_aging: pd.DataFrame, inventory_aging: pd.DataFrame, latest_fc: pd.DataFrame, product_profit: pd.DataFrame, customer_profit: pd.DataFrame, products: pd.DataFrame, pvm: pd.DataFrame, intercompany: pd.DataFrame, factory: pd.DataFrame, capex: pd.DataFrame, portfolio_events: pd.DataFrame, forecast_acc: pd.DataFrame, commentary: list[dict], checks: dict, sources: dict) -> dict:
     monthly = management.groupby("month", as_index=False).agg(
         revenue=("revenue", "sum"), marginal_contribution=("marginal_contribution", "sum"), gross_profit=("gross_profit", "sum"),
         opex=("opex", "sum"), depreciation=("depreciation", "sum"), ebit=("ebit", "sum"), net_income=("net_income", "sum"),
@@ -105,13 +129,18 @@ def _dashboard_payload(*, end_month: str, management: pd.DataFrame, group_bs: pd
     acc_summary = forecast_acc.groupby("horizon_month", as_index=False).agg(mape=("abs_pct_error", "mean"), bias=("bias_pct", "mean"), observations=("error", "size")) if not forecast_acc.empty else pd.DataFrame()
     ic_month = intercompany.groupby("month", as_index=False).agg(intercompany_sales=("invoice", "sum"), manufacturing_cost=("manufacturing_cost", "sum"), transfer_pricing_markup=("markup", "sum")) if not intercompany.empty else pd.DataFrame()
     family_profit, quality_profit, catalog_summary = _hierarchy_summaries(product_profit, products)
+    ar_summary = ar_aging_summary(ar_aging)
+    inv_summary = inventory_aging_summary(inventory_aging)
+    latest_ar = ar_aging[ar_aging.month.eq(end_month)].sort_values(["overdue_ar", "total_ar"], ascending=False).head(50) if not ar_aging.empty else pd.DataFrame()
+    latest_inventory = inventory_aging[inventory_aging.month.eq(end_month)].sort_values(["obsolescence_risk_value", "slow_moving_value", "inventory_value"], ascending=False).head(80) if not inventory_aging.empty else pd.DataFrame()
+    inv_family = _inventory_family_summary(inventory_aging, end_month)
 
     return {
         "meta": {
             "company": "Aureon Systems Group",
             "end_month": end_month,
             "currency": "EUR",
-            "version": "0.3.0",
+            "version": "0.4.0",
             "catalog_products": int(len(products)),
             "product_families": int(products[["division", "product_family"]].drop_duplicates().shape[0]),
         },
@@ -119,6 +148,11 @@ def _dashboard_payload(*, end_month: str, management: pd.DataFrame, group_bs: pd
         "management_detail": _records(management),
         "division": _records(latest_division),
         "working_capital": _records(wc),
+        "ar_aging_summary": _records(ar_summary),
+        "ar_customer_aging": _records(latest_ar),
+        "inventory_aging_summary": _records(inv_summary),
+        "inventory_sku_aging": _records(latest_inventory),
+        "inventory_family_aging": _records(inv_family.sort_values(["division", "inventory_value"], ascending=[True, False])) if not inv_family.empty else [],
         "cash_flow": _records(cf_group),
         "cash_flow_detail": _records(cf),
         "balance_sheet": _records(group_bs),
@@ -157,6 +191,9 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     group_bs = group_balance_sheet(legal_bs, float(config["transfer_pricing"]["manufacturing_cost_plus"]))
     wc = working_capital(group_bs, management)
 
+    ar_aging = build_ar_aging(accounting.journal, simulation.customers, config)
+    inventory_aging = build_inventory_aging(accounting.journal, simulation.operations, simulation.products, config)
+
     product_profit, customer_profit = profitability(simulation.operations, end_month)
     hierarchy_cols = ["product", "name", "product_family", "product_subfamily", "product_type", "quality_tier", "quality_score", "generation", "strategic_role"]
     product_profit = product_profit.merge(simulation.products[hierarchy_cols], on="product", how="left")
@@ -170,12 +207,14 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     commentary = management_commentary(management, wc, cf, latest_fc, end_month)
 
     checks = validate_all(accounting.journal, legal_bs, group_bs, cf, bridge)
+    schedule_checks = validate_working_capital_schedules(accounting.journal, ar_aging, inventory_aging)
+    checks.update({k: v for k, v in schedule_checks.items() if k != "passed"})
     lookahead_errors = int((pd.PeriodIndex(forecasts.month, freq="M") <= pd.PeriodIndex(forecasts.vintage, freq="M")).sum()) if not forecasts.empty else 0
     checks["forecast_lookahead_errors"] = lookahead_errors
     checks["catalog_product_count"] = int(len(simulation.products))
     checks["catalog_family_count"] = int(simulation.products[["division", "product_family"]].drop_duplicates().shape[0])
     checks["sold_product_count"] = int(simulation.operations["product"].nunique())
-    checks["passed"] = bool(checks["passed"] and lookahead_errors == 0 and checks["catalog_product_count"] >= 200 and checks["sold_product_count"] >= 150)
+    checks["passed"] = bool(checks["passed"] and schedule_checks["passed"] and lookahead_errors == 0 and checks["catalog_product_count"] >= 200 and checks["sold_product_count"] >= 150)
     if not checks["passed"]:
         raise RuntimeError(f"Financial controls failed: {checks}")
 
@@ -206,6 +245,8 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     _write_csv(group_bs, out / "balance_sheet.csv")
     _write_csv(cf, out / "cash_flow.csv")
     _write_csv(wc, out / "working_capital.csv")
+    _write_csv(ar_aging, out / "ar_aging.csv")
+    _write_csv(inventory_aging, out / "inventory_aging.csv")
     _write_csv(accounting.intercompany, out / "intercompany.csv")
     _write_csv(accounting.factory, out / "factory.csv")
     _write_csv(accounting.capex, out / "capex.csv")
@@ -224,7 +265,8 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
         json.dump(sources, f, indent=2)
 
     payload = _dashboard_payload(
-        end_month=end_month, management=management, group_bs=group_bs, cf=cf, wc=wc, latest_fc=latest_fc,
+        end_month=end_month, management=management, group_bs=group_bs, cf=cf, wc=wc,
+        ar_aging=ar_aging, inventory_aging=inventory_aging, latest_fc=latest_fc,
         product_profit=product_profit, customer_profit=customer_profit, products=simulation.products, pvm=pvm,
         intercompany=accounting.intercompany, factory=accounting.factory, capex=accounting.capex,
         portfolio_events=simulation.portfolio_events, forecast_acc=accuracy, commentary=commentary, checks=checks, sources=sources,
@@ -234,6 +276,8 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     with open(web / "dashboard.json", "w", encoding="utf-8") as f:
         json.dump(payload, f, separators=(",", ":"), allow_nan=False)
 
+    latest_ar = ar_aging[ar_aging.month.eq(end_month)] if not ar_aging.empty else pd.DataFrame()
+    latest_inv = inventory_aging[inventory_aging.month.eq(end_month)] if not inventory_aging.empty else pd.DataFrame()
     manifest = {
         "end_month": end_month,
         "actual_months": actual_months,
@@ -245,6 +289,10 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
         "journal_rows": len(accounting.journal),
         "forecast_rows": len(forecasts),
         "portfolio_events": len(simulation.portfolio_events),
+        "ar_aging_rows": len(ar_aging),
+        "inventory_aging_rows": len(inventory_aging),
+        "latest_overdue_ar": round(float(latest_ar.overdue_ar.sum()), 2) if not latest_ar.empty else 0.0,
+        "latest_slow_moving_inventory": round(float(latest_inv.slow_moving_value.sum()), 2) if not latest_inv.empty else 0.0,
         "detail_retention": "full transaction and journal detail is generated reproducibly in data/runtime and not committed to git",
         "validation": checks,
     }
