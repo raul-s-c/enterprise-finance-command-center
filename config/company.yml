@@ -75,5 +75,7 @@ portfolio_rules:
   phaseout_delay_months: 2
   replacement_delay_months: 4
   minimum_gross_margin:
+    Software: 0.58
     Hardware: 0.22
+    Events: 0.25
     Spare Parts: 0.34
