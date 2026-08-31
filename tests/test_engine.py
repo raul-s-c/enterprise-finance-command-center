@@ -25,11 +25,11 @@ def test_product_catalog_has_finance_grade_hierarchy():
     required = {"division", "product_family", "product_subfamily", "product_type", "quality_tier", "generation", "strategic_role"}
     assert required.issubset(products.columns)
     assert len(products) >= 200
-    assert products.product.nunique() == len(products)
-    assert products.quality_tier.nunique() == 3
-    counts = products.groupby("division").product.nunique().to_dict()
+    assert products["product"].nunique() == len(products)
+    assert products["quality_tier"].nunique() == 3
+    counts = products.groupby("division")["product"].nunique().to_dict()
     assert all(counts.get(division, 0) >= 45 for division in ["Software", "Hardware", "Events", "Spare Parts"])
-    assert products.groupby("division").product_family.nunique().min() >= 4
+    assert products.groupby("division")["product_family"].nunique().min() >= 4
 
 
 def test_deterministic_operations():
@@ -40,7 +40,7 @@ def test_deterministic_operations():
     b = simulate_operations(config, months, macro)
     assert a.operations.equals(b.operations)
     assert a.portfolio_events.equals(b.portfolio_events)
-    assert a.operations.product.nunique() >= 150
+    assert a.operations["product"].nunique() >= 150
 
 
 def test_every_journal_balances():
