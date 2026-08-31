@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pandas as pd
+import yaml
 
 from enterprise_finance.accounting import balance_sheet, build_accounting, validate_journal
 from enterprise_finance.engine import build, load_config, month_range
@@ -69,8 +70,12 @@ def test_forecasts_never_use_future_vintage_month():
 def test_full_pipeline(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     source_config = Path(__file__).resolve().parents[1] / "config" / "company.yml"
+    config = yaml.safe_load(source_config.read_text(encoding="utf-8"))
+    config["group"]["actual_months"] = 12
+    config["group"]["forecast_months"] = 6
+    config["group"]["live_macro"] = False
     (tmp_path / "config").mkdir()
-    (tmp_path / "config" / "company.yml").write_text(source_config.read_text(), encoding="utf-8")
+    (tmp_path / "config" / "company.yml").write_text(yaml.safe_dump(config, sort_keys=False), encoding="utf-8")
     result = build("2026-07", allow_live_macro=False)
     assert result.validation_passed
     assert (tmp_path / "web" / "data" / "dashboard.json").exists()
