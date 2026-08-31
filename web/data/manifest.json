@@ -2,10 +2,14 @@
   "end_month": "2026-07",
   "actual_months": 36,
   "forecast_months": 18,
-  "operational_rows": 6664,
-  "journal_rows": 65666,
+  "catalog_products": 236,
+  "sold_products": 232,
+  "product_families": 19,
+  "operational_rows": 59567,
+  "journal_rows": 522391,
   "forecast_rows": 18414,
-  "portfolio_events": 12,
+  "portfolio_events": 44,
+  "detail_retention": "full transaction and journal detail is generated reproducibly in data/runtime and not committed to git",
   "validation": {
     "journal_balance_max_gap": 0.0,
     "trial_balance_gap": 0.0,
@@ -16,6 +20,9 @@
     "consolidation_revenue_max_gap": 0.0,
     "consolidation_ebit_max_gap": 0.0,
     "passed": true,
-    "forecast_lookahead_errors": 0
+    "forecast_lookahead_errors": 0,
+    "catalog_product_count": 236,
+    "catalog_family_count": 19,
+    "sold_product_count": 232
   }
 }

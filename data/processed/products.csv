@@ -1,19 +1,237 @@
-product,division,name,base_price,base_cost,base_demand,variable_sell_pct,fixed_prod_pct,successor,initial_active
-SW-CORE,Software,Aureon Core Platform,1420.0,250.0,18.0,0.035,0.045,,True
-SW-EDGE,Software,Aureon Edge Suite,1960.0,360.0,13.0,0.045,0.05,,True
-SW-ANL,Software,Aureon Analytics,1160.0,190.0,11.0,0.03,0.04,,True
-HW-A100,Hardware,A100 Control Unit,17600.0,10800.0,3.8,0.055,0.055,,True
-HW-A200,Hardware,A200 Secure Controller,28900.0,17700.0,2.9,0.05,0.06,,True
-HW-B100,Hardware,B100 Edge Appliance,23900.0,15700.0,3.2,0.06,0.06,,True
-HW-B200,Hardware,B200 Legacy Appliance,20500.0,16750.0,2.4,0.065,0.06,HW-C300,True
-HW-C300,Hardware,C300 NextGen Appliance,26800.0,15900.0,3.4,0.05,0.055,,False
-EVT-INT,Events,Integration Event,155000.0,76000.0,0.58,0.065,0.055,,True
-EVT-TRN,Events,Training Program,82000.0,40500.0,0.82,0.055,0.05,,True
-EVT-LCH,Events,Launch Experience,225000.0,118000.0,0.42,0.075,0.06,,True
-SP-MOD-01,Spare Parts,Control Module S1,1420.0,690.0,32.0,0.075,0.035,,True
-SP-MOD-02,Spare Parts,Control Module S2,2180.0,1080.0,22.0,0.07,0.035,,True
-SP-KIT-01,Spare Parts,Maintenance Kit K1,730.0,315.0,44.0,0.08,0.03,,True
-SP-KIT-02,Spare Parts,Maintenance Kit K2,990.0,430.0,35.0,0.075,0.03,,True
-SP-LEG-01,Spare Parts,Legacy Service Board,1250.0,890.0,18.0,0.085,0.035,SP-NXT-01,True
-SP-LEG-02,Spare Parts,Legacy Interface Kit,860.0,585.0,20.0,0.085,0.035,,True
-SP-NXT-01,Spare Parts,NextGen Service Board,1540.0,720.0,25.0,0.07,0.03,,False
+product,division,product_family,product_subfamily,product_type,quality_tier,quality_score,generation,strategic_role,name,base_price,base_cost,base_demand,variable_sell_pct,fixed_prod_pct,portfolio_penetration,successor,initial_active,catalog_rank
+SW-PLT-CORE-E,Software,Platform,Core Services,Core Platform,Essential,1,G2,Volume,Aureon Core Platform Essential,1119.77,154.31,3.0816,0.0378,0.04275,0.58,,True,1
+SW-PLT-CORE-P,Software,Platform,Core Services,Core Platform,Professional,2,G2,Core,Aureon Core Platform Professional,1435.6,235.51,2.4075,0.035,0.045,0.48,,True,2
+SW-PLT-CORE-X,Software,Platform,Core Services,Core Platform,Premium,3,G2,Premium,Aureon Core Platform Premium,2124.69,425.24,1.4926,0.0322,0.0495,0.34,,True,3
+SW-PLT-WF-E,Software,Platform,Core Services,Workflow Engine,Essential,1,G2,Volume,Aureon Workflow Engine Essential,1200.58,171.44,2.88,0.0378,0.04275,0.58,,True,4
+SW-PLT-WF-P,Software,Platform,Core Services,Workflow Engine,Professional,2,G2,Core,Aureon Workflow Engine Professional,1539.2,261.66,2.25,0.035,0.045,0.48,,True,5
+SW-PLT-WF-X,Software,Platform,Core Services,Workflow Engine,Premium,3,G2,Premium,Aureon Workflow Engine Premium,2278.02,472.46,1.395,0.0322,0.0495,0.34,,True,6
+SW-PLT-EDGE-E,Software,Platform,Edge Services,Edge Runtime,Essential,1,G2,Volume,Aureon Edge Runtime Essential,1281.38,189.39,2.6784,0.0378,0.04275,0.58,,True,1
+SW-PLT-EDGE-P,Software,Platform,Edge Services,Edge Runtime,Professional,2,G2,Core,Aureon Edge Runtime Professional,1642.8,289.05,2.0925,0.035,0.045,0.48,,True,2
+SW-PLT-EDGE-X,Software,Platform,Edge Services,Edge Runtime,Premium,3,G2,Premium,Aureon Edge Runtime Premium,2431.34,521.91,1.2973,0.0322,0.0495,0.34,,True,3
+SW-PLT-API-E,Software,Platform,Edge Services,API Gateway,Essential,1,G1 Legacy,Harvest,Aureon API Gateway Essential,1362.19,463.15,2.4768,0.0378,0.04275,0.58,SW-PLT-API-E-NXT,True,4
+SW-PLT-API-E-NXT,Software,Platform,Edge Services,API Gateway,Essential,1,G3,Growth,Aureon API Gateway NextGen Essential,1471.17,351.99,2.774,0.0378,0.04275,0.6599999999999999,,False,5
+SW-PLT-API-P,Software,Platform,Edge Services,API Gateway,Professional,2,G2,Core,Aureon API Gateway Professional,1746.4,317.67,1.935,0.035,0.045,0.48,,True,6
+SW-PLT-API-X,Software,Platform,Edge Services,API Gateway,Premium,3,G2,Premium,Aureon API Gateway Premium,2584.67,573.59,1.1997,0.0322,0.0495,0.34,,True,7
+SW-SEC-IAM-E,Software,Security,Identity,Identity Access,Essential,1,G2,Volume,Aureon Identity Access Essential,1321.33,182.08,2.4036,0.0378,0.04275,0.58,,True,1
+SW-SEC-IAM-P,Software,Security,Identity,Identity Access,Professional,2,G2,Core,Aureon Identity Access Professional,1694.01,277.9,1.8778,0.035,0.045,0.48,,True,2
+SW-SEC-IAM-X,Software,Security,Identity,Identity Access,Premium,3,G2,Premium,Aureon Identity Access Premium,2507.13,501.78,1.1643,0.0322,0.0495,0.34,,True,3
+SW-SEC-PAM-E,Software,Security,Identity,Privileged Access,Essential,1,G2,Volume,Aureon Privileged Access Essential,1416.68,202.3,2.2464,0.0378,0.04275,0.58,,True,4
+SW-SEC-PAM-P,Software,Security,Identity,Privileged Access,Professional,2,G2,Core,Aureon Privileged Access Professional,1816.26,308.76,1.755,0.035,0.045,0.48,,True,5
+SW-SEC-PAM-X,Software,Security,Identity,Privileged Access,Premium,3,G2,Premium,Aureon Privileged Access Premium,2688.06,557.5,1.0881,0.0322,0.0495,0.34,,True,6
+SW-SEC-KMS-E,Software,Security,Protection,Key Management,Essential,1,G2,Volume,Aureon Key Management Essential,1512.03,223.48,2.0892,0.0378,0.04275,0.58,,True,1
+SW-SEC-KMS-P,Software,Security,Protection,Key Management,Professional,2,G2,Core,Aureon Key Management Professional,1938.5,341.08,1.6321,0.035,0.045,0.48,,True,2
+SW-SEC-KMS-X,Software,Security,Protection,Key Management,Premium,3,G2,Premium,Aureon Key Management Premium,2868.99,615.85,1.0119,0.0322,0.0495,0.34,,True,3
+SW-SEC-CMP-E,Software,Security,Protection,Compliance Monitor,Essential,1,G1 Legacy,Harvest,Aureon Compliance Monitor Essential,1607.39,546.51,1.9319,0.0378,0.04275,0.58,SW-SEC-CMP-E-NXT,True,4
+SW-SEC-CMP-E-NXT,Software,Security,Protection,Compliance Monitor,Essential,1,G3,Growth,Aureon Compliance Monitor NextGen Essential,1735.98,415.35,2.1637,0.0378,0.04275,0.6599999999999999,,False,5
+SW-SEC-CMP-P,Software,Security,Protection,Compliance Monitor,Professional,2,G2,Core,Aureon Compliance Monitor Professional,2060.75,374.85,1.5093,0.035,0.045,0.48,,True,6
+SW-SEC-CMP-X,Software,Security,Protection,Compliance Monitor,Premium,3,G2,Premium,Aureon Compliance Monitor Premium,3049.91,676.83,0.9358,0.0322,0.0495,0.34,,True,7
+SW-ANL-BI-E,Software,Analytics,Business Analytics,Business Intelligence,Essential,1,G2,Volume,Aureon Business Intelligence Essential,1175.76,162.02,2.7118,0.0378,0.04275,0.58,,True,1
+SW-ANL-BI-P,Software,Analytics,Business Analytics,Business Intelligence,Professional,2,G2,Core,Aureon Business Intelligence Professional,1507.38,247.29,2.1186,0.035,0.045,0.48,,True,2
+SW-ANL-BI-X,Software,Analytics,Business Analytics,Business Intelligence,Premium,3,G2,Premium,Aureon Business Intelligence Premium,2230.92,446.5,1.3135,0.0322,0.0495,0.34,,True,3
+SW-ANL-FIN-E,Software,Analytics,Business Analytics,Finance Analytics,Essential,1,G2,Volume,Aureon Finance Analytics Essential,1260.6,180.01,2.5344,0.0378,0.04275,0.58,,True,4
+SW-ANL-FIN-P,Software,Analytics,Business Analytics,Finance Analytics,Professional,2,G2,Core,Aureon Finance Analytics Professional,1616.16,274.75,1.98,0.035,0.045,0.48,,True,5
+SW-ANL-FIN-X,Software,Analytics,Business Analytics,Finance Analytics,Premium,3,G2,Premium,Aureon Finance Analytics Premium,2391.92,496.08,1.2276,0.0322,0.0495,0.34,,True,6
+SW-ANL-PRD-E,Software,Analytics,Advanced Analytics,Predictive Analytics,Essential,1,G2,Volume,Aureon Predictive Analytics Essential,1345.45,198.86,2.357,0.0378,0.04275,0.58,,True,1
+SW-ANL-PRD-P,Software,Analytics,Advanced Analytics,Predictive Analytics,Professional,2,G2,Core,Aureon Predictive Analytics Professional,1724.94,303.5,1.8414,0.035,0.045,0.48,,True,2
+SW-ANL-PRD-X,Software,Analytics,Advanced Analytics,Predictive Analytics,Premium,3,G2,Premium,Aureon Predictive Analytics Premium,2552.91,548.01,1.1417,0.0322,0.0495,0.34,,True,3
+SW-ANL-OPS-E,Software,Analytics,Advanced Analytics,Operations Analytics,Essential,1,G2,Volume,Aureon Operations Analytics Essential,1430.3,218.54,2.1796,0.0378,0.04275,0.58,,True,4
+SW-ANL-OPS-P,Software,Analytics,Advanced Analytics,Operations Analytics,Professional,2,G2,Core,Aureon Operations Analytics Professional,1833.72,333.55,1.7028,0.035,0.045,0.48,,True,5
+SW-ANL-OPS-X,Software,Analytics,Advanced Analytics,Operations Analytics,Premium,3,G2,Premium,Aureon Operations Analytics Premium,2713.91,602.26,1.0557,0.0322,0.0495,0.34,,True,6
+SW-AUT-ORC-E,Software,Automation,Orchestration,Process Orchestrator,Essential,1,G2,Volume,Aureon Process Orchestrator Essential,1231.74,169.74,2.5269,0.0378,0.04275,0.58,,True,1
+SW-AUT-ORC-P,Software,Automation,Orchestration,Process Orchestrator,Professional,2,G2,Core,Aureon Process Orchestrator Professional,1579.16,259.06,1.9741,0.035,0.045,0.48,,True,2
+SW-AUT-ORC-X,Software,Automation,Orchestration,Process Orchestrator,Premium,3,G2,Premium,Aureon Process Orchestrator Premium,2337.16,467.76,1.224,0.0322,0.0495,0.34,,True,3
+SW-AUT-RPA-E,Software,Automation,Orchestration,Automation Studio,Essential,1,G2,Volume,Aureon Automation Studio Essential,1320.63,188.59,2.3616,0.0378,0.04275,0.58,,True,4
+SW-AUT-RPA-P,Software,Automation,Orchestration,Automation Studio,Professional,2,G2,Core,Aureon Automation Studio Professional,1693.12,287.83,1.845,0.035,0.045,0.48,,True,5
+SW-AUT-RPA-X,Software,Automation,Orchestration,Automation Studio,Premium,3,G2,Premium,Aureon Automation Studio Premium,2505.82,519.71,1.1439,0.0322,0.0495,0.34,,True,6
+SW-AUT-INT-E,Software,Automation,Integration,Integration Hub,Essential,1,G2,Volume,Aureon Integration Hub Essential,1409.52,208.32,2.1963,0.0378,0.04275,0.58,,True,1
+SW-AUT-INT-P,Software,Automation,Integration,Integration Hub,Professional,2,G2,Core,Aureon Integration Hub Professional,1807.08,317.96,1.7158,0.035,0.045,0.48,,True,2
+SW-AUT-INT-X,Software,Automation,Integration,Integration Hub,Premium,3,G2,Premium,Aureon Integration Hub Premium,2674.48,574.1,1.0638,0.0322,0.0495,0.34,,True,3
+SW-AUT-MON-E,Software,Automation,Integration,Monitoring Suite,Essential,1,G2,Volume,Aureon Monitoring Suite Essential,1498.41,228.95,2.031,0.0378,0.04275,0.58,,True,4
+SW-AUT-MON-P,Software,Automation,Integration,Monitoring Suite,Professional,2,G2,Core,Aureon Monitoring Suite Professional,1921.04,349.44,1.5867,0.035,0.045,0.48,,True,5
+SW-AUT-MON-X,Software,Automation,Integration,Monitoring Suite,Premium,3,G2,Premium,Aureon Monitoring Suite Premium,2843.14,630.94,0.9838,0.0322,0.0495,0.34,,True,6
+HW-CTL-MCU-E,Hardware,Control Systems,Controllers,Compact Controller,Essential,1,G1 Legacy,Harvest,Aureon Compact Controller Essential,17609.87,12679.1,1.065,0.0594,0.05225,0.58,HW-CTL-MCU-E-NXT,True,1
+HW-CTL-MCU-E-NXT,Hardware,Control Systems,Controllers,Compact Controller,Essential,1,G3,Growth,Aureon Compact Controller NextGen Essential,19018.65,9636.12,1.1928,0.0594,0.05225,0.6599999999999999,,False,2
+HW-CTL-MCU-P,Hardware,Control Systems,Controllers,Compact Controller,Professional,2,G2,Core,Aureon Compact Controller Professional,22576.75,13071.94,0.832,0.055,0.055,0.48,,True,3
+HW-CTL-MCU-X,Hardware,Control Systems,Controllers,Compact Controller,Premium,3,G2,Premium,Aureon Compact Controller Premium,33413.59,23602.69,0.5159,0.0506,0.0605,0.34,,True,4
+HW-CTL-RCK-E,Hardware,Control Systems,Controllers,Rack Controller,Essential,1,G2,Volume,Aureon Rack Controller Essential,18880.68,9515.86,0.9953,0.0594,0.05225,0.58,,True,5
+HW-CTL-RCK-P,Hardware,Control Systems,Controllers,Rack Controller,Professional,2,G2,Core,Aureon Rack Controller Professional,24206.0,14523.6,0.7776,0.055,0.055,0.48,,True,6
+HW-CTL-RCK-X,Hardware,Control Systems,Controllers,Rack Controller,Premium,3,G2,Premium,Aureon Rack Controller Premium,35824.88,26223.81,0.4821,0.0506,0.0605,0.34,,True,7
+HW-CTL-RDN-E,Hardware,Control Systems,Resilient Control,Redundant Controller,Essential,1,G2,Volume,Aureon Redundant Controller Essential,20151.5,10511.83,0.9257,0.0594,0.05225,0.58,,True,1
+HW-CTL-RDN-P,Hardware,Control Systems,Resilient Control,Redundant Controller,Professional,2,G2,Core,Aureon Redundant Controller Professional,25835.25,16043.69,0.7232,0.055,0.055,0.48,,True,2
+HW-CTL-RDN-X,Hardware,Control Systems,Resilient Control,Redundant Controller,Premium,3,G2,Premium,Aureon Redundant Controller Premium,38236.17,28968.49,0.4484,0.0506,0.0605,0.34,,True,3
+HW-CTL-SAF-E,Hardware,Control Systems,Resilient Control,Safety Controller,Essential,1,G2,Volume,Aureon Safety Controller Essential,21422.31,11552.62,0.856,0.0594,0.05225,0.58,,True,4
+HW-CTL-SAF-P,Hardware,Control Systems,Resilient Control,Safety Controller,Professional,2,G2,Core,Aureon Safety Controller Professional,27464.5,17632.21,0.6687,0.055,0.055,0.48,,True,5
+HW-CTL-SAF-X,Hardware,Control Systems,Resilient Control,Safety Controller,Premium,3,G2,Premium,Aureon Safety Controller Premium,40647.46,31836.72,0.4146,0.0506,0.0605,0.34,,True,6
+HW-EDG-GTW-E,Hardware,Edge Appliances,Gateways,Industrial Gateway,Essential,1,G1 Legacy,Harvest,Aureon Industrial Gateway Essential,20761.1,14947.99,0.9072,0.0594,0.05225,0.58,HW-EDG-GTW-E-NXT,True,1
+HW-EDG-GTW-E-NXT,Hardware,Edge Appliances,Gateways,Industrial Gateway,Essential,1,G3,Growth,Aureon Industrial Gateway NextGen Essential,22421.99,11360.48,1.0161,0.0594,0.05225,0.6599999999999999,,False,2
+HW-EDG-GTW-P,Hardware,Edge Appliances,Gateways,Industrial Gateway,Professional,2,G2,Core,Aureon Industrial Gateway Professional,26616.8,15411.13,0.7088,0.055,0.055,0.48,,True,3
+HW-EDG-GTW-X,Hardware,Edge Appliances,Gateways,Industrial Gateway,Premium,3,G2,Premium,Aureon Industrial Gateway Premium,39392.86,27826.33,0.4394,0.0506,0.0605,0.34,,True,4
+HW-EDG-SEC-E,Hardware,Edge Appliances,Gateways,Secure Gateway,Essential,1,G2,Volume,Aureon Secure Gateway Essential,22259.33,11218.7,0.8479,0.0594,0.05225,0.58,,True,5
+HW-EDG-SEC-P,Hardware,Edge Appliances,Gateways,Secure Gateway,Professional,2,G2,Core,Aureon Secure Gateway Professional,28537.6,17122.56,0.6624,0.055,0.055,0.48,,True,6
+HW-EDG-SEC-X,Hardware,Edge Appliances,Gateways,Secure Gateway,Premium,3,G2,Premium,Aureon Secure Gateway Premium,42235.65,30916.49,0.4107,0.0506,0.0605,0.34,,True,7
+HW-EDG-CMP-E,Hardware,Edge Appliances,Compute,Edge Compute Node,Essential,1,G2,Volume,Aureon Edge Compute Node Essential,23757.55,12392.89,0.7885,0.0594,0.05225,0.58,,True,1
+HW-EDG-CMP-P,Hardware,Edge Appliances,Compute,Edge Compute Node,Professional,2,G2,Core,Aureon Edge Compute Node Professional,30458.4,18914.67,0.616,0.055,0.055,0.48,,True,2
+HW-EDG-CMP-X,Hardware,Edge Appliances,Compute,Edge Compute Node,Premium,3,G2,Premium,Aureon Edge Compute Node Premium,45078.43,34152.32,0.3819,0.0506,0.0605,0.34,,True,3
+HW-EDG-AI-E,Hardware,Edge Appliances,Compute,AI Edge Appliance,Essential,1,G2,Volume,Aureon AI Edge Appliance Essential,25255.78,13619.93,0.7292,0.0594,0.05225,0.58,,True,4
+HW-EDG-AI-P,Hardware,Edge Appliances,Compute,AI Edge Appliance,Professional,2,G2,Core,Aureon AI Edge Appliance Professional,32379.2,20787.45,0.5697,0.055,0.055,0.48,,True,5
+HW-EDG-AI-X,Hardware,Edge Appliances,Compute,AI Edge Appliance,Premium,3,G2,Premium,Aureon AI Edge Appliance Premium,47921.22,37533.81,0.3532,0.0506,0.0605,0.34,,True,6
+HW-TRM-FIX-E,Hardware,Terminals,Fixed Terminals,Fixed Terminal,Essential,1,G2,Volume,Aureon Fixed Terminal Essential,16312.3,7933.65,1.1044,0.0594,0.05225,0.58,,True,1
+HW-TRM-FIX-P,Hardware,Terminals,Fixed Terminals,Fixed Terminal,Professional,2,G2,Core,Aureon Fixed Terminal Professional,20913.2,12108.74,0.8628,0.055,0.055,0.48,,True,2
+HW-TRM-FIX-X,Hardware,Terminals,Fixed Terminals,Fixed Terminal,Premium,3,G2,Premium,Aureon Fixed Terminal Premium,30951.54,21863.55,0.535,0.0506,0.0605,0.34,,True,3
+HW-TRM-KSK-E,Hardware,Terminals,Fixed Terminals,Self-Service Kiosk,Essential,1,G2,Volume,Aureon Self-Service Kiosk Essential,17489.47,8814.69,1.0322,0.0594,0.05225,0.58,,True,4
+HW-TRM-KSK-P,Hardware,Terminals,Fixed Terminals,Self-Service Kiosk,Professional,2,G2,Core,Aureon Self-Service Kiosk Professional,22422.4,13453.44,0.8064,0.055,0.055,0.48,,True,5
+HW-TRM-KSK-X,Hardware,Terminals,Fixed Terminals,Self-Service Kiosk,Premium,3,G2,Premium,Aureon Self-Service Kiosk Premium,33185.15,24291.53,0.5,0.0506,0.0605,0.34,,True,6
+HW-TRM-MOB-E,Hardware,Terminals,Mobile Terminals,Mobile Terminal,Essential,1,G2,Volume,Aureon Mobile Terminal Essential,18666.65,9737.27,0.9599,0.0594,0.05225,0.58,,True,1
+HW-TRM-MOB-P,Hardware,Terminals,Mobile Terminals,Mobile Terminal,Professional,2,G2,Core,Aureon Mobile Terminal Professional,23931.6,14861.52,0.75,0.055,0.055,0.48,,True,2
+HW-TRM-MOB-X,Hardware,Terminals,Mobile Terminals,Mobile Terminal,Premium,3,G2,Premium,Aureon Mobile Terminal Premium,35418.77,26833.97,0.465,0.0506,0.0605,0.34,,True,3
+HW-TRM-RUG-E,Hardware,Terminals,Mobile Terminals,Rugged Terminal,Essential,1,G2,Volume,Aureon Rugged Terminal Essential,19843.82,10701.38,0.8877,0.0594,0.05225,0.58,,True,4
+HW-TRM-RUG-P,Hardware,Terminals,Mobile Terminals,Rugged Terminal,Professional,2,G2,Core,Aureon Rugged Terminal Professional,25440.8,16332.99,0.6935,0.055,0.055,0.48,,True,5
+HW-TRM-RUG-X,Hardware,Terminals,Mobile Terminals,Rugged Terminal,Premium,3,G2,Premium,Aureon Rugged Terminal Premium,37652.38,29490.85,0.43,0.0506,0.0605,0.34,,True,6
+HW-NET-ACC-E,Hardware,Network Devices,Access,Access Node,Essential,1,G2,Volume,Aureon Access Node Essential,18907.43,9195.82,0.9467,0.0594,0.05225,0.58,,True,1
+HW-NET-ACC-P,Hardware,Network Devices,Access,Access Node,Professional,2,G2,Core,Aureon Access Node Professional,24240.3,14035.13,0.7396,0.055,0.055,0.48,,True,2
+HW-NET-ACC-X,Hardware,Network Devices,Access,Access Node,Premium,3,G2,Premium,Aureon Access Node Premium,35875.64,25341.84,0.4585,0.0506,0.0605,0.34,,True,3
+HW-NET-SWC-E,Hardware,Network Devices,Access,Secure Switch,Essential,1,G2,Volume,Aureon Secure Switch Essential,20271.89,10217.03,0.8847,0.0594,0.05225,0.58,,True,4
+HW-NET-SWC-P,Hardware,Network Devices,Access,Secure Switch,Professional,2,G2,Core,Aureon Secure Switch Professional,25989.6,15593.76,0.6912,0.055,0.055,0.48,,True,5
+HW-NET-SWC-X,Hardware,Network Devices,Access,Secure Switch,Premium,3,G2,Premium,Aureon Secure Switch Premium,38464.61,28156.09,0.4285,0.0506,0.0605,0.34,,True,6
+HW-NET-DST-E,Hardware,Network Devices,Distribution,Distribution Node,Essential,1,G2,Volume,Aureon Distribution Node Essential,21636.34,11286.38,0.8228,0.0594,0.05225,0.58,,True,1
+HW-NET-DST-P,Hardware,Network Devices,Distribution,Distribution Node,Professional,2,G2,Core,Aureon Distribution Node Professional,27738.9,17225.86,0.6428,0.055,0.055,0.48,,True,2
+HW-NET-DST-X,Hardware,Network Devices,Distribution,Distribution Node,Premium,3,G2,Premium,Aureon Distribution Node Premium,41053.57,31103.01,0.3985,0.0506,0.0605,0.34,,True,3
+HW-NET-RTR-E,Hardware,Network Devices,Distribution,Secure Router,Essential,1,G2,Volume,Aureon Secure Router Essential,23000.8,12403.87,0.7609,0.0594,0.05225,0.58,,True,4
+HW-NET-RTR-P,Hardware,Network Devices,Distribution,Secure Router,Professional,2,G2,Core,Aureon Secure Router Professional,29488.2,18931.42,0.5944,0.055,0.055,0.48,,True,5
+HW-NET-RTR-X,Hardware,Network Devices,Distribution,Secure Router,Premium,3,G2,Premium,Aureon Secure Router Premium,43642.54,34182.58,0.3685,0.0506,0.0605,0.34,,True,6
+HW-SEN-RFID-E,Hardware,Sensors & Readers,Readers,RFID Reader,Essential,1,G2,Volume,Aureon RFID Reader Essential,13346.42,6491.17,1.2228,0.0594,0.05225,0.58,,True,1
+HW-SEN-RFID-P,Hardware,Sensors & Readers,Readers,RFID Reader,Professional,2,G2,Core,Aureon RFID Reader Professional,17110.8,9907.15,0.9553,0.055,0.055,0.48,,True,2
+HW-SEN-RFID-X,Hardware,Sensors & Readers,Readers,RFID Reader,Premium,3,G2,Premium,Aureon RFID Reader Premium,25323.98,17888.36,0.5923,0.0506,0.0605,0.34,,True,3
+HW-SEN-BIO-E,Hardware,Sensors & Readers,Readers,Biometric Reader,Essential,1,G2,Volume,Aureon Biometric Reader Essential,14309.57,7212.02,1.1428,0.0594,0.05225,0.58,,True,4
+HW-SEN-BIO-P,Hardware,Sensors & Readers,Readers,Biometric Reader,Professional,2,G2,Core,Aureon Biometric Reader Professional,18345.6,11007.36,0.8928,0.055,0.055,0.48,,True,5
+HW-SEN-BIO-X,Hardware,Sensors & Readers,Readers,Biometric Reader,Premium,3,G2,Premium,Aureon Biometric Reader Premium,27151.49,19874.89,0.5535,0.0506,0.0605,0.34,,True,6
+HW-SEN-CAM-E,Hardware,Sensors & Readers,Sensing,Vision Sensor,Essential,1,G2,Volume,Aureon Vision Sensor Essential,15272.71,7966.86,1.0628,0.0594,0.05225,0.58,,True,1
+HW-SEN-CAM-P,Hardware,Sensors & Readers,Sensing,Vision Sensor,Professional,2,G2,Core,Aureon Vision Sensor Professional,19580.4,12159.43,0.8303,0.055,0.055,0.48,,True,2
+HW-SEN-CAM-X,Hardware,Sensors & Readers,Sensing,Vision Sensor,Premium,3,G2,Premium,Aureon Vision Sensor Premium,28978.99,21955.06,0.5148,0.0506,0.0605,0.34,,True,3
+HW-SEN-HUB-E,Hardware,Sensors & Readers,Sensing,Sensor Hub,Essential,1,G2,Volume,Aureon Sensor Hub Essential,16235.86,8755.67,0.9828,0.0594,0.05225,0.58,,True,4
+HW-SEN-HUB-P,Hardware,Sensors & Readers,Sensing,Sensor Hub,Professional,2,G2,Core,Aureon Sensor Hub Professional,20815.2,13363.36,0.7678,0.055,0.055,0.48,,True,5
+HW-SEN-HUB-X,Hardware,Sensors & Readers,Sensing,Sensor Hub,Premium,3,G2,Premium,Aureon Sensor Hub Premium,30806.5,24128.88,0.476,0.0506,0.0605,0.34,,True,6
+EV-DEP-LCH-E,Events,Deployment & Integration,Deployment,Site Launch,Essential,1,G2,Volume,Aureon Site Launch Essential,127033.14,50456.8,0.1355,0.0702,0.05225,0.58,,True,1
+EV-DEP-LCH-P,Events,Deployment & Integration,Deployment,Site Launch,Professional,2,G2,Core,Aureon Site Launch Professional,162863.0,77009.77,0.1058,0.065,0.055,0.48,,True,2
+EV-DEP-LCH-X,Events,Deployment & Integration,Deployment,Site Launch,Premium,3,G2,Premium,Aureon Site Launch Premium,241037.24,139048.84,0.0656,0.0598,0.0605,0.34,,True,3
+EV-DEP-ROL-E,Events,Deployment & Integration,Deployment,Regional Rollout,Essential,1,G2,Volume,Aureon Regional Rollout Essential,136200.48,56060.12,0.1266,0.0702,0.05225,0.58,,True,4
+EV-DEP-ROL-P,Events,Deployment & Integration,Deployment,Regional Rollout,Professional,2,G2,Core,Aureon Regional Rollout Professional,174616.0,85561.84,0.0989,0.065,0.055,0.48,,True,5
+EV-DEP-ROL-X,Events,Deployment & Integration,Deployment,Regional Rollout,Premium,3,G2,Premium,Aureon Regional Rollout Premium,258431.68,154490.46,0.0613,0.0598,0.0605,0.34,,True,6
+EV-DEP-MIG-E,Events,Deployment & Integration,Integration,Migration Wave,Essential,1,G2,Volume,Aureon Migration Wave Essential,145367.82,61927.56,0.1177,0.0702,0.05225,0.58,,True,1
+EV-DEP-MIG-P,Events,Deployment & Integration,Integration,Migration Wave,Professional,2,G2,Core,Aureon Migration Wave Professional,186369.0,94517.04,0.092,0.065,0.055,0.48,,True,2
+EV-DEP-MIG-X,Events,Deployment & Integration,Integration,Migration Wave,Premium,3,G2,Premium,Aureon Migration Wave Premium,275826.12,170659.96,0.057,0.0598,0.0605,0.34,,True,3
+EV-DEP-COM-E,Events,Deployment & Integration,Integration,Commissioning Program,Essential,1,G1 Legacy,Harvest,Aureon Commissioning Program Essential,154535.16,98902.5,0.1089,0.0702,0.05225,0.58,EV-DEP-COM-E-NXT,True,4
+EV-DEP-COM-E-NXT,Events,Deployment & Integration,Integration,Commissioning Program,Essential,1,G3,Growth,Aureon Commissioning Program NextGen Essential,166897.97,75165.9,0.1219,0.0702,0.05225,0.6599999999999999,,False,5
+EV-DEP-COM-P,Events,Deployment & Integration,Integration,Commissioning Program,Professional,2,G2,Core,Aureon Commissioning Program Professional,198122.0,103875.36,0.0851,0.065,0.055,0.48,,True,6
+EV-DEP-COM-X,Events,Deployment & Integration,Integration,Commissioning Program,Premium,3,G2,Premium,Aureon Commissioning Program Premium,293220.56,187557.36,0.0527,0.0598,0.0605,0.34,,True,7
+EV-TRN-OPR-E,Events,Training & Enablement,Operational Training,Operator Academy,Essential,1,G1 Legacy,Harvest,Aureon Operator Academy Essential,79533.79,50901.63,0.2016,0.0702,0.05225,0.58,EV-TRN-OPR-E-NXT,True,1
+EV-TRN-OPR-E-NXT,Events,Training & Enablement,Operational Training,Operator Academy,Essential,1,G3,Growth,Aureon Operator Academy NextGen Essential,85896.5,38685.24,0.2258,0.0702,0.05225,0.6599999999999999,,False,2
+EV-TRN-OPR-P,Events,Training & Enablement,Operational Training,Operator Academy,Professional,2,G2,Core,Aureon Operator Academy Professional,101966.4,48214.81,0.1575,0.065,0.055,0.48,,True,3
+EV-TRN-OPR-X,Events,Training & Enablement,Operational Training,Operator Academy,Premium,3,G2,Premium,Aureon Operator Academy Premium,150910.27,87056.66,0.0977,0.0598,0.0605,0.34,,True,4
+EV-TRN-CRT-E,Events,Training & Enablement,Operational Training,Certification Program,Essential,1,G2,Volume,Aureon Certification Program Essential,85273.34,35098.51,0.1884,0.0702,0.05225,0.58,,True,5
+EV-TRN-CRT-P,Events,Training & Enablement,Operational Training,Certification Program,Professional,2,G2,Core,Aureon Certification Program Professional,109324.8,53569.15,0.1472,0.065,0.055,0.48,,True,6
+EV-TRN-CRT-X,Events,Training & Enablement,Operational Training,Certification Program,Premium,3,G2,Premium,Aureon Certification Program Premium,161800.7,96724.46,0.0913,0.0598,0.0605,0.34,,True,7
+EV-TRN-TEC-E,Events,Training & Enablement,Leadership Training,Technical Bootcamp,Essential,1,G2,Volume,Aureon Technical Bootcamp Essential,91012.9,38772.04,0.1752,0.0702,0.05225,0.58,,True,1
+EV-TRN-TEC-P,Events,Training & Enablement,Leadership Training,Technical Bootcamp,Professional,2,G2,Core,Aureon Technical Bootcamp Professional,116683.2,59175.88,0.1369,0.065,0.055,0.48,,True,2
+EV-TRN-TEC-X,Events,Training & Enablement,Leadership Training,Technical Bootcamp,Premium,3,G2,Premium,Aureon Technical Bootcamp Premium,172691.14,106847.98,0.0849,0.0598,0.0605,0.34,,True,3
+EV-TRN-EXE-E,Events,Training & Enablement,Leadership Training,Executive Workshop,Essential,1,G2,Volume,Aureon Executive Workshop Essential,96752.45,42610.94,0.162,0.0702,0.05225,0.58,,True,4
+EV-TRN-EXE-P,Events,Training & Enablement,Leadership Training,Executive Workshop,Professional,2,G2,Core,Aureon Executive Workshop Professional,124041.6,65035.01,0.1266,0.065,0.055,0.48,,True,5
+EV-TRN-EXE-X,Events,Training & Enablement,Leadership Training,Executive Workshop,Premium,3,G2,Premium,Aureon Executive Workshop Premium,183581.57,117427.22,0.0785,0.0598,0.0605,0.34,,True,6
+EV-EXP-PRD-E,Events,Customer Experience,Market Events,Product Launch,Essential,1,G2,Volume,Aureon Product Launch Essential,145811.95,57915.63,0.1134,0.0702,0.05225,0.58,,True,1
+EV-EXP-PRD-P,Events,Customer Experience,Market Events,Product Launch,Professional,2,G2,Core,Aureon Product Launch Professional,186938.4,88393.82,0.0886,0.065,0.055,0.48,,True,2
+EV-EXP-PRD-X,Events,Customer Experience,Market Events,Product Launch,Premium,3,G2,Premium,Aureon Product Launch Premium,276668.83,159603.89,0.0549,0.0598,0.0605,0.34,,True,3
+EV-EXP-FOR-E,Events,Customer Experience,Market Events,Innovation Forum,Essential,1,G2,Volume,Aureon Innovation Forum Essential,156334.46,64347.27,0.106,0.0702,0.05225,0.58,,True,4
+EV-EXP-FOR-P,Events,Customer Experience,Market Events,Innovation Forum,Professional,2,G2,Core,Aureon Innovation Forum Professional,200428.8,98210.11,0.0828,0.065,0.055,0.48,,True,5
+EV-EXP-FOR-X,Events,Customer Experience,Market Events,Innovation Forum,Premium,3,G2,Premium,Aureon Innovation Forum Premium,296634.62,177328.18,0.0513,0.0598,0.0605,0.34,,True,6
+EV-EXP-USR-E,Events,Customer Experience,Customer Events,User Conference,Essential,1,G2,Volume,Aureon User Conference Essential,166856.98,71082.07,0.0986,0.0702,0.05225,0.58,,True,1
+EV-EXP-USR-P,Events,Customer Experience,Customer Events,User Conference,Professional,2,G2,Core,Aureon User Conference Professional,213919.2,108489.12,0.077,0.065,0.055,0.48,,True,2
+EV-EXP-USR-X,Events,Customer Experience,Customer Events,User Conference,Premium,3,G2,Premium,Aureon User Conference Premium,316600.42,195887.96,0.0477,0.0598,0.0605,0.34,,True,3
+EV-EXP-DEM-E,Events,Customer Experience,Customer Events,Demonstration Center,Essential,1,G2,Volume,Aureon Demonstration Center Essential,177379.49,78120.06,0.0911,0.0702,0.05225,0.58,,True,4
+EV-EXP-DEM-P,Events,Customer Experience,Customer Events,Demonstration Center,Professional,2,G2,Core,Aureon Demonstration Center Professional,227409.6,119230.85,0.0712,0.065,0.055,0.48,,True,5
+EV-EXP-DEM-X,Events,Customer Experience,Customer Events,Demonstration Center,Premium,3,G2,Premium,Aureon Demonstration Center Premium,336566.21,215283.23,0.0441,0.0598,0.0605,0.34,,True,6
+EV-MNG-PRT-E,Events,Managed Programs,Partner Programs,Partner Summit,Essential,1,G2,Volume,Aureon Partner Summit Essential,101626.51,40365.44,0.1607,0.0702,0.05225,0.58,,True,1
+EV-MNG-PRT-P,Events,Managed Programs,Partner Programs,Partner Summit,Professional,2,G2,Core,Aureon Partner Summit Professional,130290.4,61607.82,0.1255,0.065,0.055,0.48,,True,2
+EV-MNG-PRT-X,Events,Managed Programs,Partner Programs,Partner Summit,Premium,3,G2,Premium,Aureon Partner Summit Premium,192829.79,111239.07,0.0778,0.0598,0.0605,0.34,,True,3
+EV-MNG-CUS-E,Events,Managed Programs,Partner Programs,Customer Council,Essential,1,G2,Volume,Aureon Customer Council Essential,108960.38,44848.09,0.1501,0.0702,0.05225,0.58,,True,4
+EV-MNG-CUS-P,Events,Managed Programs,Partner Programs,Customer Council,Professional,2,G2,Core,Aureon Customer Council Professional,139692.8,68449.47,0.1173,0.065,0.055,0.48,,True,5
+EV-MNG-CUS-X,Events,Managed Programs,Partner Programs,Customer Council,Premium,3,G2,Premium,Aureon Customer Council Premium,206745.34,123592.37,0.0727,0.0598,0.0605,0.34,,True,6
+EV-MNG-RDS-E,Events,Managed Programs,Field Programs,Regional Roadshow,Essential,1,G2,Volume,Aureon Regional Roadshow Essential,116294.26,49542.05,0.1396,0.0702,0.05225,0.58,,True,1
+EV-MNG-RDS-P,Events,Managed Programs,Field Programs,Regional Roadshow,Professional,2,G2,Core,Aureon Regional Roadshow Professional,149095.2,75613.63,0.1091,0.065,0.055,0.48,,True,2
+EV-MNG-RDS-X,Events,Managed Programs,Field Programs,Regional Roadshow,Premium,3,G2,Premium,Aureon Regional Roadshow Premium,220660.9,136527.97,0.0676,0.0598,0.0605,0.34,,True,3
+EV-MNG-CERT-E,Events,Managed Programs,Field Programs,Certification Roadshow,Essential,1,G2,Volume,Aureon Certification Roadshow Essential,123628.13,54447.31,0.1291,0.0702,0.05225,0.58,,True,4
+EV-MNG-CERT-P,Events,Managed Programs,Field Programs,Certification Roadshow,Professional,2,G2,Core,Aureon Certification Roadshow Professional,158497.6,83100.29,0.1009,0.065,0.055,0.48,,True,5
+EV-MNG-CERT-X,Events,Managed Programs,Field Programs,Certification Roadshow,Premium,3,G2,Premium,Aureon Certification Roadshow Premium,234576.45,150045.89,0.0625,0.0598,0.0605,0.34,,True,6
+SP-MOD-IO-E,Spare Parts,Control Modules,Electronic Boards,I/O Board,Essential,1,G1 Legacy,Harvest,Aureon I/O Board Essential,1278.35,741.44,8.76,0.081,0.03325,0.58,SP-MOD-IO-E-NXT,True,1
+SP-MOD-IO-E-NXT,Spare Parts,Control Modules,Electronic Boards,I/O Board,Essential,1,G3,Growth,Aureon I/O Board NextGen Essential,1380.62,563.5,9.8112,0.081,0.03325,0.6599999999999999,,False,2
+SP-MOD-IO-P,Spare Parts,Control Modules,Electronic Boards,I/O Board,Professional,2,G2,Core,Aureon I/O Board Professional,1638.91,743.33,6.8437,0.075,0.035,0.48,,True,3
+SP-MOD-IO-X,Spare Parts,Control Modules,Electronic Boards,I/O Board,Premium,3,G2,Premium,Aureon I/O Board Premium,2425.59,1342.15,4.2431,0.069,0.0385,0.34,,True,4
+SP-MOD-CPU-E,Spare Parts,Control Modules,Electronic Boards,Processor Board,Essential,1,G2,Volume,Aureon Processor Board Essential,1370.6,541.11,8.1869,0.081,0.03325,0.58,,True,5
+SP-MOD-CPU-P,Spare Parts,Control Modules,Electronic Boards,Processor Board,Professional,2,G2,Core,Aureon Processor Board Professional,1757.18,825.88,6.396,0.075,0.035,0.48,,True,6
+SP-MOD-CPU-X,Spare Parts,Control Modules,Electronic Boards,Processor Board,Premium,3,G2,Premium,Aureon Processor Board Premium,2600.63,1491.2,3.9655,0.069,0.0385,0.34,,True,7
+SP-MOD-PWR-E,Spare Parts,Control Modules,Power & Relay,Power Module,Essential,1,G2,Volume,Aureon Power Module Essential,1462.86,597.75,7.6138,0.081,0.03325,0.58,,True,1
+SP-MOD-PWR-P,Spare Parts,Control Modules,Power & Relay,Power Module,Professional,2,G2,Core,Aureon Power Module Professional,1875.46,912.32,5.9483,0.075,0.035,0.48,,True,2
+SP-MOD-PWR-X,Spare Parts,Control Modules,Power & Relay,Power Module,Premium,3,G2,Premium,Aureon Power Module Premium,2775.67,1647.28,3.6879,0.069,0.0385,0.34,,True,3
+SP-MOD-REL-E,Spare Parts,Control Modules,Power & Relay,Relay Module,Essential,1,G2,Volume,Aureon Relay Module Essential,1555.11,656.93,7.0407,0.081,0.03325,0.58,,True,4
+SP-MOD-REL-P,Spare Parts,Control Modules,Power & Relay,Relay Module,Professional,2,G2,Core,Aureon Relay Module Professional,1993.73,1002.65,5.5006,0.075,0.035,0.48,,True,5
+SP-MOD-REL-X,Spare Parts,Control Modules,Power & Relay,Relay Module,Premium,3,G2,Premium,Aureon Relay Module Premium,2950.72,1810.38,3.4103,0.069,0.0385,0.34,,True,6
+SP-KIT-PRE-E,Spare Parts,Maintenance Kits,Preventive Kits,Preventive Maintenance Kit,Essential,1,G2,Volume,Aureon Preventive Maintenance Kit Essential,818.94,312.0,15.0492,0.081,0.03325,0.58,,True,1
+SP-KIT-PRE-P,Spare Parts,Maintenance Kits,Preventive Kits,Preventive Maintenance Kit,Professional,2,G2,Core,Aureon Preventive Maintenance Kit Professional,1049.93,476.19,11.7572,0.075,0.035,0.48,,True,2
+SP-KIT-PRE-X,Spare Parts,Maintenance Kits,Preventive Kits,Preventive Maintenance Kit,Premium,3,G2,Premium,Aureon Preventive Maintenance Kit Premium,1553.89,859.82,7.2894,0.069,0.0385,0.34,,True,3
+SP-KIT-CAL-E,Spare Parts,Maintenance Kits,Preventive Kits,Calibration Kit,Essential,1,G2,Volume,Aureon Calibration Kit Essential,878.04,346.65,14.0646,0.081,0.03325,0.58,,True,4
+SP-KIT-CAL-P,Spare Parts,Maintenance Kits,Preventive Kits,Calibration Kit,Professional,2,G2,Core,Aureon Calibration Kit Professional,1125.7,529.08,10.988,0.075,0.035,0.48,,True,5
+SP-KIT-CAL-X,Spare Parts,Maintenance Kits,Preventive Kits,Calibration Kit,Premium,3,G2,Premium,Aureon Calibration Kit Premium,1666.03,955.3,6.8126,0.069,0.0385,0.34,,True,6
+SP-KIT-OVR-E,Spare Parts,Maintenance Kits,Overhaul Kits,Overhaul Kit,Essential,1,G2,Volume,Aureon Overhaul Kit Essential,937.14,382.93,13.0801,0.081,0.03325,0.58,,True,1
+SP-KIT-OVR-P,Spare Parts,Maintenance Kits,Overhaul Kits,Overhaul Kit,Professional,2,G2,Core,Aureon Overhaul Kit Professional,1201.46,584.45,10.2188,0.075,0.035,0.48,,True,2
+SP-KIT-OVR-X,Spare Parts,Maintenance Kits,Overhaul Kits,Overhaul Kit,Premium,3,G2,Premium,Aureon Overhaul Kit Premium,1778.17,1055.29,6.3357,0.069,0.0385,0.34,,True,3
+SP-KIT-SAF-E,Spare Parts,Maintenance Kits,Overhaul Kits,Safety Service Kit,Essential,1,G2,Volume,Aureon Safety Service Kit Essential,996.24,420.85,12.0956,0.081,0.03325,0.58,,True,4
+SP-KIT-SAF-P,Spare Parts,Maintenance Kits,Overhaul Kits,Safety Service Kit,Professional,2,G2,Core,Aureon Safety Service Kit Professional,1277.23,642.32,9.4497,0.075,0.035,0.48,,True,5
+SP-KIT-SAF-X,Spare Parts,Maintenance Kits,Overhaul Kits,Safety Service Kit,Premium,3,G2,Premium,Aureon Safety Service Kit Premium,1890.3,1159.77,5.8588,0.069,0.0385,0.34,,True,6
+SP-INT-NET-E,Spare Parts,Interface Components,Network Interfaces,Network Interface,Essential,1,G2,Volume,Aureon Network Interface Essential,938.79,357.66,11.7923,0.081,0.03325,0.58,,True,1
+SP-INT-NET-P,Spare Parts,Interface Components,Network Interfaces,Network Interface,Professional,2,G2,Core,Aureon Network Interface Professional,1203.58,545.88,9.2127,0.075,0.035,0.48,,True,2
+SP-INT-NET-X,Spare Parts,Interface Components,Network Interfaces,Network Interface,Premium,3,G2,Premium,Aureon Network Interface Premium,1781.29,985.64,5.7119,0.069,0.0385,0.34,,True,3
+SP-INT-USB-E,Spare Parts,Interface Components,Network Interfaces,Service Interface,Essential,1,G2,Volume,Aureon Service Interface Essential,1006.54,397.38,11.0208,0.081,0.03325,0.58,,True,4
+SP-INT-USB-P,Spare Parts,Interface Components,Network Interfaces,Service Interface,Professional,2,G2,Core,Aureon Service Interface Professional,1290.43,606.5,8.61,0.075,0.035,0.48,,True,5
+SP-INT-USB-X,Spare Parts,Interface Components,Network Interfaces,Service Interface,Premium,3,G2,Premium,Aureon Service Interface Premium,1909.84,1095.1,5.3382,0.069,0.0385,0.34,,True,6
+SP-INT-DSP-E,Spare Parts,Interface Components,User Interfaces,Display Interface,Essential,1,G2,Volume,Aureon Display Interface Essential,1074.28,438.97,10.2493,0.081,0.03325,0.58,,True,1
+SP-INT-DSP-P,Spare Parts,Interface Components,User Interfaces,Display Interface,Professional,2,G2,Core,Aureon Display Interface Professional,1377.29,669.98,8.0073,0.075,0.035,0.48,,True,2
+SP-INT-DSP-X,Spare Parts,Interface Components,User Interfaces,Display Interface,Premium,3,G2,Premium,Aureon Display Interface Premium,2038.39,1209.72,4.9645,0.069,0.0385,0.34,,True,3
+SP-INT-CNX-E,Spare Parts,Interface Components,User Interfaces,Connector Set,Essential,1,G1 Legacy,Harvest,Aureon Connector Set Essential,1142.03,662.38,9.4779,0.081,0.03325,0.58,SP-INT-CNX-E-NXT,True,4
+SP-INT-CNX-E-NXT,Spare Parts,Interface Components,User Interfaces,Connector Set,Essential,1,G3,Growth,Aureon Connector Set NextGen Essential,1233.39,503.41,10.6152,0.081,0.03325,0.6599999999999999,,False,5
+SP-INT-CNX-P,Spare Parts,Interface Components,User Interfaces,Connector Set,Professional,2,G2,Core,Aureon Connector Set Professional,1464.14,736.32,7.4046,0.075,0.035,0.48,,True,6
+SP-INT-CNX-X,Spare Parts,Interface Components,User Interfaces,Connector Set,Premium,3,G2,Premium,Aureon Connector Set Premium,2166.93,1329.5,4.5909,0.069,0.0385,0.34,,True,7
+SP-MEC-DRV-E,Spare Parts,Mechanical Parts,Drive Components,Drive Assembly,Essential,1,G2,Volume,Aureon Drive Assembly Essential,1048.65,399.52,10.3323,0.081,0.03325,0.58,,True,1
+SP-MEC-DRV-P,Spare Parts,Mechanical Parts,Drive Components,Drive Assembly,Professional,2,G2,Core,Aureon Drive Assembly Professional,1344.42,609.76,8.0721,0.075,0.035,0.48,,True,2
+SP-MEC-DRV-X,Spare Parts,Mechanical Parts,Drive Components,Drive Assembly,Premium,3,G2,Premium,Aureon Drive Assembly Premium,1989.74,1100.99,5.0047,0.069,0.0385,0.34,,True,3
+SP-MEC-FAN-E,Spare Parts,Mechanical Parts,Drive Components,Cooling Fan,Essential,1,G2,Volume,Aureon Cooling Fan Essential,1124.32,443.88,9.6563,0.081,0.03325,0.58,,True,4
+SP-MEC-FAN-P,Spare Parts,Mechanical Parts,Drive Components,Cooling Fan,Professional,2,G2,Core,Aureon Cooling Fan Professional,1441.44,677.48,7.544,0.075,0.035,0.48,,True,5
+SP-MEC-FAN-X,Spare Parts,Mechanical Parts,Drive Components,Cooling Fan,Premium,3,G2,Premium,Aureon Cooling Fan Premium,2133.33,1223.25,4.6773,0.069,0.0385,0.34,,True,6
+SP-MEC-HSG-E,Spare Parts,Mechanical Parts,Enclosures,Housing Kit,Essential,1,G2,Volume,Aureon Housing Kit Essential,1200.0,490.34,8.9804,0.081,0.03325,0.58,,True,1
+SP-MEC-HSG-P,Spare Parts,Mechanical Parts,Enclosures,Housing Kit,Professional,2,G2,Core,Aureon Housing Kit Professional,1538.46,748.38,7.0159,0.075,0.035,0.48,,True,2
+SP-MEC-HSG-X,Spare Parts,Mechanical Parts,Enclosures,Housing Kit,Premium,3,G2,Premium,Aureon Housing Kit Premium,2276.92,1351.28,4.3499,0.069,0.0385,0.34,,True,3
+SP-MEC-COL-E,Spare Parts,Mechanical Parts,Enclosures,Cooling Assembly,Essential,1,G2,Volume,Aureon Cooling Assembly Essential,1275.67,538.89,8.3044,0.081,0.03325,0.58,,True,4
+SP-MEC-COL-P,Spare Parts,Mechanical Parts,Enclosures,Cooling Assembly,Professional,2,G2,Core,Aureon Cooling Assembly Professional,1635.48,822.48,6.4878,0.075,0.035,0.48,,True,5
+SP-MEC-COL-X,Spare Parts,Mechanical Parts,Enclosures,Cooling Assembly,Premium,3,G2,Premium,Aureon Cooling Assembly Premium,2420.51,1485.08,4.0225,0.069,0.0385,0.34,,True,6
+SP-SEC-SEM-E,Spare Parts,Security Components,Secure Electronics,Secure Element,Essential,1,G2,Volume,Aureon Secure Element Essential,1198.45,456.59,8.3107,0.081,0.03325,0.58,,True,1
+SP-SEC-SEM-P,Spare Parts,Security Components,Secure Electronics,Secure Element,Professional,2,G2,Core,Aureon Secure Element Professional,1536.48,696.87,6.4928,0.075,0.035,0.48,,True,2
+SP-SEC-SEM-X,Spare Parts,Security Components,Secure Electronics,Secure Element,Premium,3,G2,Premium,Aureon Secure Element Premium,2273.99,1258.27,4.0255,0.069,0.0385,0.34,,True,3
+SP-SEC-AUT-E,Spare Parts,Security Components,Secure Electronics,Authentication Module,Essential,1,G2,Volume,Aureon Authentication Module Essential,1284.94,507.29,7.767,0.081,0.03325,0.58,,True,4
+SP-SEC-AUT-P,Spare Parts,Security Components,Secure Electronics,Authentication Module,Professional,2,G2,Core,Aureon Authentication Module Professional,1647.36,774.26,6.068,0.075,0.035,0.48,,True,5
+SP-SEC-AUT-X,Spare Parts,Security Components,Secure Electronics,Authentication Module,Premium,3,G2,Premium,Aureon Authentication Module Premium,2438.09,1398.0,3.7622,0.069,0.0385,0.34,,True,6
+SP-SEC-KPD-E,Spare Parts,Security Components,Input Devices,Secure Keypad,Essential,1,G2,Volume,Aureon Secure Keypad Essential,1371.43,560.39,7.2233,0.081,0.03325,0.58,,True,1
+SP-SEC-KPD-P,Spare Parts,Security Components,Input Devices,Secure Keypad,Professional,2,G2,Core,Aureon Secure Keypad Professional,1758.24,855.3,5.6432,0.075,0.035,0.48,,True,2
+SP-SEC-KPD-X,Spare Parts,Security Components,Input Devices,Secure Keypad,Premium,3,G2,Premium,Aureon Secure Keypad Premium,2602.2,1544.32,3.4988,0.069,0.0385,0.34,,True,3
+SP-SEC-SNR-E,Spare Parts,Security Components,Input Devices,Tamper Sensor,Essential,1,G2,Volume,Aureon Tamper Sensor Essential,1457.91,615.88,6.6797,0.081,0.03325,0.58,,True,4
+SP-SEC-SNR-P,Spare Parts,Security Components,Input Devices,Tamper Sensor,Professional,2,G2,Core,Aureon Tamper Sensor Professional,1869.12,939.98,5.2185,0.075,0.035,0.48,,True,5
+SP-SEC-SNR-X,Spare Parts,Security Components,Input Devices,Tamper Sensor,Premium,3,G2,Premium,Aureon Tamper Sensor Premium,2766.3,1697.23,3.2355,0.069,0.0385,0.34,,True,6
+SP-CON-FIL-E,Spare Parts,Consumables,Routine Consumables,Filter Pack,Essential,1,G2,Volume,Aureon Filter Pack Essential,459.41,175.03,18.8676,0.081,0.03325,0.58,,True,1
+SP-CON-FIL-P,Spare Parts,Consumables,Routine Consumables,Filter Pack,Professional,2,G2,Core,Aureon Filter Pack Professional,588.98,267.13,14.7403,0.075,0.035,0.48,,True,2
+SP-CON-FIL-X,Spare Parts,Consumables,Routine Consumables,Filter Pack,Premium,3,G2,Premium,Aureon Filter Pack Premium,871.7,482.34,9.139,0.069,0.0385,0.34,,True,3
+SP-CON-SEL-E,Spare Parts,Consumables,Routine Consumables,Seal Pack,Essential,1,G2,Volume,Aureon Seal Pack Essential,492.56,194.46,17.6333,0.081,0.03325,0.58,,True,4
+SP-CON-SEL-P,Spare Parts,Consumables,Routine Consumables,Seal Pack,Professional,2,G2,Core,Aureon Seal Pack Professional,631.49,296.8,13.776,0.075,0.035,0.48,,True,5
+SP-CON-SEL-X,Spare Parts,Consumables,Routine Consumables,Seal Pack,Premium,3,G2,Premium,Aureon Seal Pack Premium,934.6,535.9,8.5411,0.069,0.0385,0.34,,True,6
+SP-CON-BAT-E,Spare Parts,Consumables,Power & Service,Battery Pack,Essential,1,G2,Volume,Aureon Battery Pack Essential,525.71,214.82,16.399,0.081,0.03325,0.58,,True,1
+SP-CON-BAT-P,Spare Parts,Consumables,Power & Service,Battery Pack,Professional,2,G2,Core,Aureon Battery Pack Professional,673.99,327.86,12.8117,0.075,0.035,0.48,,True,2
+SP-CON-BAT-X,Spare Parts,Consumables,Power & Service,Battery Pack,Premium,3,G2,Premium,Aureon Battery Pack Premium,997.51,591.99,7.9432,0.069,0.0385,0.34,,True,3
+SP-CON-LUB-E,Spare Parts,Consumables,Power & Service,Service Lubricant Pack,Essential,1,G2,Volume,Aureon Service Lubricant Pack Essential,558.87,236.09,15.1646,0.081,0.03325,0.58,,True,4
+SP-CON-LUB-P,Spare Parts,Consumables,Power & Service,Service Lubricant Pack,Professional,2,G2,Core,Aureon Service Lubricant Pack Professional,716.5,360.33,11.8474,0.075,0.035,0.48,,True,5
+SP-CON-LUB-X,Spare Parts,Consumables,Power & Service,Service Lubricant Pack,Premium,3,G2,Premium,Aureon Service Lubricant Pack Premium,1060.41,650.6,7.3454,0.069,0.0385,0.34,,True,6

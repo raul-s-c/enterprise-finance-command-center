@@ -8,5 +8,8 @@
   "consolidation_revenue_max_gap": 0.0,
   "consolidation_ebit_max_gap": 0.0,
   "passed": true,
-  "forecast_lookahead_errors": 0
+  "forecast_lookahead_errors": 0,
+  "catalog_product_count": 236,
+  "catalog_family_count": 19,
+  "sold_product_count": 232
 }
