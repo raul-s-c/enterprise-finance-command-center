@@ -6,7 +6,7 @@ from enterprise_finance.accounting import balance_sheet, build_accounting, valid
 from enterprise_finance.engine import build, load_config, month_range
 from enterprise_finance.forecasting import build_forecast_vintages
 from enterprise_finance.macro import build_macro
-from enterprise_finance.model import simulate_operations
+from enterprise_finance.model import product_master, simulate_operations
 from enterprise_finance.reporting import group_balance_sheet
 
 
@@ -19,6 +19,18 @@ def _fixture(periods=12):
     return config, months, macro, simulation, accounting
 
 
+def test_product_catalog_has_finance_grade_hierarchy():
+    products = product_master()
+    required = {"division", "product_family", "product_subfamily", "product_type", "quality_tier", "generation", "strategic_role"}
+    assert required.issubset(products.columns)
+    assert len(products) >= 200
+    assert products.product.nunique() == len(products)
+    assert products.quality_tier.nunique() == 3
+    counts = products.groupby("division").product.nunique().to_dict()
+    assert all(counts.get(division, 0) >= 45 for division in ["Software", "Hardware", "Events", "Spare Parts"])
+    assert products.groupby("division").product_family.nunique().min() >= 4
+
+
 def test_deterministic_operations():
     config = load_config()
     months = month_range("2026-07", 8)
@@ -27,6 +39,7 @@ def test_deterministic_operations():
     b = simulate_operations(config, months, macro)
     assert a.operations.equals(b.operations)
     assert a.portfolio_events.equals(b.portfolio_events)
+    assert a.operations.product.nunique() >= 150
 
 
 def test_every_journal_balances():
@@ -62,3 +75,6 @@ def test_full_pipeline(tmp_path, monkeypatch):
     assert result.validation_passed
     assert (tmp_path / "web" / "data" / "dashboard.json").exists()
     assert (tmp_path / "data" / "processed" / "journal.csv.gz").exists()
+    assert (tmp_path / "data" / "processed" / "operational.csv.gz").exists()
+    products = pd.read_csv(tmp_path / "data" / "processed" / "products.csv")
+    assert len(products) >= 200
