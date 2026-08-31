@@ -9,6 +9,7 @@ from enterprise_finance.forecasting import build_forecast_vintages
 from enterprise_finance.macro import build_macro
 from enterprise_finance.model import product_master, simulate_operations
 from enterprise_finance.reporting import group_balance_sheet
+from enterprise_finance.working_capital_detail import build_ar_aging, build_inventory_aging, validate_working_capital_schedules
 
 
 def _fixture(periods=12):
@@ -60,6 +61,22 @@ def test_balance_sheet_and_intercompany_reconcile():
     assert (ic.ar - ic.ap).abs().max() <= 0.05
 
 
+def test_working_capital_schedules_reconcile_to_gl():
+    config, _, _, simulation, accounting = _fixture(8)
+    ar = build_ar_aging(accounting.journal, simulation.customers, config)
+    inventory = build_inventory_aging(accounting.journal, simulation.operations, simulation.products, config)
+    checks = validate_working_capital_schedules(accounting.journal, ar, inventory)
+    assert checks["passed"]
+    assert checks["ar_subledger_max_gap"] <= 0.05
+    assert checks["inventory_schedule_max_gap"] <= 0.05
+    assert not ar.empty
+    assert ar.total_ar.sum() > 0
+    assert not inventory.empty
+    assert inventory.inventory_value.sum() > 0
+    assert {"current", "overdue_1_30", "overdue_31_60", "overdue_61_90", "overdue_90_plus"}.issubset(ar.columns)
+    assert {"age_0_30", "age_31_60", "age_61_90", "age_91_180", "age_180_plus"}.issubset(inventory.columns)
+
+
 def test_forecasts_never_use_future_vintage_month():
     config, months, _, simulation, _ = _fixture(8)
     fc = build_forecast_vintages(config, simulation.operations, months)
@@ -83,5 +100,7 @@ def test_full_pipeline(tmp_path, monkeypatch):
     assert (tmp_path / "data" / "runtime" / "operational.csv.gz").exists()
     assert (tmp_path / "data" / "processed" / "journal_sample.csv").exists()
     assert (tmp_path / "data" / "processed" / "operational_sample.csv").exists()
+    assert (tmp_path / "data" / "processed" / "ar_aging.csv").exists()
+    assert (tmp_path / "data" / "processed" / "inventory_aging.csv").exists()
     products = pd.read_csv(tmp_path / "data" / "processed" / "products.csv")
     assert len(products) >= 200
