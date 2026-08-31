@@ -8,6 +8,13 @@ from enterprise_finance.engine import build, load_config, month_range
 from enterprise_finance.forecasting import build_forecast_vintages
 from enterprise_finance.macro import build_macro
 from enterprise_finance.model import product_master, simulate_operations
+from enterprise_finance.operating_schedules import (
+    events_backlog_schedule,
+    hardware_factory_schedule,
+    software_subscription_schedule,
+    spare_parts_schedule,
+    validate_operating_schedules,
+)
 from enterprise_finance.reporting import group_balance_sheet
 from enterprise_finance.working_capital_detail import build_ar_aging, build_inventory_aging, validate_working_capital_schedules
 
@@ -77,6 +84,30 @@ def test_working_capital_schedules_reconcile_to_gl():
     assert {"age_0_30", "age_31_60", "age_61_90", "age_91_180", "age_180_plus"}.issubset(inventory.columns)
 
 
+def test_divisional_operating_schedules_reconcile_and_roll_forward():
+    config, _, _, simulation, accounting = _fixture(8)
+    inventory = build_inventory_aging(accounting.journal, simulation.operations, simulation.products, config)
+    sw_detail, sw_summary = software_subscription_schedule(simulation.operations, simulation.products)
+    events = events_backlog_schedule(simulation.operations, simulation.products)
+    factory_econ, hardware_mix = hardware_factory_schedule(simulation.operations, simulation.products, accounting.factory, config)
+    spare = spare_parts_schedule(simulation.operations, inventory)
+    checks = validate_operating_schedules(simulation.operations, sw_detail, sw_summary, events, factory_econ, spare)
+    assert checks["passed"]
+    assert checks["software_revenue_reconciliation_max_gap"] <= 0.05
+    assert checks["software_arr_rollforward_max_gap"] <= 0.05
+    assert checks["events_backlog_rollforward_max_gap"] <= 0.05
+    assert not sw_summary.empty
+    assert sw_summary.arr.max() > 0
+    assert sw_summary.nrr.max() > 0
+    assert not events.empty
+    assert events.ending_backlog.min() >= -0.01
+    assert not factory_econ.empty
+    assert factory_econ.under_absorption.min() >= -0.01
+    assert not hardware_mix.empty
+    assert not spare.empty
+    assert spare.ending_installed_base.max() > 0
+
+
 def test_forecasts_never_use_future_vintage_month():
     config, months, _, simulation, _ = _fixture(8)
     fc = build_forecast_vintages(config, simulation.operations, months)
@@ -102,5 +133,10 @@ def test_full_pipeline(tmp_path, monkeypatch):
     assert (tmp_path / "data" / "processed" / "operational_sample.csv").exists()
     assert (tmp_path / "data" / "processed" / "ar_aging.csv").exists()
     assert (tmp_path / "data" / "processed" / "inventory_aging.csv").exists()
+    assert (tmp_path / "data" / "processed" / "software_subscription_summary.csv").exists()
+    assert (tmp_path / "data" / "processed" / "events_backlog.csv").exists()
+    assert (tmp_path / "data" / "processed" / "hardware_factory_economics.csv").exists()
+    assert (tmp_path / "data" / "processed" / "hardware_production_mix.csv").exists()
+    assert (tmp_path / "data" / "processed" / "spare_parts_economics.csv").exists()
     products = pd.read_csv(tmp_path / "data" / "processed" / "products.csv")
     assert len(products) >= 200

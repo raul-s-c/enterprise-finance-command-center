@@ -12,6 +12,13 @@ from .accounting import build_accounting, balance_sheet, cash_flow, chart_of_acc
 from .forecasting import build_forecast_vintages, forecast_accuracy, latest_forecast
 from .macro import build_macro, source_manifest
 from .model import simulate_operations
+from .operating_schedules import (
+    events_backlog_schedule,
+    hardware_factory_schedule,
+    software_subscription_schedule,
+    spare_parts_schedule,
+    validate_operating_schedules,
+)
 from .reporting import consolidation_bridge, group_balance_sheet, management_commentary, management_pnl, price_volume_mix, profitability, validate_all, working_capital
 from .working_capital_detail import (
     ar_aging_summary,
@@ -109,7 +116,48 @@ def _inventory_family_summary(inventory_aging: pd.DataFrame, end_month: str) -> 
     return out.fillna(0.0)
 
 
-def _dashboard_payload(*, end_month: str, management: pd.DataFrame, group_bs: pd.DataFrame, cf: pd.DataFrame, wc: pd.DataFrame, ar_aging: pd.DataFrame, inventory_aging: pd.DataFrame, latest_fc: pd.DataFrame, product_profit: pd.DataFrame, customer_profit: pd.DataFrame, products: pd.DataFrame, pvm: pd.DataFrame, intercompany: pd.DataFrame, factory: pd.DataFrame, capex: pd.DataFrame, portfolio_events: pd.DataFrame, forecast_acc: pd.DataFrame, commentary: list[dict], checks: dict, sources: dict) -> dict:
+def _group_software_summary(software_summary: pd.DataFrame) -> pd.DataFrame:
+    if software_summary.empty:
+        return pd.DataFrame()
+    out = software_summary.groupby("month", as_index=False).agg(
+        revenue=("revenue", "sum"),
+        services_revenue=("services_revenue", "sum"),
+        opening_mrr=("opening_mrr", "sum"),
+        ending_mrr=("ending_mrr", "sum"),
+        new_mrr=("new_mrr", "sum"),
+        expansion_mrr=("expansion_mrr", "sum"),
+        contraction_mrr=("contraction_mrr", "sum"),
+        churn_mrr=("churn_mrr", "sum"),
+        arr=("arr", "sum"),
+        new_arr=("new_arr", "sum"),
+        expansion_arr=("expansion_arr", "sum"),
+        contraction_arr=("contraction_arr", "sum"),
+        churn_arr=("churn_arr", "sum"),
+    )
+    out["recurring_revenue"] = out.ending_mrr
+    out["recurring_mix"] = out.recurring_revenue / out.revenue.replace(0, pd.NA)
+    out["nrr"] = (out.opening_mrr + out.expansion_mrr - out.contraction_mrr - out.churn_mrr) / out.opening_mrr.replace(0, pd.NA)
+    out["grr"] = (out.opening_mrr - out.contraction_mrr - out.churn_mrr) / out.opening_mrr.replace(0, pd.NA)
+    return out.fillna(0.0)
+
+
+def _group_events_summary(events: pd.DataFrame) -> pd.DataFrame:
+    if events.empty:
+        return pd.DataFrame()
+    out = events.groupby("month", as_index=False).agg(
+        opening_backlog=("opening_backlog", "sum"),
+        bookings=("bookings", "sum"),
+        recognized_revenue=("recognized_revenue", "sum"),
+        ending_backlog=("ending_backlog", "sum"),
+        project_units=("project_units", "sum"),
+    )
+    out["book_to_bill"] = out.bookings / out.recognized_revenue.replace(0, pd.NA)
+    trailing = out.recognized_revenue.rolling(3, min_periods=1).mean()
+    out["backlog_coverage_months"] = out.ending_backlog / trailing.replace(0, pd.NA)
+    return out.fillna(0.0)
+
+
+def _dashboard_payload(*, end_month: str, management: pd.DataFrame, group_bs: pd.DataFrame, cf: pd.DataFrame, wc: pd.DataFrame, ar_aging: pd.DataFrame, inventory_aging: pd.DataFrame, software_detail: pd.DataFrame, software_summary: pd.DataFrame, events_schedule: pd.DataFrame, factory_economics: pd.DataFrame, hardware_mix: pd.DataFrame, spare_parts_economics: pd.DataFrame, latest_fc: pd.DataFrame, product_profit: pd.DataFrame, customer_profit: pd.DataFrame, products: pd.DataFrame, pvm: pd.DataFrame, intercompany: pd.DataFrame, factory: pd.DataFrame, capex: pd.DataFrame, portfolio_events: pd.DataFrame, forecast_acc: pd.DataFrame, commentary: list[dict], checks: dict, sources: dict) -> dict:
     monthly = management.groupby("month", as_index=False).agg(
         revenue=("revenue", "sum"), marginal_contribution=("marginal_contribution", "sum"), gross_profit=("gross_profit", "sum"),
         opex=("opex", "sum"), depreciation=("depreciation", "sum"), ebit=("ebit", "sum"), net_income=("net_income", "sum"),
@@ -134,13 +182,15 @@ def _dashboard_payload(*, end_month: str, management: pd.DataFrame, group_bs: pd
     latest_ar = ar_aging[ar_aging.month.eq(end_month)].sort_values(["overdue_ar", "total_ar"], ascending=False).head(50) if not ar_aging.empty else pd.DataFrame()
     latest_inventory = inventory_aging[inventory_aging.month.eq(end_month)].sort_values(["obsolescence_risk_value", "slow_moving_value", "inventory_value"], ascending=False).head(80) if not inventory_aging.empty else pd.DataFrame()
     inv_family = _inventory_family_summary(inventory_aging, end_month)
+    sw_group = _group_software_summary(software_summary)
+    evt_group = _group_events_summary(events_schedule)
 
     return {
         "meta": {
             "company": "Aureon Systems Group",
             "end_month": end_month,
             "currency": "EUR",
-            "version": "0.4.0",
+            "version": "0.5.0",
             "catalog_products": int(len(products)),
             "product_families": int(products[["division", "product_family"]].drop_duplicates().shape[0]),
         },
@@ -153,6 +203,14 @@ def _dashboard_payload(*, end_month: str, management: pd.DataFrame, group_bs: pd
         "inventory_aging_summary": _records(inv_summary),
         "inventory_sku_aging": _records(latest_inventory),
         "inventory_family_aging": _records(inv_family.sort_values(["division", "inventory_value"], ascending=[True, False])) if not inv_family.empty else [],
+        "software_summary": _records(sw_group),
+        "software_entity_summary": _records(software_summary[software_summary.month >= str(pd.Period(end_month, freq="M") - 11)]),
+        "software_subscription_detail": _records(software_detail[software_detail.month.eq(end_month)].sort_values("arr", ascending=False).head(80)) if not software_detail.empty else [],
+        "events_summary": _records(evt_group),
+        "events_backlog_detail": _records(events_schedule[events_schedule.month.eq(end_month)].sort_values("ending_backlog", ascending=False)) if not events_schedule.empty else [],
+        "hardware_factory_economics": _records(factory_economics[factory_economics.month >= str(pd.Period(end_month, freq="M") - 11)]),
+        "hardware_mix": _records(hardware_mix[hardware_mix.month.eq(end_month)].sort_values(["source_factory", "units"], ascending=[True, False])) if not hardware_mix.empty else [],
+        "spare_parts_economics": _records(spare_parts_economics[spare_parts_economics.month >= str(pd.Period(end_month, freq="M") - 23)]),
         "cash_flow": _records(cf_group),
         "cash_flow_detail": _records(cf),
         "balance_sheet": _records(group_bs),
@@ -194,6 +252,11 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     ar_aging = build_ar_aging(accounting.journal, simulation.customers, config)
     inventory_aging = build_inventory_aging(accounting.journal, simulation.operations, simulation.products, config)
 
+    software_detail, software_summary = software_subscription_schedule(simulation.operations, simulation.products)
+    events_schedule = events_backlog_schedule(simulation.operations, simulation.products)
+    factory_economics, hardware_mix = hardware_factory_schedule(simulation.operations, simulation.products, accounting.factory, config)
+    spare_parts_economics = spare_parts_schedule(simulation.operations, inventory_aging)
+
     product_profit, customer_profit = profitability(simulation.operations, end_month)
     hierarchy_cols = ["product", "name", "product_family", "product_subfamily", "product_type", "quality_tier", "quality_score", "generation", "strategic_role"]
     product_profit = product_profit.merge(simulation.products[hierarchy_cols], on="product", how="left")
@@ -208,13 +271,20 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
 
     checks = validate_all(accounting.journal, legal_bs, group_bs, cf, bridge)
     schedule_checks = validate_working_capital_schedules(accounting.journal, ar_aging, inventory_aging)
+    operating_checks = validate_operating_schedules(
+        simulation.operations, software_detail, software_summary, events_schedule, factory_economics, spare_parts_economics
+    )
     checks.update({k: v for k, v in schedule_checks.items() if k != "passed"})
+    checks.update({k: v for k, v in operating_checks.items() if k != "passed"})
     lookahead_errors = int((pd.PeriodIndex(forecasts.month, freq="M") <= pd.PeriodIndex(forecasts.vintage, freq="M")).sum()) if not forecasts.empty else 0
     checks["forecast_lookahead_errors"] = lookahead_errors
     checks["catalog_product_count"] = int(len(simulation.products))
     checks["catalog_family_count"] = int(simulation.products[["division", "product_family"]].drop_duplicates().shape[0])
     checks["sold_product_count"] = int(simulation.operations["product"].nunique())
-    checks["passed"] = bool(checks["passed"] and schedule_checks["passed"] and lookahead_errors == 0 and checks["catalog_product_count"] >= 200 and checks["sold_product_count"] >= 150)
+    checks["passed"] = bool(
+        checks["passed"] and schedule_checks["passed"] and operating_checks["passed"]
+        and lookahead_errors == 0 and checks["catalog_product_count"] >= 200 and checks["sold_product_count"] >= 150
+    )
     if not checks["passed"]:
         raise RuntimeError(f"Financial controls failed: {checks}")
 
@@ -247,6 +317,11 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     _write_csv(wc, out / "working_capital.csv")
     _write_csv(ar_aging, out / "ar_aging.csv")
     _write_csv(inventory_aging, out / "inventory_aging.csv")
+    _write_csv(software_summary, out / "software_subscription_summary.csv")
+    _write_csv(events_schedule, out / "events_backlog.csv")
+    _write_csv(factory_economics, out / "hardware_factory_economics.csv")
+    _write_csv(hardware_mix, out / "hardware_production_mix.csv")
+    _write_csv(spare_parts_economics, out / "spare_parts_economics.csv")
     _write_csv(accounting.intercompany, out / "intercompany.csv")
     _write_csv(accounting.factory, out / "factory.csv")
     _write_csv(accounting.capex, out / "capex.csv")
@@ -266,8 +341,10 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
 
     payload = _dashboard_payload(
         end_month=end_month, management=management, group_bs=group_bs, cf=cf, wc=wc,
-        ar_aging=ar_aging, inventory_aging=inventory_aging, latest_fc=latest_fc,
-        product_profit=product_profit, customer_profit=customer_profit, products=simulation.products, pvm=pvm,
+        ar_aging=ar_aging, inventory_aging=inventory_aging,
+        software_detail=software_detail, software_summary=software_summary, events_schedule=events_schedule,
+        factory_economics=factory_economics, hardware_mix=hardware_mix, spare_parts_economics=spare_parts_economics,
+        latest_fc=latest_fc, product_profit=product_profit, customer_profit=customer_profit, products=simulation.products, pvm=pvm,
         intercompany=accounting.intercompany, factory=accounting.factory, capex=accounting.capex,
         portfolio_events=simulation.portfolio_events, forecast_acc=accuracy, commentary=commentary, checks=checks, sources=sources,
     )
@@ -278,6 +355,11 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
 
     latest_ar = ar_aging[ar_aging.month.eq(end_month)] if not ar_aging.empty else pd.DataFrame()
     latest_inv = inventory_aging[inventory_aging.month.eq(end_month)] if not inventory_aging.empty else pd.DataFrame()
+    latest_sw = _group_software_summary(software_summary)
+    latest_sw = latest_sw[latest_sw.month.eq(end_month)] if not latest_sw.empty else pd.DataFrame()
+    latest_evt = _group_events_summary(events_schedule)
+    latest_evt = latest_evt[latest_evt.month.eq(end_month)] if not latest_evt.empty else pd.DataFrame()
+    latest_sp = spare_parts_economics[spare_parts_economics.month.eq(end_month)] if not spare_parts_economics.empty else pd.DataFrame()
     manifest = {
         "end_month": end_month,
         "actual_months": actual_months,
@@ -291,8 +373,15 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
         "portfolio_events": len(simulation.portfolio_events),
         "ar_aging_rows": len(ar_aging),
         "inventory_aging_rows": len(inventory_aging),
+        "software_schedule_rows": len(software_detail),
+        "events_backlog_rows": len(events_schedule),
+        "hardware_factory_rows": len(factory_economics),
+        "spare_parts_schedule_rows": len(spare_parts_economics),
         "latest_overdue_ar": round(float(latest_ar.overdue_ar.sum()), 2) if not latest_ar.empty else 0.0,
         "latest_slow_moving_inventory": round(float(latest_inv.slow_moving_value.sum()), 2) if not latest_inv.empty else 0.0,
+        "latest_software_arr": round(float(latest_sw.arr.sum()), 2) if not latest_sw.empty else 0.0,
+        "latest_events_backlog": round(float(latest_evt.ending_backlog.sum()), 2) if not latest_evt.empty else 0.0,
+        "latest_spare_parts_installed_base": round(float(latest_sp.ending_installed_base.sum()), 2) if not latest_sp.empty else 0.0,
         "detail_retention": "full transaction and journal detail is generated reproducibly in data/runtime and not committed to git",
         "validation": checks,
     }
