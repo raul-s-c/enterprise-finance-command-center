@@ -43,17 +43,45 @@ CFO analytics
 
 P&L, balance sheet, cash flow and working capital are outputs of the same economic and accounting system. They are not generated independently.
 
-## Current release: v0.2
+## Current release: v0.3
 
-The current finance engine includes:
+Version 0.3 adds a finance-grade product hierarchy and a materially larger commercial catalog while retaining the connected finance architecture introduced in v0.2.
+
+The synthetic catalog now contains more than 200 product references across four asymmetric divisions. Each SKU belongs to a hierarchy:
+
+```text
+Division
+  -> Product Family
+      -> Product Subfamily
+          -> Product Type
+              -> Quality Tier
+                  -> SKU / Generation
+```
+
+Each product type normally has Essential, Professional and Premium commercial tiers. Quality tier changes price, cost, expected demand, selling-cost intensity and customer penetration.
+
+The four catalogs are intentionally different:
+
+- Software: Platform, Security, Analytics and Automation
+- Hardware: Control Systems, Edge Appliances, Terminals, Network Devices and Sensors & Readers
+- Events & Projects: Deployment & Integration, Training & Enablement, Customer Experience and Managed Programs
+- Spare Parts: Control Modules, Maintenance Kits, Interface Components, Mechanical Parts, Security Components and Consumables
+
+Customers do not buy every SKU. Each customer receives a deterministic but partial assortment based on customer size, segment, division and product quality tier. This avoids a fake customer x SKU Cartesian dataset while still producing enough complexity for mix, profitability, inventory and portfolio analysis.
+
+## Finance engine
+
+The current engine includes:
 
 - 36 rolling months of synthetic actuals
 - 18-month rolling forecast
 - historical forecast vintages
 - Base, Upside and Downside scenarios
 - entity/division forecast bias correction using only observable historical errors
+- six legal entities and four management divisions
 - product and customer master data
-- asymmetric granularity by division
+- more than 200 SKUs with family, subfamily, product type, quality tier and generation
+- sparse customer assortments rather than full Cartesian product combinations
 - customer-product operating activity
 - double-entry journals
 - monthly P&L closing to retained earnings
@@ -69,7 +97,7 @@ The current finance engine includes:
 - CAPEX project lifecycle from CIP to go-live, PPE and depreciation
 - factory capacity and utilization
 - debt, interest, income-tax accruals and quarterly payments
-- product and customer profitability
+- product, family, quality-tier and customer profitability
 - price / volume / mix analysis
 - deterministic portfolio reviews
 - product phase-out and replacement launch events
@@ -111,7 +139,25 @@ JP01 Japan
   Spare Parts
 ```
 
-A sale can therefore start with manufacturing in China or Czech Republic, create an intercompany cost-plus invoice, create inventory in a commercial entity, become an external customer sale, create receivables and finally convert to cash.
+A physical-product sale can therefore start with manufacturing in China or Czech Republic, create an intercompany cost-plus invoice, create inventory in a commercial entity, become an external customer sale, create receivables and finally convert to cash.
+
+## Product lifecycle
+
+A subset of the catalog is deliberately modelled as legacy generation. These products have weaker economics and defined NextGen successors.
+
+The portfolio review engine evaluates trailing profitability every six months. Depending on divisional thresholds, products can move through:
+
+```text
+Active
+-> Phase-out approved
+-> Phase-out effective
+-> Replacement approved
+-> Replacement launched
+```
+
+The replacement changes cost structure, demand and strategic role. The financial effects therefore flow into future revenue, margin, working capital, factory production and cash rather than being added as dashboard annotations.
+
+See `docs/product-hierarchy.md` for the detailed product model.
 
 ## Financial controls
 
@@ -128,6 +174,8 @@ The current validation suite requires:
 - legal-to-group revenue bridge to reconcile
 - legal-to-group EBIT bridge to reconcile
 - forecast targets to occur strictly after their forecast vintage
+- catalog breadth to remain above the minimum product-complexity threshold
+- a sufficiently broad share of the catalog to appear in actual operating activity
 
 A failed control raises an exception before deployment.
 
@@ -165,13 +213,23 @@ The forecast engine:
 
 This allows analysis such as Actual vs FC-1, FC-3, FC-6 and forecast-bias evolution as the project accumulates monthly closes.
 
-## Product lifecycle
+## CFO application
 
-Products are not permanently static.
+The GitHub Pages application currently contains:
 
-At scheduled portfolio reviews, the engine evaluates trailing profitability against divisional rules. Persistently weak products can be approved for phase-out. The economic activity then stops after a defined delay and, where configured, a replacement product launches later.
+- Executive
+- P&L
+- Margin Engine
+- Working Capital
+- Cash Flow
+- Balance Sheet
+- Forecast
+- Profitability
+- Intercompany
+- Operations & CAPEX
+- Data Journey
 
-The resulting financial effects flow naturally through revenue, margin, inventory, working capital, factories and cash rather than being inserted directly into the dashboard.
+The Profitability view includes family economics, quality-tier economics, detailed SKU profitability, catalog structure and customer profitability.
 
 ## Repository structure
 
@@ -208,7 +266,8 @@ data/processed/chart_of_accounts.csv
 data/processed/macro.csv
 data/processed/products.csv
 data/processed/customers.csv
-data/processed/operational.csv
+data/processed/operational.csv.gz
+data/processed/operational_sample.csv
 data/processed/portfolio_events.csv
 data/processed/journal.csv.gz
 data/processed/journal_sample.csv
@@ -233,7 +292,7 @@ data/processed/validation.json
 web/data/dashboard.json
 ```
 
-The full ledger is stored as compressed CSV to prevent unnecessary repository growth while preserving auditability. A readable sample is also published.
+Large detailed operating and ledger tables are stored as compressed CSV to prevent unnecessary repository growth while preserving auditability. Human-readable samples are also published.
 
 ## Automation
 
@@ -242,7 +301,7 @@ GitHub Actions performs the full close automatically:
 1. install the finance engine
 2. run tests
 3. refresh external macro inputs where available
-4. simulate the rolling actual period
+4. generate the rolling operating history
 5. create the accounting ledger
 6. consolidate and validate financial statements
 7. build rolling forecast vintages and accuracy outputs
