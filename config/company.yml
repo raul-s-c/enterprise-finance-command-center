@@ -4,37 +4,76 @@ group:
   actual_months: 36
   forecast_months: 18
   seed: 20260831
+  live_macro: true
+  corporate_tax_rate: 0.24
 
 entities:
-  - {code: DE01, country: Germany, currency: EUR, roles: [hq, software, hardware_sales]}
-  - {code: ES01, country: Spain, currency: EUR, roles: [hardware_sales, events, spare_parts]}
-  - {code: CZ01, country: Czech Republic, currency: CZK, roles: [hardware_factory]}
-  - {code: CN01, country: China, currency: CNY, roles: [hardware_factory, sourcing]}
-  - {code: US01, country: United States, currency: USD, roles: [software, hardware_sales, events]}
-  - {code: JP01, country: Japan, currency: JPY, roles: [software, hardware_sales, spare_parts]}
+  - {code: DE01, name: Aureon Systems GmbH, country: Germany, currency: EUR, roles: [hq, software, hardware_sales]}
+  - {code: ES01, name: Aureon Iberia SL, country: Spain, currency: EUR, roles: [hardware_sales, events, spare_parts]}
+  - {code: CZ01, name: Aureon Manufacturing CZ s.r.o., country: Czech Republic, currency: CZK, roles: [hardware_factory]}
+  - {code: CN01, name: Aureon Manufacturing China Ltd, country: China, currency: CNY, roles: [hardware_factory, sourcing]}
+  - {code: US01, name: Aureon Systems Inc, country: United States, currency: USD, roles: [software, hardware_sales, events]}
+  - {code: JP01, name: Aureon Japan KK, country: Japan, currency: JPY, roles: [software, hardware_sales, spare_parts]}
 
 divisions:
   Software:
     revenue_model: recurring_and_services
+    annual_growth: 0.105
     gross_margin_range: [0.72, 0.88]
     marginal_contribution_range: [0.62, 0.80]
+    dso: 45
+    dpo: 30
   Hardware:
     revenue_model: units_times_price
+    annual_growth: 0.035
     gross_margin_range: [0.24, 0.38]
     marginal_contribution_range: [0.30, 0.44]
+    dso: 55
+    dpo: 60
+    dio: 75
   Events:
     revenue_model: projects
+    annual_growth: 0.025
     gross_margin_range: [0.28, 0.46]
     marginal_contribution_range: [0.32, 0.50]
+    dso: 40
+    dpo: 35
   Spare Parts:
     revenue_model: units_times_price
+    annual_growth: 0.05
     gross_margin_range: [0.38, 0.58]
     marginal_contribution_range: [0.44, 0.62]
+    dso: 50
+    dpo: 50
+    dio: 90
 
 transfer_pricing:
   manufacturing_cost_plus: 0.08
+  settlement_ratio: 0.75
 
-working_capital:
-  dso: {Software: 45, Hardware: 55, Events: 40, Spare Parts: 50}
-  dpo: {Software: 30, Hardware: 60, Events: 35, Spare Parts: 50}
-  dio: {Hardware: 75, Spare Parts: 90}
+factories:
+  CZ01:
+    name: Brno Smart Manufacturing
+    base_monthly_capacity_units: 14500
+    fixed_monthly_cost: 620000
+    energy_sensitivity: 0.22
+  CN01:
+    name: Suzhou Manufacturing Hub
+    base_monthly_capacity_units: 21000
+    fixed_monthly_cost: 760000
+    energy_sensitivity: 0.28
+
+capex_projects:
+  - {id: CAPEX-001, name: Brno automated assembly line, entity: CZ01, division: Hardware, budget: 6200000, start: 2025-02, build_months: 10, useful_life_months: 96, capacity_increase_pct: 0.16}
+  - {id: CAPEX-002, name: Suzhou SMT expansion, entity: CN01, division: Hardware, budget: 8100000, start: 2025-09, build_months: 12, useful_life_months: 120, capacity_increase_pct: 0.20}
+  - {id: CAPEX-003, name: Cloud platform modernization, entity: DE01, division: Software, budget: 3400000, start: 2026-01, build_months: 9, useful_life_months: 60, capacity_increase_pct: 0.0}
+  - {id: CAPEX-004, name: Global spare parts automation, entity: ES01, division: Spare Parts, budget: 2100000, start: 2026-06, build_months: 8, useful_life_months: 72, capacity_increase_pct: 0.0}
+
+portfolio_rules:
+  review_frequency_months: 6
+  trailing_months: 6
+  phaseout_delay_months: 2
+  replacement_delay_months: 4
+  minimum_gross_margin:
+    Hardware: 0.22
+    Spare Parts: 0.34

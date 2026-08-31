@@ -2,47 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b1220">
   <title>Enterprise Finance Command Center</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main class="shell">
-    <header>
-      <div>
-        <p class="eyebrow">Aureon Systems Group</p>
-        <h1>Enterprise Finance Command Center</h1>
-        <p class="subtitle">Connected P&L, cash, balance sheet and rolling forecast for a synthetic multinational group.</p>
-      </div>
-      <div class="status" id="status">Loading...</div>
-    </header>
-
-    <section class="kpis" id="kpis"></section>
-
-    <section class="panel">
-      <div class="panel-head">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">AF</div>
         <div>
-          <p class="eyebrow">Executive cockpit</p>
-          <h2>Monthly performance</h2>
+          <div class="brand-name">Aureon Finance</div>
+          <div class="brand-sub">Command Center</div>
         </div>
-        <div class="legend">Actual vs rolling forecast</div>
       </div>
-      <div class="chart" id="chart"></div>
-    </section>
+      <nav id="nav" class="nav"></nav>
+      <div class="sidebar-footer">
+        <div id="closeStatus" class="close-status">Loading close...</div>
+        <a href="https://github.com/raul-s-c/enterprise-finance-command-center" target="_blank" rel="noreferrer">Repository</a>
+      </div>
+    </aside>
 
-    <section class="grid-two">
-      <article class="panel">
-        <p class="eyebrow">Finance model</p>
-        <h2>What this project connects</h2>
-        <p>Economic drivers create operating activity. Operating activity creates journals. Journals create the financial statements. Forecasts are built from the same business drivers rather than from disconnected target numbers.</p>
-      </article>
-      <article class="panel">
-        <p class="eyebrow">Controls</p>
-        <h2>Close integrity</h2>
-        <div id="controls"></div>
-      </article>
-    </section>
-  </main>
+    <main class="main-shell">
+      <header class="topbar">
+        <div>
+          <h1 id="viewTitle">Executive</h1>
+          <p id="viewSubtitle">Group performance, cash conversion and forward outlook.</p>
+        </div>
+        <div class="filters">
+          <label>Entity<select id="entityFilter"><option value="all">All entities</option></select></label>
+          <label>Division<select id="divisionFilter"><option value="all">All divisions</option></select></label>
+        </div>
+      </header>
+      <section id="content" class="content"></section>
+    </main>
+  </div>
   <script src="app.js"></script>
 </body>
 </html>
