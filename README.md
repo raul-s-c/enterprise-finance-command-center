@@ -34,6 +34,8 @@ P&L / Balance Sheet / Cash Flow
         ->
 Working-capital schedules / CAPEX / Profitability
         ->
+Divisional operating schedules
+        ->
 Rolling forecast
         ->
 Management decisions
@@ -41,15 +43,15 @@ Management decisions
 CFO analytics
 ```
 
-P&L, balance sheet, cash flow, Working Capital and forecast analytics all originate from the same economic system. They are not independently generated dashboard series.
+P&L, balance sheet, cash flow, Working Capital and business-driver analytics all originate from the same economic system. They are not independently generated dashboard series.
 
-## Current release: v0.4
+## Current release: v0.5
 
-Version 0.4 adds reconciled Working Capital schedules on top of the product complexity introduced in v0.3.
+Version 0.5 adds business-model-specific operating schedules behind the financial statements.
 
-The project now contains:
+The current project contains:
 
-- more than 200 product references
+- 236 synthetic product references across four asymmetric divisions
 - six legal entities
 - four management divisions
 - 36 rolling actual months
@@ -59,6 +61,10 @@ The project now contains:
 - customer-level AR aging
 - SKU-level analytical inventory aging
 - Working Capital schedule-to-GL reconciliation
+- Software ARR and retention schedules
+- Events bookings and backlog schedules
+- Hardware factory-capacity and absorption schedules
+- Spare Parts installed-base and aftermarket schedules
 - historical forecast vintages
 - product lifecycle decisions
 - automated monthly publication through GitHub Actions and GitHub Pages
@@ -89,9 +95,72 @@ Customers do not buy every SKU. Each customer receives a deterministic partial a
 
 See `docs/product-hierarchy.md`.
 
+## Divisional operating schedules
+
+The four divisions do not share an artificial generic KPI layer.
+
+### Software
+
+The Software schedule separates recurring and services revenue and creates a customer-product recurring-revenue roll-forward:
+
+```text
+Opening MRR
++ New MRR
++ Expansion MRR
+- Contraction MRR
+- Churn MRR
+= Ending MRR
+```
+
+It calculates MRR, ARR, New ARR, Expansion ARR, Contraction ARR, Churn ARR, NRR, GRR and recurring revenue mix. The complete schedule must reconcile to Software operating revenue.
+
+### Events & Projects
+
+Events is treated as a project business:
+
+```text
+Opening Backlog
++ Bookings
+- Recognized Revenue
+= Ending Backlog
+```
+
+The schedule calculates bookings, recognized revenue, ending backlog, book-to-bill, backlog coverage and project units. The backlog roll-forward is a hard release control.
+
+### Hardware
+
+Hardware exposes manufacturing economics for Brno and Suzhou:
+
+- produced units
+- available capacity
+- utilization
+- capacity headroom
+- fixed factory cost
+- absorbed fixed cost
+- under-absorption
+- fixed cost per produced unit
+- production mix by family and quality tier
+
+Factory utilization is independently recalculated from produced units and capacity. A future accounting release will post explicit absorption and under-absorption entries so this schedule also becomes a direct P&L bridge.
+
+### Spare Parts
+
+Aftermarket demand is linked to the installed base created by historical Hardware sales:
+
+```text
+Opening Installed Base
++ Hardware Additions
+- Estimated Retirements
+= Ending Installed Base
+```
+
+The schedule calculates installed base, aftermarket revenue, revenue per installed unit, active SKUs, inventory coverage and inventory health using the reconciled inventory-aging schedule.
+
+See `docs/divisional-operating-schedules.md`.
+
 ## Finance engine
 
-The current engine includes:
+The finance engine includes:
 
 - deterministic synthetic economic activity
 - public ECB FX integration with fallback data
@@ -162,13 +231,11 @@ A physical-product sale can therefore start with manufacturing in China or Czech
 
 ## Working Capital schedules
 
-Version 0.4 introduces detailed management schedules that are constrained by the legal ledger.
+Detailed management schedules remain constrained by the legal ledger.
 
 ### Accounts Receivable
 
-Sales create customer invoices in `1100_AR`. Collections credit the same account.
-
-The AR schedule reconstructs open customer balances and distributes them into:
+Sales create customer invoices in `1100_AR`. Collections credit the same account. The AR schedule reconstructs open customer balances and distributes them into:
 
 ```text
 Current
@@ -178,17 +245,11 @@ Current
 >90 days overdue
 ```
 
-Customer balances use contractual payment terms and a stable synthetic risk score. The schedule does not change total collections or the legal AR balance. It only determines which customer balances remain open.
-
 Every month/entity/division schedule must reconcile to `1100_AR`.
 
 ### Inventory
 
-Physical inventory is held by Hardware and Spare Parts commercial entities.
-
-Closing GL inventory is analytically distributed across the SKU hierarchy using recent and trailing product consumption, quality tier, generation and strategic role.
-
-Inventory is classified into:
+Closing GL inventory is analytically distributed across the physical SKU hierarchy and classified into:
 
 ```text
 0-30 days
@@ -198,9 +259,7 @@ Inventory is classified into:
 >180 days
 ```
 
-The model calculates SKU months of coverage, slow-moving inventory and obsolescence-risk exposure.
-
-Every month/entity/division schedule must reconcile to `1200_INVENTORY`.
+The model calculates SKU months of coverage, slow-moving inventory and obsolescence-risk exposure. Every month/entity/division schedule must reconcile to `1200_INVENTORY`.
 
 The current release treats obsolescence as a management risk indicator. It does not yet post an inventory provision to the P&L.
 
@@ -208,7 +267,7 @@ See `docs/working-capital-schedules.md`.
 
 ## Product lifecycle
 
-A subset of the catalog is deliberately modelled as legacy generation. Those products have weaker economics and defined NextGen successors.
+A subset of the catalog is deliberately modeled as legacy generation. Those products have weaker economics and defined NextGen successors.
 
 The portfolio review engine evaluates trailing profitability every six months. Products can move through:
 
@@ -240,6 +299,11 @@ The validation suite currently requires:
 - AR aging buckets to reconcile to AR schedule total
 - inventory schedule to reconcile to `1200_INVENTORY`
 - inventory aging buckets to reconcile to inventory schedule total
+- Software revenue schedule to reconcile to operating revenue
+- Software ARR roll-forward to reconcile
+- Events backlog roll-forward to reconcile
+- factory utilization to recalculate from production and capacity
+- Spare Parts installed-base roll-forward to reconcile
 - forecast targets to occur strictly after their forecast vintage
 - catalog breadth to remain above the product-complexity threshold
 - a sufficiently broad share of the catalog to appear in actual activity
@@ -262,7 +326,7 @@ Current deterministic fallback drivers:
 - policy interest rate
 - FX curves
 
-The source layer is isolated from the finance engine. Eurostat industrial production, Eurostat HICP and World Bank commodity data can therefore replace fallback drivers without changing downstream accounting or reporting logic.
+The source layer is isolated from the finance engine. Eurostat industrial production, Eurostat HICP and World Bank commodity data can replace fallback drivers without changing downstream accounting or reporting logic.
 
 ## Rolling forecasting
 
@@ -285,6 +349,7 @@ This enables Actual vs FC-1, FC-3, FC-6 and forecast-bias analysis as monthly cl
 The GitHub Pages application contains:
 
 - Executive
+- Business Drivers
 - P&L
 - Margin Engine
 - Working Capital
@@ -296,9 +361,11 @@ The GitHub Pages application contains:
 - Operations & CAPEX
 - Data Journey
 
-The Working Capital view includes AR aging, overdue-customer concentration, inventory aging, family-level inventory exposure and a SKU inventory watchlist.
+`Business Drivers` contains separate Software, Events, Hardware and Spare Parts economics rather than forcing them into one common operating model.
 
-The Profitability view includes family economics, quality-tier economics, detailed SKU profitability, catalog structure and customer profitability.
+`Working Capital` includes AR aging, overdue-customer concentration, inventory aging, family-level inventory exposure and a SKU inventory watchlist.
+
+`Profitability` includes family economics, quality-tier economics, detailed SKU profitability, catalog structure and customer profitability.
 
 ## Repository structure
 
@@ -350,6 +417,11 @@ data/processed/cash_flow.csv
 data/processed/working_capital.csv
 data/processed/ar_aging.csv
 data/processed/inventory_aging.csv
+data/processed/software_subscription_summary.csv
+data/processed/events_backlog.csv
+data/processed/hardware_factory_economics.csv
+data/processed/hardware_production_mix.csv
+data/processed/spare_parts_economics.csv
 data/processed/intercompany.csv
 data/processed/factory.csv
 data/processed/capex.csv
@@ -384,10 +456,11 @@ GitHub Actions performs the full close automatically:
 5. create the accounting ledger
 6. consolidate financial statements
 7. reconstruct and validate Working Capital schedules
-8. build rolling forecast vintages and accuracy outputs
-9. generate the CFO analytical dataset
-10. commit compact generated outputs
-11. publish GitHub Pages
+8. build and validate divisional operating schedules
+9. build rolling forecast vintages and accuracy outputs
+10. generate the CFO analytical dataset
+11. commit compact generated outputs
+12. publish GitHub Pages
 
 The core project requires no paid database, hosted application server, paid market-data subscription or paid AI API.
 
