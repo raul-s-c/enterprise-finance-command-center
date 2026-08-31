@@ -51,7 +51,41 @@ def _write_csv(df: pd.DataFrame, path: Path) -> None:
     df.to_csv(path, index=False)
 
 
-def _dashboard_payload(*, end_month: str, management: pd.DataFrame, group_bs: pd.DataFrame, cf: pd.DataFrame, wc: pd.DataFrame, latest_fc: pd.DataFrame, product_profit: pd.DataFrame, customer_profit: pd.DataFrame, pvm: pd.DataFrame, intercompany: pd.DataFrame, factory: pd.DataFrame, capex: pd.DataFrame, portfolio_events: pd.DataFrame, forecast_acc: pd.DataFrame, commentary: list[dict], checks: dict, sources: dict) -> dict:
+def _write_gzip_csv(df: pd.DataFrame, path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with gzip.open(path, "wt", encoding="utf-8", newline="") as f:
+        df.to_csv(f, index=False)
+
+
+def _hierarchy_summaries(product_profit: pd.DataFrame, products: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    family = product_profit.groupby(["division", "product_family"], as_index=False).agg(
+        revenue=("revenue", "sum"),
+        marginal_contribution=("marginal_contribution", "sum"),
+        gross_profit=("gross_profit", "sum"),
+        operating_contribution=("operating_contribution", "sum"),
+        sku_count=("product", "nunique"),
+    )
+    family["gross_margin_pct"] = family.gross_profit / family.revenue.replace(0, pd.NA)
+    family["mc_pct"] = family.marginal_contribution / family.revenue.replace(0, pd.NA)
+
+    quality = product_profit.groupby(["division", "quality_tier"], as_index=False).agg(
+        revenue=("revenue", "sum"),
+        marginal_contribution=("marginal_contribution", "sum"),
+        gross_profit=("gross_profit", "sum"),
+        operating_contribution=("operating_contribution", "sum"),
+        sku_count=("product", "nunique"),
+    )
+    quality["gross_margin_pct"] = quality.gross_profit / quality.revenue.replace(0, pd.NA)
+    quality["mc_pct"] = quality.marginal_contribution / quality.revenue.replace(0, pd.NA)
+
+    catalog = products.groupby(["division", "product_family", "product_subfamily", "quality_tier"], as_index=False).agg(
+        sku_count=("product", "nunique"),
+        initially_active_skus=("initial_active", "sum"),
+    )
+    return family.fillna(0.0), quality.fillna(0.0), catalog
+
+
+def _dashboard_payload(*, end_month: str, management: pd.DataFrame, group_bs: pd.DataFrame, cf: pd.DataFrame, wc: pd.DataFrame, latest_fc: pd.DataFrame, product_profit: pd.DataFrame, customer_profit: pd.DataFrame, products: pd.DataFrame, pvm: pd.DataFrame, intercompany: pd.DataFrame, factory: pd.DataFrame, capex: pd.DataFrame, portfolio_events: pd.DataFrame, forecast_acc: pd.DataFrame, commentary: list[dict], checks: dict, sources: dict) -> dict:
     monthly = management.groupby("month", as_index=False).agg(
         revenue=("revenue", "sum"), marginal_contribution=("marginal_contribution", "sum"), gross_profit=("gross_profit", "sum"),
         opex=("opex", "sum"), depreciation=("depreciation", "sum"), ebit=("ebit", "sum"), net_income=("net_income", "sum"),
@@ -70,8 +104,17 @@ def _dashboard_payload(*, end_month: str, management: pd.DataFrame, group_bs: pd
     fc_group["ebit_forecast"] = fc_group.gross_profit_forecast - fc_group.opex_forecast
     acc_summary = forecast_acc.groupby("horizon_month", as_index=False).agg(mape=("abs_pct_error", "mean"), bias=("bias_pct", "mean"), observations=("error", "size")) if not forecast_acc.empty else pd.DataFrame()
     ic_month = intercompany.groupby("month", as_index=False).agg(intercompany_sales=("invoice", "sum"), manufacturing_cost=("manufacturing_cost", "sum"), transfer_pricing_markup=("markup", "sum")) if not intercompany.empty else pd.DataFrame()
+    family_profit, quality_profit, catalog_summary = _hierarchy_summaries(product_profit, products)
+
     return {
-        "meta": {"company": "Aureon Systems Group", "end_month": end_month, "currency": "EUR", "version": "0.2.0"},
+        "meta": {
+            "company": "Aureon Systems Group",
+            "end_month": end_month,
+            "currency": "EUR",
+            "version": "0.3.0",
+            "catalog_products": int(len(products)),
+            "product_families": int(products[["division", "product_family"]].drop_duplicates().shape[0]),
+        },
         "actual": _records(monthly),
         "management_detail": _records(management),
         "division": _records(latest_division),
@@ -82,13 +125,16 @@ def _dashboard_payload(*, end_month: str, management: pd.DataFrame, group_bs: pd
         "forecast": _records(fc_group),
         "forecast_detail": _records(latest_fc),
         "forecast_accuracy": _records(acc_summary),
-        "product_profitability": _records(product_profit.sort_values("operating_contribution").head(30)),
-        "customer_profitability": _records(customer_profit.sort_values("operating_contribution").head(30)),
+        "product_profitability": _records(product_profit.sort_values("operating_contribution")),
+        "product_family_profitability": _records(family_profit.sort_values(["division", "revenue"], ascending=[True, False])),
+        "quality_tier_profitability": _records(quality_profit.sort_values(["division", "quality_tier"])),
+        "product_catalog": _records(catalog_summary),
+        "customer_profitability": _records(customer_profit.sort_values("operating_contribution").head(40)),
         "pvm": _records(pvm),
         "intercompany": _records(ic_month),
         "factory": _records(factory[factory.month >= str(pd.Period(end_month, freq="M") - 11)]),
         "capex": _records(capex),
-        "portfolio_events": _records(portfolio_events.tail(30)),
+        "portfolio_events": _records(portfolio_events.tail(50)),
         "commentary": commentary,
         "validation": checks,
         "sources": sources,
@@ -110,8 +156,10 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     management = management_pnl(simulation.operations, accounting.journal)
     group_bs = group_balance_sheet(legal_bs, float(config["transfer_pricing"]["manufacturing_cost_plus"]))
     wc = working_capital(group_bs, management)
+
     product_profit, customer_profit = profitability(simulation.operations, end_month)
-    product_profit = product_profit.merge(simulation.products[["product", "name"]], on="product", how="left")
+    hierarchy_cols = ["product", "name", "product_family", "product_subfamily", "product_type", "quality_tier", "quality_score", "generation", "strategic_role"]
+    product_profit = product_profit.merge(simulation.products[hierarchy_cols], on="product", how="left")
     customer_profit = customer_profit.merge(simulation.customers[["customer", "customer_name"]].drop_duplicates("customer"), on="customer", how="left")
     pvm = price_volume_mix(simulation.operations, end_month)
     bridge = consolidation_bridge(legal, management)
@@ -124,7 +172,10 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     checks = validate_all(accounting.journal, legal_bs, group_bs, cf, bridge)
     lookahead_errors = int((pd.PeriodIndex(forecasts.month, freq="M") <= pd.PeriodIndex(forecasts.vintage, freq="M")).sum()) if not forecasts.empty else 0
     checks["forecast_lookahead_errors"] = lookahead_errors
-    checks["passed"] = bool(checks["passed"] and lookahead_errors == 0)
+    checks["catalog_product_count"] = int(len(simulation.products))
+    checks["catalog_family_count"] = int(simulation.products[["division", "product_family"]].drop_duplicates().shape[0])
+    checks["sold_product_count"] = int(simulation.operations["product"].nunique())
+    checks["passed"] = bool(checks["passed"] and lookahead_errors == 0 and checks["catalog_product_count"] >= 200 and checks["sold_product_count"] >= 150)
     if not checks["passed"]:
         raise RuntimeError(f"Financial controls failed: {checks}")
 
@@ -134,13 +185,14 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     _write_csv(macro, out / "macro.csv")
     _write_csv(simulation.products, out / "products.csv")
     _write_csv(simulation.customers, out / "customers.csv")
-    _write_csv(simulation.operations, out / "operational.csv")
+    _write_csv(simulation.operations.head(5000), out / "operational_sample.csv")
+    _write_gzip_csv(simulation.operations, out / "operational.csv.gz")
     _write_csv(simulation.portfolio_events, out / "portfolio_events.csv")
     _write_csv(accounting.journal.head(5000), out / "journal_sample.csv")
-    with gzip.open(out / "journal.csv.gz", "wt", encoding="utf-8", newline="") as f:
-        accounting.journal.to_csv(f, index=False)
+    _write_gzip_csv(accounting.journal, out / "journal.csv.gz")
     _write_csv(legal, out / "legal_pnl.csv")
     _write_csv(management, out / "management_pnl.csv")
+
     pnl = management.groupby("month", as_index=False).agg(
         revenue=("revenue", "sum"), marginal_contribution=("marginal_contribution", "sum"), gross_profit=("gross_profit", "sum"),
         opex=("opex", "sum"), depreciation=("depreciation", "sum"), ebit=("ebit", "sum"), interest=("interest", "sum"),
@@ -170,18 +222,27 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
 
     payload = _dashboard_payload(
         end_month=end_month, management=management, group_bs=group_bs, cf=cf, wc=wc, latest_fc=latest_fc,
-        product_profit=product_profit, customer_profit=customer_profit, pvm=pvm, intercompany=accounting.intercompany,
-        factory=accounting.factory, capex=accounting.capex, portfolio_events=simulation.portfolio_events,
-        forecast_acc=accuracy, commentary=commentary, checks=checks, sources=sources,
+        product_profit=product_profit, customer_profit=customer_profit, products=simulation.products, pvm=pvm,
+        intercompany=accounting.intercompany, factory=accounting.factory, capex=accounting.capex,
+        portfolio_events=simulation.portfolio_events, forecast_acc=accuracy, commentary=commentary, checks=checks, sources=sources,
     )
     web = Path("web/data")
     web.mkdir(parents=True, exist_ok=True)
     with open(web / "dashboard.json", "w", encoding="utf-8") as f:
         json.dump(payload, f, separators=(",", ":"), allow_nan=False)
+
     manifest = {
-        "end_month": end_month, "actual_months": actual_months, "forecast_months": forecast_months,
-        "operational_rows": len(simulation.operations), "journal_rows": len(accounting.journal), "forecast_rows": len(forecasts),
-        "portfolio_events": len(simulation.portfolio_events), "validation": checks,
+        "end_month": end_month,
+        "actual_months": actual_months,
+        "forecast_months": forecast_months,
+        "catalog_products": len(simulation.products),
+        "sold_products": int(simulation.operations["product"].nunique()),
+        "product_families": int(simulation.products[["division", "product_family"]].drop_duplicates().shape[0]),
+        "operational_rows": len(simulation.operations),
+        "journal_rows": len(accounting.journal),
+        "forecast_rows": len(forecasts),
+        "portfolio_events": len(simulation.portfolio_events),
+        "validation": checks,
     }
     with open(web / "manifest.json", "w", encoding="utf-8") as f:
         json.dump(manifest, f, indent=2)
