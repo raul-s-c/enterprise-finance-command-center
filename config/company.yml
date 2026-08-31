@@ -1,0 +1,40 @@
+group:
+  name: Aureon Systems Group
+  reporting_currency: EUR
+  actual_months: 36
+  forecast_months: 18
+  seed: 20260831
+
+entities:
+  - {code: DE01, country: Germany, currency: EUR, roles: [hq, software, hardware_sales]}
+  - {code: ES01, country: Spain, currency: EUR, roles: [hardware_sales, events, spare_parts]}
+  - {code: CZ01, country: Czech Republic, currency: CZK, roles: [hardware_factory]}
+  - {code: CN01, country: China, currency: CNY, roles: [hardware_factory, sourcing]}
+  - {code: US01, country: United States, currency: USD, roles: [software, hardware_sales, events]}
+  - {code: JP01, country: Japan, currency: JPY, roles: [software, hardware_sales, spare_parts]}
+
+divisions:
+  Software:
+    revenue_model: recurring_and_services
+    gross_margin_range: [0.72, 0.88]
+    marginal_contribution_range: [0.62, 0.80]
+  Hardware:
+    revenue_model: units_times_price
+    gross_margin_range: [0.24, 0.38]
+    marginal_contribution_range: [0.30, 0.44]
+  Events:
+    revenue_model: projects
+    gross_margin_range: [0.28, 0.46]
+    marginal_contribution_range: [0.32, 0.50]
+  Spare Parts:
+    revenue_model: units_times_price
+    gross_margin_range: [0.38, 0.58]
+    marginal_contribution_range: [0.44, 0.62]
+
+transfer_pricing:
+  manufacturing_cost_plus: 0.08
+
+working_capital:
+  dso: {Software: 45, Hardware: 55, Events: 40, Spare Parts: 50}
+  dpo: {Software: 30, Hardware: 60, Events: 35, Spare Parts: 50}
+  dio: {Hardware: 75, Spare Parts: 90}
