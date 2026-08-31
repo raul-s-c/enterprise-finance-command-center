@@ -11,20 +11,25 @@ SOFTWARE_RECURRING_SHARE = {
     "Automation": 0.82,
 }
 
+PRODUCT_ATTRIBUTES = [
+    "product_family", "product_subfamily", "product_type", "quality_tier",
+    "generation", "strategic_role",
+]
 
-def _product_lookup(products: pd.DataFrame) -> pd.DataFrame:
-    cols = [
-        "product", "division", "product_family", "product_subfamily", "product_type",
-        "quality_tier", "generation", "strategic_role",
-    ]
-    return products[cols].drop_duplicates("product")
+
+def _with_product_attributes(frame: pd.DataFrame, products: pd.DataFrame) -> pd.DataFrame:
+    missing = [column for column in PRODUCT_ATTRIBUTES if column not in frame.columns]
+    if not missing:
+        return frame.copy()
+    lookup = products[["product", *missing]].drop_duplicates("product")
+    return frame.merge(lookup, on="product", how="left")
 
 
 def software_subscription_schedule(operations: pd.DataFrame, products: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     sw = operations[operations.division.eq("Software")].copy()
     if sw.empty:
         return pd.DataFrame(), pd.DataFrame()
-    sw = sw.merge(_product_lookup(products), on=["product", "division"], how="left")
+    sw = _with_product_attributes(sw, products)
     detail = sw.groupby(
         ["month", "entity", "customer", "product", "product_family", "quality_tier"], as_index=False
     ).agg(revenue=("revenue", "sum"))
@@ -93,7 +98,7 @@ def events_backlog_schedule(operations: pd.DataFrame, products: pd.DataFrame) ->
     evt = operations[operations.division.eq("Events")].copy()
     if evt.empty:
         return pd.DataFrame()
-    evt = evt.merge(_product_lookup(products), on=["product", "division"], how="left")
+    evt = _with_product_attributes(evt, products)
     revenue = evt.groupby(["month", "entity", "product_family"], as_index=False).agg(
         recognized_revenue=("revenue", "sum"),
         project_units=("quantity", "sum"),
@@ -151,7 +156,7 @@ def hardware_factory_schedule(
     hw = operations[operations.division.eq("Hardware") & operations.source_factory.ne("")].copy()
     if hw.empty:
         return econ, pd.DataFrame()
-    hw = hw.merge(_product_lookup(products), on=["product", "division"], how="left")
+    hw = _with_product_attributes(hw, products)
     mix = hw.groupby(["month", "source_factory", "product_family", "quality_tier"], as_index=False).agg(
         units=("quantity", "sum"),
         revenue=("revenue", "sum"),
@@ -199,7 +204,7 @@ def spare_parts_schedule(
         installed[entity] = ending
         inventory = float(r.inventory_value)
         usage = float(r.monthly_usage)
-        risk_value = float(r.slow_moving_value) + float(r.obsolescence_risk_value)
+        risk_value = max(float(r.slow_moving_value), float(r.obsolescence_risk_value))
         health = 1.0 - min(risk_value / inventory, 1.0) if inventory > 0.0 else 1.0
         rows.append({
             "month": str(r.month),
