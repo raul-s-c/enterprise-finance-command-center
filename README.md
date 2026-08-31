@@ -12,12 +12,30 @@ Macro environment -> Business drivers -> Operating events -> Double-entry ledger
 
 Financial statements are outputs of one accounting source and are never generated as disconnected dashboard numbers.
 
+## Current foundation
+
+Version 0.1 includes:
+
+- 36 rolling months of synthetic actuals
+- 18-month rolling forecast
+- six legal entities across Germany, Spain, Czech Republic, China, the United States and Japan
+- four asymmetric business divisions
+- deterministic macro and operating drivers
+- double-entry accounting journals
+- management P&L
+- balance sheet and cash movement outputs
+- CAPEX and depreciation mechanics
+- receivables, payables and supplier/customer cash timing
+- accounting validation gates
+- automated tests
+- scheduled GitHub Actions monthly close
+- GitHub Pages CFO application shell
+
 ## Target scope
 
-- 36 rolling months of actuals
-- 18-month rolling forecast
 - P&L and management P&L
 - Gross Profit and Marginal Contribution
+- price / volume / mix
 - Working Capital
 - Balance Sheet
 - Cash Flow and Free Cash Flow
@@ -29,6 +47,38 @@ Financial statements are outputs of one accounting source and are never generate
 - forecast accuracy and bias
 - product lifecycle and management decisions
 
+## Architecture
+
+The core system follows one direction of causality:
+
+1. Macro environment
+2. Business drivers
+3. Operating activity
+4. Balanced journal entries
+5. Legal-entity financials
+6. Consolidation
+7. Management reporting
+8. Rolling forecast
+9. CFO analytics
+
+See `docs/architecture.md` for the detailed design.
+
+## Run locally
+
+```bash
+python -m pip install -e ".[dev]"
+pytest
+python -m enterprise_finance.cli build --end-month 2026-08
+```
+
+If `--end-month` is omitted, the pipeline closes through the previous completed calendar month.
+
+## Automation
+
+The repository includes a GitHub Actions workflow that runs on pushes, can be triggered manually and is scheduled monthly. The workflow tests the finance engine, generates the rolling dataset, commits refreshed outputs and deploys the web application to GitHub Pages.
+
+The target operating model requires no paid database, paid backend or paid AI service.
+
 ## Synthetic data notice
 
-Aureon Systems Group is fictional. Company names, transactions, customers, products and financial results are synthetic. Public macroeconomic data may be used as external drivers.
+Aureon Systems Group is fictional. Company names, transactions, customers, products and financial results are synthetic. Public macroeconomic data may be used as external drivers in later releases.
