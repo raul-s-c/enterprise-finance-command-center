@@ -1,4 +1,5 @@
 from pathlib import Path
+import json
 
 import pandas as pd
 import yaml
@@ -83,8 +84,8 @@ def test_v06_enriched_close_outputs_factory_variance(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     source_config = Path(__file__).resolve().parents[1] / "config" / "company.yml"
     config = yaml.safe_load(source_config.read_text(encoding="utf-8"))
-    config["group"]["actual_months"] = 4
-    config["group"]["forecast_months"] = 3
+    config["group"]["actual_months"] = 8
+    config["group"]["forecast_months"] = 6
     config["group"]["live_macro"] = False
     (tmp_path / "config").mkdir()
     (tmp_path / "config" / "company.yml").write_text(
@@ -94,7 +95,7 @@ def test_v06_enriched_close_outputs_factory_variance(tmp_path, monkeypatch):
     result = build_v06("2026-07", allow_live_macro=False)
     assert result.validation_passed
 
-    validation = pd.read_json(tmp_path / "data" / "processed" / "validation.json", typ="series")
+    validation = json.loads((tmp_path / "data" / "processed" / "validation.json").read_text(encoding="utf-8"))
     assert validation["passed"]
     assert validation["factory_absorption_rollforward_max_gap"] <= 0.02
     assert validation["factory_absorption_journal_max_gap"] <= 0.02
@@ -104,7 +105,6 @@ def test_v06_enriched_close_outputs_factory_variance(tmp_path, monkeypatch):
     factory = pd.read_csv(tmp_path / "data" / "processed" / "factory.csv")
     assert "absorption_variance" in factory.columns
 
-    import json
     dashboard = json.loads((tmp_path / "web" / "data" / "dashboard.json").read_text(encoding="utf-8"))
     manifest = json.loads((tmp_path / "web" / "data" / "manifest.json").read_text(encoding="utf-8"))
     assert dashboard["meta"]["version"] == "0.6.0"
