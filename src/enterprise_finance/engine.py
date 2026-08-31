@@ -180,16 +180,19 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
         raise RuntimeError(f"Financial controls failed: {checks}")
 
     out = Path("data/processed")
+    runtime = Path("data/runtime")
     out.mkdir(parents=True, exist_ok=True)
+    runtime.mkdir(parents=True, exist_ok=True)
+
     _write_csv(chart_of_accounts(), out / "chart_of_accounts.csv")
     _write_csv(macro, out / "macro.csv")
     _write_csv(simulation.products, out / "products.csv")
     _write_csv(simulation.customers, out / "customers.csv")
     _write_csv(simulation.operations.head(5000), out / "operational_sample.csv")
-    _write_gzip_csv(simulation.operations, out / "operational.csv.gz")
+    _write_gzip_csv(simulation.operations, runtime / "operational.csv.gz")
     _write_csv(simulation.portfolio_events, out / "portfolio_events.csv")
     _write_csv(accounting.journal.head(5000), out / "journal_sample.csv")
-    _write_gzip_csv(accounting.journal, out / "journal.csv.gz")
+    _write_gzip_csv(accounting.journal, runtime / "journal.csv.gz")
     _write_csv(legal, out / "legal_pnl.csv")
     _write_csv(management, out / "management_pnl.csv")
 
@@ -242,6 +245,7 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
         "journal_rows": len(accounting.journal),
         "forecast_rows": len(forecasts),
         "portfolio_events": len(simulation.portfolio_events),
+        "detail_retention": "full transaction and journal detail is generated reproducibly in data/runtime and not committed to git",
         "validation": checks,
     }
     with open(web / "manifest.json", "w", encoding="utf-8") as f:
