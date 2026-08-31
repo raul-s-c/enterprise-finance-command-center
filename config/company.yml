@@ -47,6 +47,16 @@ divisions:
     dpo: 50
     dio: 90
 
+working_capital:
+  payment_terms_days:
+    Software: 30
+    Hardware: 45
+    Events: 30
+    Spare Parts: 45
+  slow_moving_days: 90
+  obsolescence_days: 180
+  customer_risk_scale: [1, 5]
+
 transfer_pricing:
   manufacturing_cost_plus: 0.08
   settlement_ratio: 0.75
