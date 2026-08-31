@@ -43,17 +43,17 @@ def management_pnl_with_factory_absorption(
             pivot[account] = 0.0
 
     rows: list[dict] = []
-    for r in pivot.itertuples(index=False):
-        variance = float(getattr(r, "5450_FACTORY_ABSORPTION_VARIANCE"))
-        depreciation = float(getattr(r, "6100_DEPRECIATION"))
-        interest = float(getattr(r, "7000_INTEREST"))
-        tax = float(getattr(r, "7100_TAX"))
+    for _, r in pivot.iterrows():
+        variance = float(r["5450_FACTORY_ABSORPTION_VARIANCE"])
+        depreciation = float(r["6100_DEPRECIATION"])
+        interest = float(r["7000_INTEREST"])
+        tax = float(r["7100_TAX"])
         gross_profit = -variance
         ebit = gross_profit - depreciation
         ebt = ebit - interest
         rows.append({
-            "month": str(r.month),
-            "entity": str(r.entity),
+            "month": str(r["month"]),
+            "entity": str(r["entity"]),
             "division": "Hardware",
             "revenue": 0.0,
             "variable_production_cost": 0.0,
