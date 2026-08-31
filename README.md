@@ -47,7 +47,7 @@ P&L, balance sheet, cash flow and working capital are outputs of the same econom
 
 Version 0.3 adds a finance-grade product hierarchy and a materially larger commercial catalog while retaining the connected finance architecture introduced in v0.2.
 
-The synthetic catalog now contains more than 200 product references across four asymmetric divisions. Each SKU belongs to a hierarchy:
+The synthetic catalog contains more than 200 product references across four asymmetric divisions. Every SKU belongs to the following hierarchy:
 
 ```text
 Division
@@ -236,7 +236,8 @@ The Profitability view includes family economics, quality-tier economics, detail
 ```text
 .github/workflows/       Monthly close, validation and Pages deployment
 config/                  Company structure and finance assumptions
-data/processed/          Generated financial and operating outputs
+data/processed/          Compact generated reporting outputs committed to Git
+data/runtime/            Reproducible full transaction detail, generated at runtime and ignored by Git
 docs/                    Architecture, finance model and data contracts
 src/enterprise_finance/  Simulation, accounting, reporting and forecasting engine
 tests/                   Financial and technical controls
@@ -261,15 +262,15 @@ If `--end-month` is omitted, the pipeline closes the previous completed calendar
 
 ## Main generated outputs
 
+Compact, auditable outputs committed to Git include:
+
 ```text
 data/processed/chart_of_accounts.csv
 data/processed/macro.csv
 data/processed/products.csv
 data/processed/customers.csv
-data/processed/operational.csv.gz
 data/processed/operational_sample.csv
 data/processed/portfolio_events.csv
-data/processed/journal.csv.gz
 data/processed/journal_sample.csv
 data/processed/legal_pnl.csv
 data/processed/management_pnl.csv
@@ -292,7 +293,14 @@ data/processed/validation.json
 web/data/dashboard.json
 ```
 
-Large detailed operating and ledger tables are stored as compressed CSV to prevent unnecessary repository growth while preserving auditability. Human-readable samples are also published.
+Full reproducible detail is generated during every build but is intentionally excluded from Git history:
+
+```text
+data/runtime/operational.csv.gz
+data/runtime/journal.csv.gz
+```
+
+This keeps the repository sustainable over years of monthly closes while preserving the ability to regenerate the complete transaction and accounting detail from code, configuration, seed and macro inputs.
 
 ## Automation
 
@@ -306,7 +314,7 @@ GitHub Actions performs the full close automatically:
 6. consolidate and validate financial statements
 7. build rolling forecast vintages and accuracy outputs
 8. generate the CFO analytical dataset
-9. commit updated generated outputs
+9. commit compact generated outputs
 10. publish GitHub Pages
 
 The core project requires no paid database, hosted application server, paid market-data subscription or paid AI API.
