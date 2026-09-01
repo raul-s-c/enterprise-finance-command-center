@@ -66,6 +66,20 @@ supplier_management:
     Delivery Capacity: 45
     Corporate Services: 30
 
+contract_liabilities:
+  software_advance_share:
+    Essential: 0.35
+    Professional: 0.55
+    Premium: 0.72
+  events_advance_share:
+    Deployment & Integration: 0.35
+    Training & Enablement: 0.25
+    Customer Experience: 0.40
+    Managed Programs: 0.30
+  strategic_customer_uplift: 0.08
+  growth_customer_discount: 0.04
+  max_advance_share: 0.85
+
 budget:
   finalization_month: 10
   history_months: 12
