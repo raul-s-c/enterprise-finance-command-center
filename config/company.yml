@@ -57,6 +57,26 @@ working_capital:
   obsolescence_days: 180
   customer_risk_scale: [1, 5]
 
+provisions:
+  # Book provisions are treated as non-deductible in the current tax model.
+  credit_loss_rates:
+    current: 0.002
+    overdue_1_30: 0.010
+    overdue_31_60: 0.040
+    overdue_61_90: 0.120
+    overdue_90_plus: 0.450
+  credit_risk_multiplier_min: 0.70
+  credit_risk_multiplier_max: 1.35
+  inventory_provision_rates:
+    age_0_30: 0.000
+    age_31_60: 0.005
+    age_61_90: 0.020
+    age_91_180: 0.120
+    age_180_plus: 0.550
+  legacy_inventory_multiplier: 1.25
+  spare_parts_inventory_multiplier: 0.85
+  premium_inventory_multiplier: 1.10
+
 transfer_pricing:
   manufacturing_cost_plus: 0.08
   settlement_ratio: 0.75
