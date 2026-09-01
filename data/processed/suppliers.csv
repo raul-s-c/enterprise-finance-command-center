@@ -1,0 +1,92 @@
+supplier,supplier_name,supplier_category,supplier_criticality,single_source
+SUP-CN01-FAC-01,Facilities Services CN01 01,Factory Fixed Cost,5,False
+SUP-CN01-FAC-02,Facilities Services CN01 02,Factory Fixed Cost,5,False
+SUP-CN01-MFG-01,Industrial Supply CN01 01,Manufacturing Supply,5,False
+SUP-CN01-MFG-02,Industrial Supply CN01 02,Manufacturing Supply,5,False
+SUP-CN01-MFG-03,Industrial Supply CN01 03,Manufacturing Supply,5,False
+SUP-CN01-MFG-04,Industrial Supply CN01 04,Manufacturing Supply,5,False
+SUP-CN01-MFG-05,Industrial Supply CN01 05,Manufacturing Supply,5,False
+SUP-CN01-MFG-06,Industrial Supply CN01 06,Manufacturing Supply,5,False
+SUP-CN01-MFG-07,Industrial Supply CN01 07,Manufacturing Supply,5,False
+SUP-CN01-MFG-08,Industrial Supply CN01 08,Manufacturing Supply,5,False
+SUP-CZ01-FAC-02,Facilities Services CZ01 02,Factory Fixed Cost,5,False
+SUP-CZ01-MFG-01,Industrial Supply CZ01 01,Manufacturing Supply,5,False
+SUP-CZ01-MFG-02,Industrial Supply CZ01 02,Manufacturing Supply,5,False
+SUP-CZ01-MFG-03,Industrial Supply CZ01 03,Manufacturing Supply,5,False
+SUP-CZ01-MFG-04,Industrial Supply CZ01 04,Manufacturing Supply,5,False
+SUP-CZ01-MFG-05,Industrial Supply CZ01 05,Manufacturing Supply,5,False
+SUP-CZ01-MFG-06,Industrial Supply CZ01 06,Manufacturing Supply,5,False
+SUP-CZ01-MFG-07,Industrial Supply CZ01 07,Manufacturing Supply,5,False
+SUP-CZ01-MFG-08,Industrial Supply CZ01 08,Manufacturing Supply,5,False
+SUP-DE01-CAP-01,Capacity Provider DE01 01,Delivery Capacity,4,False
+SUP-DE01-CAP-02,Capacity Provider DE01 02,Delivery Capacity,4,True
+SUP-DE01-CAP-03,Capacity Provider DE01 03,Delivery Capacity,4,False
+SUP-DE01-DEL-01,Delivery Partner DE01 01,Delivery Partners,4,True
+SUP-DE01-DEL-02,Delivery Partner DE01 02,Delivery Partners,4,False
+SUP-DE01-DEL-03,Delivery Partner DE01 03,Delivery Partners,4,False
+SUP-DE01-DEL-04,Delivery Partner DE01 04,Delivery Partners,4,False
+SUP-DE01-DEL-05,Delivery Partner DE01 05,Delivery Partners,4,False
+SUP-DE01-LOG-01,Logistics Partner DE01 01,Logistics & Freight,4,False
+SUP-DE01-LOG-02,Logistics Partner DE01 02,Logistics & Freight,4,False
+SUP-DE01-LOG-03,Logistics Partner DE01 03,Logistics & Freight,4,False
+SUP-DE01-LOG-04,Logistics Partner DE01 04,Logistics & Freight,4,False
+SUP-DE01-OPS-01,Business Services DE01 01,Corporate Services,3,False
+SUP-DE01-OPS-02,Business Services DE01 02,Corporate Services,3,False
+SUP-DE01-OPS-03,Business Services DE01 03,Corporate Services,3,False
+SUP-DE01-OPS-04,Business Services DE01 04,Corporate Services,3,False
+SUP-DE01-OPS-05,Business Services DE01 05,Corporate Services,3,False
+SUP-DE01-OPS-06,Business Services DE01 06,Corporate Services,3,False
+SUP-ES01-CAP-01,Capacity Provider ES01 01,Delivery Capacity,4,False
+SUP-ES01-CAP-02,Capacity Provider ES01 02,Delivery Capacity,4,False
+SUP-ES01-CAP-03,Capacity Provider ES01 03,Delivery Capacity,4,True
+SUP-ES01-DEL-01,Delivery Partner ES01 01,Delivery Partners,4,True
+SUP-ES01-DEL-02,Delivery Partner ES01 02,Delivery Partners,4,False
+SUP-ES01-DEL-03,Delivery Partner ES01 03,Delivery Partners,4,False
+SUP-ES01-DEL-04,Delivery Partner ES01 04,Delivery Partners,4,True
+SUP-ES01-DEL-05,Delivery Partner ES01 05,Delivery Partners,4,True
+SUP-ES01-LOG-01,Logistics Partner ES01 01,Logistics & Freight,4,True
+SUP-ES01-LOG-02,Logistics Partner ES01 02,Logistics & Freight,4,False
+SUP-ES01-LOG-03,Logistics Partner ES01 03,Logistics & Freight,4,True
+SUP-ES01-LOG-04,Logistics Partner ES01 04,Logistics & Freight,4,True
+SUP-ES01-OPS-01,Business Services ES01 01,Corporate Services,3,False
+SUP-ES01-OPS-02,Business Services ES01 02,Corporate Services,3,False
+SUP-ES01-OPS-03,Business Services ES01 03,Corporate Services,3,False
+SUP-ES01-OPS-04,Business Services ES01 04,Corporate Services,3,False
+SUP-ES01-OPS-05,Business Services ES01 05,Corporate Services,3,False
+SUP-ES01-OPS-06,Business Services ES01 06,Corporate Services,3,False
+SUP-JP01-CAP-01,Capacity Provider JP01 01,Delivery Capacity,4,False
+SUP-JP01-CAP-02,Capacity Provider JP01 02,Delivery Capacity,4,True
+SUP-JP01-CAP-03,Capacity Provider JP01 03,Delivery Capacity,4,False
+SUP-JP01-DEL-01,Delivery Partner JP01 01,Delivery Partners,4,False
+SUP-JP01-DEL-02,Delivery Partner JP01 02,Delivery Partners,4,False
+SUP-JP01-DEL-03,Delivery Partner JP01 03,Delivery Partners,4,True
+SUP-JP01-DEL-04,Delivery Partner JP01 04,Delivery Partners,4,False
+SUP-JP01-DEL-05,Delivery Partner JP01 05,Delivery Partners,4,False
+SUP-JP01-LOG-01,Logistics Partner JP01 01,Logistics & Freight,4,False
+SUP-JP01-LOG-02,Logistics Partner JP01 02,Logistics & Freight,4,False
+SUP-JP01-LOG-03,Logistics Partner JP01 03,Logistics & Freight,4,True
+SUP-JP01-LOG-04,Logistics Partner JP01 04,Logistics & Freight,4,False
+SUP-JP01-OPS-01,Business Services JP01 01,Corporate Services,3,False
+SUP-JP01-OPS-02,Business Services JP01 02,Corporate Services,3,False
+SUP-JP01-OPS-03,Business Services JP01 03,Corporate Services,3,False
+SUP-JP01-OPS-04,Business Services JP01 04,Corporate Services,3,False
+SUP-JP01-OPS-05,Business Services JP01 05,Corporate Services,3,False
+SUP-JP01-OPS-06,Business Services JP01 06,Corporate Services,3,False
+SUP-US01-CAP-01,Capacity Provider US01 01,Delivery Capacity,4,False
+SUP-US01-CAP-02,Capacity Provider US01 02,Delivery Capacity,4,True
+SUP-US01-CAP-03,Capacity Provider US01 03,Delivery Capacity,4,False
+SUP-US01-DEL-01,Delivery Partner US01 01,Delivery Partners,4,True
+SUP-US01-DEL-02,Delivery Partner US01 02,Delivery Partners,4,False
+SUP-US01-DEL-03,Delivery Partner US01 03,Delivery Partners,4,False
+SUP-US01-DEL-04,Delivery Partner US01 04,Delivery Partners,4,False
+SUP-US01-DEL-05,Delivery Partner US01 05,Delivery Partners,4,False
+SUP-US01-LOG-01,Logistics Partner US01 01,Logistics & Freight,4,False
+SUP-US01-LOG-02,Logistics Partner US01 02,Logistics & Freight,4,False
+SUP-US01-LOG-03,Logistics Partner US01 03,Logistics & Freight,4,True
+SUP-US01-LOG-04,Logistics Partner US01 04,Logistics & Freight,4,False
+SUP-US01-OPS-01,Business Services US01 01,Corporate Services,3,False
+SUP-US01-OPS-02,Business Services US01 02,Corporate Services,3,False
+SUP-US01-OPS-03,Business Services US01 03,Corporate Services,3,False
+SUP-US01-OPS-04,Business Services US01 04,Corporate Services,3,False
+SUP-US01-OPS-05,Business Services US01 05,Corporate Services,3,False
+SUP-US01-OPS-06,Business Services US01 06,Corporate Services,3,False

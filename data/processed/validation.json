@@ -26,5 +26,9 @@
   "forecast_lookahead_errors": 0,
   "catalog_product_count": 236,
   "catalog_family_count": 19,
-  "sold_product_count": 232
+  "sold_product_count": 232,
+  "ap_subledger_max_gap": 0.0,
+  "ap_aging_bucket_max_gap": 0.0,
+  "ap_negative_supplier_balances": 0,
+  "supplier_concentration_out_of_range": 0
 }

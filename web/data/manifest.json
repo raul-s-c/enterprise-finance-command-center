@@ -49,9 +49,13 @@
     "forecast_lookahead_errors": 0,
     "catalog_product_count": 236,
     "catalog_family_count": 19,
-    "sold_product_count": 232
+    "sold_product_count": 232,
+    "ap_subledger_max_gap": 0.0,
+    "ap_aging_bucket_max_gap": 0.0,
+    "ap_negative_supplier_balances": 0,
+    "supplier_concentration_out_of_range": 0
   },
-  "version": "0.7.0",
+  "version": "0.8.0",
   "latest_factory_absorption_variance": 675568.8,
   "latest_factory_under_absorption": 675568.8,
   "latest_factory_over_absorption": 0.0,
@@ -61,5 +65,12 @@
   "latest_net_trade_receivables": 51738627.61,
   "latest_net_inventory": 37819753.94,
   "latest_credit_loss_expense": -8219.03,
-  "latest_inventory_provision_expense": -13878.3
+  "latest_inventory_provision_expense": -13878.3,
+  "ap_aging_rows": 6027,
+  "supplier_count": 91,
+  "latest_total_ap": 32306026.01,
+  "latest_overdue_ap": 12943378.67,
+  "latest_ap_overdue_pct": 0.4006,
+  "latest_supplier_top5_concentration": 0.2675,
+  "latest_single_source_ap": 2202196.4
 }
