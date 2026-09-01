@@ -7,8 +7,8 @@ import pandas as pd
 
 from . import engine as base_engine
 from .accounting_v14 import validate_workforce_accounting
-from .engine_v12 import _capital_allocation, _scenario_summary as liquidity_scenario_summary
-from .engine_v13 import build as build_v13, _scenario_summary as statement_scenario_summary
+from .engine_v12 import build as build_v12, _capital_allocation, _scenario_summary as liquidity_scenario_summary
+from .engine_v13 import _scenario_summary as statement_scenario_summary
 from .forecasting_v14 import validate_workforce_forecast
 from .liquidity_workforce_v14 import build_liquidity_forecast, validate_liquidity_forecast
 from .three_statement_forecast import build_three_statement_forecast, validate_three_statement_forecast
@@ -48,8 +48,15 @@ def _workforce_summary(schedule: pd.DataFrame) -> pd.DataFrame:
 
 
 def build(end_month: str, config_path: str = "config/company.yml", allow_live_macro: bool = True):
-    """Run v0.13 on workforce-driven actuals and replace forward cash with payroll-aware liquidity."""
-    result = build_v13(end_month, config_path=config_path, allow_live_macro=allow_live_macro)
+    """Run through v0.12, then build payroll-aware liquidity and three statements.
+
+    v0.14 must not invoke the v0.13 three-statement validation before Workforce
+    replaces the inherited liquidity forecast. The proven actual close and Treasury
+    stack is therefore built through v0.12 first; v0.14 then overwrites forward
+    liquidity with payroll-aware, cent-precise balances and builds the integrated
+    P&L / Balance Sheet / Cash Flow forecast from that final state.
+    """
+    result = build_v12(end_month, config_path=config_path, allow_live_macro=allow_live_macro)
     config = base_engine.load_config(config_path)
 
     operations = _read_csv("data/runtime/operational.csv.gz")
@@ -107,11 +114,15 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
         checks = json.load(handle)
     for control in [roll_checks, allocation_control, accounting_control, forecast_control, liquidity_checks, statement_checks]:
         checks.update({k: v for k, v in control.items() if k != "passed"})
+    checks["three_statement_base_missing"] = int(statement_summary[statement_summary.scenario.eq("Base")].empty) if not statement_summary.empty else 1
+    checks["three_statement_downside_missing"] = int(statement_summary[statement_summary.scenario.eq("Downside")].empty) if not statement_summary.empty else 1
     checks["workforce_schedule_missing"] = int(workforce.empty)
     checks["workforce_forecast_missing"] = int(workforce_forecast.empty)
     checks["passed"] = bool(
         checks.get("passed", False)
         and all(c["passed"] for c in [roll_checks, allocation_control, accounting_control, forecast_control, liquidity_checks, statement_checks])
+        and checks["three_statement_base_missing"] == 0
+        and checks["three_statement_downside_missing"] == 0
         and checks["workforce_schedule_missing"] == 0
         and checks["workforce_forecast_missing"] == 0
     )
