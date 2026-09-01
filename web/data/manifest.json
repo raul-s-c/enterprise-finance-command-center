@@ -81,9 +81,17 @@
     "liquidity_forecast_rcf_excess_rows": 0,
     "liquidity_forecast_shortfall_rows": 0,
     "liquidity_forecast_base_missing": 0,
-    "liquidity_forecast_downside_missing": 0
+    "liquidity_forecast_downside_missing": 0,
+    "three_statement_balance_sheet_max_gap": 0.0,
+    "three_statement_cash_flow_max_gap": 0.0,
+    "three_statement_ebit_identity_max_gap": 0.0,
+    "three_statement_net_income_identity_max_gap": 0.0,
+    "three_statement_cash_link_max_gap": 0.0,
+    "three_statement_missing_scenario_months": 0,
+    "three_statement_base_missing": 0,
+    "three_statement_downside_missing": 0
   },
-  "version": "0.12.0",
+  "version": "0.13.0",
   "latest_factory_absorption_variance": 675568.8,
   "latest_factory_under_absorption": 675568.8,
   "latest_factory_over_absorption": 0.0,
@@ -155,5 +163,15 @@
   "downside_minimum_liquidity_headroom": 194567467.7,
   "downside_12m_ending_cash": 274450839.93,
   "downside_12m_covenant_status": "PASS",
-  "downside_protected_allocation_capacity": 194567467.7
+  "downside_protected_allocation_capacity": 194567467.7,
+  "three_statement_forecast_rows": 36,
+  "base_12m_forecast_revenue": 426546609.9,
+  "base_12m_forecast_ebit": 95272736.91,
+  "base_12m_forecast_net_income": 71689266.29,
+  "base_12m_forecast_free_cash_flow": 83717214.19,
+  "base_12m_forecast_assets": 427891859.2,
+  "base_12m_forecast_equity": 345475940.53,
+  "downside_12m_forecast_net_income": 63732389.51,
+  "downside_12m_forecast_free_cash_flow": 77298362.05,
+  "downside_12m_forecast_assets": 417789165.2
 }

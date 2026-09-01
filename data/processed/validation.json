@@ -58,5 +58,13 @@
   "liquidity_forecast_rcf_excess_rows": 0,
   "liquidity_forecast_shortfall_rows": 0,
   "liquidity_forecast_base_missing": 0,
-  "liquidity_forecast_downside_missing": 0
+  "liquidity_forecast_downside_missing": 0,
+  "three_statement_balance_sheet_max_gap": 0.0,
+  "three_statement_cash_flow_max_gap": 0.0,
+  "three_statement_ebit_identity_max_gap": 0.0,
+  "three_statement_net_income_identity_max_gap": 0.0,
+  "three_statement_cash_link_max_gap": 0.0,
+  "three_statement_missing_scenario_months": 0,
+  "three_statement_base_missing": 0,
+  "three_statement_downside_missing": 0
 }
