@@ -94,6 +94,7 @@ treasury:
   sweep_buffer: 1000000
   sweep_ratio: 0.80
   rcf_limit: 35000000
+  strategic_liquidity_buffer: 15000000
   net_leverage_limit: 2.50
   interest_coverage_min: 4.00
   debt_maturities:
