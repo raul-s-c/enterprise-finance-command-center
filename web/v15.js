@@ -14,7 +14,7 @@ function renderFxTranslation(){
   const ebitFx=cc.reduce((s,r)=>s+(Number(r.ebit_fx_effect)||0),0);
   const cta=latestTranslation.reduce((s,r)=>s+(Number(r.fx_translation_reserve)||0),0);
   const foreign=latestTranslation.filter(r=>r.functional_currency!=='EUR');
-  return `<div class="section-note"><strong>FX translation</strong> — legal activity is maintained in functional currency and translated to EUR. Assets and liabilities use closing FX; share capital uses historical FX; translation differences are reported as CTA/OCI.</div>
+  return `<div class="section-note"><strong>FX translation</strong> — functional-currency legal books are translated to EUR. Assets and liabilities use closing FX; share capital keeps its historical issue rate; retained earnings accumulate at the rates when profits arose; the residual translation difference is CTA/OCI.</div>
   <div class="kpi-grid">
     ${kpi('Translation reserve',eur.format(cta),'CTA / OCI')}
     ${kpi('Revenue FX effect',signed(revenueFx),'Reported vs prior-year rates')}
@@ -29,13 +29,16 @@ function renderFxTranslation(){
       {key:'revenue_fx_effect',label:'Revenue FX',num:true,format:v=>signed(v)},
       {key:'reported_ebit',label:'Reported EBIT',num:true,format:v=>eur.format(v)},
       {key:'ebit_fx_effect',label:'EBIT FX',num:true,format:v=>signed(v)}
-    ]),'span-8')}
-    ${panel('Closing FX & CTA','Latest foreign entities',table(foreign,[
+    ]),'span-7')}
+    ${panel('Closing FX & equity translation','Latest foreign entities',table(foreign,[
       {key:'entity',label:'Entity'},{key:'functional_currency',label:'Currency'},
       {key:'closing_fx_to_eur',label:'Closing FX',num:true,format:v=>num(v,5)},
-      {key:'historical_equity_fx_to_eur',label:'Historical equity FX',num:true,format:v=>num(v,5)},
+      {key:'historical_equity_fx_to_eur',label:'Share capital FX',num:true,format:v=>num(v,5)},
+      {key:'retained_earnings_effective_fx_to_eur',label:'RE effective FX',num:true,format:v=>num(v,5)},
+      {key:'translated_share_capital',label:'Share capital',num:true,format:v=>eur.format(v)},
+      {key:'translated_retained_earnings',label:'Retained earnings',num:true,format:v=>eur.format(v)},
       {key:'fx_translation_reserve',label:'CTA',num:true,format:v=>signed(v)}
-    ]),'span-4')}
+    ]),'span-5')}
     ${panel('Translation reserve trend','Group CTA / OCI by close',bars(summary.slice(-24),'fx_translation_reserve'),'span-12')}
   </div>`;
 }
@@ -45,5 +48,5 @@ renderers.fx=renderFxTranslation;
 
 const journeyBeforeFx=renderers['data-journey'];
 renderers['data-journey']=function(){
-  return journeyBeforeFx()+`<div class="panel-grid">${panel('Multi-currency reporting','Functional currency → EUR translation',`<div class="section-note">Each legal journal has a functional-currency equivalent using monthly ECB FX when available. Local trial balances are translated to EUR using closing FX for assets/liabilities and historical FX for share capital. The resulting foreign currency translation difference is isolated in CTA/OCI. Reported revenue and EBIT are also shown at prior-year FX for constant-currency analysis.</div>`,'span-12')}</div>`;
+  return journeyBeforeFx()+`<div class="panel-grid">${panel('Multi-currency reporting','Functional currency → EUR translation',`<div class="section-note">Each legal journal has a functional-currency equivalent using monthly ECB FX when available. Local journals remain balanced after currency rounding. Assets and liabilities use closing FX, share capital uses historical FX and retained earnings accumulate at the monthly rates when profits arose. CTA/OCI isolates the remaining translation effect. Transaction-currency remeasurement is intentionally outside v0.15.</div>`,'span-12')}</div>`;
 };
