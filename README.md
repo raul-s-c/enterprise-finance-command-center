@@ -45,9 +45,9 @@ CFO analytics
 
 P&L, balance sheet, cash flow, Working Capital, asset quality and business-driver analytics all originate from the same economic system. They are not independently generated dashboard series.
 
-## Current release: v0.7
+## Current release: v0.8
 
-Version 0.7 converts receivables credit risk and inventory obsolescence risk into explicit accounting reserves while preserving the gross operational aging schedules.
+Version 0.8 completes the operating Working Capital layer with reconciled supplier-level Accounts Payable aging and supplier-concentration analytics.
 
 The current project contains:
 
@@ -59,10 +59,12 @@ The current project contains:
 - legal and consolidated financial statements
 - customer-level AR aging
 - SKU-level inventory aging
+- supplier-level AP aging
 - expected credit loss accounting
 - inventory obsolescence provision accounting
 - gross-to-net asset presentation
-- Working Capital schedule-to-GL reconciliation
+- three-way Working Capital schedule integrity across AR, Inventory and AP
+- supplier concentration and single-source exposure
 - Software ARR and retention schedules
 - Events bookings and backlog schedules
 - Hardware factory-capacity, production-mix and absorption accounting
@@ -95,9 +97,9 @@ Customers receive deterministic partial assortments rather than an artificial cu
 
 See `docs/product-hierarchy.md`.
 
-## Asset quality and provisions
+## Working Capital and asset quality
 
-Version 0.7 keeps operating exposure and accounting valuation separate but reconciled.
+Version 0.8 separates operating exposure, accounting valuation and payment behavior while keeping each layer reconciled to the legal ledger.
 
 ### Trade receivables
 
@@ -165,6 +167,43 @@ Inventory provision movement is presented in Gross Profit.
 Provision entries are non-cash. In the current synthetic tax model they are deliberately treated as non-deductible rather than inventing country-specific tax rules.
 
 See `docs/provisions-and-asset-quality.md`.
+
+### Accounts Payable
+
+Version 0.8 reconstructs supplier lots directly from `2100_AP`.
+
+```text
+Supplier AP Schedule by Legal Entity
+= 2100_AP legal-entity balance
+```
+
+Credits to AP create supplier accrual lots and debits reduce those lots. Supplier payments preferentially settle the originating division but may settle any open payable within the same legal entity, matching the accounting architecture used by the manufacturing entities.
+
+Open AP is classified into:
+
+```text
+Current
+1-30 days overdue
+31-60 days overdue
+61-90 days overdue
+>90 days overdue
+```
+
+Supplier counterparts are derived deterministically from the actual ledger accruals rather than generated as an unrelated vendor table. Categories include Manufacturing Supply, Factory Fixed Cost, Logistics & Freight, Delivery Partners, Delivery Capacity and Corporate Services.
+
+The schedule also calculates:
+
+- trailing-12-month supplier spend
+- supplier share of external spend
+- group Top-5 supplier concentration
+- current and overdue AP by supplier
+- critical supplier exposure
+- single-source exposure
+- transparent supplier risk flags
+
+Top-5 concentration uses the complete trailing-12-month supplier population, including suppliers with zero AP at the close date.
+
+See `docs/supplier-payables-and-concentration.md`.
 
 ## Divisional operating schedules
 
@@ -254,9 +293,12 @@ The finance engine includes:
 - connected cash flow
 - AR, AP and inventory mechanics
 - DSO, DPO and DIO
-- reconciled AR and inventory aging
+- reconciled customer AR aging
+- reconciled SKU inventory aging
+- reconciled supplier AP aging
 - expected credit loss allowance
 - inventory obsolescence provision
+- supplier concentration and single-source analysis
 - cost-plus intercompany manufacturing flows
 - reciprocal intercompany AR/AP and settlements
 - transfer-pricing consolidation bridge
@@ -307,31 +349,24 @@ JP01 Japan
 
 A physical-product sale can start in a factory, create a cost-plus intercompany invoice, become inventory in a commercial entity, convert to an external sale and receivable, and finally convert to cash.
 
-## Working Capital schedules
+## Three-way Working Capital integrity
 
-Gross receivables are classified into:
-
-```text
-Current
-1-30 days overdue
-31-60 days overdue
-61-90 days overdue
->90 days overdue
-```
-
-Gross inventory is classified into:
+The project now contains three reconciled operating schedules:
 
 ```text
-0-30 days
-31-60 days
-61-90 days
-91-180 days
->180 days
+Customer AR aging  -> 1100_AR
+SKU inventory aging -> 1200_INVENTORY
+Supplier AP aging  -> 2100_AP
 ```
 
-The CFO view presents both operational gross exposure and accounting net carrying values. Provision entries do not alter customer collections, inventory movements or supplier-payment behavior.
+AR and Inventory also have accounting valuation layers through ECL and inventory provisions. AP remains a gross legal liability schedule.
 
-See `docs/working-capital-schedules.md`.
+This allows the CFO view to distinguish:
+
+- collection risk from customer credit valuation
+- stock aging from inventory carrying value
+- payment velocity from supplier overdue exposure
+- supplier payment discipline from supplier concentration risk
 
 ## Product lifecycle
 
@@ -360,6 +395,10 @@ Publication is blocked if financial controls fail. The suite requires, among oth
 - legal-to-group revenue and EBIT bridges to reconcile
 - AR aging and buckets to reconcile to `1100_AR`
 - inventory aging and buckets to reconcile to `1200_INVENTORY`
+- supplier AP aging to reconcile to legal-entity `2100_AP`
+- AP aging buckets to equal reconstructed supplier balances
+- no negative supplier balances
+- supplier concentration ratios to remain within 0-100%
 - credit loss allowance to reconcile to `1190_CREDIT_LOSS_ALLOWANCE`
 - inventory provision to reconcile to `1290_INVENTORY_PROVISION`
 - neither provision to exceed its gross asset
@@ -423,7 +462,7 @@ The GitHub Pages application contains:
 - Operations & CAPEX
 - Data Journey
 
-`Working Capital` now shows Gross AR -> ECL -> Net AR and Gross Inventory -> Provision -> Net Inventory, while retaining detailed customer and SKU aging.
+`Working Capital` combines Gross AR -> ECL -> Net AR, Gross Inventory -> Provision -> Net Inventory, AP aging, supplier concentration and DSO/DIO/DPO in one connected view.
 
 `Balance Sheet` shows gross-to-net asset bridges and keeps legal provisions separate from the consolidation-only unrealized intercompany markup reserve.
 
@@ -480,6 +519,10 @@ data/processed/credit_loss_allowance.csv
 data/processed/inventory_aging.csv
 data/processed/inventory_provision.csv
 data/processed/provision_summary.csv
+data/processed/ap_aging.csv
+data/processed/ap_aging_summary.csv
+data/processed/supplier_concentration.csv
+data/processed/suppliers.csv
 data/processed/software_subscription_summary.csv
 data/processed/events_backlog.csv
 data/processed/hardware_factory_economics.csv
@@ -517,15 +560,16 @@ GitHub Actions performs the full close automatically:
 4. generate rolling operating history
 5. create the accounting ledger
 6. post factory absorption accounting
-7. reconstruct Working Capital schedules
+7. reconstruct AR, inventory and AP Working Capital schedules
 8. calculate and post asset-quality provisions
 9. rebuild legal and consolidated financial statements
-10. build divisional operating schedules
-11. build rolling forecast vintages and accuracy outputs
-12. run all release controls
-13. generate the CFO analytical dataset
-14. commit compact generated outputs
-15. publish GitHub Pages
+10. build supplier concentration analytics
+11. build divisional operating schedules
+12. build rolling forecast vintages and accuracy outputs
+13. run all release controls
+14. generate the CFO analytical dataset
+15. commit compact generated outputs
+16. publish GitHub Pages
 
 The core project requires no paid database, hosted application server, paid market-data subscription or paid AI API.
 
