@@ -9,15 +9,6 @@ from .model import SimulationResult
 from .workforce import simulate_operations_with_workforce
 
 
-MONEY_COLUMNS_BUYER = [
-    "revenue",
-    "variable_selling_cost",
-    "non_people_opex",
-    "personnel_cost_allocated",
-    "opex",
-]
-
-
 def _money(value: float) -> float:
     return round(float(value), 2)
 
@@ -42,14 +33,7 @@ def _fx_lookup(macro: pd.DataFrame) -> dict[tuple[str, str], float]:
 
 
 def _translate_reference_amount(reference_eur: float, calibration_fx: float, current_fx: float) -> tuple[float, float]:
-    """Return functional-currency amount and current reported EUR amount.
-
-    The pre-FX operating model is treated as a constant-currency economic base.
-    Dividing by a fixed calibration FX creates a stable local price/cost level.
-    Translating that local amount at the monthly FX makes reported EUR performance
-    respond to currency without letting spot FX alter underlying volume or local
-    commercial economics.
-    """
+    """Return functional-currency amount and current reported EUR amount."""
     local = float(reference_eur) / float(calibration_fx)
     reported = local * float(current_fx)
     return _money(local), _money(reported)
@@ -61,6 +45,13 @@ def apply_native_fx_to_operations(
     config: dict,
     fx_policy: dict,
 ) -> pd.DataFrame:
+    """Translate constant-currency operating economics through functional currencies.
+
+    The pre-FX model remains the economic base. Revenue/selling/payroll economics
+    originate in the commercial entity currency, while Hardware/Spare Parts direct
+    manufacturing cost originates in the source factory currency. Monetary totals
+    are always recomposed from translated components at cent precision.
+    """
     if operations.empty:
         return operations.copy()
 
@@ -69,9 +60,6 @@ def apply_native_fx_to_operations(
     fx = _fx_lookup(macro)
     out = operations.copy()
 
-    # Preserve the underlying constant-currency economics for auditability and
-    # Workforce demand planning. Current columns are then overwritten with the
-    # monthly EUR reporting translation.
     reference_columns = [
         "revenue", "variable_production_cost", "variable_selling_cost",
         "fixed_production_cost", "marginal_contribution", "gross_profit",
@@ -100,27 +88,41 @@ def apply_native_fx_to_operations(
         if buyer_current <= 0:
             raise ValueError(f"Missing monthly FX for {entity} {buyer_currency} {month}")
 
-        rev_local, rev_eur = _translate_reference_amount(float(row["revenue_constant_currency_eur"]), buyer_calibration, buyer_current)
+        rev_local, rev_eur = _translate_reference_amount(
+            float(row["revenue_constant_currency_eur"]), buyer_calibration, buyer_current
+        )
         out.at[idx, "revenue"] = rev_eur
         revenue_currency.append(buyer_currency)
         revenue_local.append(rev_local)
 
         if "unit_price" in out.columns:
-            price_local, price_eur = _translate_reference_amount(float(row["unit_price_constant_currency_eur"]), buyer_calibration, buyer_current)
+            price_local, price_eur = _translate_reference_amount(
+                float(row["unit_price_constant_currency_eur"]), buyer_calibration, buyer_current
+            )
             out.at[idx, "unit_price"] = price_eur
             out.at[idx, "unit_price_local"] = price_local
 
-        # Selling costs and operating expenses belong to the commercial/legal
-        # entity and therefore originate in that entity's functional currency.
-        for column in ["variable_selling_cost", "non_people_opex", "personnel_cost_allocated", "opex"]:
+        # Commercial/local components are translated separately so OPEX can be
+        # recomposed exactly from payroll + non-people cost after cent rounding.
+        for column in ["variable_selling_cost", "non_people_opex", "personnel_cost_allocated"]:
             reference_column = f"{column}_constant_currency_eur"
             if column in out.columns and reference_column in out.columns:
-                local, reported = _translate_reference_amount(float(row[reference_column]), buyer_calibration, buyer_current)
+                local, reported = _translate_reference_amount(
+                    float(row[reference_column]), buyer_calibration, buyer_current
+                )
                 out.at[idx, column] = reported
                 out.at[idx, f"{column}_local"] = local
 
-        # Software/Events delivery cost is local to the commercial entity. Physical
-        # manufacturing economics originate in the source factory functional currency.
+        if "non_people_opex" in out.columns and "personnel_cost_allocated" in out.columns:
+            opex_reported = _money(float(out.at[idx, "non_people_opex"]) + float(out.at[idx, "personnel_cost_allocated"]))
+            opex_local = _money(float(out.at[idx, "non_people_opex_local"]) + float(out.at[idx, "personnel_cost_allocated_local"]))
+        else:
+            opex_local, opex_reported = _translate_reference_amount(
+                float(row["opex_constant_currency_eur"]), buyer_calibration, buyer_current
+            )
+        out.at[idx, "opex"] = opex_reported
+        out.at[idx, "opex_local"] = opex_local
+
         source_factory = str(row.get("source_factory", ""))
         cost_entity = source_factory if division in {"Hardware", "Spare Parts"} and source_factory else entity
         cost_currency = entity_currency.get(cost_entity, buyer_currency)
@@ -143,12 +145,11 @@ def apply_native_fx_to_operations(
         out.at[idx, "fixed_production_cost_local"] = fixed_local
 
         variable_selling = float(out.at[idx, "variable_selling_cost"])
-        opex = float(out.at[idx, "opex"])
         marginal = _money(rev_eur - direct_eur - variable_selling)
         gross_profit = _money(marginal - fixed_eur)
         out.at[idx, "marginal_contribution"] = marginal
         out.at[idx, "gross_profit"] = gross_profit
-        out.at[idx, "ebit_before_dep"] = _money(gross_profit - opex)
+        out.at[idx, "ebit_before_dep"] = _money(gross_profit - opex_reported)
 
     out["revenue_currency"] = revenue_currency
     out["revenue_local"] = revenue_local
@@ -163,7 +164,6 @@ def simulate_operations_with_native_fx(
     macro: pd.DataFrame,
     fx_policy_path: str = "config/fx-policy.yml",
 ) -> SimulationResult:
-    """Generate Workforce-aware operations, then translate native local economics."""
     base = simulate_operations_with_workforce(config, months, macro)
     policy = load_fx_policy(fx_policy_path)
     operations = apply_native_fx_to_operations(base.operations, macro, config, policy)
@@ -179,6 +179,7 @@ def validate_native_fx_economics(operations: pd.DataFrame, macro: pd.DataFrame, 
     if operations.empty:
         return {
             "native_fx_revenue_roundtrip_max_gap": 0.0,
+            "native_fx_opex_component_max_gap": 0.0,
             "native_fx_missing_currency_rows": 1,
             "native_fx_reported_sensitivity_rows": 0,
             "passed": False,
@@ -201,9 +202,18 @@ def validate_native_fx_economics(operations: pd.DataFrame, macro: pd.DataFrame, 
         if currency != "EUR" and abs(float(row.revenue) - float(row.revenue_constant_currency_eur)) > 0.01:
             sensitive += 1
     max_gap = max(gaps) if gaps else 0.0
+    if {"non_people_opex", "personnel_cost_allocated"}.issubset(operations.columns):
+        opex_gap = float((
+            operations.opex.astype(float)
+            - operations.non_people_opex.astype(float)
+            - operations.personnel_cost_allocated.astype(float)
+        ).abs().max())
+    else:
+        opex_gap = 0.0
     return {
         "native_fx_revenue_roundtrip_max_gap": round(max_gap, 2),
+        "native_fx_opex_component_max_gap": round(opex_gap, 2),
         "native_fx_missing_currency_rows": int(missing),
         "native_fx_reported_sensitivity_rows": int(sensitive),
-        "passed": max_gap <= 0.02 and missing == 0 and sensitive > 0,
+        "passed": max_gap <= 0.02 and opex_gap <= 0.02 and missing == 0 and sensitive > 0,
     }
