@@ -1,24 +1,28 @@
 # Enterprise Finance Command Center
 
-Enterprise Finance Command Center is an end-to-end CFO analytics project built around a continuously evolving synthetic multinational company.
+Enterprise Finance Command Center is an end-to-end CFO / FP&A portfolio project built around a continuously evolving synthetic multinational company.
 
-The project does not generate disconnected dashboard numbers. It models economic activity first, translates that activity into double-entry accounting, consolidates legal entities, derives connected financial statements, creates rolling forecasts and publishes a CFO-oriented analytical application.
-
-The synthetic group is **Aureon Systems Group**. It operates four deliberately different business models:
-
-- Software: recurring subscriptions and services
-- Hardware: manufactured units sold through commercial entities
-- Events & Projects: project-based revenue with irregular demand
-- Spare Parts: high-SKU aftermarket activity with inventory intensity
-
-The group has six legal entities across Germany, Spain, Czech Republic, China, the United States and Japan. Brno and Suzhou operate manufacturing sites and supply commercial entities through cost-plus intercompany flows.
+The project does not generate disconnected dashboard numbers. It models economic activity first, translates that activity into double-entry accounting, consolidates legal entities, derives connected financial statements, builds management schedules, creates Budget and rolling Forecast versions, and publishes a CFO-oriented analytical application.
 
 Live application: https://raul-s-c.github.io/enterprise-finance-command-center/
 
-## Core design principle
+## Synthetic group
+
+The fictional company is **Aureon Systems Group**.
+
+It combines four deliberately different business models:
+
+- Software: recurring subscriptions and services
+- Hardware: manufactured products sold through commercial entities
+- Events & Projects: project-based revenue and backlog
+- Spare Parts: high-SKU aftermarket activity linked to installed base
+
+The group has legal entities in Germany, Spain, Czech Republic, China, the United States and Japan. Brno and Suzhou operate manufacturing sites and supply commercial entities through cost-plus intercompany flows.
+
+## Core architecture
 
 ```text
-Macro environment
+Public macro drivers
         ->
 Business drivers
         ->
@@ -32,46 +36,53 @@ Intercompany consolidation
         ->
 P&L / Balance Sheet / Cash Flow
         ->
-Working-capital and asset-quality schedules
+Working Capital / Asset Quality / CAPEX
         ->
-Divisional operating schedules / CAPEX / Profitability
+Divisional operating schedules
         ->
-Rolling forecast
+Annual Budget / Rolling Forecast
         ->
 Management decisions
         ->
 CFO analytics
 ```
 
-P&L, balance sheet, cash flow, Working Capital, asset quality and business-driver analytics all originate from the same economic system. They are not independently generated dashboard series.
+P&L, Balance Sheet, Cash Flow, Working Capital, provisions, factory economics, Budget and Forecast all originate from the same economic system.
 
-## Current release: v0.8
+## Current release: v0.9
 
-Version 0.8 completes the operating Working Capital layer with reconciled supplier-level Accounts Payable aging and supplier-concentration analytics.
+Version 0.9 adds a frozen Annual Budget and full-year planning layer.
 
-The current project contains:
+The current system includes:
 
-- 236 synthetic product references across four asymmetric divisions
-- six legal entities and four management divisions
+- 236 synthetic product references
+- 19 division/family combinations
+- four business models
+- six legal entities
+- two factories
 - 36 rolling actual months
 - 18 forecast months
 - double-entry accounting
 - legal and consolidated financial statements
+- Annual Budget with prior-year approval vintage
+- YTD Actual vs Budget
+- FY Budget vs Latest Outlook
+- FC-1 / FC-3 / FC-6 full-year outlook reconstruction
 - customer-level AR aging
-- SKU-level inventory aging
-- supplier-level AP aging
 - expected credit loss accounting
-- inventory obsolescence provision accounting
-- gross-to-net asset presentation
-- three-way Working Capital schedule integrity across AR, Inventory and AP
+- SKU-level inventory aging
+- inventory obsolescence provisions
+- supplier-level AP aging
 - supplier concentration and single-source exposure
-- Software ARR and retention schedules
-- Events bookings and backlog schedules
-- Hardware factory-capacity, production-mix and absorption accounting
-- Spare Parts installed-base and aftermarket schedules
-- historical forecast vintages and accuracy analysis
-- deterministic product lifecycle decisions
-- automated monthly publication through GitHub Actions and GitHub Pages
+- Software ARR / MRR / churn / NRR
+- Events bookings / backlog / book-to-bill
+- Hardware capacity / utilization / absorption accounting
+- Spare Parts installed-base economics
+- CAPEX projects from CIP through go-live and depreciation
+- product and customer profitability
+- price / volume / mix analysis
+- product lifecycle decisions
+- automated GitHub Actions close and GitHub Pages deployment
 
 ## Product hierarchy
 
@@ -84,22 +95,19 @@ Division
                   -> SKU / Generation
 ```
 
-Each product type normally has Essential, Professional and Premium tiers. Quality tier changes price, cost, expected demand, selling-cost intensity and customer penetration.
-
-The catalogs are intentionally different:
-
-- Software: Platform, Security, Analytics and Automation
-- Hardware: Control Systems, Edge Appliances, Terminals, Network Devices and Sensors & Readers
-- Events & Projects: Deployment & Integration, Training & Enablement, Customer Experience and Managed Programs
-- Spare Parts: Control Modules, Maintenance Kits, Interface Components, Mechanical Parts, Security Components and Consumables
-
-Customers receive deterministic partial assortments rather than an artificial customer x SKU Cartesian dataset.
+Commercial tiers are typically Essential, Professional and Premium. Customers receive deterministic partial assortments rather than an artificial customer x SKU Cartesian product.
 
 See `docs/product-hierarchy.md`.
 
 ## Working Capital and asset quality
 
-Version 0.8 separates operating exposure, accounting valuation and payment behavior while keeping each layer reconciled to the legal ledger.
+The project contains three reconciled operating schedules:
+
+```text
+Customer AR aging   -> 1100_AR
+SKU inventory aging -> 1200_INVENTORY
+Supplier AP aging   -> 2100_AP
+```
 
 ### Trade receivables
 
@@ -109,28 +117,7 @@ Gross Trade Receivables
 = Net Trade Receivables
 ```
 
-The gross AR schedule is reconstructed from invoices and collections and remains reconciled to `1100_AR`.
-
-The expected-credit-loss model applies aging rates to each customer exposure and scales them with the stable customer risk score.
-
-Base rates:
-
-```text
-Current            0.2%
-1-30 overdue       1.0%
-31-60 overdue      4.0%
-61-90 overdue     12.0%
->90 overdue       45.0%
-```
-
-Accounts:
-
-```text
-1190_CREDIT_LOSS_ALLOWANCE
-6050_CREDIT_LOSS_EXPENSE
-```
-
-An increase in the allowance reduces EBIT through OPEX. A release reverses the expense.
+The ECL model uses customer risk and aging buckets.
 
 ### Inventory
 
@@ -141,114 +128,29 @@ Gross Legal Inventory
 = Net Consolidated Inventory
 ```
 
-The inventory aging schedule remains reconciled to `1200_INVENTORY`.
-
-Base provision rates:
-
-```text
-0-30 days          0.0%
-31-60 days         0.5%
-61-90 days         2.0%
-91-180 days       12.0%
->180 days         55.0%
-```
-
-Legacy, Spare Parts and Premium inventory receive transparent risk multipliers.
-
-Accounts:
-
-```text
-1290_INVENTORY_PROVISION
-5460_INVENTORY_OBSOLESCENCE
-```
-
-Inventory provision movement is presented in Gross Profit.
-
-Provision entries are non-cash. In the current synthetic tax model they are deliberately treated as non-deductible rather than inventing country-specific tax rules.
-
-See `docs/provisions-and-asset-quality.md`.
+Inventory provision depends on age, product generation, quality tier and business model.
 
 ### Accounts Payable
 
-Version 0.8 reconstructs supplier lots directly from `2100_AP`.
+Supplier lots are reconstructed from the legal AP ledger. The schedule adds:
 
-```text
-Supplier AP Schedule by Legal Entity
-= 2100_AP legal-entity balance
-```
-
-Credits to AP create supplier accrual lots and debits reduce those lots. Supplier payments preferentially settle the originating division but may settle any open payable within the same legal entity, matching the accounting architecture used by the manufacturing entities.
-
-Open AP is classified into:
-
-```text
-Current
-1-30 days overdue
-31-60 days overdue
-61-90 days overdue
->90 days overdue
-```
-
-Supplier counterparts are derived deterministically from the actual ledger accruals rather than generated as an unrelated vendor table. Categories include Manufacturing Supply, Factory Fixed Cost, Logistics & Freight, Delivery Partners, Delivery Capacity and Corporate Services.
-
-The schedule also calculates:
-
+- AP aging
+- payment terms
+- supplier criticality
 - trailing-12-month supplier spend
-- supplier share of external spend
-- group Top-5 supplier concentration
-- current and overdue AP by supplier
-- critical supplier exposure
+- Top-5 concentration
 - single-source exposure
-- transparent supplier risk flags
+- overdue supplier exposure
 
-Top-5 concentration uses the complete trailing-12-month supplier population, including suppliers with zero AP at the close date.
+See:
 
-See `docs/supplier-payables-and-concentration.md`.
+- `docs/working-capital-schedules.md`
+- `docs/provisions-and-asset-quality.md`
+- `docs/supplier-payables-and-concentration.md`
 
-## Divisional operating schedules
+## Factory absorption accounting
 
-The four divisions deliberately do not share one generic operating KPI framework.
-
-### Software
-
-```text
-Opening MRR
-+ New MRR
-+ Expansion MRR
-- Contraction MRR
-- Churn MRR
-= Ending MRR
-```
-
-The schedule calculates MRR, ARR, New ARR, Expansion ARR, Contraction ARR, Churn ARR, NRR, GRR, recurring revenue mix and services revenue. It reconciles to Software operating revenue.
-
-### Events & Projects
-
-```text
-Opening Backlog
-+ Bookings
-- Recognized Revenue
-= Ending Backlog
-```
-
-The schedule calculates bookings, recognized revenue, ending backlog, book-to-bill, backlog coverage and project units.
-
-### Hardware
-
-Hardware exposes manufacturing economics for Brno and Suzhou:
-
-- produced units
-- capacity and utilization
-- capacity headroom
-- actual fixed factory cost
-- standard fixed cost absorbed into production
-- factory absorption variance
-- under-absorption and over-absorption
-- fixed-cost absorption percentage
-- fixed cost per produced unit
-- production mix by family and quality tier
-
-Factory absorption is accounting, not only a KPI:
+Brno and Suzhou use explicit absorption accounting.
 
 ```text
 Actual Factory Fixed Cost
@@ -262,9 +164,41 @@ Account:
 5450_FACTORY_ABSORPTION_VARIANCE
 ```
 
-The variance affects Gross Profit, tax, retained earnings, AP, supplier cash payments and operating cash flow.
+The variance flows through Gross Profit, AP, cash, tax and retained earnings.
 
 See `docs/factory-absorption-accounting.md`.
+
+## Divisional operating schedules
+
+The divisions do not share an artificial generic KPI framework.
+
+### Software
+
+```text
+Opening MRR
++ New MRR
++ Expansion MRR
+- Contraction MRR
+- Churn MRR
+= Ending MRR
+```
+
+Outputs include ARR, NRR, GRR and recurring-revenue mix.
+
+### Events & Projects
+
+```text
+Opening Backlog
++ Bookings
+- Recognized Revenue
+= Ending Backlog
+```
+
+Outputs include backlog, book-to-bill and project volume.
+
+### Hardware
+
+Outputs include capacity, utilization, production mix, absorbed fixed cost and under/over-absorption.
 
 ### Spare Parts
 
@@ -275,175 +209,65 @@ Opening Installed Base
 = Ending Installed Base
 ```
 
-The schedule calculates installed base, aftermarket revenue, revenue per installed unit, active SKUs, inventory coverage and inventory health.
+Outputs include aftermarket revenue, inventory coverage and installed-base economics.
 
 See `docs/divisional-operating-schedules.md`.
 
-## Finance engine
+## Annual Budget and FY planning
 
-The finance engine includes:
+The Annual Budget is intentionally separate from the rolling Forecast.
 
-- deterministic synthetic economic activity
-- public ECB FX integration with deterministic fallback data
-- customer-product operating activity
-- double-entry journals
-- monthly P&L closing to retained earnings
-- legal-entity P&L and balance sheets
-- consolidated management P&L
-- connected cash flow
-- AR, AP and inventory mechanics
-- DSO, DPO and DIO
-- reconciled customer AR aging
-- reconciled SKU inventory aging
-- reconciled supplier AP aging
-- expected credit loss allowance
-- inventory obsolescence provision
-- supplier concentration and single-source analysis
-- cost-plus intercompany manufacturing flows
-- reciprocal intercompany AR/AP and settlements
-- transfer-pricing consolidation bridge
-- unrealized intercompany markup reserve in inventory
-- CAPEX lifecycle from CIP to go-live, PPE and depreciation
-- factory capacity, utilization and absorption accounting
-- debt, interest, income-tax accruals and quarterly payments
-- product, family, quality-tier and customer profitability
-- price / volume / mix analysis
-- deterministic portfolio reviews and replacement launches
-- rolling forecast vintages
-- Base, Upside and Downside scenarios
-- forecast accuracy and bias
-- procedural CFO commentary
-- automated release controls
-
-## Synthetic company structure
+Budget 2026, for example, is approved using an October 2025 planning vintage.
 
 ```text
-Aureon Systems Group
-
-DE01 Germany
-  HQ
-  Software
-  Hardware Sales
-
-ES01 Spain
-  Hardware Sales
-  Events
-  Spare Parts
-
-CZ01 Czech Republic
-  Brno Smart Manufacturing
-
-CN01 China
-  Suzhou Manufacturing Hub
-
-US01 United States
-  Software
-  Hardware Sales
-  Events
-
-JP01 Japan
-  Software
-  Hardware Sales
-  Spare Parts
+Budget 2026
+Vintage: 2025-10
+Targets: 2026-01 to 2026-12
 ```
 
-A physical-product sale can start in a factory, create a cost-plus intercompany invoice, become inventory in a commercial entity, convert to an external sale and receivable, and finally convert to cash.
+No actual information after the budget vintage may change the frozen plan.
 
-## Three-way Working Capital integrity
-
-The project now contains three reconciled operating schedules:
+Commercial combinations use:
 
 ```text
-Customer AR aging  -> 1100_AR
-SKU inventory aging -> 1200_INVENTORY
-Supplier AP aging  -> 2100_AP
+Trailing observable revenue run-rate
+x structural growth
+x management stretch
+x monthly phasing
+= Revenue Budget
 ```
 
-AR and Inventory also have accounting valuation layers through ECL and inventory provisions. AP remains a gross legal liability schedule.
+Factories and other zero-revenue cost centers use a separate cost-based planning model.
 
-This allows the CFO view to distinguish:
-
-- collection risk from customer credit valuation
-- stock aging from inventory carrying value
-- payment velocity from supplier overdue exposure
-- supplier payment discipline from supplier concentration risk
-
-## Product lifecycle
-
-A subset of the catalog is modeled as legacy generation. The portfolio review engine evaluates trailing profitability every six months.
+The Plan & Forecast layer provides:
 
 ```text
-Active
--> Phase-out approved
--> Phase-out effective
--> Replacement approved
--> Replacement launched
+YTD Actual vs Budget
+FY Budget vs Latest Outlook
+FY Budget vs FC-1
+FY Budget vs FC-3
+FY Budget vs FC-6
 ```
 
-The consequences flow into future revenue, margin, Working Capital, factory production and cash rather than being inserted as dashboard annotations.
+FY outlook combines closed actual months with the remaining months from the selected forecast vintage. Depreciation is included before calculating forecast EBIT.
 
-## Financial controls
-
-Publication is blocked if financial controls fail. The suite requires, among other checks:
-
-- every journal to balance
-- total trial balance to equal zero
-- every legal balance sheet to balance
-- consolidated balance sheet to balance
-- legal intercompany AR and AP to reconcile
-- cash-flow movement to reconcile to cash
-- legal-to-group revenue and EBIT bridges to reconcile
-- AR aging and buckets to reconcile to `1100_AR`
-- inventory aging and buckets to reconcile to `1200_INVENTORY`
-- supplier AP aging to reconcile to legal-entity `2100_AP`
-- AP aging buckets to equal reconstructed supplier balances
-- no negative supplier balances
-- supplier concentration ratios to remain within 0-100%
-- credit loss allowance to reconcile to `1190_CREDIT_LOSS_ALLOWANCE`
-- inventory provision to reconcile to `1290_INVENTORY_PROVISION`
-- neither provision to exceed its gross asset
-- Software revenue and ARR roll-forward to reconcile
-- Events backlog roll-forward to reconcile
-- factory utilization to recalculate from production and capacity
-- factory absorption schedule to reconcile to `5450_FACTORY_ABSORPTION_VARIANCE`
-- actual fixed cost - absorbed fixed cost - absorption variance to equal zero
-- Spare Parts installed-base roll-forward to reconcile
-- forecast targets to occur strictly after their vintage
-- catalog and sold-product breadth thresholds to pass
-
-A failed control raises an exception before deployment.
-
-## Macro and external data
-
-Current preferred live source:
-
-- ECB Data Portal monthly foreign-exchange reference rates
-
-Current deterministic fallback drivers:
-
-- inflation
-- industrial activity index
-- energy index
-- policy interest rate
-- FX curves
-
-The source layer is isolated so Eurostat and World Bank data can progressively replace fallback drivers without changing downstream accounting contracts.
+See `docs/budget-and-fy-planning.md`.
 
 ## Rolling forecasting
 
-Every close creates a forecast vintage. Historical vintages remain available for accuracy analysis.
+Every monthly close creates a forecast vintage.
 
 The forecast engine:
 
 1. uses only information observable at the vintage date
-2. estimates a driver-based baseline from recent actuals
-3. applies divisional growth and seasonality
-4. calculates historical entity/division bias from realized prior forecasts
-5. applies a capped bias correction
+2. builds an entity/division baseline from recent actuals
+3. applies structural growth and seasonality
+4. calculates historical forecast bias
+5. applies capped bias correction
 6. generates Base, Upside and Downside scenarios
-7. stores the vintage for later MAPE and bias evaluation
+7. preserves historical vintages for accuracy analysis
 
-This enables Actual vs FC-1, FC-3, FC-6 and forecast-bias analysis as monthly closes accumulate.
+This supports FC-1, FC-3, FC-6, MAPE and bias analysis.
 
 ## CFO application
 
@@ -456,30 +280,98 @@ The GitHub Pages application contains:
 - Working Capital
 - Cash Flow
 - Balance Sheet
-- Forecast
+- Plan & Forecast
 - Profitability
 - Intercompany
 - Operations & CAPEX
 - Data Journey
 
-`Working Capital` combines Gross AR -> ECL -> Net AR, Gross Inventory -> Provision -> Net Inventory, AP aging, supplier concentration and DSO/DIO/DPO in one connected view.
+The application is static and reads compact JSON generated by the finance engine.
 
-`Balance Sheet` shows gross-to-net asset bridges and keeps legal provisions separate from the consolidation-only unrealized intercompany markup reserve.
+## Release controls
 
-`P&L` identifies factory absorption, inventory-provision movement and expected-credit-loss movement explicitly.
+Deployment is blocked if material controls fail.
 
-## Repository structure
+The suite includes:
+
+- journal balance
+- trial balance
+- legal Balance Sheet equation
+- consolidated Balance Sheet equation
+- cash-flow reconciliation
+- intercompany AR/AP reconciliation
+- consolidation revenue and EBIT bridges
+- AR aging to GL
+- inventory aging to GL
+- AP aging to GL
+- ECL allowance to contra-asset account
+- inventory provision to contra-asset account
+- factory absorption schedule to ledger
+- Software ARR roll-forward
+- Events backlog roll-forward
+- Spare Parts installed-base roll-forward
+- forecast no-lookahead
+- product-catalog breadth
+- frozen Budget no-hindsight
+- 12-month Budget coverage
+- Budget duplicate detection
+- current-year Budget presence
+- FY plan bridge presence
+
+A failed control raises an exception before deployment.
+
+## Main generated outputs
 
 ```text
-.github/workflows/       Monthly close, validation and Pages deployment
-config/                  Company structure and finance policies
-data/processed/          Compact generated reporting outputs committed to Git
-data/runtime/            Reproducible transaction and journal detail generated at runtime
-docs/                    Architecture and finance documentation
-src/enterprise_finance/  Simulation, accounting, reporting, forecasting and schedule engines
-tests/                   Financial and technical release controls
-web/                     Static CFO application
+data/processed/legal_pnl.csv
+data/processed/management_pnl.csv
+data/processed/balance_sheet.csv
+data/processed/cash_flow.csv
+data/processed/working_capital.csv
+data/processed/ar_aging.csv
+data/processed/credit_loss_allowance.csv
+data/processed/inventory_aging.csv
+data/processed/inventory_provision.csv
+data/processed/ap_aging.csv
+data/processed/supplier_concentration.csv
+data/processed/software_subscription_summary.csv
+data/processed/events_backlog.csv
+data/processed/hardware_factory_economics.csv
+data/processed/spare_parts_economics.csv
+data/processed/annual_budget.csv
+data/processed/budget_performance.csv
+data/processed/fy_plan_bridge.csv
+data/processed/forecast_vintages.csv
+data/processed/forecast_accuracy.csv
+data/processed/validation.json
+web/data/dashboard.json
+web/data/manifest.json
 ```
+
+Full reproducible operating and journal detail is generated at runtime and intentionally excluded from Git history.
+
+## Automation
+
+GitHub Actions performs the complete close automatically:
+
+1. install the finance engine
+2. run tests
+3. refresh macro inputs where available
+4. generate operating history
+5. create the ledger
+6. post factory absorption
+7. reconstruct Working Capital schedules
+8. calculate asset-quality provisions
+9. consolidate financial statements
+10. build divisional schedules
+11. build the frozen Annual Budget where applicable
+12. build forecast vintages and FY outlooks
+13. run release controls
+14. generate the CFO dataset
+15. commit compact outputs
+16. deploy GitHub Pages
+
+No paid database, application server, LLM API or paid market-data subscription is required.
 
 ## Run locally
 
@@ -489,90 +381,12 @@ pytest
 python -m enterprise_finance.cli build --end-month 2026-08
 ```
 
-To force deterministic fallback macro data:
+To disable live macro retrieval:
 
 ```bash
 python -m enterprise_finance.cli build --end-month 2026-08 --offline-macro
 ```
 
-If `--end-month` is omitted, the pipeline closes the previous completed calendar month.
-
-## Main generated outputs
-
-```text
-data/processed/chart_of_accounts.csv
-data/processed/macro.csv
-data/processed/products.csv
-data/processed/customers.csv
-data/processed/operational_sample.csv
-data/processed/journal_sample.csv
-data/processed/provision_journal.csv
-data/processed/legal_pnl.csv
-data/processed/management_pnl.csv
-data/processed/pnl.csv
-data/processed/legal_balance_sheet.csv
-data/processed/balance_sheet.csv
-data/processed/cash_flow.csv
-data/processed/working_capital.csv
-data/processed/ar_aging.csv
-data/processed/credit_loss_allowance.csv
-data/processed/inventory_aging.csv
-data/processed/inventory_provision.csv
-data/processed/provision_summary.csv
-data/processed/ap_aging.csv
-data/processed/ap_aging_summary.csv
-data/processed/supplier_concentration.csv
-data/processed/suppliers.csv
-data/processed/software_subscription_summary.csv
-data/processed/events_backlog.csv
-data/processed/hardware_factory_economics.csv
-data/processed/hardware_production_mix.csv
-data/processed/spare_parts_economics.csv
-data/processed/intercompany.csv
-data/processed/factory.csv
-data/processed/capex.csv
-data/processed/product_profitability.csv
-data/processed/customer_profitability.csv
-data/processed/price_volume_mix.csv
-data/processed/consolidation_bridge.csv
-data/processed/forecast_vintages.csv
-data/processed/forecast.csv
-data/processed/forecast_accuracy.csv
-data/processed/validation.json
-web/data/dashboard.json
-web/data/manifest.json
-```
-
-Full reproducible detail is generated during every build but intentionally excluded from Git history:
-
-```text
-data/runtime/operational.csv.gz
-data/runtime/journal.csv.gz
-```
-
-## Automation
-
-GitHub Actions performs the full close automatically:
-
-1. install the finance engine
-2. run tests
-3. refresh external macro inputs where available
-4. generate rolling operating history
-5. create the accounting ledger
-6. post factory absorption accounting
-7. reconstruct AR, inventory and AP Working Capital schedules
-8. calculate and post asset-quality provisions
-9. rebuild legal and consolidated financial statements
-10. build supplier concentration analytics
-11. build divisional operating schedules
-12. build rolling forecast vintages and accuracy outputs
-13. run all release controls
-14. generate the CFO analytical dataset
-15. commit compact generated outputs
-16. publish GitHub Pages
-
-The core project requires no paid database, hosted application server, paid market-data subscription or paid AI API.
-
 ## Synthetic data notice
 
-Aureon Systems Group is fictional. Company names, customers, products, transactions and financial results are synthetic. Real public macroeconomic data may be used as external drivers but does not represent the financial performance of any real company.
+Aureon Systems Group is fictional. Company names, customers, suppliers, products, transactions and financial results are synthetic. Real public macroeconomic data may be used as external drivers but does not represent the financial performance of any real company.
