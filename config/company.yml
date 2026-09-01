@@ -57,6 +57,15 @@ working_capital:
   obsolescence_days: 180
   customer_risk_scale: [1, 5]
 
+supplier_management:
+  payment_terms_days:
+    Manufacturing Supply: 60
+    Factory Fixed Cost: 60
+    Logistics & Freight: 45
+    Delivery Partners: 30
+    Delivery Capacity: 45
+    Corporate Services: 30
+
 provisions:
   # Book provisions are treated as non-deductible in the current tax model.
   credit_loss_rates:
