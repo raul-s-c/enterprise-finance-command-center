@@ -81,6 +81,10 @@ def build_three_statement_forecast(
     forecast rows. This preserves a single forward monetary source and prevents
     divisional rounding differences from accumulating in retained earnings.
 
+    Legacy/unit-test liquidity frames may not expose the newer Workforce-specific
+    personnel/non-people split. In that case the function falls back to the detailed
+    forecast OPEX aggregate while preserving the same three-statement identities.
+
     No balancing plug is permitted.
     """
     if forecasts.empty or liquidity.empty or balance_sheet.empty:
@@ -133,14 +137,23 @@ def build_three_statement_forecast(
             period = pd.Period(month, freq="M")
             month_fc = scenario_fc[scenario_fc.month.eq(month)]
 
-            # Use exactly the same cent-precise P&L driver block that generated
-            # Working Capital and cash in the liquidity engine.
-            revenue = _money(liq_row.revenue)
-            opex = _money(float(liq_row.personnel_cost) + float(liq_row.non_people_opex))
-            gross_profit_before_quality = _money(float(liq_row.ebitda) + opex)
-
             detailed_revenue = _money(month_fc.revenue_forecast.sum())
             detailed_opex = _money(month_fc.opex_forecast.sum())
+            detailed_gp = _money(month_fc.gross_profit_forecast.sum())
+
+            # Production v0.14 liquidity frames expose the exact cent-precise
+            # Workforce driver block. Older fixtures do not, so they retain the
+            # detailed forecast aggregate as a compatibility fallback.
+            revenue = _money(getattr(liq_row, "revenue", detailed_revenue))
+            if hasattr(liq_row, "personnel_cost") and hasattr(liq_row, "non_people_opex"):
+                opex = _money(float(liq_row.personnel_cost) + float(liq_row.non_people_opex))
+            else:
+                opex = detailed_opex
+            if hasattr(liq_row, "ebitda"):
+                gross_profit_before_quality = _money(float(liq_row.ebitda) + opex)
+            else:
+                gross_profit_before_quality = detailed_gp
+
             driver_revenue_rounding_gap = _money(revenue - detailed_revenue)
             driver_opex_rounding_gap = _money(opex - detailed_opex)
 
