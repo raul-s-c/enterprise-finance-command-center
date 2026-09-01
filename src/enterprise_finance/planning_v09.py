@@ -10,7 +10,7 @@ def _remaining_plan(actual: pd.DataFrame, forecasts: pd.DataFrame, year: int, vi
     base = forecasts[
         forecasts.scenario.eq("Base")
         & forecasts.vintage.eq(str(vintage))
-        & pd.PeriodIndex(forecasts.month, freq="M").year.eq(year)
+        & (pd.PeriodIndex(forecasts.month, freq="M").year == year)
     ].copy()
     if base.empty:
         fc = pd.DataFrame(columns=["entity", "division", "fc_revenue", "fc_gross_profit", "fc_opex"])
@@ -53,7 +53,7 @@ def _remaining_plan(actual: pd.DataFrame, forecasts: pd.DataFrame, year: int, vi
 def fy_outlook(management: pd.DataFrame, forecasts: pd.DataFrame, year: int, vintage: pd.Period) -> pd.DataFrame:
     actual = actual_monthly(management)
     scope = actual[
-        pd.PeriodIndex(actual.month, freq="M").year.eq(year)
+        (pd.PeriodIndex(actual.month, freq="M").year == year)
         & (pd.PeriodIndex(actual.month, freq="M") <= vintage)
     ]
     act = scope.groupby(["entity", "division"], as_index=False).agg(
@@ -96,7 +96,7 @@ def fy_plan_bridge(management: pd.DataFrame, budgets: pd.DataFrame, forecasts: p
         ytd_budget_ebit=("ebit_budget", "sum"),
     )
     ytd_actual = actual[
-        pd.PeriodIndex(actual.month, freq="M").year.eq(year)
+        (pd.PeriodIndex(actual.month, freq="M").year == year)
         & (pd.PeriodIndex(actual.month, freq="M") <= end)
     ].groupby(["entity", "division"], as_index=False).agg(
         ytd_actual_revenue=("revenue", "sum"),
