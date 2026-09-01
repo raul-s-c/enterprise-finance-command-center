@@ -22,7 +22,8 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
 
     Contract settlement is injected at cent precision before running the v0.10
     rebuild. The wrapper then reasserts forecast-scale/no-lookahead controls from
-    v0.9.1 and publishes exact Entity/Division contract summaries.
+    v0.9.1, validates customer refunds and publishes exact Entity/Division
+    contract summaries.
     """
     engine_v10_module.apply_contract_liability_accounting = cent_precise_contract_settlement
     result = engine_v10_module.build(
@@ -30,6 +31,7 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     )
 
     operations = _read_csv("data/runtime/operational.csv.gz")
+    journal = _read_csv("data/runtime/journal.csv.gz")
     forecasts = _read_csv("data/processed/forecast_vintages.csv")
     products = _read_csv("data/processed/products.csv")
     contracts = _read_csv("data/processed/contract_liabilities.csv")
@@ -40,19 +42,27 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
         (pd.PeriodIndex(forecasts.month, freq="M") <= pd.PeriodIndex(forecasts.vintage, freq="M")).sum()
     ) if not forecasts.empty else 0
 
+    refunds = journal[journal.journal_type.eq("customer_advance_refund")].copy()
+    refund_balance_gap = 0.0
+    if not refunds.empty:
+        by_refund = refunds.groupby("journal_id", as_index=False).agg(debit=("debit", "sum"), credit=("credit", "sum"))
+        refund_balance_gap = float((by_refund.debit - by_refund.credit).abs().max())
+
     with open("data/processed/validation.json", "r", encoding="utf-8") as handle:
         checks = json.load(handle)
     checks.update({key: value for key, value in forecast_scale.items() if key != "passed"})
     checks["forecast_lookahead_errors"] = lookahead_errors
     checks["catalog_product_count"] = int(len(products))
     checks["catalog_family_count"] = int(products[["division", "product_family"]].drop_duplicates().shape[0])
-    checks["sold_product_count"] = int(operations.product.nunique())
+    checks["sold_product_count"] = int(operations["product"].nunique())
+    checks["contract_refund_journal_max_gap"] = round(refund_balance_gap, 2)
     checks["passed"] = bool(
         checks.get("passed", False)
         and forecast_scale["passed"]
         and lookahead_errors == 0
         and checks["catalog_product_count"] >= 200
         and checks["sold_product_count"] >= 150
+        and refund_balance_gap <= 0.02
     )
     if not checks["passed"]:
         raise RuntimeError(f"v0.10 final release controls failed: {checks}")
@@ -72,6 +82,14 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
             entity_summary = entity_summary.merge(receipt_summary, on=["entity", "division"], how="outer")
         entity_summary = entity_summary.fillna(0.0)
 
+    refund_cash = refunds[refunds.account.eq("1000_CASH")].copy() if not refunds.empty else pd.DataFrame()
+    latest_refund_cash = refund_cash[refund_cash.month.eq(end_month)] if not refund_cash.empty else pd.DataFrame()
+    end = pd.Period(end_month, freq="M")
+    trailing_start = str(end - 11)
+    trailing_refund_cash = refund_cash[
+        refund_cash.month.ge(trailing_start) & refund_cash.month.le(end_month)
+    ] if not refund_cash.empty else pd.DataFrame()
+
     with open("data/processed/validation.json", "w", encoding="utf-8") as handle:
         json.dump(checks, handle, indent=2)
 
@@ -85,6 +103,9 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     dashboard["customer_advances"] = base_engine._records(
         latest_advances.sort_values("advance_amount", ascending=False).head(500)
     ) if not latest_advances.empty else []
+    dashboard["contract_refunds"] = base_engine._records(
+        refund_cash.sort_values(["month", "credit"], ascending=[False, False]).head(500)
+    ) if not refund_cash.empty else []
     dashboard["validation"] = checks
     with open("web/data/dashboard.json", "w", encoding="utf-8") as handle:
         json.dump(dashboard, handle, separators=(",", ":"), allow_nan=False)
@@ -95,6 +116,9 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     manifest["forecast_next_month_scale_ratio"] = round(float(forecast_scale["forecast_next_month_scale_ratio"]), 4)
     manifest["forecast_lookahead_errors"] = lookahead_errors
     manifest["contract_entity_division_rows"] = int(len(entity_summary))
+    manifest["contract_refund_journal_rows"] = int(len(refunds))
+    manifest["latest_customer_advance_refunds"] = round(float(latest_refund_cash.credit.sum()), 2) if not latest_refund_cash.empty else 0.0
+    manifest["trailing_12m_customer_advance_refunds"] = round(float(trailing_refund_cash.credit.sum()), 2) if not trailing_refund_cash.empty else 0.0
     manifest["validation"] = checks
     with open("web/data/manifest.json", "w", encoding="utf-8") as handle:
         json.dump(manifest, handle, indent=2)
