@@ -6,8 +6,9 @@ from pathlib import Path
 import pandas as pd
 
 from . import engine as base_engine
-from .budgeting_v09 import build_annual_budgets, budget_performance, fy_plan_bridge, validate_budgets
+from .budgeting_v09 import build_annual_budgets, budget_performance, validate_budgets
 from .engine_v08 import build as build_v08
+from .planning_v09 import fy_plan_bridge
 
 
 VERSION = "0.9.0"
@@ -20,13 +21,6 @@ def _read_csv(path: str) -> pd.DataFrame:
 def _write_csv(df: pd.DataFrame, path: str) -> None:
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(path, index=False)
-
-
-def _scope(rows: pd.DataFrame, end_month: str) -> pd.DataFrame:
-    if rows.empty:
-        return rows
-    year = pd.Period(end_month, freq="M").year
-    return rows[rows.budget_year.eq(year)].copy() if "budget_year" in rows.columns else rows
 
 
 def build(end_month: str, config_path: str = "config/company.yml", allow_live_macro: bool = True):
