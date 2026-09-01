@@ -28,6 +28,7 @@ ACCOUNT_META = {
     "5200_FACTORY_COST": ("P&L", "Factory Manufacturing Cost", "Expense"),
     "5300_VARIABLE_SELLING": ("P&L", "Variable Selling & Logistics", "Expense"),
     "5400_FIXED_PRODUCTION": ("P&L", "Fixed Production Cost", "Expense"),
+    "5450_FACTORY_ABSORPTION_VARIANCE": ("P&L", "Factory Absorption Variance", "Expense"),
     "6000_OPEX": ("P&L", "Operating Expenses", "Expense"),
     "6100_DEPRECIATION": ("P&L", "Depreciation", "Expense"),
     "7000_INTEREST": ("P&L", "Net Interest", "Expense"),
@@ -143,6 +144,7 @@ def build_accounting(config: dict, months: pd.PeriodIndex, macro: pd.DataFrame, 
         sales_agg = month_ops.groupby(["entity", "division"], as_index=False).revenue.sum()
         external_accruals: dict[tuple[str, str], float] = defaultdict(float)
         factory_external_cost: dict[str, float] = defaultdict(float)
+        factory_absorbed_fixed: dict[str, float] = defaultdict(float)
         factory_units: dict[str, float] = defaultdict(float)
 
         for idx, r in month_ops.reset_index(drop=True).iterrows():
@@ -227,18 +229,42 @@ def build_accounting(config: dict, months: pd.PeriodIndex, macro: pd.DataFrame, 
                     _add(rows, month=month, entity=seller, division=str(division), journal_id=jid_s, journal_type="intercompany_sale", account="4100_IC_REVENUE", credit=invoice, counterparty=str(buyer), description="Cost-plus manufacturing transfer")
                     jid_c = f"MFG-{month}-{seller}-{buyer}-{btype}"
                     _add(rows, month=month, entity=seller, division=str(division), journal_id=jid_c, journal_type="factory_cost", account="5200_FACTORY_COST", debit=manufacturing_cost, counterparty=str(buyer), description="Manufacturing cost of transferred goods")
-                    _add(rows, month=month, entity=seller, division=str(division), journal_id=jid_c, journal_type="factory_cost", account="2100_AP", credit=manufacturing_cost, counterparty="EXTERNAL", description="Factory supplier and labor accrual")
+                    _add(rows, month=month, entity=seller, division=str(division), journal_id=jid_c, journal_type="factory_cost", account="2100_AP", credit=manufacturing_cost, counterparty="EXTERNAL", description="Factory variable and standard fixed cost accrual")
                     factory_external_cost[seller] += manufacturing_cost
                     source = grp.loc[grp.source_factory.eq(seller)]
-                    avg_unit_group_cost = float(source["group_cost"].sum()) / max(float(source["quantity"].sum()), 1.0)
+                    source_group_cost = float(source["group_cost"].sum())
+                    source_fixed_cost = float(source["fixed_production_cost"].sum())
+                    fixed_share = source_fixed_cost / source_group_cost if source_group_cost else 0.0
+                    factory_absorbed_fixed[seller] += manufacturing_cost * fixed_share
+                    avg_unit_group_cost = source_group_cost / max(float(source["quantity"].sum()), 1.0)
                     factory_units[seller] += manufacturing_cost / max(avg_unit_group_cost, 1.0)
                     pair = (str(buyer), seller)
                     ic_balance[pair] += invoice
                     intercompany_rows.append({"month": month, "seller": seller, "buyer": str(buyer), "division": str(division), "invoice": round(invoice, 2), "manufacturing_cost": round(manufacturing_cost, 2), "markup": round(invoice - manufacturing_cost, 2)})
                 inventory_balance[inv_key] = opening_inv + purchase_tp - sold_tp
 
-        for factory, cost in factory_external_cost.items():
-            external_accruals[(factory, "Hardware")] += cost
+        factory_month_metrics: dict[str, dict[str, float]] = {}
+        for factory, fcfg in config["factories"].items():
+            standard_factory_cost = float(factory_external_cost.get(factory, 0.0))
+            absorbed_fixed = float(factory_absorbed_fixed.get(factory, 0.0))
+            actual_fixed = float(fcfg["fixed_monthly_cost"])
+            variance = actual_fixed - absorbed_fixed
+            jid = f"ABSORB-{month}-{factory}"
+            if variance > 0.005:
+                _add(rows, month=month, entity=factory, division="Hardware", journal_id=jid, journal_type="factory_absorption_variance", account="5450_FACTORY_ABSORPTION_VARIANCE", debit=variance, description="Under-absorbed factory fixed cost")
+                _add(rows, month=month, entity=factory, division="Hardware", journal_id=jid, journal_type="factory_absorption_variance", account="2100_AP", credit=variance, description="Actual factory fixed cost accrual")
+            elif variance < -0.005:
+                _add(rows, month=month, entity=factory, division="Hardware", journal_id=jid, journal_type="factory_absorption_variance", account="2100_AP", debit=-variance, description="Release of over-absorbed factory fixed cost")
+                _add(rows, month=month, entity=factory, division="Hardware", journal_id=jid, journal_type="factory_absorption_variance", account="5450_FACTORY_ABSORPTION_VARIANCE", credit=-variance, description="Over-absorbed factory fixed cost")
+            external_accruals[(factory, "Hardware")] += standard_factory_cost + variance
+            factory_month_metrics[factory] = {
+                "actual_fixed_factory_cost": actual_fixed,
+                "absorbed_fixed_cost": absorbed_fixed,
+                "absorption_variance": variance,
+                "under_absorption": max(variance, 0.0),
+                "over_absorption": max(-variance, 0.0),
+            }
+
         for (entity, division), accrual in list(external_accruals.items()):
             dpo = float(config["divisions"].get(division, config["divisions"]["Hardware"])["dpo"])
             key = (entity, division)
@@ -351,7 +377,25 @@ def build_accounting(config: dict, months: pd.PeriodIndex, macro: pd.DataFrame, 
             base_capacity = float(fcfg["base_monthly_capacity_units"])
             capacity = base_capacity * (1.0 + capacity_increase.get((month, factory), 0.0))
             units = factory_units.get(factory, 0.0)
-            factory_rows.append({"month": month, "factory": factory, "factory_name": fcfg["name"], "produced_units": round(units, 2), "capacity_units": round(capacity, 2), "utilization": round(units / capacity if capacity else 0.0, 4), "capacity_increase_pct": round(capacity / base_capacity - 1.0, 4)})
+            metrics = factory_month_metrics.get(factory, {})
+            actual_fixed = float(metrics.get("actual_fixed_factory_cost", fcfg["fixed_monthly_cost"]))
+            absorbed_fixed = float(metrics.get("absorbed_fixed_cost", 0.0))
+            variance = float(metrics.get("absorption_variance", actual_fixed - absorbed_fixed))
+            factory_rows.append({
+                "month": month,
+                "factory": factory,
+                "factory_name": fcfg["name"],
+                "produced_units": round(units, 2),
+                "capacity_units": round(capacity, 2),
+                "utilization": round(units / capacity if capacity else 0.0, 4),
+                "capacity_increase_pct": round(capacity / base_capacity - 1.0, 4),
+                "actual_fixed_factory_cost": round(actual_fixed, 2),
+                "absorbed_fixed_cost": round(absorbed_fixed, 2),
+                "absorption_variance": round(variance, 2),
+                "under_absorption": round(max(variance, 0.0), 2),
+                "over_absorption": round(max(-variance, 0.0), 2),
+                "fixed_cost_absorption_pct": round(absorbed_fixed / actual_fixed if actual_fixed else 0.0, 4),
+            })
 
     journal = pd.DataFrame(rows)
     if intercompany_rows:
@@ -370,6 +414,27 @@ def validate_journal(journal: pd.DataFrame) -> dict:
     return {"journal_balance_max_gap": round(max_gap, 2), "trial_balance_gap": round(trial_gap, 2)}
 
 
+def validate_factory_absorption_accounting(factory: pd.DataFrame, journal: pd.DataFrame) -> dict:
+    if factory.empty:
+        return {"factory_absorption_rollforward_max_gap": 0.0, "factory_absorption_journal_max_gap": 0.0, "passed": True}
+    schedule = factory.copy()
+    schedule["rollforward_gap"] = schedule.actual_fixed_factory_cost - schedule.absorbed_fixed_cost - schedule.absorption_variance
+    schedule_gap = float(schedule.rollforward_gap.abs().max())
+    j = journal[(journal.account.eq("5450_FACTORY_ABSORPTION_VARIANCE")) & (~journal.journal_type.eq("closing"))].copy()
+    if j.empty:
+        journal_gap = float(schedule.absorption_variance.abs().max())
+    else:
+        j["journal_variance"] = j.debit - j.credit
+        posted = j.groupby(["month", "entity"], as_index=False).journal_variance.sum().rename(columns={"entity": "factory"})
+        recon = schedule[["month", "factory", "absorption_variance"]].merge(posted, on=["month", "factory"], how="outer").fillna(0.0)
+        journal_gap = float((recon.absorption_variance - recon.journal_variance).abs().max())
+    return {
+        "factory_absorption_rollforward_max_gap": round(schedule_gap, 2),
+        "factory_absorption_journal_max_gap": round(journal_gap, 2),
+        "passed": schedule_gap <= 0.02 and journal_gap <= 0.02,
+    }
+
+
 def legal_pnl(journal: pd.DataFrame) -> pd.DataFrame:
     frame = journal[journal.account.isin(P_AND_L_ACCOUNTS) & ~journal.journal_type.eq("closing")].copy()
     frame["amount"] = frame.debit - frame.credit
@@ -380,7 +445,10 @@ def legal_pnl(journal: pd.DataFrame) -> pd.DataFrame:
     pivot["external_revenue"] = -pivot["4000_EXTERNAL_REVENUE"]
     pivot["intercompany_revenue"] = -pivot["4100_IC_REVENUE"]
     pivot["revenue"] = pivot.external_revenue + pivot.intercompany_revenue
-    pivot["cogs"] = pivot["5000_EXTERNAL_COGS"] + pivot["5050_SERVICE_DELIVERY"] + pivot["5200_FACTORY_COST"] + pivot["5400_FIXED_PRODUCTION"]
+    pivot["cogs"] = (
+        pivot["5000_EXTERNAL_COGS"] + pivot["5050_SERVICE_DELIVERY"] + pivot["5200_FACTORY_COST"]
+        + pivot["5400_FIXED_PRODUCTION"] + pivot["5450_FACTORY_ABSORPTION_VARIANCE"]
+    )
     pivot["gross_profit"] = pivot.revenue - pivot.cogs
     pivot["ebit"] = pivot.gross_profit - pivot["5300_VARIABLE_SELLING"] - pivot["6000_OPEX"] - pivot["6100_DEPRECIATION"]
     pivot["ebt"] = pivot.ebit - pivot["7000_INTEREST"]
