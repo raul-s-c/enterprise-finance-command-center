@@ -1,12 +1,12 @@
 import pandas as pd
 
-from enterprise_finance.accounting import build_accounting, validate_journal
+from enterprise_finance.accounting import build_accounting, cash_flow, validate_journal
 from enterprise_finance.contract_liabilities import (
-    apply_contract_liability_accounting,
     group_balance_sheet_with_contracts,
     legal_balance_sheet_with_contracts,
     validate_contract_liabilities,
 )
+from enterprise_finance.contract_settlement_v10 import apply_contract_liability_accounting
 from enterprise_finance.customer_receivables_v10 import build_ar_aging_with_contracts, validate_contract_ar
 from enterprise_finance.engine import load_config, month_range
 from enterprise_finance.macro import build_macro
@@ -17,7 +17,6 @@ from enterprise_finance.provisions import (
     build_inventory_provision_schedule,
 )
 from enterprise_finance.working_capital_detail import build_ar_aging, build_inventory_aging
-from enterprise_finance.accounting import cash_flow
 
 
 def _fixture(periods=8):
@@ -50,9 +49,9 @@ def test_customer_advances_create_reconciled_contract_liabilities_without_changi
     assert abs(original_revenue - adjusted_revenue) <= 0.01
 
     contract_checks = validate_contract_liabilities(adjusted, schedule)
-    assert contract_checks["passed"]
-    assert contract_checks["contract_liability_schedule_max_gap"] <= 0.05
-    assert contract_checks["contract_liability_journal_max_gap"] <= 0.02
+    assert contract_checks["contract_liability_schedule_max_gap"] <= 0.05, contract_checks
+    assert contract_checks["contract_liability_journal_max_gap"] <= 0.02, contract_checks
+    assert contract_checks["passed"], contract_checks
 
     journal_checks = validate_journal(adjusted)
     assert journal_checks["journal_balance_max_gap"] <= 0.02
@@ -68,7 +67,7 @@ def test_contract_aware_ar_reconciles_and_reduces_credit_exposure():
     base_ar = build_ar_aging(accounting.journal, simulation.customers, config)
 
     ar_checks = validate_contract_ar(adjusted, contract_ar)
-    assert ar_checks["passed"]
+    assert ar_checks["passed"], ar_checks
     assert ar_checks["contract_ar_subledger_max_gap"] <= 0.05
 
     end_month = "2026-08"
@@ -107,7 +106,7 @@ def test_contract_liabilities_keep_balance_sheet_and_cash_reconciled_after_provi
     assert float(group_bs.balance_check.abs().max()) <= 0.05
 
     contract_checks = validate_contract_liabilities(journal, schedule)
-    assert contract_checks["passed"]
+    assert contract_checks["passed"], contract_checks
 
     cf = cash_flow(journal)
     cash_movement = cf.groupby("entity", as_index=False).net_cash_movement.sum()
