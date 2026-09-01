@@ -9,7 +9,7 @@ import pandas as pd
 from . import engine as base_engine
 from .engine_v10_final import build as build_v10
 from .reporting import validate_all
-from .treasury import (
+from .treasury_controls_v11 import (
     append_cash_pool_journals,
     cash_flow_with_treasury,
     chart_of_accounts_with_treasury,
@@ -57,7 +57,6 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
 
     base_journal = _read_csv("data/runtime/journal.csv.gz")
     management = _read_csv("data/processed/management_pnl.csv")
-    legal_pnl = _read_csv("data/processed/legal_pnl.csv")
     bridge = _read_csv("data/processed/consolidation_bridge.csv")
 
     journal, pool_schedule = append_cash_pool_journals(base_journal, config)
@@ -73,7 +72,8 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     treasury_checks = validate_treasury(base_journal, journal, legal_bs, group_bs, debt)
 
     latest_entity = entity_treasury[entity_treasury.month.eq(end_month)].copy()
-    non_hq = latest_entity[~latest_entity.entity.eq(str(config.get("treasury", {}).get("hq_entity", "DE01")))]
+    hq = str(config.get("treasury", {}).get("hq_entity", "DE01"))
+    non_hq = latest_entity[~latest_entity.entity.eq(hq)]
     below_minimum = int((non_hq.cash < non_hq.minimum_cash - 0.05).sum()) if not non_hq.empty else 0
     negative_cash = int((latest_entity.cash < -0.05).sum()) if not latest_entity.empty else 0
 
