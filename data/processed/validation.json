@@ -48,5 +48,15 @@
   "treasury_group_balance_sheet_max_gap": 0.0,
   "treasury_debt_schedule_max_gap": 0.0,
   "treasury_subsidiaries_below_minimum_cash": 0,
-  "treasury_negative_cash_entities": 0
+  "treasury_negative_cash_entities": 0,
+  "liquidity_forecast_cash_rollforward_max_gap": 0.0,
+  "liquidity_forecast_customer_cash_max_gap": 0.0,
+  "liquidity_forecast_supplier_cash_max_gap": 0.0,
+  "liquidity_forecast_rcf_identity_max_gap": 0.0,
+  "liquidity_forecast_negative_balance_rows": 0,
+  "liquidity_forecast_missing_scenario_months": 0,
+  "liquidity_forecast_rcf_excess_rows": 0,
+  "liquidity_forecast_shortfall_rows": 0,
+  "liquidity_forecast_base_missing": 0,
+  "liquidity_forecast_downside_missing": 0
 }
