@@ -30,5 +30,11 @@
   "ap_subledger_max_gap": 0.0,
   "ap_aging_bucket_max_gap": 0.0,
   "ap_negative_supplier_balances": 0,
-  "supplier_concentration_out_of_range": 0
+  "supplier_concentration_out_of_range": 0,
+  "budget_future_source_months": 0,
+  "budget_incomplete_groups": 0,
+  "budget_duplicate_rows": 0,
+  "budget_frozen_max_gap": 0.0,
+  "current_year_budget_missing": 0,
+  "fy_plan_bridge_missing": 0
 }
