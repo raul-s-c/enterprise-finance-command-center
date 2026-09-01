@@ -19,6 +19,7 @@ account,statement,line,account_type
 5200_FACTORY_COST,P&L,Factory Manufacturing Cost,Expense
 5300_VARIABLE_SELLING,P&L,Variable Selling & Logistics,Expense
 5400_FIXED_PRODUCTION,P&L,Fixed Production Cost,Expense
+5450_FACTORY_ABSORPTION_VARIANCE,P&L,Factory Absorption Variance,Expense
 6000_OPEX,P&L,Operating Expenses,Expense
 6100_DEPRECIATION,P&L,Depreciation,Expense
 7000_INTEREST,P&L,Net Interest,Expense

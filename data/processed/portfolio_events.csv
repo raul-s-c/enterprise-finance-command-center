@@ -1,45 +1,46 @@
 month,division,product_family,product_subfamily,product_type,quality_tier,product,event,effective_month,successor,gross_margin,reason
-2024-01,Software,Security,Protection,Compliance Monitor,Essential,SW-SEC-CMP-E,PHASE_OUT_APPROVED,2024-03,SW-SEC-CMP-E-NXT,0.5738,Trailing gross margin below 58% portfolio threshold
-2024-01,Software,Security,Protection,Compliance Monitor,Essential,SW-SEC-CMP-E-NXT,REPLACEMENT_APPROVED,2024-05,,,Replacement for SW-SEC-CMP-E
-2024-01,Hardware,Network Devices,Distribution,Secure Router,Premium,HW-NET-RTR-X,PHASE_OUT_APPROVED,2024-03,,0.1018,Trailing gross margin below 22% portfolio threshold
-2024-01,Events,Training & Enablement,Operational Training,Operator Academy,Essential,EV-TRN-OPR-E,PHASE_OUT_APPROVED,2024-03,EV-TRN-OPR-E-NXT,0.2491,Trailing gross margin below 25% portfolio threshold
-2024-01,Events,Training & Enablement,Operational Training,Operator Academy,Essential,EV-TRN-OPR-E-NXT,REPLACEMENT_APPROVED,2024-05,,,Replacement for EV-TRN-OPR-E
-2024-01,Spare Parts,Interface Components,User Interfaces,Connector Set,Premium,SP-INT-CNX-X,PHASE_OUT_APPROVED,2024-03,,0.2784,Trailing gross margin below 34% portfolio threshold
-2024-03,Software,Security,Protection,Compliance Monitor,Essential,SW-SEC-CMP-E,PHASE_OUT_EFFECTIVE,2024-03,SW-SEC-CMP-E-NXT,,Portfolio decision executed
-2024-03,Hardware,Network Devices,Distribution,Secure Router,Premium,HW-NET-RTR-X,PHASE_OUT_EFFECTIVE,2024-03,,,Portfolio decision executed
-2024-03,Events,Training & Enablement,Operational Training,Operator Academy,Essential,EV-TRN-OPR-E,PHASE_OUT_EFFECTIVE,2024-03,EV-TRN-OPR-E-NXT,,Portfolio decision executed
-2024-03,Spare Parts,Interface Components,User Interfaces,Connector Set,Premium,SP-INT-CNX-X,PHASE_OUT_EFFECTIVE,2024-03,,,Portfolio decision executed
-2024-05,Software,Security,Protection,Compliance Monitor,Essential,SW-SEC-CMP-E-NXT,PRODUCT_LAUNCH,2024-05,,,Replacement for SW-SEC-CMP-E
-2024-05,Events,Training & Enablement,Operational Training,Operator Academy,Essential,EV-TRN-OPR-E-NXT,PRODUCT_LAUNCH,2024-05,,,Replacement for EV-TRN-OPR-E
-2024-07,Software,Platform,Edge Services,API Gateway,Essential,SW-PLT-API-E,PHASE_OUT_APPROVED,2024-09,SW-PLT-API-E-NXT,0.5615,Trailing gross margin below 58% portfolio threshold
-2024-07,Software,Platform,Edge Services,API Gateway,Essential,SW-PLT-API-E-NXT,REPLACEMENT_APPROVED,2024-11,,,Replacement for SW-PLT-API-E
-2024-07,Hardware,Control Systems,Resilient Control,Safety Controller,Premium,HW-CTL-SAF-X,PHASE_OUT_APPROVED,2024-09,,0.0961,Trailing gross margin below 22% portfolio threshold
-2024-07,Events,Deployment & Integration,Integration,Commissioning Program,Essential,EV-DEP-COM-E,PHASE_OUT_APPROVED,2024-09,EV-DEP-COM-E-NXT,0.2466,Trailing gross margin below 25% portfolio threshold
-2024-07,Events,Deployment & Integration,Integration,Commissioning Program,Essential,EV-DEP-COM-E-NXT,REPLACEMENT_APPROVED,2024-11,,,Replacement for EV-DEP-COM-E
-2024-07,Spare Parts,Security Components,Input Devices,Tamper Sensor,Premium,SP-SEC-SNR-X,PHASE_OUT_APPROVED,2024-09,,0.2783,Trailing gross margin below 34% portfolio threshold
-2024-09,Software,Platform,Edge Services,API Gateway,Essential,SW-PLT-API-E,PHASE_OUT_EFFECTIVE,2024-09,SW-PLT-API-E-NXT,,Portfolio decision executed
-2024-09,Hardware,Control Systems,Resilient Control,Safety Controller,Premium,HW-CTL-SAF-X,PHASE_OUT_EFFECTIVE,2024-09,,,Portfolio decision executed
-2024-09,Events,Deployment & Integration,Integration,Commissioning Program,Essential,EV-DEP-COM-E,PHASE_OUT_EFFECTIVE,2024-09,EV-DEP-COM-E-NXT,,Portfolio decision executed
-2024-09,Spare Parts,Security Components,Input Devices,Tamper Sensor,Premium,SP-SEC-SNR-X,PHASE_OUT_EFFECTIVE,2024-09,,,Portfolio decision executed
-2024-11,Software,Platform,Edge Services,API Gateway,Essential,SW-PLT-API-E-NXT,PRODUCT_LAUNCH,2024-11,,,Replacement for SW-PLT-API-E
-2024-11,Events,Deployment & Integration,Integration,Commissioning Program,Essential,EV-DEP-COM-E-NXT,PRODUCT_LAUNCH,2024-11,,,Replacement for EV-DEP-COM-E
-2025-01,Hardware,Terminals,Mobile Terminals,Rugged Terminal,Premium,HW-TRM-RUG-X,PHASE_OUT_APPROVED,2025-03,,0.0911,Trailing gross margin below 22% portfolio threshold
-2025-01,Events,Training & Enablement,Leadership Training,Executive Workshop,Premium,EV-TRN-EXE-X,PHASE_OUT_APPROVED,2025-03,,0.246,Trailing gross margin below 25% portfolio threshold
-2025-01,Spare Parts,Consumables,Power & Service,Service Lubricant Pack,Premium,SP-CON-LUB-X,PHASE_OUT_APPROVED,2025-03,,0.278,Trailing gross margin below 34% portfolio threshold
-2025-03,Hardware,Terminals,Mobile Terminals,Rugged Terminal,Premium,HW-TRM-RUG-X,PHASE_OUT_EFFECTIVE,2025-03,,,Portfolio decision executed
-2025-03,Events,Training & Enablement,Leadership Training,Executive Workshop,Premium,EV-TRN-EXE-X,PHASE_OUT_EFFECTIVE,2025-03,,,Portfolio decision executed
-2025-03,Spare Parts,Consumables,Power & Service,Service Lubricant Pack,Premium,SP-CON-LUB-X,PHASE_OUT_EFFECTIVE,2025-03,,,Portfolio decision executed
-2025-07,Hardware,Sensors & Readers,Sensing,Sensor Hub,Premium,HW-SEN-HUB-X,PHASE_OUT_APPROVED,2025-09,,0.0893,Trailing gross margin below 22% portfolio threshold
-2025-07,Events,Customer Experience,Customer Events,Demonstration Center,Premium,EV-EXP-DEM-X,PHASE_OUT_APPROVED,2025-09,,0.2452,Trailing gross margin below 25% portfolio threshold
-2025-07,Spare Parts,Maintenance Kits,Overhaul Kits,Safety Service Kit,Premium,SP-KIT-SAF-X,PHASE_OUT_APPROVED,2025-09,,0.2785,Trailing gross margin below 34% portfolio threshold
-2025-09,Hardware,Sensors & Readers,Sensing,Sensor Hub,Premium,HW-SEN-HUB-X,PHASE_OUT_EFFECTIVE,2025-09,,,Portfolio decision executed
-2025-09,Events,Customer Experience,Customer Events,Demonstration Center,Premium,EV-EXP-DEM-X,PHASE_OUT_EFFECTIVE,2025-09,,,Portfolio decision executed
-2025-09,Spare Parts,Maintenance Kits,Overhaul Kits,Safety Service Kit,Premium,SP-KIT-SAF-X,PHASE_OUT_EFFECTIVE,2025-09,,,Portfolio decision executed
-2026-01,Hardware,Edge Appliances,Compute,AI Edge Appliance,Premium,HW-EDG-AI-X,PHASE_OUT_APPROVED,2026-03,,0.0831,Trailing gross margin below 22% portfolio threshold
-2026-01,Events,Managed Programs,Field Programs,Certification Roadshow,Premium,EV-MNG-CERT-X,PHASE_OUT_APPROVED,2026-03,,0.2423,Trailing gross margin below 25% portfolio threshold
-2026-01,Spare Parts,Control Modules,Power & Relay,Relay Module,Premium,SP-MOD-REL-X,PHASE_OUT_APPROVED,2026-03,,0.2768,Trailing gross margin below 34% portfolio threshold
-2026-03,Hardware,Edge Appliances,Compute,AI Edge Appliance,Premium,HW-EDG-AI-X,PHASE_OUT_EFFECTIVE,2026-03,,,Portfolio decision executed
-2026-03,Events,Managed Programs,Field Programs,Certification Roadshow,Premium,EV-MNG-CERT-X,PHASE_OUT_EFFECTIVE,2026-03,,,Portfolio decision executed
-2026-03,Spare Parts,Control Modules,Power & Relay,Relay Module,Premium,SP-MOD-REL-X,PHASE_OUT_EFFECTIVE,2026-03,,,Portfolio decision executed
-2026-07,Hardware,Network Devices,Distribution,Distribution Node,Premium,HW-NET-DST-X,PHASE_OUT_APPROVED,2026-09,,0.1089,Trailing gross margin below 22% portfolio threshold
-2026-07,Spare Parts,Mechanical Parts,Enclosures,Cooling Assembly,Premium,SP-MEC-COL-X,PHASE_OUT_APPROVED,2026-09,,0.28,Trailing gross margin below 34% portfolio threshold
+2024-02,Software,Security,Protection,Compliance Monitor,Essential,SW-SEC-CMP-E,PHASE_OUT_APPROVED,2024-04,SW-SEC-CMP-E-NXT,0.5741,Trailing gross margin below 58% portfolio threshold
+2024-02,Software,Security,Protection,Compliance Monitor,Essential,SW-SEC-CMP-E-NXT,REPLACEMENT_APPROVED,2024-06,,,Replacement for SW-SEC-CMP-E
+2024-02,Hardware,Network Devices,Distribution,Secure Router,Premium,HW-NET-RTR-X,PHASE_OUT_APPROVED,2024-04,,0.1022,Trailing gross margin below 22% portfolio threshold
+2024-02,Events,Training & Enablement,Operational Training,Operator Academy,Essential,EV-TRN-OPR-E,PHASE_OUT_APPROVED,2024-04,EV-TRN-OPR-E-NXT,0.2492,Trailing gross margin below 25% portfolio threshold
+2024-02,Events,Training & Enablement,Operational Training,Operator Academy,Essential,EV-TRN-OPR-E-NXT,REPLACEMENT_APPROVED,2024-06,,,Replacement for EV-TRN-OPR-E
+2024-02,Spare Parts,Maintenance Kits,Overhaul Kits,Safety Service Kit,Premium,SP-KIT-SAF-X,PHASE_OUT_APPROVED,2024-04,,0.2784,Trailing gross margin below 34% portfolio threshold
+2024-04,Software,Security,Protection,Compliance Monitor,Essential,SW-SEC-CMP-E,PHASE_OUT_EFFECTIVE,2024-04,SW-SEC-CMP-E-NXT,,Portfolio decision executed
+2024-04,Hardware,Network Devices,Distribution,Secure Router,Premium,HW-NET-RTR-X,PHASE_OUT_EFFECTIVE,2024-04,,,Portfolio decision executed
+2024-04,Events,Training & Enablement,Operational Training,Operator Academy,Essential,EV-TRN-OPR-E,PHASE_OUT_EFFECTIVE,2024-04,EV-TRN-OPR-E-NXT,,Portfolio decision executed
+2024-04,Spare Parts,Maintenance Kits,Overhaul Kits,Safety Service Kit,Premium,SP-KIT-SAF-X,PHASE_OUT_EFFECTIVE,2024-04,,,Portfolio decision executed
+2024-06,Software,Security,Protection,Compliance Monitor,Essential,SW-SEC-CMP-E-NXT,PRODUCT_LAUNCH,2024-06,,,Replacement for SW-SEC-CMP-E
+2024-06,Events,Training & Enablement,Operational Training,Operator Academy,Essential,EV-TRN-OPR-E-NXT,PRODUCT_LAUNCH,2024-06,,,Replacement for EV-TRN-OPR-E
+2024-08,Software,Platform,Edge Services,API Gateway,Essential,SW-PLT-API-E,PHASE_OUT_APPROVED,2024-10,SW-PLT-API-E-NXT,0.5613,Trailing gross margin below 58% portfolio threshold
+2024-08,Software,Platform,Edge Services,API Gateway,Essential,SW-PLT-API-E-NXT,REPLACEMENT_APPROVED,2024-12,,,Replacement for SW-PLT-API-E
+2024-08,Hardware,Control Systems,Resilient Control,Safety Controller,Premium,HW-CTL-SAF-X,PHASE_OUT_APPROVED,2024-10,,0.0963,Trailing gross margin below 22% portfolio threshold
+2024-08,Events,Deployment & Integration,Integration,Commissioning Program,Essential,EV-DEP-COM-E,PHASE_OUT_APPROVED,2024-10,EV-DEP-COM-E-NXT,0.2468,Trailing gross margin below 25% portfolio threshold
+2024-08,Events,Deployment & Integration,Integration,Commissioning Program,Essential,EV-DEP-COM-E-NXT,REPLACEMENT_APPROVED,2024-12,,,Replacement for EV-DEP-COM-E
+2024-08,Spare Parts,Consumables,Power & Service,Service Lubricant Pack,Premium,SP-CON-LUB-X,PHASE_OUT_APPROVED,2024-10,,0.2783,Trailing gross margin below 34% portfolio threshold
+2024-10,Software,Platform,Edge Services,API Gateway,Essential,SW-PLT-API-E,PHASE_OUT_EFFECTIVE,2024-10,SW-PLT-API-E-NXT,,Portfolio decision executed
+2024-10,Hardware,Control Systems,Resilient Control,Safety Controller,Premium,HW-CTL-SAF-X,PHASE_OUT_EFFECTIVE,2024-10,,,Portfolio decision executed
+2024-10,Events,Deployment & Integration,Integration,Commissioning Program,Essential,EV-DEP-COM-E,PHASE_OUT_EFFECTIVE,2024-10,EV-DEP-COM-E-NXT,,Portfolio decision executed
+2024-10,Spare Parts,Consumables,Power & Service,Service Lubricant Pack,Premium,SP-CON-LUB-X,PHASE_OUT_EFFECTIVE,2024-10,,,Portfolio decision executed
+2024-12,Software,Platform,Edge Services,API Gateway,Essential,SW-PLT-API-E-NXT,PRODUCT_LAUNCH,2024-12,,,Replacement for SW-PLT-API-E
+2024-12,Events,Deployment & Integration,Integration,Commissioning Program,Essential,EV-DEP-COM-E-NXT,PRODUCT_LAUNCH,2024-12,,,Replacement for EV-DEP-COM-E
+2025-02,Hardware,Edge Appliances,Compute,AI Edge Appliance,Premium,HW-EDG-AI-X,PHASE_OUT_APPROVED,2025-04,,0.091,Trailing gross margin below 22% portfolio threshold
+2025-02,Events,Customer Experience,Customer Events,Demonstration Center,Premium,EV-EXP-DEM-X,PHASE_OUT_APPROVED,2025-04,,0.2468,Trailing gross margin below 25% portfolio threshold
+2025-02,Spare Parts,Interface Components,User Interfaces,Connector Set,Premium,SP-INT-CNX-X,PHASE_OUT_APPROVED,2025-04,,0.2779,Trailing gross margin below 34% portfolio threshold
+2025-04,Hardware,Edge Appliances,Compute,AI Edge Appliance,Premium,HW-EDG-AI-X,PHASE_OUT_EFFECTIVE,2025-04,,,Portfolio decision executed
+2025-04,Events,Customer Experience,Customer Events,Demonstration Center,Premium,EV-EXP-DEM-X,PHASE_OUT_EFFECTIVE,2025-04,,,Portfolio decision executed
+2025-04,Spare Parts,Interface Components,User Interfaces,Connector Set,Premium,SP-INT-CNX-X,PHASE_OUT_EFFECTIVE,2025-04,,,Portfolio decision executed
+2025-08,Hardware,Sensors & Readers,Sensing,Sensor Hub,Premium,HW-SEN-HUB-X,PHASE_OUT_APPROVED,2025-10,,0.0896,Trailing gross margin below 22% portfolio threshold
+2025-08,Events,Deployment & Integration,Integration,Commissioning Program,Premium,EV-DEP-COM-X,PHASE_OUT_APPROVED,2025-10,,0.2463,Trailing gross margin below 25% portfolio threshold
+2025-08,Spare Parts,Control Modules,Power & Relay,Relay Module,Premium,SP-MOD-REL-X,PHASE_OUT_APPROVED,2025-10,,0.2785,Trailing gross margin below 34% portfolio threshold
+2025-10,Hardware,Sensors & Readers,Sensing,Sensor Hub,Premium,HW-SEN-HUB-X,PHASE_OUT_EFFECTIVE,2025-10,,,Portfolio decision executed
+2025-10,Events,Deployment & Integration,Integration,Commissioning Program,Premium,EV-DEP-COM-X,PHASE_OUT_EFFECTIVE,2025-10,,,Portfolio decision executed
+2025-10,Spare Parts,Control Modules,Power & Relay,Relay Module,Premium,SP-MOD-REL-X,PHASE_OUT_EFFECTIVE,2025-10,,,Portfolio decision executed
+2026-02,Hardware,Terminals,Mobile Terminals,Rugged Terminal,Premium,HW-TRM-RUG-X,PHASE_OUT_APPROVED,2026-04,,0.083,Trailing gross margin below 22% portfolio threshold
+2026-02,Events,Training & Enablement,Leadership Training,Executive Workshop,Premium,EV-TRN-EXE-X,PHASE_OUT_APPROVED,2026-04,,0.2441,Trailing gross margin below 25% portfolio threshold
+2026-02,Spare Parts,Mechanical Parts,Enclosures,Cooling Assembly,Premium,SP-MEC-COL-X,PHASE_OUT_APPROVED,2026-04,,0.2769,Trailing gross margin below 34% portfolio threshold
+2026-04,Hardware,Terminals,Mobile Terminals,Rugged Terminal,Premium,HW-TRM-RUG-X,PHASE_OUT_EFFECTIVE,2026-04,,,Portfolio decision executed
+2026-04,Events,Training & Enablement,Leadership Training,Executive Workshop,Premium,EV-TRN-EXE-X,PHASE_OUT_EFFECTIVE,2026-04,,,Portfolio decision executed
+2026-04,Spare Parts,Mechanical Parts,Enclosures,Cooling Assembly,Premium,SP-MEC-COL-X,PHASE_OUT_EFFECTIVE,2026-04,,,Portfolio decision executed
+2026-08,Hardware,Terminals,Mobile Terminals,Mobile Terminal,Premium,HW-TRM-MOB-X,PHASE_OUT_APPROVED,2026-10,,0.1089,Trailing gross margin below 22% portfolio threshold
+2026-08,Events,Managed Programs,Field Programs,Certification Roadshow,Premium,EV-MNG-CERT-X,PHASE_OUT_APPROVED,2026-10,,0.2414,Trailing gross margin below 25% portfolio threshold
+2026-08,Spare Parts,Security Components,Input Devices,Tamper Sensor,Premium,SP-SEC-SNR-X,PHASE_OUT_APPROVED,2026-10,,0.2798,Trailing gross margin below 34% portfolio threshold
