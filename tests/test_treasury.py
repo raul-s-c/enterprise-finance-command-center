@@ -5,7 +5,7 @@ from enterprise_finance.engine import load_config, month_range
 from enterprise_finance.macro import build_macro
 from enterprise_finance.model import simulate_operations
 from enterprise_finance.reporting import management_pnl
-from enterprise_finance.treasury import (
+from enterprise_finance.treasury_controls_v11 import (
     append_cash_pool_journals,
     cash_flow_with_treasury,
     debt_schedule,
@@ -52,7 +52,7 @@ def test_cash_pool_is_zero_sum_and_legal_balance_sheets_remain_balanced():
 
     debt, maturity, liquidity = debt_schedule(adjusted, management, config)
     checks = validate_treasury(base_journal, adjusted, legal, group, debt)
-    assert checks["passed"]
+    assert checks["passed"], checks
     assert checks["treasury_pool_journal_max_gap"] <= 0.02
     assert checks["treasury_group_cash_movement_max_gap"] <= 0.02
     assert checks["treasury_ic_receivable_payable_max_gap"] <= 0.02
