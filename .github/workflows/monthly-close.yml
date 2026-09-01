@@ -5,7 +5,7 @@ on:
   schedule:
     - cron: "17 5 2 * *"
   push:
-    branches: [main, release/v0.9-budget-and-plan]
+    branches: [main]
     paths-ignore:
       - "data/processed/**"
       - "web/data/**"
@@ -16,8 +16,8 @@ permissions:
   id-token: write
 
 concurrency:
-  group: enterprise-finance-close-${{ github.ref }}
-  cancel-in-progress: true
+  group: enterprise-finance-close
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -32,7 +32,6 @@ jobs:
       - run: pytest
       - run: python -m enterprise_finance.cli build
       - name: Commit generated finance data
-        if: github.ref == 'refs/heads/main'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -40,12 +39,10 @@ jobs:
           git diff --cached --quiet || git commit -m "data: monthly synthetic finance close"
           git push
       - uses: actions/upload-pages-artifact@v3
-        if: github.ref == 'refs/heads/main'
         with:
           path: web
 
   deploy:
-    if: github.ref == 'refs/heads/main'
     needs: build
     environment:
       name: github-pages
