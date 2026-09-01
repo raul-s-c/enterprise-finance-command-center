@@ -50,6 +50,9 @@ def test_functional_currency_journal_and_translation_reserve():
     local = enrich_journal_with_functional_currency(_journal(), _macro(), _config())
     assert set(local.functional_currency) == {"USD"}
     assert local.fx_to_eur.min() > 0
+    journal_balance = local.groupby("journal_id").agg(debit=("local_debit", "sum"), credit=("local_credit", "sum"))
+    assert (journal_balance.debit - journal_balance.credit).abs().max() <= 0.01
+
     trial = local_trial_balance(local)
     assert not trial.empty
     translation = build_translation_schedule(local, _macro(), _config(), _chart())
@@ -58,9 +61,14 @@ def test_functional_currency_journal_and_translation_reserve():
     assert controls["passed"], controls
     assert controls["functional_currency_journal_max_gap"] == 0.0
     assert controls["fx_translation_balance_max_gap"] == 0.0
+
     feb = translation[translation.month.eq("2026-02")].iloc[0]
+    assert abs(feb.translated_share_capital - 1000.0) <= 0.02
+    assert abs(feb.translated_retained_earnings - 940.0) <= 0.02
     assert abs(feb.fx_translation_reserve) > 0.0
     assert feb.translation_balance_check == 0.0
+    assert feb.closing_fx_to_eur == 0.94
+    assert feb.historical_equity_fx_to_eur == 0.91
 
 
 def test_constant_currency_separates_fx_effect():
@@ -68,7 +76,6 @@ def test_constant_currency_separates_fx_effect():
         {"month": "2026-02", "entity": "US01", "division": "Software", "revenue": 940.0, "ebit": 188.0},
         {"month": "2026-02", "entity": "DE01", "division": "Software", "revenue": 500.0, "ebit": 100.0},
     ])
-    # Include the prior-year comparison rate needed by the analytical bridge.
     macro = pd.DataFrame([
         {"month": "2025-02", "EUR": 1.0, "USD": 0.90},
         {"month": "2026-02", "EUR": 1.0, "USD": 0.94},
