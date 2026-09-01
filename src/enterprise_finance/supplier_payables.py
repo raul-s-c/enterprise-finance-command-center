@@ -87,19 +87,14 @@ def _ap_gl_balance(journal: pd.DataFrame) -> pd.DataFrame:
 
 
 def build_ap_aging(journal: pd.DataFrame, config: dict) -> pd.DataFrame:
-    """Reconstruct supplier-level open AP lots from the legal ledger.
-
-    AP credits create supplier lots. Any AP debit other than month-end P&L closing
-    reduces those lots. Cash supplier payments are therefore reconciled together
-    with non-cash releases such as factory over-absorption.
-    """
+    """Reconstruct supplier-level open AP lots from the legal ledger."""
     ap = journal[journal.account.eq("2100_AP")].copy()
     if ap.empty:
         return pd.DataFrame(columns=[
             "month", "entity", "division", "supplier", "supplier_name", "supplier_category",
             "supplier_criticality", "single_source", "payment_terms_days", *AP_BUCKETS,
             "total_ap", "overdue_ap", "overdue_pct", "weighted_age_days", "trailing_12m_spend",
-            "supplier_spend_share",
+            "supplier_spend_share", "group_top5_spend_concentration", "group_supplier_count_trailing12",
         ])
 
     accruals = ap[ap.credit.gt(0.005)].copy()
@@ -140,7 +135,6 @@ def build_ap_aging(journal: pd.DataFrame, config: dict) -> pd.DataFrame:
             })
 
         month_reductions = reduction_monthly[reduction_monthly.month.eq(month)].copy()
-        # Non-cash factory releases should reduce factory fixed-cost lots before ordinary supplier lots.
         month_reductions["priority"] = month_reductions.journal_type.eq("factory_absorption_variance").map({True: 0, False: 1})
         for _, r in month_reductions.sort_values(["priority", "entity", "division"]).iterrows():
             key = (str(r.entity), str(r.division))
@@ -161,11 +155,15 @@ def build_ap_aging(journal: pd.DataFrame, config: dict) -> pd.DataFrame:
                 remaining -= applied
 
         trailing_start = period - 11
-        trailing_spend = spend_monthly[
+        trailing_scope = spend_monthly[
             (pd.PeriodIndex(spend_monthly.month, freq="M") >= trailing_start)
             & (pd.PeriodIndex(spend_monthly.month, freq="M") <= period)
-        ].groupby("supplier").credit.sum().to_dict()
+        ]
+        trailing_spend = trailing_scope.groupby("supplier").credit.sum().to_dict()
         total_trailing_spend = float(sum(trailing_spend.values()))
+        sorted_spend = sorted((float(v) for v in trailing_spend.values()), reverse=True)
+        group_top5 = float(sum(sorted_spend[:5]) / total_trailing_spend) if total_trailing_spend else 0.0
+        trailing_supplier_count = int(len(trailing_spend))
 
         for (entity, division), lots in open_lots.items():
             supplier_rows: dict[str, dict] = {}
@@ -213,6 +211,8 @@ def build_ap_aging(journal: pd.DataFrame, config: dict) -> pd.DataFrame:
                 row["weighted_age_days"] = row.pop("weighted_age_value") / total if total else 0.0
                 row["trailing_12m_spend"] = spend
                 row["supplier_spend_share"] = spend / total_trailing_spend if total_trailing_spend else 0.0
+                row["group_top5_spend_concentration"] = group_top5
+                row["group_supplier_count_trailing12"] = trailing_supplier_count
                 snapshots.append(row)
 
     return pd.DataFrame(snapshots)
@@ -222,16 +222,13 @@ def ap_aging_summary(ap_aging: pd.DataFrame) -> pd.DataFrame:
     if ap_aging.empty:
         return pd.DataFrame(columns=[
             "month", *AP_BUCKETS, "total_ap", "overdue_ap", "overdue_pct", "weighted_age_days",
-            "supplier_count", "top5_spend_concentration", "single_source_ap", "critical_supplier_ap",
+            "supplier_count", "trailing_12m_supplier_count", "top5_spend_concentration", "single_source_ap", "critical_supplier_ap",
         ])
     rows: list[dict] = []
     for month, grp in ap_aging.groupby("month"):
         total = float(grp.total_ap.sum())
         overdue = float(grp.overdue_ap.sum())
         weighted_age = float((grp.total_ap * grp.weighted_age_days).sum() / total) if total else 0.0
-        spend = grp.groupby("supplier", as_index=False).trailing_12m_spend.max().sort_values("trailing_12m_spend", ascending=False)
-        spend_total = float(spend.trailing_12m_spend.sum())
-        top5 = float(spend.head(5).trailing_12m_spend.sum() / spend_total) if spend_total else 0.0
         single_source_ap = float(grp.loc[grp.single_source.astype(bool), "total_ap"].sum())
         critical_ap = float(grp.loc[grp.supplier_criticality.ge(4), "total_ap"].sum())
         row = {
@@ -242,7 +239,8 @@ def ap_aging_summary(ap_aging: pd.DataFrame) -> pd.DataFrame:
             "overdue_pct": overdue / total if total else 0.0,
             "weighted_age_days": weighted_age,
             "supplier_count": int(grp.supplier.nunique()),
-            "top5_spend_concentration": top5,
+            "trailing_12m_supplier_count": int(grp.group_supplier_count_trailing12.max()),
+            "top5_spend_concentration": float(grp.group_top5_spend_concentration.max()),
             "single_source_ap": single_source_ap,
             "critical_supplier_ap": critical_ap,
         }
@@ -290,9 +288,11 @@ def validate_ap_aging(journal: pd.DataFrame, ap_aging: pd.DataFrame) -> dict:
     if ap_aging.empty:
         schedule = pd.DataFrame(columns=["month", "entity", "division", "schedule_ap"])
         bucket_gap = 0.0
+        concentration_out_of_range = 0
     else:
         schedule = ap_aging.groupby(["month", "entity", "division"], as_index=False).total_ap.sum().rename(columns={"total_ap": "schedule_ap"})
         bucket_gap = float((ap_aging[AP_BUCKETS].sum(axis=1) - ap_aging.total_ap).abs().max())
+        concentration_out_of_range = int(((ap_aging.group_top5_spend_concentration < -1e-9) | (ap_aging.group_top5_spend_concentration > 1.0 + 1e-9)).sum())
     recon = gl.merge(schedule, on=["month", "entity", "division"], how="outer").fillna(0.0)
     gap = float((recon.gl_ap - recon.schedule_ap).abs().max()) if not recon.empty else 0.0
     negative_count = int((ap_aging.total_ap < -0.005).sum()) if not ap_aging.empty else 0
@@ -300,6 +300,7 @@ def validate_ap_aging(journal: pd.DataFrame, ap_aging: pd.DataFrame) -> dict:
         "ap_subledger_max_gap": round(gap, 2),
         "ap_aging_bucket_max_gap": round(bucket_gap, 2),
         "ap_negative_supplier_balances": negative_count,
+        "supplier_concentration_out_of_range": concentration_out_of_range,
     }
-    checks["passed"] = gap <= 0.05 and bucket_gap <= 0.05 and negative_count == 0
+    checks["passed"] = gap <= 0.05 and bucket_gap <= 0.05 and negative_count == 0 and concentration_out_of_range == 0
     return checks
