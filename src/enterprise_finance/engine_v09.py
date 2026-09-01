@@ -8,10 +8,11 @@ import pandas as pd
 from . import engine as base_engine
 from .budgeting_v09 import build_annual_budgets, budget_performance, validate_budgets
 from .engine_v08 import build as build_v08
+from .forecasting import validate_forecast_scale
 from .planning_v09 import fy_plan_bridge
 
 
-VERSION = "0.9.0"
+VERSION = "0.9.1"
 
 
 def _read_csv(path: str) -> pd.DataFrame:
@@ -24,9 +25,10 @@ def _write_csv(df: pd.DataFrame, path: str) -> None:
 
 
 def build(end_month: str, config_path: str = "config/company.yml", allow_live_macro: bool = True):
-    """Run v0.8 and add a frozen annual Budget plus FY planning bridges."""
+    """Run v0.8 and add frozen Budget, FY planning and forecast scale controls."""
     result = build_v08(end_month, config_path=config_path, allow_live_macro=allow_live_macro)
     config = base_engine.load_config(config_path)
+    operations = _read_csv("data/runtime/operational.csv.gz")
     management = _read_csv("data/processed/management_pnl.csv")
     forecasts = _read_csv("data/processed/forecast_vintages.csv")
 
@@ -34,6 +36,7 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     performance = budget_performance(management, budgets, end_month)
     fy_bridge = fy_plan_bridge(management, budgets, forecasts, end_month)
     budget_checks = validate_budgets(management, budgets, config)
+    forecast_scale_checks = validate_forecast_scale(forecasts, operations, end_month)
 
     current_year = pd.Period(end_month, freq="M").year
     current_budget = budgets[budgets.budget_year.eq(current_year)] if not budgets.empty else pd.DataFrame()
@@ -43,16 +46,18 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     with open("data/processed/validation.json", "r", encoding="utf-8") as handle:
         checks = json.load(handle)
     checks.update({key: value for key, value in budget_checks.items() if key != "passed"})
+    checks.update({key: value for key, value in forecast_scale_checks.items() if key != "passed"})
     checks["current_year_budget_missing"] = current_budget_missing
     checks["fy_plan_bridge_missing"] = fy_bridge_missing
     checks["passed"] = bool(
         checks.get("passed", False)
         and budget_checks["passed"]
+        and forecast_scale_checks["passed"]
         and current_budget_missing == 0
         and fy_bridge_missing == 0
     )
     if not checks["passed"]:
-        raise RuntimeError(f"Budget and plan controls failed: {checks}")
+        raise RuntimeError(f"Budget, forecast and plan controls failed: {checks}")
 
     _write_csv(budgets, "data/processed/annual_budget.csv")
     _write_csv(performance, "data/processed/budget_performance.csv")
@@ -97,6 +102,7 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     manifest["fc1_fy_revenue"] = round(float(agg.get("fc_1_fy_revenue", 0.0)), 2)
     manifest["fc3_fy_revenue"] = round(float(agg.get("fc_3_fy_revenue", 0.0)), 2)
     manifest["fc6_fy_revenue"] = round(float(agg.get("fc_6_fy_revenue", 0.0)), 2)
+    manifest["forecast_next_month_scale_ratio"] = round(float(forecast_scale_checks["forecast_next_month_scale_ratio"]), 4)
     manifest["validation"] = checks
     with open("web/data/manifest.json", "w", encoding="utf-8") as handle:
         json.dump(manifest, handle, indent=2)
