@@ -82,6 +82,15 @@ def _enrich_working_capital(wc: pd.DataFrame, group_bs: pd.DataFrame) -> pd.Data
     return out
 
 
+def _working_capital_with_asset_quality(group_bs: pd.DataFrame, management: pd.DataFrame) -> pd.DataFrame:
+    # ECL is a non-cash accounting charge, not supplier spend. Excluding it from
+    # the DPO denominator keeps supplier-payment efficiency economically clean.
+    wc_management = management.copy()
+    if "credit_loss_expense" in wc_management.columns:
+        wc_management["opex"] = wc_management.opex - wc_management.credit_loss_expense
+    return _enrich_working_capital(working_capital(group_bs, wc_management), group_bs)
+
+
 def build(end_month: str, config_path: str = "config/company.yml", allow_live_macro: bool = True):
     """Run v0.6 and then post book provisions from reconciled aging schedules.
 
@@ -112,7 +121,7 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     management = management_pnl_with_provisions(operations, journal, set(config["factories"]))
     # Provision rows explain Gross Profit directly; they are not standard physical cost for DIO.
     management["fixed_production_cost"] = management.fixed_production_cost - management.inventory_provision_expense
-    wc = _enrich_working_capital(working_capital(group_bs, management), group_bs)
+    wc = _working_capital_with_asset_quality(group_bs, management)
 
     software_detail, software_summary = software_subscription_schedule(operations, products)
     events_schedule = events_backlog_schedule(operations, products)
