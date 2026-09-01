@@ -28,3 +28,4 @@ account,statement,line,account_type
 1290_INVENTORY_PROVISION,Balance Sheet,Inventory Obsolescence Provision,Contra Asset
 5460_INVENTORY_OBSOLESCENCE,P&L,Inventory Obsolescence Expense,Expense
 6050_CREDIT_LOSS_EXPENSE,P&L,Expected Credit Loss Expense,Expense
+2300_CONTRACT_LIABILITIES,Balance Sheet,Contract Liabilities,Liability
