@@ -10,30 +10,63 @@ SCENARIOS = {
     "Downside": {"growth_delta": -0.055, "margin_delta": -0.018},
 }
 
+SEASONALITY = {1:.88,2:.92,3:.99,4:1.01,5:1.03,6:1.05,7:.95,8:.84,9:1.04,10:1.08,11:1.12,12:1.18}
+
+
+def _monthly_baseline(operations: pd.DataFrame, vintage: pd.Period) -> pd.DataFrame:
+    """Build a six-month entity/division baseline from monthly totals, not transaction means."""
+    history = operations[operations["month"] <= str(vintage)].copy()
+    if history.empty:
+        return pd.DataFrame()
+    start = vintage - 5
+    recent = history[history["month"] >= str(start)].copy()
+    monthly = recent.groupby(["month", "entity", "division"], as_index=False).agg(
+        revenue=("revenue", "sum"),
+        gross_profit=("gross_profit", "sum"),
+        marginal_contribution=("marginal_contribution", "sum"),
+        opex=("opex", "sum"),
+    )
+
+    keys = history[["entity", "division"]].drop_duplicates()
+    month_frame = pd.DataFrame({"month": pd.period_range(start, vintage, freq="M").astype(str)})
+    grid = keys.merge(month_frame, how="cross").merge(monthly, on=["month", "entity", "division"], how="left").fillna(0.0)
+    grid["seasonality"] = pd.PeriodIndex(grid.month, freq="M").month.map(SEASONALITY)
+    grid["neutral_revenue"] = grid.revenue / grid.seasonality
+
+    grouped = grid.groupby(["entity", "division"], as_index=False).agg(
+        neutral_revenue=("neutral_revenue", "mean"),
+        revenue_sum=("revenue", "sum"),
+        gross_profit_sum=("gross_profit", "sum"),
+        marginal_contribution_sum=("marginal_contribution", "sum"),
+        opex_sum=("opex", "sum"),
+        observed_months=("month", "nunique"),
+    )
+    denom = grouped.revenue_sum.replace(0, np.nan)
+    grouped["gross_margin"] = (grouped.gross_profit_sum / denom).fillna(0.0)
+    grouped["mc_margin"] = (grouped.marginal_contribution_sum / denom).fillna(0.0)
+    grouped["opex_pct"] = (grouped.opex_sum / denom).fillna(0.0)
+    return grouped
+
 
 def _forecast_one_vintage(operations: pd.DataFrame, vintage: pd.Period, horizon: int, config: dict, prior_forecasts: list[dict]) -> list[dict]:
     history = operations[operations["month"] <= str(vintage)].copy()
     if history.empty:
         return []
-    recent = history[history["month"] >= str(vintage - 5)]
-    grouped = recent.groupby(["entity", "division"], as_index=False).agg(
-        revenue=("revenue", "mean"), gross_profit=("gross_profit", "mean"),
-        marginal_contribution=("marginal_contribution", "mean"), opex=("opex", "mean"),
-    )
+    grouped = _monthly_baseline(operations, vintage)
+    if grouped.empty:
+        return []
+
     prior = pd.DataFrame(prior_forecasts)
     bias_map: dict[tuple[str, str], float] = {}
     if not prior.empty:
-        realized = prior[prior["month"] <= str(vintage)].merge(
-            operations.groupby(["month", "entity", "division"], as_index=False).revenue.sum().rename(columns={"revenue": "actual_revenue"}),
-            on=["month", "entity", "division"], how="inner",
-        )
+        actual_monthly = operations.groupby(["month", "entity", "division"], as_index=False).revenue.sum().rename(columns={"revenue": "actual_revenue"})
+        realized = prior[prior["month"] <= str(vintage)].merge(actual_monthly, on=["month", "entity", "division"], how="inner")
         realized = realized[(realized["scenario"] == "Base") & realized.actual_revenue.gt(0)]
         if not realized.empty:
             realized["bias"] = realized.revenue_forecast / realized.actual_revenue - 1.0
             for key, grp in realized.groupby(["entity", "division"]):
                 bias_map[key] = float(np.clip(grp.tail(12).bias.median(), -0.12, 0.12))
 
-    seasonality = {1: .88, 2: .92, 3: .99, 4: 1.01, 5: 1.03, 6: 1.05, 7: .95, 8: .84, 9: 1.04, 10: 1.08, 11: 1.12, 12: 1.18}
     rows: list[dict] = []
     for h in range(1, horizon + 1):
         target = vintage + h
@@ -44,15 +77,17 @@ def _forecast_one_vintage(operations: pd.DataFrame, vintage: pd.Period, horizon:
             correction = 1.0 / (1.0 + bias_map.get((entity, division), 0.0))
             for scenario, assumptions in SCENARIOS.items():
                 scenario_growth = (1 + float(assumptions["growth_delta"])) ** (h / 12.0)
-                revenue = float(base.revenue) * base_growth * scenario_growth * (seasonality[target.month] / seasonality[vintage.month]) * correction
-                gp_pct = float(base.gross_profit) / max(float(base.revenue), 1.0) + float(assumptions["margin_delta"])
-                mc_pct = float(base.marginal_contribution) / max(float(base.revenue), 1.0) + float(assumptions["margin_delta"]) * 0.7
-                opex_pct = float(base.opex) / max(float(base.revenue), 1.0)
+                revenue = float(base.neutral_revenue) * SEASONALITY[target.month] * base_growth * scenario_growth * correction
+                gp_pct = float(base.gross_margin) + float(assumptions["margin_delta"])
+                mc_pct = float(base.mc_margin) + float(assumptions["margin_delta"]) * 0.7
+                opex_pct = float(base.opex_pct)
                 rows.append({
                     "vintage": str(vintage), "month": str(target), "horizon_month": h,
                     "entity": entity, "division": division, "scenario": scenario,
-                    "revenue_forecast": round(revenue, 2), "gross_profit_forecast": round(revenue * gp_pct, 2),
-                    "marginal_contribution_forecast": round(revenue * mc_pct, 2), "opex_forecast": round(revenue * opex_pct, 2),
+                    "revenue_forecast": round(revenue, 2),
+                    "gross_profit_forecast": round(revenue * gp_pct, 2),
+                    "marginal_contribution_forecast": round(revenue * mc_pct, 2),
+                    "opex_forecast": round(revenue * opex_pct, 2),
                     "bias_correction": round(correction, 5),
                 })
     return rows
@@ -82,3 +117,23 @@ def forecast_accuracy(forecasts: pd.DataFrame, operations: pd.DataFrame, end_mon
 
 def latest_forecast(forecasts: pd.DataFrame, end_month: str) -> pd.DataFrame:
     return forecasts[forecasts.vintage.eq(end_month)].copy()
+
+
+def validate_forecast_scale(forecasts: pd.DataFrame, operations: pd.DataFrame, end_month: str) -> dict:
+    """Catch unit/grain errors that can still pass ordinary no-lookahead checks."""
+    if forecasts.empty:
+        return {"forecast_next_month_scale_ratio": 0.0, "forecast_scale_out_of_range": 1, "passed": False}
+    end = pd.Period(end_month, freq="M")
+    latest = forecasts[(forecasts.vintage.eq(end_month)) & forecasts.scenario.eq("Base")]
+    next_month = latest[latest.horizon_month.eq(1)]
+    actual_monthly = operations.groupby("month", as_index=False).revenue.sum()
+    trailing = actual_monthly[(actual_monthly.month >= str(end - 5)) & (actual_monthly.month <= end_month)]
+    baseline = float(trailing.revenue.mean()) if not trailing.empty else 0.0
+    next_revenue = float(next_month.revenue_forecast.sum()) if not next_month.empty else 0.0
+    ratio = next_revenue / baseline if baseline else 0.0
+    out_of_range = int(not (0.55 <= ratio <= 1.65))
+    return {
+        "forecast_next_month_scale_ratio": round(ratio, 4),
+        "forecast_scale_out_of_range": out_of_range,
+        "passed": out_of_range == 0,
+    }
