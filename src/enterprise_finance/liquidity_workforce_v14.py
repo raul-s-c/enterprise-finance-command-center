@@ -11,18 +11,28 @@ def _money(value: float) -> float:
 
 
 def _terms(scope: pd.DataFrame, prepay: dict[str, float], config: dict) -> dict:
-    revenue = _money(scope.revenue_forecast.sum())
-    gp = _money(scope.gross_profit_forecast.sum())
-    opex = _money(scope.opex_forecast.sum())
-    personnel = _money(scope.personnel_cost_forecast.sum()) if "personnel_cost_forecast" in scope.columns else 0.0
-    non_people = _money(scope.non_people_opex_forecast.sum()) if "non_people_opex_forecast" in scope.columns else _money(max(opex - personnel, 0.0))
+    """Build one consolidated monthly driver block from cent-precise divisions.
+
+    Revenue, Gross Profit, personnel cost, non-people OPEX, Working Capital targets
+    and external supplier cost are all accumulated from the exact same divisional
+    monetary blocks. This prevents a global-sum versus sum-of-rounded-divisions
+    difference from leaking into the linked Balance Sheet through retained earnings.
+    """
+    revenue = gp = personnel = non_people = 0.0
     target_ar = target_inventory = target_ap = target_contract = external_cost = 0.0
     for division, grp in scope.groupby("division"):
         div = str(division)
         rev = _money(grp.revenue_forecast.sum())
         div_gp = _money(grp.gross_profit_forecast.sum())
         div_personnel = _money(grp.personnel_cost_forecast.sum()) if "personnel_cost_forecast" in grp.columns else 0.0
-        div_non_people = _money(grp.non_people_opex_forecast.sum()) if "non_people_opex_forecast" in grp.columns else _money(max(float(grp.opex_forecast.sum()) - div_personnel, 0.0))
+        raw_div_opex = _money(grp.opex_forecast.sum())
+        div_non_people = _money(grp.non_people_opex_forecast.sum()) if "non_people_opex_forecast" in grp.columns else _money(max(raw_div_opex - div_personnel, 0.0))
+
+        revenue = _money(revenue + rev)
+        gp = _money(gp + div_gp)
+        personnel = _money(personnel + div_personnel)
+        non_people = _money(non_people + div_non_people)
+
         direct = _money(max(rev - div_gp, 0.0))
         ext = _money(direct + max(div_non_people, 0.0))
         external_cost = _money(external_cost + ext)
@@ -32,6 +42,8 @@ def _terms(scope: pd.DataFrame, prepay: dict[str, float], config: dict) -> dict:
         target_ap = _money(target_ap + ext * float(config["divisions"][div]["dpo"]) / 30.0)
         if div in PHYSICAL_DIVISIONS:
             target_inventory = _money(target_inventory + direct * float(config["divisions"][div]["dio"]) / 30.0)
+
+    opex = _money(personnel + non_people)
     return {
         "revenue": revenue,
         "gross_profit": gp,
