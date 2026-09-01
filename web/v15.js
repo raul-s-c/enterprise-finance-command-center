@@ -14,7 +14,7 @@ function renderFxTranslation(){
   const ebitFx=cc.reduce((s,r)=>s+(Number(r.ebit_fx_effect)||0),0);
   const cta=latestTranslation.reduce((s,r)=>s+(Number(r.fx_translation_reserve)||0),0);
   const foreign=latestTranslation.filter(r=>r.functional_currency!=='EUR');
-  return `<div class="section-note"><strong>FX translation</strong> — functional-currency legal books are translated to EUR. Assets and liabilities use closing FX; share capital keeps its historical issue rate; retained earnings accumulate at the rates when profits arose; the residual translation difference is CTA/OCI.</div>
+  return `<div class="section-note"><strong>FX translation</strong> — operating Revenue, local selling cost and Workforce cost originate from stable functional-currency economics before monthly EUR translation. The reporting ledger is then mirrored into functional-currency views for translation analytics. Assets and liabilities use closing FX; historical equity rates are preserved; the translation difference is CTA/OCI. Transaction-currency remeasurement is outside this release.</div>
   <div class="kpi-grid">
     ${kpi('Translation reserve',eur.format(cta),'CTA / OCI')}
     ${kpi('Revenue FX effect',signed(revenueFx),'Reported vs prior-year rates')}
@@ -43,10 +43,10 @@ function renderFxTranslation(){
   </div>`;
 }
 
-if(!views.some(v=>v[0]==='fx')) views.splice(Math.max(views.length-1,0),0,['fx','FX & Translation','Functional-currency books, constant-currency performance and translation reserve.']);
+if(!views.some(v=>v[0]==='fx')) views.splice(Math.max(views.length-1,0),0,['fx','FX & Translation','Native operating FX, constant-currency performance and translation analytics.']);
 renderers.fx=renderFxTranslation;
 
 const journeyBeforeFx=renderers['data-journey'];
 renderers['data-journey']=function(){
-  return journeyBeforeFx()+`<div class="panel-grid">${panel('Multi-currency reporting','Functional currency → EUR translation',`<div class="section-note">Each legal journal has a functional-currency equivalent using monthly ECB FX when available. Local journals remain balanced after currency rounding. Assets and liabilities use closing FX, share capital uses historical FX and retained earnings accumulate at the monthly rates when profits arose. CTA/OCI isolates the remaining translation effect. Transaction-currency remeasurement is intentionally outside v0.15.</div>`,'span-12')}</div>`;
+  return journeyBeforeFx()+`<div class="panel-grid">${panel('Multi-currency reporting','Functional currency → EUR reporting',`<div class="section-note">Commercial Revenue and local operating costs are anchored to stable functional-currency economics and translated monthly using ECB FX when available. Physical manufacturing cost follows the source-factory currency. The reporting ledger is also expressed in functional currency for local trial-balance and translation analysis. Assets/liabilities are translated at closing FX, historical equity rates are preserved and CTA/OCI isolates the translation effect. Foreign-currency monetary-item remeasurement and realized settlement FX are intentionally outside v0.15.</div>`,'span-12')}</div>`;
 };
