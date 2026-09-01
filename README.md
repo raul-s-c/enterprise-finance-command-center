@@ -36,9 +36,9 @@ P&L / Balance Sheet / Cash Flow
         ->
 Working Capital / Asset Quality / Customer Funding / Treasury / CAPEX
         ->
-Divisional operating schedules
-        ->
 Annual Budget / Rolling Forecast
+        ->
+Forward Liquidity / Capital Allocation Capacity
         ->
 Management decisions
         ->
@@ -47,49 +47,47 @@ CFO analytics
 
 The project does not independently generate P&L, Balance Sheet and Cash Flow numbers for a dashboard. Those outputs are consequences of the same underlying transactions and accounting events.
 
-## Current release: v0.11
+## Current release: v0.12
 
-Version 0.11 adds **Treasury & Liquidity** to the existing finance operating system.
+Version 0.12 adds a **12-month driver-based liquidity forecast and capital-allocation capacity layer** on top of the existing Treasury model.
 
-The Treasury layer works on the legal ledger after the complete v0.10 close. Subsidiaries retain configured minimum operating cash balances while excess liquidity is concentrated at German HQ through a deterministic cash pool.
-
-```text
-Subsidiary surplus sweep
-Dr IC Treasury Receivable
-Cr Cash
-
-HQ receipt
-Dr Cash
-Cr IC Treasury Payable
-```
-
-If a subsidiary falls below its configured minimum cash, HQ funds the legal entity using the reciprocal entries.
-
-Treasury introduces:
+The cash forecast is not a standalone EBITDA-conversion assumption. Each Base, Upside and Downside forecast month reconstructs the financial state from operating drivers:
 
 ```text
-1160_IC_TREASURY_RECEIVABLE
-2160_IC_TREASURY_PAYABLE
+Revenue Forecast
+-> AR / Customer Cash
+
+Physical Cost Forecast
+-> Inventory
+
+Operating Cost
+-> AP / Supplier Cash
+
+Software & Events
+-> Contract Liabilities / Customer Funding
+
+EBIT
+-> Tax
+
+Debt
+-> Interest / Scheduled Repayment
+
+CAPEX Projects
+-> CAPEX Cash
+
+All Drivers
+-> Ending Cash
+-> RCF Requirement
+-> Net Debt
+-> Liquidity Headroom
+-> Covenant Position
 ```
 
-The balances are legal-entity positions and eliminate in consolidation. Cash pooling must never change consolidated cash.
+The consolidated state advances exactly once per month and scenario. Entity / Division forecast rows remain the driver grain for DSO, DIO, DPO, margins and prepayment economics.
 
-Version 0.11 also adds:
+Version 0.12 also calculates a conservative **downside-protected capital-allocation capacity** after preserving minimum operating cash and a EUR 15m strategic liquidity buffer. This is decision support, not an automated recommendation to spend capital.
 
-- cash by legal entity after pooling
-- minimum operating cash policy
-- debt schedule reconciled to `2500_DEBT`
-- contractual debt maturities
-- debt maturity ladder
-- TTM EBITDA
-- TTM interest
-- Net Debt / EBITDA
-- interest coverage
-- revolving-credit-facility headroom
-- liquidity headroom
-- covenant monitoring
-
-See `docs/treasury-and-liquidity.md`.
+See `docs/liquidity-forecast-and-capital-allocation.md`.
 
 ## Finance scope
 
@@ -98,12 +96,17 @@ The current system includes:
 - 236 synthetic product references across a multi-level hierarchy
 - six legal entities and two factories
 - 36 rolling actual months
-- 18 forecast months
+- 18 rolling forecast months
+- 12-month Base / Upside / Downside liquidity forecast
 - double-entry accounting
 - legal and consolidated P&L / Balance Sheet / Cash Flow
 - intercompany cost-plus manufacturing and eliminations
 - legal-entity cash pooling and Treasury IC positions
-- debt and liquidity schedules
+- debt and maturity schedules
+- liquidity headroom and covenant monitoring
+- driver-based forward cash and Working Capital forecast
+- RCF requirement and availability modelling
+- downside-protected capital-allocation capacity
 - customer-level AR aging
 - expected credit loss accounting
 - SKU-level inventory aging and obsolescence provisions
@@ -122,8 +125,7 @@ The current system includes:
 - YTD Actual vs Budget
 - FY Budget vs Latest Outlook
 - FC-1 / FC-3 / FC-6 outlook reconstruction
-- Base / Upside / Downside rolling forecasts
-- forecast MAPE, bias and scale controls
+- forecast MAPE, bias and economic-scale controls
 - automated monthly close and GitHub Pages deployment
 
 ## Product hierarchy
@@ -198,9 +200,11 @@ When does debt mature?
 How much RCF remains available?
 What is the liquidity headroom?
 Do leverage and interest-coverage covenants pass?
+What does the next 12 months of liquidity look like?
+How much capital could be deployed while protecting Downside liquidity?
 ```
 
-Release controls require:
+Current-state Treasury controls require:
 
 ```text
 Group cash before pooling = Group cash after pooling
@@ -211,7 +215,21 @@ Consolidated Balance Sheet remains balanced
 Subsidiaries remain above minimum operating cash
 ```
 
-See `docs/treasury-and-liquidity.md`.
+Forward-liquidity controls additionally require:
+
+```text
+Customer cash identity = 0
+Supplier cash identity = 0
+Cash roll-forward = 0
+RCF drawn + undrawn = facility limit
+12 months x 3 scenarios = complete
+Liquidity shortfall after available RCF = 0
+```
+
+See:
+
+- `docs/treasury-and-liquidity.md`
+- `docs/liquidity-forecast-and-capital-allocation.md`
 
 ## Divisional operating schedules
 
@@ -292,7 +310,9 @@ Forecasts are based on monthly Entity / Division totals, de-seasonalized recent 
 
 A dedicated economic-scale control blocks forecasts that are internally consistent but implausibly small or large relative to the recent business run-rate.
 
-See `docs/budget-and-fy-planning.md` and `docs/v0.9.1-forecast-hotfix.md`.
+The same forecast vintages are then used by the 12-month liquidity model. The project therefore has one operating forecast feeding both P&L outlook and cash/liquidity outlook rather than two disconnected planning systems.
+
+See `docs/budget-and-fy-planning.md`, `docs/v0.9.1-forecast-hotfix.md` and `docs/liquidity-forecast-and-capital-allocation.md`.
 
 ## CFO application
 
@@ -311,6 +331,8 @@ The GitHub Pages application contains:
 - Intercompany
 - Operations & CAPEX
 - Data Journey
+
+Treasury now combines current cash/debt/liquidity with the 12-month scenario outlook and downside-protected capital-allocation capacity.
 
 The application is static and reads compact JSON generated by the finance engine.
 
@@ -339,6 +361,12 @@ Deployment is blocked if material controls fail. The suite includes:
 - product-catalog breadth
 - frozen Budget no-hindsight and 12-month coverage
 - current-year Budget and FY planning bridge presence
+- liquidity customer-cash identity
+- liquidity supplier-cash identity
+- liquidity cash roll-forward
+- liquidity RCF identity and facility-limit control
+- complete Base / Upside / Downside 12-month coverage
+- forward liquidity-shortfall detection
 
 A failed control raises an exception before deployment.
 
@@ -364,6 +392,9 @@ data/processed/treasury_entity_cash.csv
 data/processed/debt_schedule.csv
 data/processed/debt_maturity_ladder.csv
 data/processed/liquidity_covenants.csv
+data/processed/liquidity_forecast.csv
+data/processed/liquidity_forecast_summary.csv
+data/processed/capital_allocation_capacity.csv
 data/processed/software_subscription_summary.csv
 data/processed/events_backlog.csv
 data/processed/hardware_factory_economics.csv
@@ -396,10 +427,12 @@ GitHub Actions performs the close automatically:
 10. apply legal-entity cash pooling
 11. rebuild Balance Sheet and Cash Flow after pooling
 12. build debt, maturity, liquidity and covenant schedules
-13. run release controls
-14. publish compact CFO datasets
-15. commit generated outputs
-16. deploy GitHub Pages
+13. build the 12-month scenario liquidity forecast
+14. calculate downside-protected capital-allocation capacity
+15. run release controls
+16. publish compact CFO datasets
+17. commit generated outputs
+18. deploy GitHub Pages
 
 No paid database, application server, LLM API or paid market-data subscription is required.
 
