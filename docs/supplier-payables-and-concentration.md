@@ -5,8 +5,8 @@ Version 0.8 completes the operating Working Capital schedules with supplier-leve
 The objective is to separate three different questions:
 
 ```text
-DPO                  -> How quickly is the company paying suppliers?
-AP aging             -> Which supplier balances make up the legal payable?
+DPO                    -> How quickly is the company paying suppliers?
+AP aging               -> Which supplier balances make up the legal payable?
 Supplier concentration -> How dependent is the company on specific external suppliers?
 ```
 
@@ -24,12 +24,16 @@ Credits to `2100_AP` create supplier accrual lots. Debits reduce those lots.
 
 This includes cash supplier payments and non-cash AP releases such as factory over-absorption. The schedule therefore follows the legal liability rather than creating a parallel purchasing balance.
 
-Every month/entity/division schedule must satisfy:
+The hard reconciliation is performed at legal-entity level:
 
 ```text
-Supplier AP Schedule
-= 2100_AP legal balance
+Supplier AP Schedule by Legal Entity
+= 2100_AP legal-entity balance
 ```
+
+Division is retained as an analytical source attribute on each supplier lot, but it is not treated as a separate legal payable subledger. This distinction matters for the manufacturing entities: one factory payment can settle external cost that originated from both Hardware and Spare Parts production even when the payment journal is operationally classified under Hardware.
+
+When a payment is allocated, the engine first prefers open lots from the same posted division. If those are insufficient, it can settle other open supplier lots within the same legal entity. This preserves analytical traceability without violating the accounting structure.
 
 ## Supplier derivation
 
@@ -77,7 +81,7 @@ Current
 >90 days overdue
 ```
 
-Supplier payments reduce the oldest open exposure first. A factory over-absorption release preferentially reduces Factory Fixed Cost exposure before other payable lots.
+Supplier payments reduce the oldest preferred exposure first. A factory over-absorption release preferentially reduces Factory Fixed Cost exposure before other payable lots.
 
 ## Supplier concentration
 
@@ -94,7 +98,7 @@ The schedule calculates:
 - critical-supplier AP exposure
 - single-source AP exposure
 
-The supplier watchlist therefore combines historical dependency with current payable exposure.
+The Top-5 concentration denominator includes the complete trailing supplier population, including suppliers whose closing AP balance is zero. The supplier watchlist then combines that historical dependency with current payable exposure.
 
 ## Supplier risk flags
 
@@ -122,7 +126,7 @@ Examples of useful combinations:
 
 Version 0.8 blocks publication if:
 
-- AP schedule differs from `2100_AP`
+- legal-entity AP schedule differs from `2100_AP`
 - AP aging buckets do not equal supplier balance
 - any reconstructed supplier balance becomes negative
 - concentration ratios fall outside 0-100%
