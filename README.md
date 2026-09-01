@@ -2,7 +2,7 @@
 
 Enterprise Finance Command Center is an end-to-end CFO / FP&A portfolio project built around a continuously evolving synthetic multinational company.
 
-The project models economic activity first and derives accounting, financial statements, Working Capital, Treasury, operating schedules, Budget, Forecast and management analytics from the same economic system.
+The project models economic activity first and derives accounting, financial statements, Working Capital, Treasury, Budget, Forecast and management analytics from the same economic system.
 
 Live application: https://raul-s-c.github.io/enterprise-finance-command-center/
 
@@ -32,62 +32,55 @@ Legal-entity financials
         ->
 Intercompany consolidation
         ->
-P&L / Balance Sheet / Cash Flow
+Actual P&L / Balance Sheet / Cash Flow
         ->
 Working Capital / Asset Quality / Customer Funding / Treasury / CAPEX
         ->
 Annual Budget / Rolling Forecast
         ->
-Forward Liquidity / Capital Allocation Capacity
+Forward Liquidity
         ->
-Management decisions
+Integrated Forecast P&L / Balance Sheet / Cash Flow
+        ->
+Capital Allocation Capacity / Management Decisions
         ->
 CFO analytics
 ```
 
-The project does not independently generate P&L, Balance Sheet and Cash Flow numbers for a dashboard. Those outputs are consequences of the same underlying transactions and accounting events.
+P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.12
+## Current release: v0.13
 
-Version 0.12 adds a **12-month driver-based liquidity forecast and capital-allocation capacity layer** on top of the existing Treasury model.
+Version 0.13 adds an **integrated 12-month three-statement forecast** for Base, Upside and Downside.
 
-The cash forecast is not a standalone EBITDA-conversion assumption. Each Base, Upside and Downside forecast month reconstructs the financial state from operating drivers:
+The same rolling operating forecast now drives both liquidity and the forward financial statements:
 
 ```text
-Revenue Forecast
--> AR / Customer Cash
-
-Physical Cost Forecast
--> Inventory
-
-Operating Cost
--> AP / Supplier Cash
-
-Software & Events
--> Contract Liabilities / Customer Funding
-
-EBIT
--> Tax
-
-Debt
--> Interest / Scheduled Repayment
-
-CAPEX Projects
--> CAPEX Cash
-
-All Drivers
--> Ending Cash
--> RCF Requirement
--> Net Debt
--> Liquidity Headroom
--> Covenant Position
+Operating Forecast
+-> Revenue / Margin / OPEX
+-> AR / Inventory / AP / Contract Liabilities
+-> Customer & Supplier Cash
+-> Tax / Interest / CAPEX / Debt / RCF
+-> Forecast Cash
+-> Forecast P&L
+-> Forecast Balance Sheet
+-> Forecast Cash Flow
 ```
 
-The consolidated state advances exactly once per month and scenario. Entity / Division forecast rows remain the driver grain for DSO, DIO, DPO, margins and prepayment economics.
+The Balance Sheet is not forced to balance with a plug. Cash comes from the liquidity model, Working Capital comes from operating drivers, PPE/CIP follows CAPEX, reserves follow explicit policies, debt follows its roll-forward and retained earnings follows forecast Net Income.
 
-Version 0.12 also calculates a conservative **downside-protected capital-allocation capacity** after preserving minimum operating cash and a EUR 15m strategic liquidity buffer. This is decision support, not an automated recommendation to spend capital.
+Release controls require:
 
-See `docs/liquidity-forecast-and-capital-allocation.md`.
+```text
+Forecast Assets - Liabilities - Equity = 0
+Forecast Cash Flow roll-forward = 0
+Forecast EBIT identity = 0
+Forecast Net Income identity = 0
+Forecast BS Cash - Forecast CF Cash = 0
+12 months x 3 scenarios = complete
+```
+
+See `docs/integrated-three-statement-forecast.md`.
 
 ## Finance scope
 
@@ -96,23 +89,21 @@ The current system includes:
 - 236 synthetic product references across a multi-level hierarchy
 - six legal entities and two factories
 - 36 rolling actual months
-- 18 rolling forecast months
+- 18 rolling operating forecast months
 - 12-month Base / Upside / Downside liquidity forecast
+- 12-month Base / Upside / Downside integrated three-statement forecast
 - double-entry accounting
-- legal and consolidated P&L / Balance Sheet / Cash Flow
+- legal and consolidated actual P&L / Balance Sheet / Cash Flow
 - intercompany cost-plus manufacturing and eliminations
 - legal-entity cash pooling and Treasury IC positions
 - debt and maturity schedules
 - liquidity headroom and covenant monitoring
-- driver-based forward cash and Working Capital forecast
 - RCF requirement and availability modelling
 - downside-protected capital-allocation capacity
-- customer-level AR aging
-- expected credit loss accounting
+- customer-level AR aging and Expected Credit Loss accounting
 - SKU-level inventory aging and obsolescence provisions
 - supplier-level AP aging, concentration and single-source exposure
-- customer advances and contract liabilities
-- contract cancellations and cash refunds
+- customer advances, contract liabilities, cancellations and refunds
 - factory capacity and absorption accounting
 - CAPEX from CIP through go-live, PPE and depreciation
 - Software ARR / MRR / churn / NRR
@@ -145,11 +136,11 @@ See `docs/product-hierarchy.md`.
 
 ## Working Capital and customer funding
 
-The project contains three reconciled trade schedules:
+Three trade schedules reconcile to the legal GL:
 
 ```text
 Customer AR aging   -> 1100_AR
-SKU inventory aging -> 1200_INVENTORY
+SKU Inventory aging -> 1200_INVENTORY
 Supplier AP aging   -> 2100_AP
 ```
 
@@ -166,7 +157,7 @@ Gross Legal Inventory
 = Net Consolidated Inventory
 ```
 
-Customer funding is treated separately from revenue:
+Customer funding is also separate from Revenue:
 
 ```text
 Trade NWC
@@ -175,8 +166,6 @@ Trade NWC
 Operating NWC
 = Trade NWC - Contract Liabilities
 ```
-
-This lets the CFO distinguish slow cash conversion from a business model that is partially funded by customer prepayments.
 
 See:
 
@@ -187,43 +176,34 @@ See:
 
 ## Treasury and liquidity
 
-Cash pooling is a legal-entity financing process, not a change to group cash.
+Germany (`DE01`) acts as the Treasury hub. Subsidiaries retain configured operating cash minimums; excess liquidity can be swept to HQ and local shortfalls can be funded from HQ through reciprocal Treasury intercompany balances.
 
-The group Treasury view answers:
+The Treasury layer answers:
 
 ```text
 Where is cash located?
-How much can be centralized?
-Which entities require liquidity support?
+How much cash can be centralized?
+Which entities require funding?
 What is gross debt and net debt?
 When does debt mature?
-How much RCF remains available?
-What is the liquidity headroom?
+How much RCF is available?
+What is liquidity headroom?
 Do leverage and interest-coverage covenants pass?
-What does the next 12 months of liquidity look like?
+What does liquidity look like over the next 12 months?
 How much capital could be deployed while protecting Downside liquidity?
 ```
 
-Current-state Treasury controls require:
+Key controls include:
 
 ```text
 Group cash before pooling = Group cash after pooling
 IC Treasury Receivables = IC Treasury Payables
 Debt schedule = 2500_DEBT
-Legal Balance Sheets remain balanced
-Consolidated Balance Sheet remains balanced
-Subsidiaries remain above minimum operating cash
-```
-
-Forward-liquidity controls additionally require:
-
-```text
 Customer cash identity = 0
 Supplier cash identity = 0
-Cash roll-forward = 0
+Forward cash roll-forward = 0
 RCF drawn + undrawn = facility limit
-12 months x 3 scenarios = complete
-Liquidity shortfall after available RCF = 0
+Forward liquidity shortfall after RCF = 0
 ```
 
 See:
@@ -261,15 +241,13 @@ Outputs include book-to-bill, backlog coverage and project advances.
 
 ### Hardware
 
-Outputs include capacity, utilization, production mix, fixed-cost absorption and under/over-absorption.
-
 ```text
 Actual Factory Fixed Cost
 - Standard Fixed Cost Absorbed
 = Factory Absorption Variance
 ```
 
-The variance is posted to the ledger and affects Gross Profit, AP, tax, retained earnings and cash.
+The variance is posted to the ledger and affects Gross Profit, AP, tax, retained earnings and cash. Operations additionally expose capacity, utilization and production mix.
 
 ### Spare Parts
 
@@ -280,15 +258,15 @@ Opening Installed Base
 = Ending Installed Base
 ```
 
-Outputs include aftermarket revenue, inventory coverage and installed-base economics.
+Outputs include aftermarket revenue, stock coverage and installed-base economics.
 
 See `docs/divisional-operating-schedules.md` and `docs/factory-absorption-accounting.md`.
 
-## Annual Budget and rolling Forecast
+## Budget and rolling Forecast
 
-Budget and Forecast are different finance objects.
+Budget and Forecast are separate finance objects.
 
-Budget 2026, for example, is approved from an October 2025 planning vintage and is frozen against hindsight.
+Budget 2026, for example, is frozen using an October 2025 approval vintage:
 
 ```text
 Budget 2026
@@ -296,7 +274,7 @@ Vintage: 2025-10
 Targets: 2026-01 to 2026-12
 ```
 
-The Plan & Forecast layer provides:
+The planning layer supports:
 
 ```text
 YTD Actual vs Budget
@@ -306,13 +284,16 @@ FY Budget vs FC-3
 FY Budget vs FC-6
 ```
 
-Forecasts are based on monthly Entity / Division totals, de-seasonalized recent run-rate, structural growth, target-month seasonality and capped historical bias correction.
+Rolling forecasts are built from monthly Entity / Division totals, de-seasonalized recent run-rate, structural growth, target-month seasonality and capped historical bias correction. A dedicated economic-scale control prevents internally consistent but implausibly small or large forecasts.
 
-A dedicated economic-scale control blocks forecasts that are internally consistent but implausibly small or large relative to the recent business run-rate.
+The same forecast vintages feed the P&L outlook, liquidity outlook and integrated three-statement forecast. There is one operating forecast, not three disconnected planning systems.
 
-The same forecast vintages are then used by the 12-month liquidity model. The project therefore has one operating forecast feeding both P&L outlook and cash/liquidity outlook rather than two disconnected planning systems.
+See:
 
-See `docs/budget-and-fy-planning.md`, `docs/v0.9.1-forecast-hotfix.md` and `docs/liquidity-forecast-and-capital-allocation.md`.
+- `docs/budget-and-fy-planning.md`
+- `docs/v0.9.1-forecast-hotfix.md`
+- `docs/liquidity-forecast-and-capital-allocation.md`
+- `docs/integrated-three-statement-forecast.md`
 
 ## CFO application
 
@@ -332,7 +313,7 @@ The GitHub Pages application contains:
 - Operations & CAPEX
 - Data Journey
 
-Treasury now combines current cash/debt/liquidity with the 12-month scenario outlook and downside-protected capital-allocation capacity.
+The P&L, Balance Sheet and Cash Flow pages now combine actual reporting with the Base forward statement. Plan & Forecast compares the Base, Upside and Downside three-statement consequences.
 
 The application is static and reads compact JSON generated by the finance engine.
 
@@ -341,8 +322,8 @@ The application is static and reads compact JSON generated by the finance engine
 Deployment is blocked if material controls fail. The suite includes:
 
 - journal and trial-balance integrity
-- legal and consolidated Balance Sheet equations
-- cash-flow reconciliation
+- legal and consolidated actual Balance Sheet equations
+- actual cash-flow reconciliation
 - intercompany AR/AP and consolidation bridges
 - Treasury IC receivable/payable reconciliation
 - cash-pool zero-sum control
@@ -353,20 +334,21 @@ Deployment is blocked if material controls fail. The suite includes:
 - factory absorption schedule to ledger
 - Software ARR, Events backlog and Spare Parts installed-base roll-forwards
 - contract-liability subledger to account 2300
-- customer-advance journal balancing
+- customer-advance and refund journal balancing
 - contract-aware AR to account 1100
 - no stale customer advances beyond the refund grace period
-- customer-refund journal balancing
 - forecast no-lookahead and economic-scale plausibility
-- product-catalog breadth
 - frozen Budget no-hindsight and 12-month coverage
-- current-year Budget and FY planning bridge presence
-- liquidity customer-cash identity
-- liquidity supplier-cash identity
+- liquidity customer/supplier cash identities
 - liquidity cash roll-forward
-- liquidity RCF identity and facility-limit control
-- complete Base / Upside / Downside 12-month coverage
+- RCF identity and facility-limit control
+- complete Base / Upside / Downside liquidity coverage
 - forward liquidity-shortfall detection
+- forecast Balance Sheet equation
+- forecast Cash Flow roll-forward
+- forecast EBIT and Net Income identities
+- forecast Balance Sheet / Cash Flow cash link
+- complete Base / Upside / Downside three-statement coverage
 
 A failed control raises an exception before deployment.
 
@@ -395,6 +377,10 @@ data/processed/liquidity_covenants.csv
 data/processed/liquidity_forecast.csv
 data/processed/liquidity_forecast_summary.csv
 data/processed/capital_allocation_capacity.csv
+data/processed/forecast_pnl.csv
+data/processed/forecast_balance_sheet.csv
+data/processed/forecast_cash_flow.csv
+data/processed/three_statement_forecast_summary.csv
 data/processed/software_subscription_summary.csv
 data/processed/events_backlog.csv
 data/processed/hardware_factory_economics.csv
@@ -413,7 +399,7 @@ Full reproducible operating and journal detail is generated at runtime and inten
 
 ## Automation
 
-GitHub Actions performs the close automatically:
+GitHub Actions performs the complete close automatically:
 
 1. install the finance engine
 2. run tests
@@ -423,16 +409,17 @@ GitHub Actions performs the close automatically:
 6. post factory absorption and provisions
 7. rebuild customer settlement, advances and contract liabilities
 8. reconstruct AR / Inventory / AP schedules
-9. build Budget and forecast vintages
+9. build Budget and rolling forecast vintages
 10. apply legal-entity cash pooling
-11. rebuild Balance Sheet and Cash Flow after pooling
+11. rebuild actual Balance Sheet and Cash Flow after pooling
 12. build debt, maturity, liquidity and covenant schedules
 13. build the 12-month scenario liquidity forecast
 14. calculate downside-protected capital-allocation capacity
-15. run release controls
-16. publish compact CFO datasets
-17. commit generated outputs
-18. deploy GitHub Pages
+15. build the integrated three-statement forecast
+16. run release controls
+17. publish compact CFO datasets
+18. commit generated outputs
+19. deploy GitHub Pages
 
 No paid database, application server, LLM API or paid market-data subscription is required.
 
