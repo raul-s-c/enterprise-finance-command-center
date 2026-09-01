@@ -2,7 +2,7 @@
 
 Enterprise Finance Command Center is an end-to-end CFO / FP&A portfolio project built around a continuously evolving synthetic multinational company.
 
-The project models economic activity first and derives accounting, financial statements, Working Capital, operating schedules, Budget, Forecast and management analytics from the same economic system.
+The project models economic activity first and derives accounting, financial statements, Working Capital, Treasury, operating schedules, Budget, Forecast and management analytics from the same economic system.
 
 Live application: https://raul-s-c.github.io/enterprise-finance-command-center/
 
@@ -34,7 +34,7 @@ Intercompany consolidation
         ->
 P&L / Balance Sheet / Cash Flow
         ->
-Working Capital / Asset Quality / Customer Funding / CAPEX
+Working Capital / Asset Quality / Customer Funding / Treasury / CAPEX
         ->
 Divisional operating schedules
         ->
@@ -47,38 +47,49 @@ CFO analytics
 
 The project does not independently generate P&L, Balance Sheet and Cash Flow numbers for a dashboard. Those outputs are consequences of the same underlying transactions and accounting events.
 
-## Current release: v0.10
+## Current release: v0.11
 
-Version 0.10 adds **customer advances and contract liabilities** to Software and Events & Projects.
+Version 0.11 adds **Treasury & Liquidity** to the existing finance operating system.
 
-Cash timing is now explicitly separated from revenue recognition:
-
-```text
-Customer pays before service
-Dr Cash
-Cr Contract Liabilities
-
-Service is delivered
-Dr Accounts Receivable
-Cr Revenue
-
-Advance settles the invoice
-Dr Contract Liabilities
-Cr Accounts Receivable
-```
-
-If a contracted service is not delivered within the configured grace period, the remaining advance is refunded:
+The Treasury layer works on the legal ledger after the complete v0.10 close. Subsidiaries retain configured minimum operating cash balances while excess liquidity is concentrated at German HQ through a deterministic cash pool.
 
 ```text
-Dr Contract Liabilities
+Subsidiary surplus sweep
+Dr IC Treasury Receivable
 Cr Cash
+
+HQ receipt
+Dr Cash
+Cr IC Treasury Payable
 ```
 
-Revenue is never created merely because cash arrived earlier.
+If a subsidiary falls below its configured minimum cash, HQ funds the legal entity using the reciprocal entries.
 
-The contract-aware close then rebuilds AR aging, expected credit loss, Balance Sheet, Cash Flow and Working Capital before publication.
+Treasury introduces:
 
-See `docs/contract-liabilities-and-customer-advances.md`.
+```text
+1160_IC_TREASURY_RECEIVABLE
+2160_IC_TREASURY_PAYABLE
+```
+
+The balances are legal-entity positions and eliminate in consolidation. Cash pooling must never change consolidated cash.
+
+Version 0.11 also adds:
+
+- cash by legal entity after pooling
+- minimum operating cash policy
+- debt schedule reconciled to `2500_DEBT`
+- contractual debt maturities
+- debt maturity ladder
+- TTM EBITDA
+- TTM interest
+- Net Debt / EBITDA
+- interest coverage
+- revolving-credit-facility headroom
+- liquidity headroom
+- covenant monitoring
+
+See `docs/treasury-and-liquidity.md`.
 
 ## Finance scope
 
@@ -91,6 +102,8 @@ The current system includes:
 - double-entry accounting
 - legal and consolidated P&L / Balance Sheet / Cash Flow
 - intercompany cost-plus manufacturing and eliminations
+- legal-entity cash pooling and Treasury IC positions
+- debt and liquidity schedules
 - customer-level AR aging
 - expected credit loss accounting
 - SKU-level inventory aging and obsolescence provisions
@@ -128,7 +141,7 @@ Commercial tiers are typically Essential, Professional and Premium. Customers re
 
 See `docs/product-hierarchy.md`.
 
-## Working Capital and asset quality
+## Working Capital and customer funding
 
 The project contains three reconciled trade schedules:
 
@@ -151,7 +164,7 @@ Gross Legal Inventory
 = Net Consolidated Inventory
 ```
 
-Version 0.10 adds customer funding:
+Customer funding is treated separately from revenue:
 
 ```text
 Trade NWC
@@ -169,6 +182,36 @@ See:
 - `docs/provisions-and-asset-quality.md`
 - `docs/supplier-payables-and-concentration.md`
 - `docs/contract-liabilities-and-customer-advances.md`
+
+## Treasury and liquidity
+
+Cash pooling is a legal-entity financing process, not a change to group cash.
+
+The group Treasury view answers:
+
+```text
+Where is cash located?
+How much can be centralized?
+Which entities require liquidity support?
+What is gross debt and net debt?
+When does debt mature?
+How much RCF remains available?
+What is the liquidity headroom?
+Do leverage and interest-coverage covenants pass?
+```
+
+Release controls require:
+
+```text
+Group cash before pooling = Group cash after pooling
+IC Treasury Receivables = IC Treasury Payables
+Debt schedule = 2500_DEBT
+Legal Balance Sheets remain balanced
+Consolidated Balance Sheet remains balanced
+Subsidiaries remain above minimum operating cash
+```
+
+See `docs/treasury-and-liquidity.md`.
 
 ## Divisional operating schedules
 
@@ -261,6 +304,7 @@ The GitHub Pages application contains:
 - Margin Engine
 - Working Capital
 - Cash Flow
+- Treasury
 - Balance Sheet
 - Plan & Forecast
 - Profitability
@@ -278,6 +322,10 @@ Deployment is blocked if material controls fail. The suite includes:
 - legal and consolidated Balance Sheet equations
 - cash-flow reconciliation
 - intercompany AR/AP and consolidation bridges
+- Treasury IC receivable/payable reconciliation
+- cash-pool zero-sum control
+- debt schedule to GL reconciliation
+- subsidiary minimum-cash control
 - AR, inventory and AP subledger reconciliation
 - ECL and inventory-provision reconciliation
 - factory absorption schedule to ledger
@@ -311,6 +359,11 @@ data/processed/supplier_concentration.csv
 data/processed/contract_liabilities.csv
 data/processed/customer_advances.csv
 data/processed/contract_liability_summary.csv
+data/processed/treasury_cash_pool.csv
+data/processed/treasury_entity_cash.csv
+data/processed/debt_schedule.csv
+data/processed/debt_maturity_ladder.csv
+data/processed/liquidity_covenants.csv
 data/processed/software_subscription_summary.csv
 data/processed/events_backlog.csv
 data/processed/hardware_factory_economics.csv
@@ -339,13 +392,14 @@ GitHub Actions performs the close automatically:
 6. post factory absorption and provisions
 7. rebuild customer settlement, advances and contract liabilities
 8. reconstruct AR / Inventory / AP schedules
-9. consolidate financial statements
-10. build divisional schedules
-11. build Budget and forecast vintages
-12. run release controls
-13. publish compact CFO datasets
-14. commit generated outputs
-15. deploy GitHub Pages
+9. build Budget and forecast vintages
+10. apply legal-entity cash pooling
+11. rebuild Balance Sheet and Cash Flow after pooling
+12. build debt, maturity, liquidity and covenant schedules
+13. run release controls
+14. publish compact CFO datasets
+15. commit generated outputs
+16. deploy GitHub Pages
 
 No paid database, application server, LLM API or paid market-data subscription is required.
 
