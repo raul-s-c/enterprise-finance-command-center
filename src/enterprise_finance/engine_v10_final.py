@@ -5,8 +5,12 @@ import json
 import pandas as pd
 
 from . import engine as base_engine
-from .engine_v10 import VERSION, build as build_v10
+from . import engine_v10 as engine_v10_module
+from .contract_settlement_v10 import apply_contract_liability_accounting as cent_precise_contract_settlement
 from .forecasting import validate_forecast_scale
+
+
+VERSION = "0.10.0"
 
 
 def _read_csv(path: str) -> pd.DataFrame:
@@ -16,10 +20,14 @@ def _read_csv(path: str) -> pd.DataFrame:
 def build(end_month: str, config_path: str = "config/company.yml", allow_live_macro: bool = True):
     """Finalize the v0.10 close after the contract-aware rebuild.
 
-    This small wrapper reasserts forecast-scale/no-lookahead controls from v0.9.1
-    and publishes exact Entity/Division contract summaries for filtered CFO views.
+    Contract settlement is injected at cent precision before running the v0.10
+    rebuild. The wrapper then reasserts forecast-scale/no-lookahead controls from
+    v0.9.1 and publishes exact Entity/Division contract summaries.
     """
-    result = build_v10(end_month, config_path=config_path, allow_live_macro=allow_live_macro)
+    engine_v10_module.apply_contract_liability_accounting = cent_precise_contract_settlement
+    result = engine_v10_module.build(
+        end_month, config_path=config_path, allow_live_macro=allow_live_macro
+    )
 
     operations = _read_csv("data/runtime/operational.csv.gz")
     forecasts = _read_csv("data/processed/forecast_vintages.csv")
