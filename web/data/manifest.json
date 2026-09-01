@@ -53,9 +53,15 @@
     "ap_subledger_max_gap": 0.0,
     "ap_aging_bucket_max_gap": 0.0,
     "ap_negative_supplier_balances": 0,
-    "supplier_concentration_out_of_range": 0
+    "supplier_concentration_out_of_range": 0,
+    "budget_future_source_months": 0,
+    "budget_incomplete_groups": 0,
+    "budget_duplicate_rows": 0,
+    "budget_frozen_max_gap": 0.0,
+    "current_year_budget_missing": 0,
+    "fy_plan_bridge_missing": 0
   },
-  "version": "0.8.0",
+  "version": "0.9.0",
   "latest_factory_absorption_variance": 675568.8,
   "latest_factory_under_absorption": 675568.8,
   "latest_factory_over_absorption": 0.0,
@@ -72,5 +78,27 @@
   "latest_overdue_ap": 12943378.67,
   "latest_ap_overdue_pct": 0.4006,
   "latest_supplier_top5_concentration": 0.2675,
-  "latest_single_source_ap": 2202196.4
+  "latest_single_source_ap": 2202196.4,
+  "budget_rows": 312,
+  "budget_years": [
+    2025,
+    2026
+  ],
+  "current_budget_year": 2026,
+  "current_budget_vintage": "2025-10",
+  "fy_budget_revenue": 404599025.97,
+  "fy_budget_ebit": 91065541.67,
+  "ytd_actual_revenue": 265420252.45,
+  "ytd_budget_revenue": 256681102.52,
+  "ytd_revenue_variance": 8739149.93,
+  "ytd_actual_ebit": 56276757.46,
+  "ytd_budget_ebit": 57554986.72,
+  "ytd_ebit_variance": -1278229.26,
+  "latest_fy_revenue": 268295363.5,
+  "latest_fy_ebit": 52390111.3,
+  "latest_fy_revenue_vs_budget": -136303662.47,
+  "latest_fy_ebit_vs_budget": -38675430.37,
+  "fc1_fy_revenue": 237472120.07,
+  "fc3_fy_revenue": 170573923.69,
+  "fc6_fy_revenue": 69274303.66
 }
