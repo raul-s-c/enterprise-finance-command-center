@@ -1,0 +1,32 @@
+reporting_currency: EUR
+
+# EUR value of one unit of functional currency used only to calibrate the
+# constant-currency economic base into stable local-currency price/cost levels.
+# Monthly reporting translation uses the live/fallback macro FX curve instead.
+calibration_fx_to_eur:
+  EUR: 1.000000
+  USD: 0.910000
+  JPY: 0.006250
+  CNY: 0.128200
+  CZK: 0.040000
+
+translation:
+  assets_and_liabilities: closing_rate
+  share_capital: historical_rate
+  retained_earnings: historical_monthly_profit_rates
+  translation_difference: OCI_CTA
+
+constant_currency:
+  comparison_rate: prior_year_same_month
+  metrics:
+    - revenue
+    - ebit
+
+transaction_remeasurement:
+  enabled: false
+  planned_scope:
+    - foreign_currency_trade_receivables
+    - foreign_currency_trade_payables
+    - intercompany_monetary_balances
+    - realized_fx_on_settlement
+    - unrealized_fx_at_month_end
