@@ -29,3 +29,5 @@ account,statement,line,account_type
 5460_INVENTORY_OBSOLESCENCE,P&L,Inventory Obsolescence Expense,Expense
 6050_CREDIT_LOSS_EXPENSE,P&L,Expected Credit Loss Expense,Expense
 2300_CONTRACT_LIABILITIES,Balance Sheet,Contract Liabilities,Liability
+1160_IC_TREASURY_RECEIVABLE,Balance Sheet,Intercompany Treasury Receivable,Asset
+2160_IC_TREASURY_PAYABLE,Balance Sheet,Intercompany Treasury Payable,Liability

@@ -40,5 +40,13 @@
   "catalog_product_count": 236,
   "catalog_family_count": 19,
   "sold_product_count": 232,
-  "contract_refund_journal_max_gap": 0.0
+  "contract_refund_journal_max_gap": 0.0,
+  "treasury_pool_journal_max_gap": 0.0,
+  "treasury_group_cash_movement_max_gap": 0.0,
+  "treasury_ic_receivable_payable_max_gap": 0.0,
+  "treasury_legal_balance_sheet_max_gap": 0.0,
+  "treasury_group_balance_sheet_max_gap": 0.0,
+  "treasury_debt_schedule_max_gap": 0.0,
+  "treasury_subsidiaries_below_minimum_cash": 0,
+  "treasury_negative_cash_entities": 0
 }
