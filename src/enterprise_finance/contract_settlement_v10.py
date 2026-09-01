@@ -22,9 +22,11 @@ def apply_contract_liability_accounting(
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """Replace Software/Events collection mechanics with cent-precise advances.
 
-    The contract subledger uses the same cent precision as the journal. This is
-    essential because the release control reconciles thousands of customer-level
-    contract lots to account 2300_CONTRACT_LIABILITIES.
+    The contract subledger uses the same cent precision as the journal. Customer
+    advances are applied to the intended service invoice. If the related service
+    is still not delivered after the configured contractual grace period, the
+    remaining customer advance is refunded instead of remaining indefinitely as
+    a stale contract liability.
     """
     journal = journal_pre_provision.copy()
     remove_collection = journal.journal_type.eq("collection") & journal.division.isin(["Software", "Events"])
@@ -35,6 +37,9 @@ def apply_contract_liability_accounting(
         return base, commitments, pd.DataFrame()
     commitments["advance_amount"] = commitments.advance_amount.astype(float).round(2)
     commitments = commitments[commitments.advance_amount.gt(0.005)].copy()
+
+    contract_cfg = config.get("contract_liabilities", {})
+    refund_grace_months = int(contract_cfg.get("refund_grace_months", 3))
 
     months = sorted(operations.month.unique())
     sales = operations[operations.division.isin(["Software", "Events"])].groupby(
@@ -56,6 +61,45 @@ def apply_contract_liability_accounting(
             for r in month_sales.itertuples(index=False)
         }
         release_by_ed: dict[tuple[str, str], float] = defaultdict(float)
+
+        # Cancel contracts that remain unfulfilled beyond the contractual grace
+        # period. The refund reduces both cash and account 2300; it never touches
+        # revenue because no service has been recognized for the outstanding lot.
+        for lot in open_contracts:
+            outstanding = _cents(lot["outstanding"])
+            if outstanding <= 0.005:
+                continue
+            service_period = pd.Period(lot["service_month"], freq="M")
+            overdue_months = period.ordinal - service_period.ordinal
+            if overdue_months <= refund_grace_months:
+                continue
+            jid = f"CONTRACT-REFUND-{month}-{lot['entity']}-{lot['customer']}-{lot['product']}"
+            new_rows.append(_journal_row(
+                month=month,
+                entity=lot["entity"],
+                division=lot["division"],
+                journal_id=jid,
+                journal_type="customer_advance_refund",
+                account=CONTRACT_LIABILITY_ACCOUNT,
+                debit=outstanding,
+                customer=lot["customer"],
+                product=lot["product"],
+                description="Refund of unfulfilled customer advance after contractual grace period",
+            ))
+            new_rows.append(_journal_row(
+                month=month,
+                entity=lot["entity"],
+                division=lot["division"],
+                journal_id=jid,
+                journal_type="customer_advance_refund",
+                account="1000_CASH",
+                credit=outstanding,
+                customer=lot["customer"],
+                product=lot["product"],
+                description="Refund of unfulfilled customer advance after contractual grace period",
+                cash_flow_category="customer_collections",
+            ))
+            lot["outstanding"] = 0.0
 
         # Apply previously received customer advances to the intended invoice.
         for lot in open_contracts:
