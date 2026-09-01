@@ -1,12 +1,26 @@
-# Multi-Currency Accounting and FX Translation
+# Native Operating FX, Translation and Constant Currency
 
-Version 0.15 introduces a functional-currency mirror and group translation layer for the multinational synthetic company.
+Version 0.15 introduces genuine FX sensitivity into the multinational operating model and adds functional-currency translation analytics.
 
 ## Why this layer exists
 
-Earlier releases already maintained legal entities in Germany, Spain, the Czech Republic, China, the United States and Japan and downloaded monthly ECB FX rates. However, operating and accounting amounts were still represented directly in EUR. FX therefore acted as a macro input but not as a formal legal-book and consolidation layer.
+Earlier releases already maintained legal entities in Germany, Spain, the Czech Republic, China, the United States and Japan and downloaded monthly ECB FX rates. However, operating amounts were generated directly in EUR. FX could therefore be displayed as a macro driver without changing reported Revenue or cost in a genuinely local-currency way.
 
-Version 0.15 closes the translation gap while keeping the existing EUR economic ledger as the authoritative reporting ledger.
+Version 0.15 changes that operating assumption.
+
+The pre-FX operating model is retained as a **constant-currency economic base**. A fixed calibration FX converts that base into stable local-currency price and cost levels. Those native amounts are then translated each month using the current ECB/fallback FX rate.
+
+```text
+Constant-currency economic base
+/ fixed calibration FX
+= Native functional-currency economics
+
+Native functional-currency economics
+x monthly closing/reporting FX
+= Reported EUR economics
+```
+
+As a result, volume and local economics can remain unchanged while reported EUR performance moves because FX moved.
 
 ## Functional currencies
 
@@ -19,19 +33,42 @@ Version 0.15 closes the translation gap while keeping the existing EUR economic 
 | US01 | USD |
 | JP01 | JPY |
 
-For every legal journal line, v0.15 creates a functional-currency equivalent using the monthly FX rate applicable to that close.
+The calibration rates are explicit in `config/fx-policy.yml`. They are structural anchors, not monthly reporting rates.
+
+## Operating FX origination
+
+### Commercial Revenue
+
+Revenue originates in the functional currency of the selling entity.
+
+US commercial activity therefore originates in USD and Japanese commercial activity in JPY. Germany and Spain remain EUR-native.
+
+### Commercial selling cost and OPEX
+
+Variable selling cost and non-people operating cost originate in the commercial entity currency.
+
+Workforce capacity is driven by constant-currency business demand so an FX movement cannot create artificial hiring or attrition. Workforce monetary cost, however, originates in the entity functional currency and is translated into reported EUR.
+
+This deliberately separates:
 
 ```text
-Reporting EUR amount
-/ FX value of one functional-currency unit in EUR
-= Functional-currency amount
+Underlying productivity / FTE decision
+from
+Reported EUR payroll translation
 ```
 
-Line-level conversion can create minor local-currency rounding differences. Those differences are resolved within the same journal entry, assigned to the largest line on the opposite side and exposed as a rounding adjustment. They do not create a P&L, retained-earnings or CTA plug.
+### Manufacturing cost
 
-The full functional-currency journal is reproducible in runtime storage. A sample and local trial balances are published as audit outputs.
+For Hardware and Spare Parts, manufacturing cost originates in the source-factory currency rather than the selling-entity currency.
 
-## FX source
+```text
+CZ01 factory -> CZK manufacturing cost
+CN01 factory -> CNY manufacturing cost
+```
+
+Commercial Revenue and factory manufacturing cost can therefore carry different FX exposures within the same product sale.
+
+## ECB and fallback FX
 
 Preferred source:
 
@@ -41,23 +78,37 @@ Fallback:
 
 - deterministic synthetic FX curves already used by the macro layer
 
-The pipeline therefore remains autonomous if the ECB endpoint is unavailable.
+The pipeline remains autonomous if the ECB endpoint is unavailable.
 
-## Translation to EUR
+## Functional-currency reporting mirror
 
-The local trial balance is translated back to the group reporting currency using accounting-style translation rules.
+The existing double-entry reporting journal remains the authoritative EUR accounting ledger in v0.15. For translation analysis, every legal journal line is also expressed in the legal entity's functional currency using the monthly FX rate.
+
+```text
+Reporting EUR journal amount
+/ monthly FX-to-EUR
+= Functional-currency reporting view
+```
+
+Line-level conversion can create local-currency cent rounding. The functional-currency view is rebalanced inside the same journal entry and the local rounding adjustment is explicitly exposed. It does not create a P&L, retained-earnings or CTA plug.
+
+This layer provides local trial balances and translation analytics. It should not yet be described as a fully native monetary-item subledger because transaction-currency remeasurement remains outside v0.15.
+
+## Translation to EUR and CTA
+
+The functional-currency trial-balance view is translated using accounting-style group-translation rules.
 
 ### Assets and liabilities
 
-Translated using the closing FX rate for each month.
+Closing rate.
 
 ### Share capital
 
-Translated using the historical rate applicable when the capital movement arose. In the current model this is the opening-period rate because share capital is issued at opening and no later capital increases are simulated yet.
+Historical rate applicable when the capital movement arose.
 
 ### Retained earnings
 
-Retained earnings are **not** retranslated wholesale at each closing rate. Monthly movements into retained earnings are accumulated in EUR using the FX rate applicable when the underlying monthly profit arose. This preserves historical equity and isolates translation movements correctly.
+Accumulated using historical monthly profit rates rather than wholesale retranslation at every close.
 
 ### Foreign Currency Translation Reserve
 
@@ -67,9 +118,7 @@ The remaining translation difference is reported explicitly as:
 3300_FX_TRANSLATION_RESERVE
 ```
 
-and economically represents CTA / OCI.
-
-The translation equation is:
+representing CTA / OCI.
 
 ```text
 Translated Assets
@@ -79,13 +128,11 @@ Translated Assets
 = 0
 ```
 
-CTA is therefore an identified foreign-currency equity reserve, not an unexplained balancing plug.
+CTA is therefore an identified translation reserve, not an unexplained balancing plug.
 
 ## Constant-currency management analysis
 
-For the current close, foreign-entity Revenue and EBIT are also translated at the equivalent prior-year FX rate.
-
-This produces:
+Current Revenue and EBIT can be translated at the equivalent prior-year rate:
 
 ```text
 Reported Revenue
@@ -97,24 +144,29 @@ Constant-Currency EBIT
 EBIT FX Effect
 ```
 
-This allows management to distinguish operating performance from the translation effect implied by changing reporting rates.
+Because the underlying operating flows now originate from stable functional-currency economics, this bridge represents a real reporting-currency effect rather than a cosmetic conversion of an EUR-only business model.
 
 ## Hard controls
 
-Version 0.15 is blocked unless:
+Version 0.15 will be blocked unless:
 
 ```text
-Functional-currency journals balance after local rounding
-EUR -> local -> EUR round-trip remains within disclosed rounding materiality
+Native local Revenue x monthly FX = Reported EUR Revenue
+EUR entities remain unchanged by FX translation
+FX shocks change foreign reported EUR but not local business economics
+Workforce FTE / hires / attrition are invariant to pure FX shocks
+Reported foreign Workforce cost moves with FX
+Physical manufacturing cost follows source-factory currency
+Reported OPEX = translated payroll + translated non-people OPEX
+Functional-currency journal views remain balanced
+EUR -> local -> EUR reporting round-trip stays within disclosed cent rounding
 Translated Assets = Liabilities + Historical Equity + CTA
-Functional-currency journal exists
-FX translation schedule exists
 Constant-currency analysis exists
 ```
 
-The validation output also exposes the largest EUR-equivalent local-currency rounding adjustment rather than hiding it inside a general tolerance.
-
 ## Published outputs
+
+Planned/current v0.15 outputs include:
 
 ```text
 data/processed/functional_currency_journal_sample.csv
@@ -124,17 +176,17 @@ data/processed/fx_translation.csv
 data/processed/constant_currency_analysis.csv
 ```
 
-The dashboard adds an `FX & Translation` view with closing FX, historical equity translation, CTA, reported versus constant-currency Revenue and EBIT and translation-reserve trend.
+The dashboard adds `FX & Translation` with current FX rates, CTA/OCI, reported versus constant-currency Revenue/EBIT and translation-reserve history.
 
-## Deliberate limitation
+## Deliberate limitations
 
-Version 0.15 models a **functional-currency mirror and group translation layer** over the existing EUR economic ledger. It does not yet model transaction-level FX remeasurement where an invoice is denominated in a currency different from the legal entity's functional currency.
+Version 0.15 does **not** yet model transaction-currency remeasurement for monetary items denominated in a currency different from the legal entity functional currency.
 
-Examples intentionally deferred:
+Examples deferred to a dedicated subledger:
 
-- a USD customer invoice in a JPY functional-currency entity
-- a CNY intercompany payable held by a EUR entity
+- USD customer invoice inside a JPY functional-currency entity
+- CNY intercompany payable held by an EUR entity
 - realized FX on settlement
-- unrealized transaction FX gains/losses at month end
+- unrealized FX gains/losses on monetary items at month end
 
-Those effects are separate from group translation and should be added as a dedicated foreign-currency transaction subledger rather than mixed into CTA.
+It also does not claim that every historical Balance Sheet item was originally posted from a native functional-currency monetary subledger. v0.15 makes the operating business genuinely FX-sensitive and provides group-translation analytics; transaction remeasurement and fully native monetary balance origination are a separate accounting problem and will be implemented separately rather than hidden inside CTA.
