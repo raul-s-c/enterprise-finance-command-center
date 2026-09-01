@@ -123,7 +123,10 @@ def enrich_operations_with_workforce(operations: pd.DataFrame, workforce: pd.Dat
     out["workforce_attrition_allocated"] = out.attrition.fillna(0.0) * out.allocation_share
     out["workforce_ending_fte_allocated"] = out.ending_fte.fillna(0.0) * out.allocation_share
     out["workforce_average_fte_allocated"] = out.average_fte.fillna(0.0) * out.allocation_share
-    out["non_people_opex"] = out.apply(lambda r: float(r.revenue) * float(settings["non_people_opex_pct"].get(str(r.division), 0.04)), axis=1)
+    out["non_people_opex"] = out.apply(
+        lambda r: round(float(r.revenue) * float(settings["non_people_opex_pct"].get(str(r.division), 0.04)), 2),
+        axis=1,
+    )
     out["opex"] = out.non_people_opex + out.personnel_cost_allocated
     out["ebit_before_dep"] = out.gross_profit - out.opex
     return out.drop(columns=["personnel_cost", "opening_fte", "hires", "attrition", "ending_fte", "average_fte", "entity_division_revenue", "allocation_share"])
