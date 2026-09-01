@@ -106,6 +106,6 @@ def test_liquidity_separates_payroll_from_supplier_cash():
     liquidity = build_liquidity_forecast(forecasts, management, bs, liq_hist, debt, advances, config, end_month, 12)
     controls = validate_liquidity_forecast(liquidity, 12)
     assert controls["passed"], controls
+    assert controls["workforce_liquidity_payroll_cash_max_gap"] <= 0.02
     assert liquidity.payroll_cash.sum() > 0
-    assert liquidity.workforce_liquidity_payroll_cash_max_gap.sum() if "workforce_liquidity_payroll_cash_max_gap" in liquidity.columns else True
     assert liquidity.payroll_cash_identity_gap.abs().max() <= 0.02
