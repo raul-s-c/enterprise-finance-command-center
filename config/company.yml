@@ -47,6 +47,30 @@ divisions:
     dpo: 50
     dio: 90
 
+workforce:
+  fully_loaded_factor: 1.28
+  annual_attrition: 0.11
+  hire_gap_closure: 0.55
+  recruitment_cost_per_hire: 7500
+  salary_growth: 0.032
+  productivity_growth: 0.012
+  minimum_fte_per_entity_division: 5
+  entity_base_salary:
+    DE01: 92000
+    ES01: 62000
+    US01: 118000
+    JP01: 86000
+  revenue_per_fte:
+    Software: 1050000
+    Hardware: 1500000
+    Events: 900000
+    Spare Parts: 1250000
+  non_people_opex_pct:
+    Software: 0.055
+    Hardware: 0.030
+    Events: 0.045
+    Spare Parts: 0.030
+
 working_capital:
   payment_terms_days:
     Software: 30
