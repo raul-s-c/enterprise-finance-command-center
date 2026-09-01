@@ -1,6 +1,6 @@
 {
   "journal_balance_max_gap": 0.0,
-  "trial_balance_gap": -0.0,
+  "trial_balance_gap": 0.0,
   "legal_balance_sheet_max_gap": 0.0,
   "legal_ic_ar_ap_max_mismatch": 0.0,
   "consolidated_balance_sheet_max_gap": 0.0,
@@ -17,10 +17,14 @@
   "events_backlog_rollforward_max_gap": 0.0,
   "factory_utilization_recalculation_max_gap": 0.0,
   "spare_parts_installed_base_rollforward_max_gap": 0.0,
+  "factory_absorption_rollforward_max_gap": 0.0,
+  "factory_absorption_journal_max_gap": 0.0,
+  "credit_loss_allowance_max_gap": 0.04,
+  "credit_loss_allowance_excess_max": 0.0,
+  "inventory_provision_max_gap": 0.04,
+  "inventory_provision_excess_max": 0.0,
   "forecast_lookahead_errors": 0,
   "catalog_product_count": 236,
   "catalog_family_count": 19,
-  "sold_product_count": 232,
-  "factory_absorption_rollforward_max_gap": 0.0,
-  "factory_absorption_journal_max_gap": 0.0
+  "sold_product_count": 232
 }
