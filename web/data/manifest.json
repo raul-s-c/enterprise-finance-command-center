@@ -58,10 +58,12 @@
     "budget_incomplete_groups": 0,
     "budget_duplicate_rows": 0,
     "budget_frozen_max_gap": 0.0,
+    "forecast_next_month_scale_ratio": 1.0688,
+    "forecast_scale_out_of_range": 0,
     "current_year_budget_missing": 0,
     "fy_plan_bridge_missing": 0
   },
-  "version": "0.9.0",
+  "version": "0.9.1",
   "latest_factory_absorption_variance": 675568.8,
   "latest_factory_under_absorption": 675568.8,
   "latest_factory_over_absorption": 0.0,
@@ -94,11 +96,12 @@
   "ytd_actual_ebit": 56276757.46,
   "ytd_budget_ebit": 57554986.72,
   "ytd_ebit_variance": -1278229.26,
-  "latest_fy_revenue": 268295363.5,
-  "latest_fy_ebit": 52390111.3,
-  "latest_fy_revenue_vs_budget": -136303662.47,
-  "latest_fy_ebit_vs_budget": -38675430.37,
-  "fc1_fy_revenue": 237472120.07,
-  "fc3_fy_revenue": 170573923.69,
-  "fc6_fy_revenue": 69274303.66
+  "latest_fy_revenue": 419369681.35,
+  "latest_fy_ebit": 89707345.18,
+  "latest_fy_revenue_vs_budget": 14770655.38,
+  "latest_fy_ebit_vs_budget": -1358196.49,
+  "fc1_fy_revenue": 411147517.61,
+  "fc3_fy_revenue": 417040336.64,
+  "fc6_fy_revenue": 428384267.28,
+  "forecast_next_month_scale_ratio": 1.0688
 }

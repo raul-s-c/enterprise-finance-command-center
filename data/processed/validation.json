@@ -35,6 +35,8 @@
   "budget_incomplete_groups": 0,
   "budget_duplicate_rows": 0,
   "budget_frozen_max_gap": 0.0,
+  "forecast_next_month_scale_ratio": 1.0688,
+  "forecast_scale_out_of_range": 0,
   "current_year_budget_missing": 0,
   "fy_plan_bridge_missing": 0
 }
