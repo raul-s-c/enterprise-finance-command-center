@@ -1,0 +1,41 @@
+function renderWCv07(){
+  const rows=data.working_capital||[], l=latest(rows);
+  const ar=latest(data.ar_aging_summary||[]), inv=latest(data.inventory_aging_summary||[]);
+  const provision=latest(data.provision_summary||[]);
+  const eclRows=scopedV04(data.credit_loss_detail||[]).slice(0,30);
+  const invProvisionRows=scopedV04(data.inventory_provision_detail||[]).slice(0,35);
+  const arCustomers=scopedV04(data.ar_customer_aging||[]).slice(0,24);
+  const inventorySkus=scopedV04(data.inventory_sku_aging||[]).slice(0,30);
+  const grossAr=Number(l.trade_receivables_gross)||Number(provision.gross_ar)||0;
+  const ecl=Number(l.credit_loss_allowance)||Number(provision.credit_loss_allowance)||0;
+  const netAr=Number(l.net_trade_receivables)||Number(l.trade_receivables)||0;
+  const grossInv=Number(l.inventory_gross)||Number(provision.gross_inventory)||0;
+  const invProv=Number(l.inventory_provision)||Number(provision.inventory_provision)||0;
+  const netInv=Number(l.net_inventory)||Number(l.inventory)||0;
+  const grossNwc=Number(l.gross_net_working_capital)||grossAr+grossInv-(Number(l.trade_payables)||0);
+  const netNwc=Number(l.provision_adjusted_net_working_capital)||Number(l.net_working_capital)||0;
+  return `<div class="kpi-grid">${kpi('Gross receivables',eur.format(grossAr),`DSO ${num(l.dso||0,0)} days`)}${kpi('Credit loss allowance',eur.format(ecl),grossAr?pct(ecl/grossAr):'-')}${kpi('Net receivables',eur.format(netAr))}${kpi('Gross inventory',eur.format(grossInv),`DIO ${num(l.dio||0,0)} days`)}${kpi('Inventory provision',eur.format(invProv),grossInv?pct(invProv/grossInv):'-')}${kpi('Net inventory',eur.format(netInv))}${kpi('Trade payables',eur.format(l.trade_payables||0),`DPO ${num(l.dpo||0,0)} days`)}${kpi('Provision-adjusted NWC',eur.format(netNwc),`Gross ${eur.format(grossNwc)}`)}</div><div class="panel-grid">${panel('Asset-quality trend','Allowance and provision reduce carrying value without cash movement',bars((data.provision_summary||[]).slice(-24),'credit_loss_allowance'),'span-6')}${panel('Provision impact','Latest close',metricRows([['Gross AR',eur.format(grossAr)],['Credit loss allowance',eur.format(ecl)],['Net AR',eur.format(netAr)],['Gross inventory',eur.format(grossInv)],['Inventory provision',eur.format(invProv)],['Net inventory',eur.format(netInv)],['Gross NWC',eur.format(grossNwc)],['Provision-adjusted NWC',eur.format(netNwc)]]),'span-6')}${panel('Expected credit loss exposure','Largest customer allowances; aging remains reconciled to gross AR',table(eclRows,[{key:'entity',label:'Entity'},{key:'division',label:'Division'},{key:'customer_name',label:'Customer'},{key:'risk_score',label:'Risk',num:true,format:v=>num(v,1)},{key:'gross_ar',label:'Gross AR',num:true,format:v=>eur.format(v)},{key:'credit_loss_allowance',label:'Allowance',num:true,format:v=>eur.format(v)},{key:'allowance_pct',label:'Allowance %',num:true,format:v=>pct(v)},{key:'net_ar',label:'Net AR',num:true,format:v=>eur.format(v)}]),'span-7')}${panel('AR aging','Gross receivables before allowance',metricRows([['Current',eur.format(ar.current||0)],['1-30 overdue',eur.format(ar.overdue_1_30||0)],['31-60 overdue',eur.format(ar.overdue_31_60||0)],['61-90 overdue',eur.format(ar.overdue_61_90||0)],['>90 overdue',eur.format(ar.overdue_90_plus||0)],['Total overdue',eur.format(ar.overdue_ar||0)]]),'span-5')}${panel('Inventory provision exposure','Largest SKU reserves',table(invProvisionRows,[{key:'entity',label:'Entity'},{key:'division',label:'Division'},{key:'product_family',label:'Family'},{key:'product',label:'SKU'},{key:'quality_tier',label:'Tier'},{key:'generation',label:'Gen.'},{key:'gross_inventory',label:'Gross inventory',num:true,format:v=>eur.format(v)},{key:'inventory_provision',label:'Provision',num:true,format:v=>eur.format(v)},{key:'provision_pct',label:'Provision %',num:true,format:v=>pct(v)},{key:'net_inventory',label:'Net inventory',num:true,format:v=>eur.format(v)}]),'span-8')}${panel('Inventory aging','Gross stock before provision',metricRows([['0-30 days',eur.format(inv.age_0_30||0)],['31-60 days',eur.format(inv.age_31_60||0)],['61-90 days',eur.format(inv.age_61_90||0)],['91-180 days',eur.format(inv.age_91_180||0)],['>180 days',eur.format(inv.age_180_plus||0)],['Obsolescence risk',eur.format(inv.obsolescence_risk_value||0)]]),'span-4')}${panel('Customer aging watchlist','Operational collection risk behind ECL',table(arCustomers,[{key:'entity',label:'Entity'},{key:'division',label:'Division'},{key:'customer_name',label:'Customer'},{key:'risk_score',label:'Risk',num:true,format:v=>num(v,1)},{key:'total_ar',label:'Gross AR',num:true,format:v=>eur.format(v)},{key:'overdue_ar',label:'Overdue',num:true,format:v=>eur.format(v)},{key:'overdue_pct',label:'Overdue %',num:true,format:v=>pct(v)}]),'span-6')}${panel('SKU aging watchlist','Operational stock risk behind accounting provision',table(inventorySkus,[{key:'entity',label:'Entity'},{key:'division',label:'Division'},{key:'product_family',label:'Family'},{key:'product',label:'SKU'},{key:'inventory_value',label:'Gross inventory',num:true,format:v=>eur.format(v)},{key:'coverage_months',label:'Coverage',num:true,format:v=>`${num(v,1)} mo`},{key:'stock_status',label:'Status'}]),'span-6')}</div>`;
+}
+
+function renderBSv07(){
+  const rows=data.balance_sheet||[],l=latest(rows);
+  const grossAr=Number(l.trade_receivables_gross)||Number(l.trade_receivables)||0;
+  const ecl=Number(l.credit_loss_allowance)||0;
+  const grossInv=Number(l.inventory_gross)||Number(l.inventory_legal_transfer_value)||Number(l.inventory)||0;
+  const invProv=Number(l.inventory_provision)||0;
+  return `<div class="kpi-grid">${kpi('Assets',eur.format(l.assets||0))}${kpi('Liabilities',eur.format(l.liabilities||0))}${kpi('Equity',eur.format(l.equity||0))}${kpi('Credit loss allowance',eur.format(ecl),grossAr?pct(ecl/grossAr):'-')}${kpi('Inventory provision',eur.format(invProv),grossInv?pct(invProv/grossInv):'-')}${kpi('Balance check',eur.format(l.balance_check||0),Math.abs(l.balance_check||0)<.1?'Reconciled':'Review')}</div><div class="panel-grid">${panel('Receivables carrying value','Latest consolidated close',metricRows([['Gross trade receivables',eur.format(grossAr)],['Credit loss allowance',`(${eur.format(ecl)})`],['Net trade receivables',eur.format(l.trade_receivables||0)]]),'span-4')}${panel('Inventory carrying value','Provision and intercompany reserve are separate adjustments',metricRows([['Gross legal inventory',eur.format(grossInv)],['Inventory provision',`(${eur.format(invProv)})`],['Unrealized IC markup reserve',`(${eur.format(l.unrealized_ic_markup_reserve||0)})`],['Net consolidated inventory',eur.format(l.inventory||0)]]),'span-4')}${panel('Funding structure','Latest consolidated balance sheet',metricRows([['Cash',eur.format(l.cash||0)],['Trade payables',eur.format(l.trade_payables||0)],['Tax payable',eur.format(l.tax_payable||0)],['Debt',eur.format(l.debt||0)],['Share capital',eur.format(l.share_capital||0)],['Retained earnings',eur.format(l.retained_earnings||0)]]),'span-4')}${panel('Total assets trend','Net of accounting allowances and provisions',bars(rows.slice(-24),'assets'),'span-12')}</div>`;
+}
+
+const renderPnlBeforeAssetQuality=renderers.pnl;
+renderers.pnl=function(){
+  const current=(data.management_detail||[]).filter(r=>r.month===data.meta.end_month && (state.entity==='all'||r.entity===state.entity) && (state.division==='all'||r.division===state.division));
+  const invExpense=current.reduce((s,r)=>s+(Number(r.inventory_provision_expense)||0),0);
+  const eclExpense=current.reduce((s,r)=>s+(Number(r.credit_loss_expense)||0),0);
+  const note=`<div class="section-note"><strong>Asset-quality accounting:</strong> Inventory provision movement ${eur.format(invExpense)} is included in Gross Profit; expected credit loss movement ${eur.format(eclExpense)} is included in OPEX. Both are non-cash book adjustments in the current tax model.</div>`;
+  return note+renderPnlBeforeAssetQuality();
+};
+
+renderers['working-capital']=renderWCv07;
+renderers['balance-sheet']=renderBSv07;
+const wcV07=views.find(v=>v[0]==='working-capital'); if(wcV07) wcV07[2]='Gross exposure, accounting provisions, aging, payables and cash conversion.';
+const bsV07=views.find(v=>v[0]==='balance-sheet'); if(bsV07) bsV07[2]='Gross assets, contra-asset reserves, liabilities and equity.';
