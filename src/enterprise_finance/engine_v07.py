@@ -148,7 +148,7 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     checks["forecast_lookahead_errors"] = lookahead_errors
     checks["catalog_product_count"] = int(len(products))
     checks["catalog_family_count"] = int(products[["division", "product_family"]].drop_duplicates().shape[0])
-    checks["sold_product_count"] = int(operations.product.nunique())
+    checks["sold_product_count"] = int(operations["product"].nunique())
     checks["passed"] = bool(
         checks["passed"]
         and wc_checks["passed"]
