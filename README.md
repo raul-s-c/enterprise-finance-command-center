@@ -2,20 +2,18 @@
 
 Enterprise Finance Command Center is an end-to-end CFO / FP&A portfolio project built around a continuously evolving synthetic multinational company.
 
-The project does not generate disconnected dashboard numbers. It models economic activity first, translates that activity into double-entry accounting, consolidates legal entities, derives connected financial statements, builds management schedules, creates Budget and rolling Forecast versions, and publishes a CFO-oriented analytical application.
+The project models economic activity first and derives accounting, financial statements, Working Capital, operating schedules, Budget, Forecast and management analytics from the same economic system.
 
 Live application: https://raul-s-c.github.io/enterprise-finance-command-center/
 
 ## Synthetic group
 
-The fictional company is **Aureon Systems Group**.
+The fictional company is **Aureon Systems Group** with four deliberately different business models:
 
-It combines four deliberately different business models:
-
-- Software: recurring subscriptions and services
-- Hardware: manufactured products sold through commercial entities
-- Events & Projects: project-based revenue and backlog
-- Spare Parts: high-SKU aftermarket activity linked to installed base
+- Software — recurring subscriptions and services
+- Hardware — manufactured products and factory economics
+- Events & Projects — bookings, backlog and project delivery
+- Spare Parts — high-SKU aftermarket activity linked to installed base
 
 The group has legal entities in Germany, Spain, Czech Republic, China, the United States and Japan. Brno and Suzhou operate manufacturing sites and supply commercial entities through cost-plus intercompany flows.
 
@@ -36,7 +34,7 @@ Intercompany consolidation
         ->
 P&L / Balance Sheet / Cash Flow
         ->
-Working Capital / Asset Quality / CAPEX
+Working Capital / Asset Quality / Customer Funding / CAPEX
         ->
 Divisional operating schedules
         ->
@@ -47,42 +45,73 @@ Management decisions
 CFO analytics
 ```
 
-P&L, Balance Sheet, Cash Flow, Working Capital, provisions, factory economics, Budget and Forecast all originate from the same economic system.
+The project does not independently generate P&L, Balance Sheet and Cash Flow numbers for a dashboard. Those outputs are consequences of the same underlying transactions and accounting events.
 
-## Current release: v0.9
+## Current release: v0.10
 
-Version 0.9 adds a frozen Annual Budget and full-year planning layer.
+Version 0.10 adds **customer advances and contract liabilities** to Software and Events & Projects.
+
+Cash timing is now explicitly separated from revenue recognition:
+
+```text
+Customer pays before service
+Dr Cash
+Cr Contract Liabilities
+
+Service is delivered
+Dr Accounts Receivable
+Cr Revenue
+
+Advance settles the invoice
+Dr Contract Liabilities
+Cr Accounts Receivable
+```
+
+If a contracted service is not delivered within the configured grace period, the remaining advance is refunded:
+
+```text
+Dr Contract Liabilities
+Cr Cash
+```
+
+Revenue is never created merely because cash arrived earlier.
+
+The contract-aware close then rebuilds AR aging, expected credit loss, Balance Sheet, Cash Flow and Working Capital before publication.
+
+See `docs/contract-liabilities-and-customer-advances.md`.
+
+## Finance scope
 
 The current system includes:
 
-- 236 synthetic product references
-- 19 division/family combinations
-- four business models
-- six legal entities
-- two factories
+- 236 synthetic product references across a multi-level hierarchy
+- six legal entities and two factories
 - 36 rolling actual months
 - 18 forecast months
 - double-entry accounting
-- legal and consolidated financial statements
-- Annual Budget with prior-year approval vintage
-- YTD Actual vs Budget
-- FY Budget vs Latest Outlook
-- FC-1 / FC-3 / FC-6 full-year outlook reconstruction
+- legal and consolidated P&L / Balance Sheet / Cash Flow
+- intercompany cost-plus manufacturing and eliminations
 - customer-level AR aging
 - expected credit loss accounting
-- SKU-level inventory aging
-- inventory obsolescence provisions
-- supplier-level AP aging
-- supplier concentration and single-source exposure
+- SKU-level inventory aging and obsolescence provisions
+- supplier-level AP aging, concentration and single-source exposure
+- customer advances and contract liabilities
+- contract cancellations and cash refunds
+- factory capacity and absorption accounting
+- CAPEX from CIP through go-live, PPE and depreciation
 - Software ARR / MRR / churn / NRR
 - Events bookings / backlog / book-to-bill
-- Hardware capacity / utilization / absorption accounting
 - Spare Parts installed-base economics
-- CAPEX projects from CIP through go-live and depreciation
-- product and customer profitability
+- product, family, quality-tier and customer profitability
 - price / volume / mix analysis
-- product lifecycle decisions
-- automated GitHub Actions close and GitHub Pages deployment
+- deterministic product lifecycle decisions
+- frozen Annual Budget
+- YTD Actual vs Budget
+- FY Budget vs Latest Outlook
+- FC-1 / FC-3 / FC-6 outlook reconstruction
+- Base / Upside / Downside rolling forecasts
+- forecast MAPE, bias and scale controls
+- automated monthly close and GitHub Pages deployment
 
 ## Product hierarchy
 
@@ -101,7 +130,7 @@ See `docs/product-hierarchy.md`.
 
 ## Working Capital and asset quality
 
-The project contains three reconciled operating schedules:
+The project contains three reconciled trade schedules:
 
 ```text
 Customer AR aging   -> 1100_AR
@@ -109,68 +138,41 @@ SKU inventory aging -> 1200_INVENTORY
 Supplier AP aging   -> 2100_AP
 ```
 
-### Trade receivables
+Asset valuation is separated from operating exposure:
 
 ```text
 Gross Trade Receivables
-- Credit Loss Allowance
+- Expected Credit Loss Allowance
 = Net Trade Receivables
-```
 
-The ECL model uses customer risk and aging buckets.
-
-### Inventory
-
-```text
 Gross Legal Inventory
 - Inventory Provision
 - Unrealized Intercompany Markup Reserve
 = Net Consolidated Inventory
 ```
 
-Inventory provision depends on age, product generation, quality tier and business model.
+Version 0.10 adds customer funding:
 
-### Accounts Payable
+```text
+Trade NWC
+= Net AR + Net Inventory - Trade AP
 
-Supplier lots are reconstructed from the legal AP ledger. The schedule adds:
+Operating NWC
+= Trade NWC - Contract Liabilities
+```
 
-- AP aging
-- payment terms
-- supplier criticality
-- trailing-12-month supplier spend
-- Top-5 concentration
-- single-source exposure
-- overdue supplier exposure
+This lets the CFO distinguish slow cash conversion from a business model that is partially funded by customer prepayments.
 
 See:
 
 - `docs/working-capital-schedules.md`
 - `docs/provisions-and-asset-quality.md`
 - `docs/supplier-payables-and-concentration.md`
-
-## Factory absorption accounting
-
-Brno and Suzhou use explicit absorption accounting.
-
-```text
-Actual Factory Fixed Cost
-- Standard Fixed Cost Absorbed
-= Factory Absorption Variance
-```
-
-Account:
-
-```text
-5450_FACTORY_ABSORPTION_VARIANCE
-```
-
-The variance flows through Gross Profit, AP, cash, tax and retained earnings.
-
-See `docs/factory-absorption-accounting.md`.
+- `docs/contract-liabilities-and-customer-advances.md`
 
 ## Divisional operating schedules
 
-The divisions do not share an artificial generic KPI framework.
+The four divisions deliberately use different operating mathematics.
 
 ### Software
 
@@ -183,7 +185,7 @@ Opening MRR
 = Ending MRR
 ```
 
-Outputs include ARR, NRR, GRR and recurring-revenue mix.
+Outputs include ARR, NRR, GRR, recurring mix and customer prepayments.
 
 ### Events & Projects
 
@@ -194,11 +196,19 @@ Opening Backlog
 = Ending Backlog
 ```
 
-Outputs include backlog, book-to-bill and project volume.
+Outputs include book-to-bill, backlog coverage and project advances.
 
 ### Hardware
 
-Outputs include capacity, utilization, production mix, absorbed fixed cost and under/over-absorption.
+Outputs include capacity, utilization, production mix, fixed-cost absorption and under/over-absorption.
+
+```text
+Actual Factory Fixed Cost
+- Standard Fixed Cost Absorbed
+= Factory Absorption Variance
+```
+
+The variance is posted to the ledger and affects Gross Profit, AP, tax, retained earnings and cash.
 
 ### Spare Parts
 
@@ -211,33 +221,19 @@ Opening Installed Base
 
 Outputs include aftermarket revenue, inventory coverage and installed-base economics.
 
-See `docs/divisional-operating-schedules.md`.
+See `docs/divisional-operating-schedules.md` and `docs/factory-absorption-accounting.md`.
 
-## Annual Budget and FY planning
+## Annual Budget and rolling Forecast
 
-The Annual Budget is intentionally separate from the rolling Forecast.
+Budget and Forecast are different finance objects.
 
-Budget 2026, for example, is approved using an October 2025 planning vintage.
+Budget 2026, for example, is approved from an October 2025 planning vintage and is frozen against hindsight.
 
 ```text
 Budget 2026
 Vintage: 2025-10
 Targets: 2026-01 to 2026-12
 ```
-
-No actual information after the budget vintage may change the frozen plan.
-
-Commercial combinations use:
-
-```text
-Trailing observable revenue run-rate
-x structural growth
-x management stretch
-x monthly phasing
-= Revenue Budget
-```
-
-Factories and other zero-revenue cost centers use a separate cost-based planning model.
 
 The Plan & Forecast layer provides:
 
@@ -249,25 +245,11 @@ FY Budget vs FC-3
 FY Budget vs FC-6
 ```
 
-FY outlook combines closed actual months with the remaining months from the selected forecast vintage. Depreciation is included before calculating forecast EBIT.
+Forecasts are based on monthly Entity / Division totals, de-seasonalized recent run-rate, structural growth, target-month seasonality and capped historical bias correction.
 
-See `docs/budget-and-fy-planning.md`.
+A dedicated economic-scale control blocks forecasts that are internally consistent but implausibly small or large relative to the recent business run-rate.
 
-## Rolling forecasting
-
-Every monthly close creates a forecast vintage.
-
-The forecast engine:
-
-1. uses only information observable at the vintage date
-2. builds an entity/division baseline from recent actuals
-3. applies structural growth and seasonality
-4. calculates historical forecast bias
-5. applies capped bias correction
-6. generates Base, Upside and Downside scenarios
-7. preserves historical vintages for accuracy analysis
-
-This supports FC-1, FC-3, FC-6, MAPE and bias analysis.
+See `docs/budget-and-fy-planning.md` and `docs/v0.9.1-forecast-hotfix.md`.
 
 ## CFO application
 
@@ -290,33 +272,25 @@ The application is static and reads compact JSON generated by the finance engine
 
 ## Release controls
 
-Deployment is blocked if material controls fail.
+Deployment is blocked if material controls fail. The suite includes:
 
-The suite includes:
-
-- journal balance
-- trial balance
-- legal Balance Sheet equation
-- consolidated Balance Sheet equation
+- journal and trial-balance integrity
+- legal and consolidated Balance Sheet equations
 - cash-flow reconciliation
-- intercompany AR/AP reconciliation
-- consolidation revenue and EBIT bridges
-- AR aging to GL
-- inventory aging to GL
-- AP aging to GL
-- ECL allowance to contra-asset account
-- inventory provision to contra-asset account
+- intercompany AR/AP and consolidation bridges
+- AR, inventory and AP subledger reconciliation
+- ECL and inventory-provision reconciliation
 - factory absorption schedule to ledger
-- Software ARR roll-forward
-- Events backlog roll-forward
-- Spare Parts installed-base roll-forward
-- forecast no-lookahead
+- Software ARR, Events backlog and Spare Parts installed-base roll-forwards
+- contract-liability subledger to account 2300
+- customer-advance journal balancing
+- contract-aware AR to account 1100
+- no stale customer advances beyond the refund grace period
+- customer-refund journal balancing
+- forecast no-lookahead and economic-scale plausibility
 - product-catalog breadth
-- frozen Budget no-hindsight
-- 12-month Budget coverage
-- Budget duplicate detection
-- current-year Budget presence
-- FY plan bridge presence
+- frozen Budget no-hindsight and 12-month coverage
+- current-year Budget and FY planning bridge presence
 
 A failed control raises an exception before deployment.
 
@@ -334,6 +308,9 @@ data/processed/inventory_aging.csv
 data/processed/inventory_provision.csv
 data/processed/ap_aging.csv
 data/processed/supplier_concentration.csv
+data/processed/contract_liabilities.csv
+data/processed/customer_advances.csv
+data/processed/contract_liability_summary.csv
 data/processed/software_subscription_summary.csv
 data/processed/events_backlog.csv
 data/processed/hardware_factory_economics.csv
@@ -352,24 +329,23 @@ Full reproducible operating and journal detail is generated at runtime and inten
 
 ## Automation
 
-GitHub Actions performs the complete close automatically:
+GitHub Actions performs the close automatically:
 
 1. install the finance engine
 2. run tests
 3. refresh macro inputs where available
-4. generate operating history
-5. create the ledger
-6. post factory absorption
-7. reconstruct Working Capital schedules
-8. calculate asset-quality provisions
+4. simulate operating activity
+5. create the legal ledger
+6. post factory absorption and provisions
+7. rebuild customer settlement, advances and contract liabilities
+8. reconstruct AR / Inventory / AP schedules
 9. consolidate financial statements
 10. build divisional schedules
-11. build the frozen Annual Budget where applicable
-12. build forecast vintages and FY outlooks
-13. run release controls
-14. generate the CFO dataset
-15. commit compact outputs
-16. deploy GitHub Pages
+11. build Budget and forecast vintages
+12. run release controls
+13. publish compact CFO datasets
+14. commit generated outputs
+15. deploy GitHub Pages
 
 No paid database, application server, LLM API or paid market-data subscription is required.
 
