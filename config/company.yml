@@ -79,6 +79,7 @@ contract_liabilities:
   strategic_customer_uplift: 0.08
   growth_customer_discount: 0.04
   max_advance_share: 0.85
+  refund_grace_months: 3
 
 budget:
   finalization_month: 10
