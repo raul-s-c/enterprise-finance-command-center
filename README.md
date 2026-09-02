@@ -24,13 +24,15 @@ Public macro drivers
         ->
 Business drivers
         ->
+Workforce capacity and cost
+        ->
 Operating events
         ->
-Double-entry ledger
+Double-entry legal ledger
         ->
-Legal-entity financials
+Functional-currency books / Legal-entity financials
         ->
-Intercompany consolidation
+Intercompany consolidation / EUR translation / CTA
         ->
 Actual P&L / Balance Sheet / Cash Flow
         ->
@@ -49,11 +51,15 @@ CFO analytics
 
 P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.13
+## Current release: v0.15
 
-Version 0.13 adds an **integrated 12-month three-statement forecast** for Base, Upside and Downside.
+Version 0.15 combines two connected CFO capabilities: **driver-based workforce cost planning** and **multi-currency accounting and group translation**.
 
-The same rolling operating forecast now drives both liquidity and the forward financial statements:
+The operating model now separates personnel from external OPEX. Demand drives required capacity, attrition and hiring; those workforce movements determine payroll, recruitment cost and forward OPEX. Payroll is paid directly through cash and never creates Trade AP.
+
+Each legal entity also has a functional-currency mirror. Local trial balances are translated to EUR using closing rates for assets and liabilities, historical rates for share capital and accumulated historical rates for retained earnings. The residual translation difference is reported explicitly as CTA / OCI. Management reporting separates underlying Revenue and EBIT performance from FX translation through constant-currency analysis.
+
+The same rolling operating forecast continues to drive liquidity and all three forward financial statements:
 
 ```text
 Operating Forecast
@@ -80,7 +86,11 @@ Forecast BS Cash - Forecast CF Cash = 0
 12 months x 3 scenarios = complete
 ```
 
-See `docs/integrated-three-statement-forecast.md`.
+See:
+
+- `docs/workforce-cost-planning.md`
+- `docs/multicurrency-fx.md`
+- `docs/integrated-three-statement-forecast.md`
 
 ## Finance scope
 
@@ -92,6 +102,11 @@ The current system includes:
 - 18 rolling operating forecast months
 - 12-month Base / Upside / Downside liquidity forecast
 - 12-month Base / Upside / Downside integrated three-statement forecast
+- Month x Entity x Division x Function workforce roll-forward
+- driver-based FTE, attrition, hiring, payroll and recruitment-cost forecast
+- functional-currency journals and local trial balances for all six entities
+- EUR group translation with historical equity rates and explicit CTA / OCI
+- reported versus constant-currency Revenue and EBIT
 - double-entry accounting
 - legal and consolidated actual P&L / Balance Sheet / Cash Flow
 - intercompany cost-plus manufacturing and eliminations
@@ -311,6 +326,7 @@ The GitHub Pages application contains:
 - Profitability
 - Intercompany
 - Operations & CAPEX
+- FX & Translation
 - Data Journey
 
 The P&L, Balance Sheet and Cash Flow pages now combine actual reporting with the Base forward statement. Plan & Forecast compares the Base, Upside and Downside three-statement consequences.
@@ -349,6 +365,14 @@ Deployment is blocked if material controls fail. The suite includes:
 - forecast EBIT and Net Income identities
 - forecast Balance Sheet / Cash Flow cash link
 - complete Base / Upside / Downside three-statement coverage
+- workforce FTE roll-forward and non-negative capacity
+- workforce personnel-cost allocation to operating records
+- payroll journal and direct-cash settlement integrity
+- workforce-driven forecast OPEX identity
+- workforce-aware liquidity payroll cash identity
+- functional-currency journal balance and EUR round-trip control
+- translated Balance Sheet equation including historical equity and CTA
+- functional-currency, translation and constant-currency output completeness
 
 A failed control raises an exception before deployment.
 
@@ -381,6 +405,13 @@ data/processed/forecast_pnl.csv
 data/processed/forecast_balance_sheet.csv
 data/processed/forecast_cash_flow.csv
 data/processed/three_statement_forecast_summary.csv
+data/processed/workforce_schedule.csv
+data/processed/workforce_summary.csv
+data/processed/workforce_forecast.csv
+data/processed/functional_currency_journal_sample.csv
+data/processed/local_trial_balance.csv
+data/processed/fx_translation.csv
+data/processed/constant_currency_analysis.csv
 data/processed/software_subscription_summary.csv
 data/processed/events_backlog.csv
 data/processed/hardware_factory_economics.csv
@@ -404,22 +435,27 @@ GitHub Actions performs the complete close automatically:
 1. install the finance engine
 2. run tests
 3. refresh macro inputs where available
-4. simulate operating activity
-5. create the legal ledger
-6. post factory absorption and provisions
-7. rebuild customer settlement, advances and contract liabilities
-8. reconstruct AR / Inventory / AP schedules
-9. build Budget and rolling forecast vintages
-10. apply legal-entity cash pooling
-11. rebuild actual Balance Sheet and Cash Flow after pooling
-12. build debt, maturity, liquidity and covenant schedules
-13. build the 12-month scenario liquidity forecast
-14. calculate downside-protected capital-allocation capacity
-15. build the integrated three-statement forecast
-16. run release controls
-17. publish compact CFO datasets
-18. commit generated outputs
-19. deploy GitHub Pages
+4. simulate operating demand and build the workforce roll-forward
+5. allocate payroll and non-people OPEX to operating activity
+6. create the legal ledger with payroll settled directly through cash
+7. post factory absorption and provisions
+8. rebuild customer settlement, advances and contract liabilities
+9. reconstruct AR / Inventory / AP schedules
+10. build Budget and workforce-driven rolling forecast vintages
+11. apply legal-entity cash pooling
+12. rebuild actual Balance Sheet and Cash Flow after pooling
+13. build debt, maturity, liquidity and covenant schedules
+14. build the payroll-aware 12-month scenario liquidity forecast
+15. calculate downside-protected capital-allocation capacity
+16. build the integrated three-statement forecast
+17. create functional-currency journal mirrors and local trial balances
+18. translate foreign entities to EUR and calculate CTA / OCI
+19. calculate reported and constant-currency Revenue and EBIT
+20. assemble workforce, FX and core finance dashboard datasets
+21. run release controls
+22. publish compact CFO datasets
+23. commit generated outputs
+24. deploy GitHub Pages
 
 No paid database, application server, LLM API or paid market-data subscription is required.
 
