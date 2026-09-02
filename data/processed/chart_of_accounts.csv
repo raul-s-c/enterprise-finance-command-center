@@ -31,3 +31,4 @@ account,statement,line,account_type
 2300_CONTRACT_LIABILITIES,Balance Sheet,Contract Liabilities,Liability
 1160_IC_TREASURY_RECEIVABLE,Balance Sheet,Intercompany Treasury Receivable,Asset
 2160_IC_TREASURY_PAYABLE,Balance Sheet,Intercompany Treasury Payable,Liability
+3300_FX_TRANSLATION_RESERVE,Balance Sheet,Foreign Currency Translation Reserve,Equity
