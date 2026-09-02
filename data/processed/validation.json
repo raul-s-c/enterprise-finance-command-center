@@ -84,5 +84,17 @@
   "fx_local_rounding_adjustment_eur_max": 0.02,
   "functional_currency_journal_missing": 0,
   "fx_translation_schedule_missing": 0,
-  "constant_currency_analysis_missing": 0
+  "constant_currency_analysis_missing": 0,
+  "performance_review_missing_columns": 0,
+  "management_actions_missing_columns": 0,
+  "performance_review_duplicate_ids": 0,
+  "management_action_duplicate_ids": 0,
+  "performance_review_current_month_missing": 0,
+  "performance_review_source_rows_missing": 0,
+  "performance_review_source_max_gap": 0.0,
+  "performance_review_required_actions_missing": 0,
+  "management_action_orphans": 0,
+  "management_action_invalid_fields": 0,
+  "performance_review_summary_missing": 0,
+  "monthly_performance_review_missing": 0
 }
