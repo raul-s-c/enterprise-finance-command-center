@@ -5,10 +5,12 @@ on:
   schedule:
     - cron: "17 5 2 * *"
   push:
-    branches: [main, release/v0.14-workforce-cost-planning]
+    branches: [main]
     paths-ignore:
       - "data/processed/**"
       - "web/data/**"
+  pull_request:
+    branches: [main]
 
 permissions:
   contents: write
@@ -17,7 +19,7 @@ permissions:
 
 concurrency:
   group: enterprise-finance-close-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
