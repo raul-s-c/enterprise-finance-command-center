@@ -6,6 +6,11 @@ import numpy as np
 import pandas as pd
 
 
+def _money(value: float) -> float:
+    """Materialize monetary state at ledger precision."""
+    return round(float(value), 2)
+
+
 def _capex_project_schedules(config: dict, end_month: str, opening_cip: float) -> tuple[dict[str, dict], dict[str, float]]:
     end = pd.Period(end_month, freq="M")
     projects: dict[str, dict] = {}
@@ -22,24 +27,31 @@ def _capex_project_schedules(config: dict, end_month: str, opening_cip: float) -
         go_live = start + build_months - 1
         if go_live <= end:
             continue
-        spends = {str(month): round(float(project["budget"]) * float(weights[idx]), 2) for idx, month in enumerate(spend_months)}
-        raw = sum(amount for month, amount in spends.items() if pd.Period(month, freq="M") <= end)
+        spends = {str(month): _money(float(project["budget"]) * float(weights[idx])) for idx, month in enumerate(spend_months)}
+        raw = _money(sum(amount for month, amount in spends.items() if pd.Period(month, freq="M") <= end))
         raw_opening[str(project["id"])] = raw
         projects[str(project["id"])] = {
             "go_live": str(go_live),
-            "budget": float(project["budget"]),
+            "budget": _money(project["budget"]),
             "useful_life_months": int(project["useful_life_months"]),
             "spends": spends,
             "cip": 0.0,
         }
         for month, amount in spends.items():
             if pd.Period(month, freq="M") > end:
-                future_spend[month] += amount
+                future_spend[month] = _money(future_spend[month] + amount)
 
-    raw_total = sum(raw_opening.values())
+    raw_total = _money(sum(raw_opening.values()))
     scale = float(opening_cip) / raw_total if raw_total > 0.005 else 0.0
-    for project_id, raw in raw_opening.items():
-        projects[project_id]["cip"] = raw * scale
+    remaining = _money(opening_cip)
+    ids = list(raw_opening)
+    for idx, project_id in enumerate(ids):
+        if idx == len(ids) - 1:
+            allocated = remaining
+        else:
+            allocated = _money(raw_opening[project_id] * scale)
+            remaining = _money(remaining - allocated)
+        projects[project_id]["cip"] = allocated
     return projects, dict(future_spend)
 
 
@@ -62,9 +74,14 @@ def build_three_statement_forecast(
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """Build linked forecast P&L, Balance Sheet and Cash Flow statements.
 
-    The liquidity forecast supplies cash and Working Capital state. This layer adds
-    forecast depreciation, asset-quality reserves, PPE/CIP, retained earnings and
-    statement identities. No balancing plug is permitted.
+    The detailed operating forecast first feeds the liquidity engine. When the
+    liquidity dataset exposes its cent-precise Revenue, EBITDA and workforce OPEX
+    block, the three-statement layer consumes that exact monetary source rather
+    than independently re-aggregating detailed forecast rows. This prevents small
+    divisional rounding differences from accumulating in retained earnings.
+
+    Legacy liquidity fixtures without the extended driver block remain supported.
+    No balancing plug is permitted.
     """
     if forecasts.empty or liquidity.empty or balance_sheet.empty:
         return pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
@@ -80,13 +97,12 @@ def build_three_statement_forecast(
     if current_forecasts.empty:
         return pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
 
-    baseline_dep = float(management.loc[management.month.eq(end_month), "depreciation"].sum())
-    tax_rate = float(config["group"]["corporate_tax_rate"])
-    opening_ar_gross = float(opening.get("trade_receivables_gross", opening.get("trade_receivables", 0.0)))
-    opening_ecl = float(opening.get("credit_loss_allowance", 0.0))
-    opening_inv_gross = float(opening.get("inventory_gross", opening.get("inventory_legal_transfer_value", opening.get("inventory", 0.0))))
-    opening_inv_prov = float(opening.get("inventory_provision", 0.0))
-    opening_markup = float(opening.get("unrealized_ic_markup_reserve", 0.0))
+    baseline_dep = _money(management.loc[management.month.eq(end_month), "depreciation"].sum())
+    opening_ar_gross = _money(opening.get("trade_receivables_gross", opening.get("trade_receivables", 0.0)))
+    opening_ecl = _money(opening.get("credit_loss_allowance", 0.0))
+    opening_inv_gross = _money(opening.get("inventory_gross", opening.get("inventory_legal_transfer_value", opening.get("inventory", 0.0))))
+    opening_inv_prov = _money(opening.get("inventory_provision", 0.0))
+    opening_markup = _money(opening.get("unrealized_ic_markup_reserve", 0.0))
     ecl_rate = opening_ecl / opening_ar_gross if opening_ar_gross > 0.005 else 0.0
     inv_prov_rate = opening_inv_prov / opening_inv_gross if opening_inv_gross > 0.005 else 0.0
     markup_rate = opening_markup / opening_inv_gross if opening_inv_gross > 0.005 else 0.0
@@ -101,11 +117,11 @@ def build_three_statement_forecast(
         if liq.empty or scenario_fc.empty:
             continue
 
-        ppe_gross = float(opening.get("ppe_gross", 0.0))
-        cip = float(opening.get("cip", 0.0))
-        accum_dep = float(opening.get("accumulated_depreciation", 0.0))
-        share_capital = float(opening.get("share_capital", 0.0))
-        retained = float(opening.get("retained_earnings", 0.0))
+        ppe_gross = _money(opening.get("ppe_gross", 0.0))
+        cip = _money(opening.get("cip", 0.0))
+        accum_dep = _money(opening.get("accumulated_depreciation", 0.0))
+        share_capital = _money(opening.get("share_capital", 0.0))
+        retained = _money(opening.get("retained_earnings", 0.0))
         prior_ecl = opening_ecl
         prior_inv_prov = opening_inv_prov
         prior_markup = opening_markup
@@ -116,58 +132,75 @@ def build_three_statement_forecast(
             month = str(liq_row.month)
             period = pd.Period(month, freq="M")
             month_fc = scenario_fc[scenario_fc.month.eq(month)]
-            revenue = float(month_fc.revenue_forecast.sum())
-            gross_profit_before_quality = float(month_fc.gross_profit_forecast.sum())
-            opex = float(month_fc.opex_forecast.sum())
+            detailed_revenue = _money(month_fc.revenue_forecast.sum())
+            detailed_gp = _money(month_fc.gross_profit_forecast.sum())
+            detailed_opex = _money(month_fc.opex_forecast.sum())
+
+            has_liquidity_driver_block = all(
+                hasattr(liq_row, field)
+                for field in ("revenue", "ebitda", "personnel_cost", "non_people_opex")
+            )
+            if has_liquidity_driver_block:
+                revenue = _money(liq_row.revenue)
+                opex = _money(float(liq_row.personnel_cost) + float(liq_row.non_people_opex))
+                gross_profit_before_quality = _money(float(liq_row.ebitda) + opex)
+            else:
+                revenue = detailed_revenue
+                gross_profit_before_quality = detailed_gp
+                opex = detailed_opex
+
+            driver_revenue_rounding_gap = _money(revenue - detailed_revenue)
+            driver_gp_rounding_gap = _money(gross_profit_before_quality - detailed_gp)
+            driver_opex_rounding_gap = _money(opex - detailed_opex)
 
             depreciation = baseline_dep
             for project in projects.values():
                 go_live = pd.Period(project["go_live"], freq="M")
                 if period > go_live:
-                    depreciation += float(project["budget"]) / float(project["useful_life_months"])
+                    depreciation = _money(depreciation + float(project["budget"]) / float(project["useful_life_months"]))
 
             for project in projects.values():
-                spend = float(project["spends"].get(month, 0.0))
+                spend = _money(project["spends"].get(month, 0.0))
                 if spend:
-                    project["cip"] += spend
-                    cip += spend
+                    project["cip"] = _money(project["cip"] + spend)
+                    cip = _money(cip + spend)
                 if month == project["go_live"] and project["cip"] > 0.005:
-                    transfer = float(project["cip"])
-                    cip -= transfer
-                    ppe_gross += transfer
+                    transfer = _money(project["cip"])
+                    cip = _money(cip - transfer)
+                    ppe_gross = _money(ppe_gross + transfer)
                     project["cip"] = 0.0
 
-            accum_dep -= depreciation
+            accum_dep = _money(accum_dep - depreciation)
 
-            ar_gross = float(liq_row.ending_ar)
-            inv_gross = float(liq_row.ending_inventory)
-            ecl = max(ar_gross * ecl_rate * ecl_mult, 0.0)
-            inv_prov = max(inv_gross * inv_prov_rate * inv_mult, 0.0)
-            markup_reserve = max(inv_gross * markup_rate, 0.0)
-            credit_loss_expense = ecl - prior_ecl
-            inventory_provision_expense = inv_prov - prior_inv_prov
-            unrealized_profit_adjustment = markup_reserve - prior_markup
+            ar_gross = _money(liq_row.ending_ar)
+            inv_gross = _money(liq_row.ending_inventory)
+            ecl = _money(max(ar_gross * ecl_rate * ecl_mult, 0.0))
+            inv_prov = _money(max(inv_gross * inv_prov_rate * inv_mult, 0.0))
+            markup_reserve = _money(max(inv_gross * markup_rate, 0.0))
+            credit_loss_expense = _money(ecl - prior_ecl)
+            inventory_provision_expense = _money(inv_prov - prior_inv_prov)
+            unrealized_profit_adjustment = _money(markup_reserve - prior_markup)
 
-            gross_profit = gross_profit_before_quality - inventory_provision_expense - unrealized_profit_adjustment
-            ebit = gross_profit - opex - credit_loss_expense - depreciation
-            interest = float(liq_row.interest_cash)
-            ebt = ebit - interest
-            tax = float(liq_row.tax_accrual)
-            net_income = ebt - tax
-            retained += net_income
+            gross_profit = _money(gross_profit_before_quality - inventory_provision_expense - unrealized_profit_adjustment)
+            ebit = _money(gross_profit - opex - credit_loss_expense - depreciation)
+            interest = _money(liq_row.interest_cash)
+            ebt = _money(ebit - interest)
+            tax = _money(liq_row.tax_accrual)
+            net_income = _money(ebt - tax)
+            retained = _money(retained + net_income)
 
-            trade_receivables = ar_gross - ecl
-            inventory = inv_gross - inv_prov - markup_reserve
-            cash = float(liq_row.ending_cash)
-            trade_payables = float(liq_row.ending_ap)
-            tax_payable = float(liq_row.ending_tax_payable)
-            debt = float(liq_row.gross_debt)
-            contract_liabilities = float(liq_row.ending_contract_liabilities)
+            trade_receivables = _money(ar_gross - ecl)
+            inventory = _money(inv_gross - inv_prov - markup_reserve)
+            cash = _money(liq_row.ending_cash)
+            trade_payables = _money(liq_row.ending_ap)
+            tax_payable = _money(liq_row.ending_tax_payable)
+            debt = _money(liq_row.gross_debt)
+            contract_liabilities = _money(liq_row.ending_contract_liabilities)
 
-            assets = cash + trade_receivables + inventory + ppe_gross + cip + accum_dep
-            liabilities = trade_payables + tax_payable + debt + contract_liabilities
-            equity = share_capital + retained
-            balance_check = assets - liabilities - equity
+            assets = _money(cash + trade_receivables + inventory + ppe_gross + cip + accum_dep)
+            liabilities = _money(trade_payables + tax_payable + debt + contract_liabilities)
+            equity = _money(share_capital + retained)
+            balance_check = _money(assets - liabilities - equity)
 
             pnl_rows.append({
                 "scenario": scenario, "month": month, "horizon_month": int(liq_row.horizon_month),
@@ -178,8 +211,11 @@ def build_three_statement_forecast(
                 "credit_loss_expense": credit_loss_expense, "depreciation": depreciation,
                 "ebit": ebit, "interest": interest, "ebt": ebt, "tax": tax,
                 "net_income": net_income,
-                "ebit_identity_gap": ebit - (gross_profit - opex - credit_loss_expense - depreciation),
-                "net_income_identity_gap": net_income - (ebit - interest - tax),
+                "operating_forecast_revenue_rounding_gap": driver_revenue_rounding_gap,
+                "operating_forecast_gp_rounding_gap": driver_gp_rounding_gap,
+                "operating_forecast_opex_rounding_gap": driver_opex_rounding_gap,
+                "ebit_identity_gap": _money(ebit - (gross_profit - opex - credit_loss_expense - depreciation)),
+                "net_income_identity_gap": _money(net_income - (ebit - interest - tax)),
             })
             bs_rows.append({
                 "scenario": scenario, "month": month, "horizon_month": int(liq_row.horizon_month),
@@ -195,19 +231,20 @@ def build_three_statement_forecast(
                 "assets": assets, "liabilities": liabilities, "equity": equity,
                 "balance_check": balance_check,
             })
-            financing_cash_flow = float(liq_row.rcf_draw) - float(liq_row.scheduled_debt_repayment)
-            investing_cash_flow = -float(liq_row.capex)
-            operating_cash_flow = float(liq_row.operating_cash_flow)
-            net_cash_movement = operating_cash_flow + investing_cash_flow + financing_cash_flow
+            financing_cash_flow = _money(float(liq_row.rcf_draw) - float(liq_row.scheduled_debt_repayment))
+            investing_cash_flow = _money(-float(liq_row.capex))
+            operating_cash_flow = _money(liq_row.operating_cash_flow)
+            net_cash_movement = _money(operating_cash_flow + investing_cash_flow + financing_cash_flow)
+            opening_cash = _money(liq_row.opening_cash)
             cf_rows.append({
                 "scenario": scenario, "month": month, "horizon_month": int(liq_row.horizon_month),
                 "operating_cash_flow": operating_cash_flow,
                 "investing_cash_flow": investing_cash_flow,
                 "financing_cash_flow": financing_cash_flow,
-                "free_cash_flow": operating_cash_flow + investing_cash_flow,
+                "free_cash_flow": _money(operating_cash_flow + investing_cash_flow),
                 "net_cash_movement": net_cash_movement,
-                "opening_cash": float(liq_row.opening_cash), "ending_cash": cash,
-                "cash_flow_identity_gap": cash - float(liq_row.opening_cash) - net_cash_movement,
+                "opening_cash": opening_cash, "ending_cash": cash,
+                "cash_flow_identity_gap": _money(cash - opening_cash - net_cash_movement),
             })
 
             prior_ecl = ecl
@@ -247,7 +284,7 @@ def validate_three_statement_forecast(pnl: pd.DataFrame, bs: pd.DataFrame, cf: p
         "three_statement_missing_scenario_months": missing,
     }
     checks["passed"] = (
-        balance_gap <= 0.10 and cf_gap <= 0.02 and ebit_gap <= 0.02
+        balance_gap <= 0.02 and cf_gap <= 0.02 and ebit_gap <= 0.02
         and ni_gap <= 0.02 and cash_link_gap <= 0.02 and missing == 0
     )
     return checks

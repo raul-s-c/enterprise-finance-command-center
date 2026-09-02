@@ -8,10 +8,11 @@ import json
 import pandas as pd
 import yaml
 
-from .accounting import build_accounting, balance_sheet, cash_flow, chart_of_accounts, legal_pnl
-from .forecasting import build_forecast_vintages, forecast_accuracy, latest_forecast
+from .accounting import balance_sheet, cash_flow, chart_of_accounts, legal_pnl
+from .accounting_v14 import build_accounting
+from .forecasting_v14 import build_forecast_vintages, forecast_accuracy, latest_forecast
 from .macro import build_macro, source_manifest
-from .model import simulate_operations
+from .workforce import simulate_operations_with_workforce as simulate_operations
 from .operating_schedules import (
     events_backlog_schedule,
     hardware_factory_schedule,
