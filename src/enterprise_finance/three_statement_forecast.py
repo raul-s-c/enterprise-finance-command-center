@@ -74,10 +74,14 @@ def build_three_statement_forecast(
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """Build linked forecast P&L, Balance Sheet and Cash Flow statements.
 
-    The liquidity forecast supplies cash and Working Capital state. This layer adds
-    forecast depreciation, asset-quality reserves, PPE/CIP, retained earnings and
-    statement identities. No balancing plug is permitted. Monetary roll-forwards
-    are materialized at cent precision, matching the actual ledger.
+    The detailed operating forecast first feeds the liquidity engine. When the
+    liquidity dataset exposes its cent-precise Revenue, EBITDA and workforce OPEX
+    block, the three-statement layer consumes that exact monetary source rather
+    than independently re-aggregating detailed forecast rows. This prevents small
+    divisional rounding differences from accumulating in retained earnings.
+
+    Legacy liquidity fixtures without the extended driver block remain supported.
+    No balancing plug is permitted.
     """
     if forecasts.empty or liquidity.empty or balance_sheet.empty:
         return pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
@@ -128,9 +132,26 @@ def build_three_statement_forecast(
             month = str(liq_row.month)
             period = pd.Period(month, freq="M")
             month_fc = scenario_fc[scenario_fc.month.eq(month)]
-            revenue = _money(month_fc.revenue_forecast.sum())
-            gross_profit_before_quality = _money(month_fc.gross_profit_forecast.sum())
-            opex = _money(month_fc.opex_forecast.sum())
+            detailed_revenue = _money(month_fc.revenue_forecast.sum())
+            detailed_gp = _money(month_fc.gross_profit_forecast.sum())
+            detailed_opex = _money(month_fc.opex_forecast.sum())
+
+            has_liquidity_driver_block = all(
+                hasattr(liq_row, field)
+                for field in ("revenue", "ebitda", "personnel_cost", "non_people_opex")
+            )
+            if has_liquidity_driver_block:
+                revenue = _money(liq_row.revenue)
+                opex = _money(float(liq_row.personnel_cost) + float(liq_row.non_people_opex))
+                gross_profit_before_quality = _money(float(liq_row.ebitda) + opex)
+            else:
+                revenue = detailed_revenue
+                gross_profit_before_quality = detailed_gp
+                opex = detailed_opex
+
+            driver_revenue_rounding_gap = _money(revenue - detailed_revenue)
+            driver_gp_rounding_gap = _money(gross_profit_before_quality - detailed_gp)
+            driver_opex_rounding_gap = _money(opex - detailed_opex)
 
             depreciation = baseline_dep
             for project in projects.values():
@@ -190,6 +211,9 @@ def build_three_statement_forecast(
                 "credit_loss_expense": credit_loss_expense, "depreciation": depreciation,
                 "ebit": ebit, "interest": interest, "ebt": ebt, "tax": tax,
                 "net_income": net_income,
+                "operating_forecast_revenue_rounding_gap": driver_revenue_rounding_gap,
+                "operating_forecast_gp_rounding_gap": driver_gp_rounding_gap,
+                "operating_forecast_opex_rounding_gap": driver_opex_rounding_gap,
                 "ebit_identity_gap": _money(ebit - (gross_profit - opex - credit_loss_expense - depreciation)),
                 "net_income_identity_gap": _money(net_income - (ebit - interest - tax)),
             })
