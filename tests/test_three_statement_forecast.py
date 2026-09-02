@@ -151,3 +151,35 @@ def test_three_statement_retained_earnings_and_cash_roll_forward():
         assert (b.retained_earnings - expected_retained).abs().max() <= 0.10
         assert (b.cash - c.ending_cash).abs().max() <= 0.02
         assert (c.ending_cash.iloc[1:].reset_index(drop=True) - c.opening_cash.iloc[1:].reset_index(drop=True)).abs().max() >= 0.0
+
+
+def test_three_statement_uses_cent_precise_liquidity_driver_block():
+    config, forecasts, liquidity, management, balance_sheet = _fixture()
+    liquidity = liquidity.copy()
+    liquidity["revenue"] = 0.0
+    liquidity["personnel_cost"] = 0.0
+    liquidity["non_people_opex"] = 0.0
+    liquidity["ebitda"] = 0.0
+
+    for idx, row in liquidity.iterrows():
+        month_fc = forecasts[
+            forecasts.scenario.eq(row.scenario)
+            & forecasts.month.eq(row.month)
+        ]
+        revenue = round(sum(round(float(value), 2) for value in month_fc.revenue_forecast), 2)
+        opex = round(sum(round(float(value), 2) for value in month_fc.opex_forecast), 2)
+        gross_profit = round(sum(round(float(value), 2) for value in month_fc.gross_profit_forecast), 2)
+        liquidity.at[idx, "revenue"] = revenue
+        liquidity.at[idx, "personnel_cost"] = round(opex * 0.7, 2)
+        liquidity.at[idx, "non_people_opex"] = round(opex - round(opex * 0.7, 2), 2)
+        liquidity.at[idx, "ebitda"] = round(gross_profit - opex, 2)
+
+    pnl, bs, cf = build_three_statement_forecast(
+        forecasts, liquidity, management, balance_sheet, config, "2026-08", 12
+    )
+    checks = validate_three_statement_forecast(pnl, bs, cf, 12)
+
+    assert checks["passed"], checks
+    assert pnl.operating_forecast_revenue_rounding_gap.abs().max() <= 0.02
+    assert pnl.operating_forecast_gp_rounding_gap.abs().max() <= 0.02
+    assert pnl.operating_forecast_opex_rounding_gap.abs().max() <= 0.02
