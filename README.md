@@ -44,50 +44,39 @@ Forward Liquidity
         ->
 Integrated Forecast P&L / Balance Sheet / Cash Flow
         ->
-Capital Allocation Capacity / Management Decisions
+Capital Allocation Capacity
+        ->
+Monthly Performance Review / Management Actions
         ->
 CFO analytics
 ```
 
 P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.15
+## Current release: v0.16
 
-Version 0.15 combines two connected CFO capabilities: **driver-based workforce cost planning** and **multi-currency accounting and group translation**.
+Version 0.16 adds a **monthly performance review and management action layer** to the reconciled close.
 
-The operating model now separates personnel from external OPEX. Demand drives required capacity, attrition and hiring; those workforce movements determine payroll, recruitment cost and forward OPEX. Payroll is paid directly through cash and never creates Trade AP.
+The engine compares Actuals with Budget, prior year, prior month, prior-year FX and the latest full-year outlook. It separates P&L variance, price / volume / mix, FX translation, cash conversion, workforce productivity, full-year outlook and forecast accuracy. Every observation retains its source dataset, source key, scope, benchmark, variance, materiality and assessment.
 
-Each legal entity also has a functional-currency mirror. Local trial balances are translated to EUR using closing rates for assets and liabilities, historical rates for share capital and accumulated historical rates for retained earnings. The residual translation difference is reported explicitly as CTA / OCI. Management reporting separates underlying Revenue and EBIT performance from FX translation through constant-currency analysis.
-
-The same rolling operating forecast continues to drive liquidity and all three forward financial statements:
-
-```text
-Operating Forecast
--> Revenue / Margin / OPEX
--> AR / Inventory / AP / Contract Liabilities
--> Customer & Supplier Cash
--> Tax / Interest / CAPEX / Debt / RCF
--> Forecast Cash
--> Forecast P&L
--> Forecast Balance Sheet
--> Forecast Cash Flow
-```
-
-The Balance Sheet is not forced to balance with a plug. Cash comes from the liquidity model, Working Capital comes from operating drivers, PPE/CIP follows CAPEX, reserves follow explicit policies, debt follows its roll-forward and retained earnings follows forecast Net Income.
+Deterministic explanations turn the close into a CFO review without an LLM or manually entered commentary. Only material adverse signals become P1/P2 actions. Each action has a source-linked trigger, owner role, due month, expected outcome and status. Group, entity, division and entity-division views use the same controlled dataset.
 
 Release controls require:
 
 ```text
-Forecast Assets - Liabilities - Equity = 0
-Forecast Cash Flow roll-forward = 0
-Forecast EBIT identity = 0
-Forecast Net Income identity = 0
-Forecast BS Cash - Forecast CF Cash = 0
-12 months x 3 scenarios = complete
+Review actual / benchmark / variance = source data
+Review IDs and action IDs = unique
+Every required P1/P2 action = present
+Every action = valid review evidence + owner + due month
+Review summary = current close month
+All accounting, workforce, FX and three-statement controls = passed
 ```
+
+The v0.15 workforce, multi-currency and integrated forecast capabilities remain fully active underneath the review layer. The Balance Sheet still has no balancing plug: cash comes from liquidity, Working Capital from operating drivers, PPE/CIP from CAPEX, debt from its roll-forward and retained earnings from forecast Net Income.
 
 See:
 
+- `docs/monthly-performance-review.md`
 - `docs/workforce-cost-planning.md`
 - `docs/multicurrency-fx.md`
 - `docs/integrated-three-statement-forecast.md`
@@ -107,6 +96,8 @@ The current system includes:
 - functional-currency journals and local trial balances for all six entities
 - EUR group translation with historical equity rates and explicit CTA / OCI
 - reported versus constant-currency Revenue and EBIT
+- source-tied monthly performance review across group and operating scopes
+- deterministic variance explanations and owned P1/P2 management actions
 - double-entry accounting
 - legal and consolidated actual P&L / Balance Sheet / Cash Flow
 - intercompany cost-plus manufacturing and eliminations
@@ -373,6 +364,10 @@ Deployment is blocked if material controls fail. The suite includes:
 - functional-currency journal balance and EUR round-trip control
 - translated Balance Sheet equation including historical equity and CTA
 - functional-currency, translation and constant-currency output completeness
+- performance-review source value and variance tie-out
+- unique review/action IDs and current-month completeness
+- required-action coverage and valid action ownership
+- no orphan management actions
 
 A failed control raises an exception before deployment.
 
@@ -412,6 +407,9 @@ data/processed/functional_currency_journal_sample.csv
 data/processed/local_trial_balance.csv
 data/processed/fx_translation.csv
 data/processed/constant_currency_analysis.csv
+data/processed/monthly_performance_review.csv
+data/processed/management_actions.csv
+data/processed/performance_review_summary.csv
 data/processed/software_subscription_summary.csv
 data/processed/events_backlog.csv
 data/processed/hardware_factory_economics.csv
@@ -451,11 +449,13 @@ GitHub Actions performs the complete close automatically:
 17. create functional-currency journal mirrors and local trial balances
 18. translate foreign entities to EUR and calculate CTA / OCI
 19. calculate reported and constant-currency Revenue and EBIT
-20. assemble workforce, FX and core finance dashboard datasets
-21. run release controls
-22. publish compact CFO datasets
-23. commit generated outputs
-24. deploy GitHub Pages
+20. build the source-tied monthly performance review
+21. create owned management actions for material adverse signals
+22. assemble workforce, FX, review and core finance dashboard datasets
+23. run release controls
+24. publish compact CFO datasets
+25. commit generated outputs
+26. deploy GitHub Pages
 
 No paid database, application server, LLM API or paid market-data subscription is required.
 
