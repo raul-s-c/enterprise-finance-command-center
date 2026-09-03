@@ -82,6 +82,14 @@ The project separates source-like operating data, accounting data and analytical
 
 `financial_sensitivity_summary.csv` reconciles detail to one Group row per controlled shock and adds Net Leverage and Interest Coverage deltas. Rows are explicitly non-additive and do not replace or mutate forecast scenarios.
 
+## Transaction FX layer
+
+`transaction_fx_documents.csv` contains one foreign-currency monetary document per source journal and AR/AP account. It preserves functional and transaction currency, original amounts, source account, counterparty and payment terms.
+
+`transaction_fx_snapshots.csv` contains the monthly open-to-settled lifecycle, closing carrying values and functional/EUR realized and unrealized FX gain or loss.
+
+`transaction_fx_summary.csv` aggregates open receivables, payables, net exposure and FX P&L by month, entity and transaction currency. Transaction remeasurement is separate from the CTA translation reserve.
+
 ## Web contract
 
 `web/data/dashboard.json` is a compact read-only payload for the GitHub Pages application. It contains actuals, management detail, working capital, cash flow, balance sheet, forecast, accuracy, profitability, PVM, intercompany, factories, CAPEX, portfolio events, management commentary, action execution, macro lineage, financial sensitivities, controls and source metadata.

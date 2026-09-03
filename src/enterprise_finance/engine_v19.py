@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import time
 from pathlib import Path
 
 import pandas as pd
@@ -21,6 +22,19 @@ def _read(path: str) -> pd.DataFrame:
 def _write(frame: pd.DataFrame, path: str) -> None:
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     frame.to_csv(path, index=False)
+
+
+def _dump_json(payload: object, path: str, **kwargs: object) -> None:
+    """Retry transient Windows/OneDrive invalid-handle failures during close writes."""
+    for attempt in range(5):
+        try:
+            with open(path, "w", encoding="utf-8") as handle:
+                json.dump(payload, handle, **kwargs)
+            return
+        except OSError as exc:
+            if exc.errno != 22 or attempt == 4:
+                raise
+            time.sleep(1)
 
 
 def build(end_month: str, config_path: str = "config/company.yml", allow_live_macro: bool = True):
@@ -46,10 +60,8 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     _write(lineage, "data/processed/macro_lineage.csv")
     _write(detail, "data/processed/financial_sensitivity_detail.csv")
     _write(summary, "data/processed/financial_sensitivity_summary.csv")
-    with open("data/processed/source_manifest.json", "w", encoding="utf-8") as handle:
-        json.dump(source_manifest(macro), handle, indent=2)
-    with open("data/processed/validation.json", "w", encoding="utf-8") as handle:
-        json.dump(checks, handle, indent=2)
+    _dump_json(source_manifest(macro), "data/processed/source_manifest.json", indent=2)
+    _dump_json(checks, "data/processed/validation.json", indent=2)
 
     with open("web/data/dashboard.json", encoding="utf-8") as handle:
         dashboard = json.load(handle)
@@ -60,8 +72,7 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     dashboard["financial_sensitivity_detail"] = base_engine._records(detail)
     dashboard["financial_sensitivity_summary"] = base_engine._records(summary)
     dashboard["validation"] = checks
-    with open("web/data/dashboard.json", "w", encoding="utf-8") as handle:
-        json.dump(dashboard, handle, separators=(",", ":"), allow_nan=False)
+    _dump_json(dashboard, "web/data/dashboard.json", separators=(",", ":"), allow_nan=False)
 
     official_rows = int(lineage.status.eq("Official").sum())
     with open("web/data/manifest.json", encoding="utf-8") as handle:
@@ -75,6 +86,5 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
         "financial_sensitivity_scenarios": int(summary.shock.nunique()),
         "validation": checks,
     })
-    with open("web/data/manifest.json", "w", encoding="utf-8") as handle:
-        json.dump(manifest, handle, indent=2)
+    _dump_json(manifest, "web/data/manifest.json", indent=2)
     return result
