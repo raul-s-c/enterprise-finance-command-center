@@ -53,13 +53,13 @@ CFO analytics
 
 P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.18
+## Current release: v0.19
 
-Version 0.18 adds **Management Action Execution & Benefits Realization** to the persistent action lifecycle.
+Version 0.19 adds **Macro Driver Lineage & Financial Sensitivities** to the connected finance model.
 
-Every action cycle receives a controlled execution plan with approval, effective and target months, owner, driver profile, expected benefit and dated evidence. Approved interventions affect future operating drivers only after their effective month. They therefore flow through operating activity, the double-entry ledger, actual statements and the integrated forecast instead of appearing as management overlays or balancing adjustments.
+Inflation and industrial production prefer Eurostat observations, energy uses the World Bank Pink Sheet, policy rates and FX use the ECB Data Portal. Each driver-month records its applied value, source, URL and Official/Fallback status. Missing or lagged official observations fall back at the individual month level, preserving a deterministic offline close.
 
-Benefit evidence is deliberately separated. Per-action trigger improvement is directional and non-additive because Group, Entity and Division actions can overlap. Additive portfolio impact is recorded once in the operating and forecast bridges. Governance-only actions such as forecast-process correction and FX-exposure review carry evidence and targets but do not invent a financial benefit.
+The CFO sensitivity matrix measures eight controlled standalone shocks over the current 12-month Base forecast: price, volume, industrial activity, inflation, wages, energy, policy rates and EUR translation. It quantifies Revenue, Gross Profit, OPEX, EBIT, Net Income, Ending Cash, Net Debt and covenant deltas. Sensitivities never mutate the Base forecast and are explicitly non-additive.
 
 Release controls require:
 
@@ -77,6 +77,14 @@ Approval month < effective month
 Intervention rates = non-negative and capped
 Directional trigger benefits = explicitly non-additive
 Operating and forecast impact = additive causal bridge
+Every macro driver-month = applied value + source + status
+Official observations = exact-month overlays only
+Missing official observations = deterministic fallback
+Sensitivity detail = group summary
+Sensitivity EBIT = Gross Profit impact + OPEX benefit
+Sensitivity Net Debt impact = inverse of Ending Cash impact
+Sensitivity direction = economically controlled
+Standalone sensitivities = explicitly non-additive
 Review summary = current close month
 All accounting, workforce, FX and three-statement controls = passed
 ```
@@ -88,6 +96,7 @@ See:
 - `docs/monthly-performance-review.md`
 - `docs/management-action-lifecycle.md`
 - `docs/management-action-execution.md`
+- `docs/macro-driver-lineage-and-sensitivities.md`
 - `docs/workforce-cost-planning.md`
 - `docs/multicurrency-fx.md`
 - `docs/integrated-three-statement-forecast.md`
@@ -389,6 +398,7 @@ Deployment is blocked if material controls fail. The suite includes:
 - one execution plan per action cycle with dated evidence
 - execution-plan scope, rates and effective-date integrity
 - complete benefit snapshots and additive forecast bridge coverage
+- complete macro lineage and sensitivity detail-to-summary reconciliation
 
 A failed control raises an exception before deployment.
 
@@ -438,6 +448,9 @@ data/processed/management_action_plans.csv
 data/processed/management_action_benefits.csv
 data/processed/management_action_actual_impact.csv
 data/processed/management_action_forecast_bridge.csv
+data/processed/macro_lineage.csv
+data/processed/financial_sensitivity_detail.csv
+data/processed/financial_sensitivity_summary.csv
 data/processed/software_subscription_summary.csv
 data/processed/events_backlog.csv
 data/processed/hardware_factory_economics.csv
