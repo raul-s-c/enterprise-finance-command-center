@@ -161,9 +161,15 @@
     "sensitivity_net_debt_identity_max_gap": 0.0,
     "sensitivity_detail_summary_max_gap": 0.0,
     "sensitivity_direction_errors": 0,
-    "sensitivity_additive_summary_rows": 0
+    "sensitivity_additive_summary_rows": 0,
+    "transaction_fx_document_duplicate_rows": 0,
+    "transaction_fx_same_functional_currency_rows": 0,
+    "transaction_fx_snapshot_duplicate_rows": 0,
+    "transaction_fx_carrying_value_max_gap": 0.0,
+    "transaction_fx_lifecycle_pnl_max_gap": 0.0,
+    "transaction_fx_summary_pnl_max_gap": 0.0
   },
-  "version": "0.19.0",
+  "version": "0.20.0",
   "latest_factory_absorption_variance": 614045.8,
   "latest_factory_under_absorption": 614045.8,
   "latest_factory_over_absorption": 0.0,
@@ -296,5 +302,12 @@
   "macro_official_observations": 286,
   "macro_fallback_observations": 2,
   "financial_sensitivity_detail_rows": 83,
-  "financial_sensitivity_scenarios": 8
+  "financial_sensitivity_scenarios": 8,
+  "transaction_fx_document_rows": 42397,
+  "transaction_fx_snapshot_rows": 103711,
+  "transaction_fx_summary_rows": 830,
+  "transaction_fx_open_documents": 1758,
+  "transaction_fx_net_exposure_eur": -2039537.7,
+  "transaction_fx_unrealized_pnl_eur": -32535.15,
+  "transaction_fx_realized_pnl_eur": 60092.33
 }
