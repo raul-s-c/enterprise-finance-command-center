@@ -64,9 +64,19 @@ The project separates source-like operating data, accounting data and analytical
 
 `forecast_accuracy.csv` compares closed forecast vintages with actual operating performance and calculates error, absolute percentage error and bias.
 
+## Management action execution layer
+
+`management_action_plans.csv` contains one approved execution plan per persistent action cycle, including scope, owner, effective date, target date, driver profile and evidence.
+
+`management_action_benefits.csv` preserves one monthly benefit snapshot per plan. Trigger improvement is directional and explicitly non-additive.
+
+`management_action_actual_impact.csv` contains the additive monthly Revenue, Gross Profit, OPEX and EBIT effects recorded by the operating engine after intervention effective dates.
+
+`management_action_forecast_bridge.csv` contains the additive Base, Upside and Downside action impact embedded in the current forecast.
+
 ## Web contract
 
-`web/data/dashboard.json` is a compact read-only payload for the GitHub Pages application. It contains actuals, management detail, working capital, cash flow, balance sheet, forecast, accuracy, profitability, PVM, intercompany, factories, CAPEX, portfolio events, management commentary, controls and source metadata.
+`web/data/dashboard.json` is a compact read-only payload for the GitHub Pages application. It contains actuals, management detail, working capital, cash flow, balance sheet, forecast, accuracy, profitability, PVM, intercompany, factories, CAPEX, portfolio events, management commentary, action execution, benefits, controls and source metadata.
 
 `web/data/manifest.json` describes the latest close and row counts.
 

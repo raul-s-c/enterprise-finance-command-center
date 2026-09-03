@@ -13,6 +13,7 @@ Enterprise Finance Command Center models a fictional multinational group as a co
 7. Management P&L, Working Capital, Cash Flow and CAPEX
 8. Rolling forecast and forecast vintages
 9. CFO analytics and management commentary
+10. Management action execution and benefits realization
 
 ## Company model
 
@@ -32,4 +33,8 @@ Each monthly close creates a new forecast vintage. Historical vintages will be r
 
 ## Product evolution
 
-Later releases will introduce a stateful product portfolio engine. Products can be launched, mature, enter watchlist status and be discontinued according to measurable profitability, growth and working-capital criteria. These decisions will alter future transactions rather than simply annotate the dashboard.
+The stateful product portfolio engine can launch, mature, place on watchlist and discontinue products according to measurable profitability, growth and working-capital criteria. These decisions alter future transactions rather than simply annotate the dashboard.
+
+## Management action rule
+
+Material adverse signals create persistent action cycles. Each cycle has one controlled execution plan. Approved interventions begin after the approval close and change only explicit operating drivers. Their consequences pass through the normal ledger and forecast chain. Directional trigger improvement is kept non-additive; additive portfolio benefit is measured only from the causal operating and forecast impact fields.

@@ -123,12 +123,18 @@ def enrich_operations_with_workforce(operations: pd.DataFrame, workforce: pd.Dat
     out["workforce_attrition_allocated"] = out.attrition.fillna(0.0) * out.allocation_share
     out["workforce_ending_fte_allocated"] = out.ending_fte.fillna(0.0) * out.allocation_share
     out["workforce_average_fte_allocated"] = out.average_fte.fillna(0.0) * out.allocation_share
-    out["non_people_opex"] = out.apply(
-        lambda r: round(float(r.revenue) * float(settings["non_people_opex_pct"].get(str(r.division), 0.04)), 2),
-        axis=1,
+    out["non_people_opex_before_actions"] = out.apply(
+        lambda r: round(float(r.revenue) * float(settings["non_people_opex_pct"].get(str(r.division), 0.04)), 2), axis=1
     )
+    reduction = pd.to_numeric(out.get("management_action_opex_reduction_pct", 0.0), errors="coerce").fillna(0.0)
+    out["non_people_opex"] = (out.non_people_opex_before_actions * (1.0 - reduction)).round(2)
     out["opex"] = out.non_people_opex + out.personnel_cost_allocated
     out["ebit_before_dep"] = out.gross_profit - out.opex
+    out["management_action_opex_impact"] = (out.non_people_opex_before_actions - out.non_people_opex).round(2)
+    out["management_action_ebit_impact"] = (
+        pd.to_numeric(out.get("management_action_gross_profit_impact", 0.0), errors="coerce").fillna(0.0)
+        + out.management_action_opex_impact
+    ).round(2)
     return out.drop(columns=["personnel_cost", "opening_fte", "hires", "attrition", "ending_fte", "average_fte", "entity_division_revenue", "allocation_share"])
 
 
