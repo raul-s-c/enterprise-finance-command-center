@@ -53,13 +53,13 @@ CFO analytics
 
 P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.16
+## Current release: v0.17
 
-Version 0.16 adds a **monthly performance review and management action layer** to the reconciled close.
+Version 0.17 adds a **persistent management action lifecycle and close history** to the reconciled monthly review.
 
-The engine compares Actuals with Budget, prior year, prior month, prior-year FX and the latest full-year outlook. It separates P&L variance, price / volume / mix, FX translation, cash conversion, workforce productivity, full-year outlook and forecast accuracy. Every observation retains its source dataset, source key, scope, benchmark, variance, materiality and assessment.
+The engine still compares Actuals with Budget, prior year, prior month, prior-year FX and the latest full-year outlook. It now reconciles each required action with the prior close, preserves the action cycle and owner, records monthly snapshots and changes, and closes a trigger only with deterministic evidence from the reconciled review.
 
-Deterministic explanations turn the close into a CFO review without an LLM or manually entered commentary. Only material adverse signals become P1/P2 actions. Each action has a source-linked trigger, owner role, due month, expected outcome and status. Group, entity, division and entity-division views use the same controlled dataset.
+Actions support `Open`, `In Progress`, `Closed` and `Cancelled`. Active actions expose age, carry-forward months, overdue months and management or executive escalation. Closure and cancellation require dated evidence. Group, entity, division and entity-division views use the same controlled dataset.
 
 Release controls require:
 
@@ -68,6 +68,10 @@ Review actual / benchmark / variance = source data
 Review IDs and action IDs = unique
 Every required P1/P2 action = present
 Every action = valid review evidence + owner + due month
+Every terminal action = dated closure or cancellation evidence
+Every overdue action = management or executive escalation
+Current required signals = one active action key each
+Action and review histories = unique monthly snapshots
 Review summary = current close month
 All accounting, workforce, FX and three-statement controls = passed
 ```
@@ -77,6 +81,7 @@ The v0.15 workforce, multi-currency and integrated forecast capabilities remain 
 See:
 
 - `docs/monthly-performance-review.md`
+- `docs/management-action-lifecycle.md`
 - `docs/workforce-cost-planning.md`
 - `docs/multicurrency-fx.md`
 - `docs/integrated-three-statement-forecast.md`
@@ -98,6 +103,7 @@ The current system includes:
 - reported versus constant-currency Revenue and EBIT
 - source-tied monthly performance review across group and operating scopes
 - deterministic variance explanations and owned P1/P2 management actions
+- persistent management action lifecycle, monthly snapshots and change history
 - double-entry accounting
 - legal and consolidated actual P&L / Balance Sheet / Cash Flow
 - intercompany cost-plus manufacturing and eliminations
@@ -368,6 +374,9 @@ Deployment is blocked if material controls fail. The suite includes:
 - unique review/action IDs and current-month completeness
 - required-action coverage and valid action ownership
 - no orphan management actions
+- unique active action keys and complete current-trigger coverage
+- terminal action evidence and overdue escalation
+- action, review and change-history integrity
 
 A failed control raises an exception before deployment.
 
@@ -409,6 +418,9 @@ data/processed/fx_translation.csv
 data/processed/constant_currency_analysis.csv
 data/processed/monthly_performance_review.csv
 data/processed/management_actions.csv
+data/processed/management_action_history.csv
+data/processed/management_action_changes.csv
+data/processed/performance_review_history.csv
 data/processed/performance_review_summary.csv
 data/processed/software_subscription_summary.csv
 data/processed/events_backlog.csv
@@ -451,11 +463,13 @@ GitHub Actions performs the complete close automatically:
 19. calculate reported and constant-currency Revenue and EBIT
 20. build the source-tied monthly performance review
 21. create owned management actions for material adverse signals
-22. assemble workforce, FX, review and core finance dashboard datasets
-23. run release controls
-24. publish compact CFO datasets
-25. commit generated outputs
-26. deploy GitHub Pages
+22. reconcile actions with the prior close and append controlled history
+23. calculate age, overdue status, carry-forward and escalation
+24. assemble workforce, FX, review, lifecycle and core finance dashboard datasets
+25. run release controls
+26. publish compact CFO datasets
+27. commit generated outputs
+28. deploy GitHub Pages
 
 No paid database, application server, LLM API or paid market-data subscription is required.
 

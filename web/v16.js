@@ -55,7 +55,7 @@ function renderPerformanceReview(){
     ${kpi('EBIT vs budget',ebit?reviewSigned(ebit.variance,ebit.unit):'-',ebit?`${pct(Number(ebit.materiality_pct))} materiality`:'Not available')}
     ${kpi('FY EBIT vs budget',outlook?reviewSigned(outlook.variance,outlook.unit):'-',outlook?'Latest full-year outlook':'Group scope only')}
     ${kpi('Adverse signals',String(adverse.length),`${review.length} reviewed drivers`)}
-    ${kpi('Open actions',String(actions.filter(r=>r.status==='Open').length),`${actions.filter(r=>r.priority==='P1').length} P1`)}
+    ${kpi('Active actions',String(actions.filter(r=>['Open','In Progress','In progress'].includes(r.status)).length),`${actions.filter(r=>r.priority==='P1' && ['Open','In Progress','In progress'].includes(r.status)).length} P1`)}
   </div>
   <div class="panel-grid">
     ${panel('CFO performance narrative',top?`Top adverse signal: ${top.metric}`:'No material adverse signal',`<div class="review-list">${narrative.map(r=>`<div class="review-item ${r.favorable?'favorable':'adverse'}"><div class="review-item-head"><span>${severityBadge(r.severity)} <strong>${safe(r.headline)}</strong></span><span>${reviewScopeLabel(r)}</span></div><div class="review-item-detail">${safe(r.explanation)}</div><div class="review-source">${safe(r.source_dataset)} · ${safe(r.comparison)}</div></div>`).join('')||'<div class="empty">No review observations for this selection.</div>'}</div>`,'span-7')}
@@ -84,7 +84,7 @@ const renderExecutiveBeforeReview=renderers.executive;
 renderers.executive=function(){
   const base=renderExecutiveBeforeReview();
   const groupReview=(data.performance_review||[]).filter(r=>r.scope_level==='Group' && !r.favorable).sort((a,b)=>Number(b.materiality_pct)-Number(a.materiality_pct)).slice(0,4);
-  const groupActions=(data.management_actions||[]).filter(r=>r.scope_level==='Group' && r.status==='Open').sort((a,b)=>a.priority.localeCompare(b.priority)).slice(0,4);
+  const groupActions=(data.management_actions||[]).filter(r=>r.scope_level==='Group' && ['Open','In Progress','In progress'].includes(r.status)).sort((a,b)=>a.priority.localeCompare(b.priority)).slice(0,4);
   return base+`<div class="panel-grid review-executive-extension">
     ${panel('Close priorities','Highest-materiality adverse signals',table(groupReview,[{key:'metric',label:'Metric'},{key:'variance',label:'Variance',num:true,format:(v,r)=>reviewSigned(v,r.unit)},{key:'severity',label:'Severity',format:v=>severityBadge(v)},{key:'source_dataset',label:'Source'}]),'span-6')}
     ${panel('Management commitments','Open group actions',table(groupActions,[{key:'priority',label:'Priority',format:v=>priorityBadge(v)},{key:'trigger_metric',label:'Trigger'},{key:'owner_role',label:'Owner'},{key:'due_month',label:'Due'}]),'span-6')}

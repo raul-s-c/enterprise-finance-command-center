@@ -1,6 +1,6 @@
 # Monthly Performance Review and Management Actions
 
-Version 0.16 converts the reconciled monthly close into a controlled CFO review. It does not generate free-form AI commentary and it does not create an independent set of finance numbers.
+Version 0.16 converts the reconciled monthly close into a controlled CFO review. Version 0.17 preserves that review logic and adds the persistent lifecycle described in `docs/management-action-lifecycle.md`. Neither layer generates free-form AI commentary or creates an independent set of finance numbers.
 
 ## Review chain
 
@@ -59,7 +59,7 @@ Every required action includes:
 - P1 or P2 priority
 - accountable owner role
 - due month
-- Open / In progress / Closed status
+- Open / In Progress / Closed / Cancelled lifecycle status
 - specific management action
 - expected outcome
 - source-linked trigger metric and value
