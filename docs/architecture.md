@@ -15,6 +15,7 @@ Enterprise Finance Command Center models a fictional multinational group as a co
 9. CFO analytics and management commentary
 10. Management action execution and benefits realization
 11. Macro source lineage and controlled financial sensitivities
+12. Transaction-currency document subledger and functional remeasurement
 
 ## Company model
 
@@ -43,3 +44,7 @@ Material adverse signals create persistent action cycles. Each cycle has one con
 ## Macro and sensitivity rule
 
 Official macro observations replace deterministic values only for the same driver and observation month. Every applied value preserves source lineage and fallback status. Sensitivities use the current 12-month Base forecast as an immutable exposure baseline. Each shock is calculated independently, reconciles from entity/division detail to the Group view and is never combined with another shock or posted to the ledger.
+
+## Transaction FX rule
+
+Foreign-currency receivables and payables originate from source journal lines and remain separate from Group translation. Each document is remeasured monthly in the entity's functional currency; the movement is translated to EUR and classified as unrealized until settlement. Transaction FX analytics never use CTA or a balancing plug.

@@ -53,13 +53,13 @@ CFO analytics
 
 P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.19
+## Current release: v0.20
 
-Version 0.19 adds **Macro Driver Lineage & Financial Sensitivities** to the connected finance model.
+Version 0.20 adds **Transaction FX Exposure & Remeasurement** to the connected finance model.
 
-Inflation and industrial production prefer Eurostat observations, energy uses the World Bank Pink Sheet, policy rates and FX use the ECB Data Portal. Each driver-month records its applied value, source, URL and Official/Fallback status. Missing or lagged official observations fall back at the individual month level, preserving a deterministic offline close.
+Foreign-currency monetary documents are sourced from actual external and intercompany AR/AP journal lines. Each document preserves its source journal, issue and settlement month, legal entity, division, counterparty, source account, functional currency, transaction currency, original amounts and payment terms.
 
-The CFO sensitivity matrix measures eight controlled standalone shocks over the current 12-month Base forecast: price, volume, industrial activity, inflation, wages, energy, policy rates and EUR translation. It quantifies Revenue, Gross Profit, OPEX, EBIT, Net Income, Ending Cash, Net Debt and covenant deltas. Sensitivities never mutate the Base forecast and are explicitly non-additive.
+Open documents are remeasured monthly in functional currency using the same official/fallback FX lineage as the rest of the model. Realized and unrealized FX P&L are kept separate from CTA, with exposure, ageing and lifecycle visible by entity, division and transaction currency. The subledger is an analytical accounting layer sourced from the authoritative journal; it does not post balancing adjustments back into historical statements.
 
 Release controls require:
 
@@ -85,6 +85,12 @@ Sensitivity EBIT = Gross Profit impact + OPEX benefit
 Sensitivity Net Debt impact = inverse of Ending Cash impact
 Sensitivity direction = economically controlled
 Standalone sensitivities = explicitly non-additive
+Transaction FX documents = unique source journals + AR/AP accounts
+Functional currency != transaction currency
+Transaction FX snapshots = unique document-month lifecycle
+Carrying value = transaction amount × closing transaction FX
+Lifecycle FX P&L = functional carrying-value movement
+Summary FX P&L = realized FX + unrealized FX
 Review summary = current close month
 All accounting, workforce, FX and three-statement controls = passed
 ```
@@ -97,6 +103,7 @@ See:
 - `docs/management-action-lifecycle.md`
 - `docs/management-action-execution.md`
 - `docs/macro-driver-lineage-and-sensitivities.md`
+- `docs/transaction-fx-subledger.md`
 - `docs/workforce-cost-planning.md`
 - `docs/multicurrency-fx.md`
 - `docs/integrated-three-statement-forecast.md`
@@ -114,6 +121,7 @@ The current system includes:
 - Month x Entity x Division x Function workforce roll-forward
 - driver-based FTE, attrition, hiring, payroll and recruitment-cost forecast
 - functional-currency journals and local trial balances for all six entities
+- document-level transaction FX exposure, ageing and realized/unrealized remeasurement
 - EUR group translation with historical equity rates and explicit CTA / OCI
 - reported versus constant-currency Revenue and EBIT
 - source-tied monthly performance review across group and operating scopes
@@ -451,6 +459,9 @@ data/processed/management_action_forecast_bridge.csv
 data/processed/macro_lineage.csv
 data/processed/financial_sensitivity_detail.csv
 data/processed/financial_sensitivity_summary.csv
+data/processed/transaction_fx_documents.csv
+data/processed/transaction_fx_snapshots.csv
+data/processed/transaction_fx_summary.csv
 data/processed/software_subscription_summary.csv
 data/processed/events_backlog.csv
 data/processed/hardware_factory_economics.csv

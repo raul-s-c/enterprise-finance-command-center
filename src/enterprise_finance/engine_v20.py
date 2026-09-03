@@ -6,7 +6,7 @@ from pathlib import Path
 import pandas as pd
 
 from . import engine as base_engine
-from .engine_v19 import build as build_v19
+from .engine_v19 import _dump_json, build as build_v19
 from .transaction_fx import (
     build_transaction_documents,
     build_transaction_fx_snapshots,
@@ -49,8 +49,7 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     _write(documents, "data/processed/transaction_fx_documents.csv")
     _write(snapshots, "data/processed/transaction_fx_snapshots.csv")
     _write(summary, "data/processed/transaction_fx_summary.csv")
-    with open("data/processed/validation.json", "w", encoding="utf-8") as handle:
-        json.dump(checks, handle, indent=2)
+    _dump_json(checks, "data/processed/validation.json", indent=2)
 
     close = snapshots[snapshots.snapshot_month.eq(end_month)].copy()
     close["absolute_exposure"] = close.carrying_reporting_eur.abs()
@@ -61,8 +60,7 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     dashboard["transaction_fx_summary"] = base_engine._records(summary)
     dashboard["transaction_fx_close_documents"] = base_engine._records(close)
     dashboard["validation"] = checks
-    with open("web/data/dashboard.json", "w", encoding="utf-8") as handle:
-        json.dump(dashboard, handle, separators=(",", ":"), allow_nan=False)
+    _dump_json(dashboard, "web/data/dashboard.json", separators=(",", ":"), allow_nan=False)
 
     current = summary[summary.month.eq(end_month)]
     with open("web/data/manifest.json", encoding="utf-8") as handle:
@@ -78,6 +76,5 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
         "transaction_fx_realized_pnl_eur": round(float(current.realized_fx_gain_loss_eur.sum()), 2),
         "validation": checks,
     })
-    with open("web/data/manifest.json", "w", encoding="utf-8") as handle:
-        json.dump(manifest, handle, indent=2)
+    _dump_json(manifest, "web/data/manifest.json", indent=2)
     return result
