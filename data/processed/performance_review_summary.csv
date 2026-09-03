@@ -1,2 +1,2 @@
-review_month,group_insights,group_adverse_insights,open_actions,p1_actions,revenue_vs_budget,ebit_vs_budget,fy_ebit_vs_budget,free_cash_flow,net_working_capital_change,top_adverse_review_id
-2026-08,17,9,12,6,2815819.42,-263791.67,-3168507.3633,8584290.26,-2844939.51,REV-202608-MONTHLY-P-L-VS-BUDGET-GROUP-ALL-ALL-OPEX
+review_month,group_insights,group_adverse_insights,p1_actions,revenue_vs_budget,ebit_vs_budget,fy_ebit_vs_budget,free_cash_flow,net_working_capital_change,top_adverse_review_id,total_actions,open_actions,in_progress_actions,closed_actions,cancelled_actions,overdue_actions,carry_forward_actions,p1_active_actions,executive_escalations,average_active_age_months
+2026-08,17,9,6,2815819.42,-263791.67,-3168507.3633,8584290.26,-2844939.51,REV-202608-MONTHLY-P-L-VS-BUDGET-GROUP-ALL-ALL-OPEX,12,12,0,0,0,0,0,6,0,0.0

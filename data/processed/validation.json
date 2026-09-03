@@ -96,5 +96,21 @@
   "management_action_orphans": 0,
   "management_action_invalid_fields": 0,
   "performance_review_summary_missing": 0,
-  "monthly_performance_review_missing": 0
+  "monthly_performance_review_missing": 0,
+  "management_lifecycle_missing_columns": 0,
+  "management_lifecycle_duplicate_ids": 0,
+  "management_lifecycle_duplicate_active_keys": 0,
+  "management_lifecycle_invalid_statuses": 0,
+  "management_lifecycle_missing_core_fields": 0,
+  "management_lifecycle_terminal_evidence_missing": 0,
+  "management_lifecycle_overdue_escalation_missing": 0,
+  "management_lifecycle_required_actions_missing": 0,
+  "management_lifecycle_action_orphans": 0,
+  "management_lifecycle_current_snapshot_missing": 0,
+  "management_lifecycle_history_duplicate_rows": 0,
+  "management_lifecycle_review_history_duplicates": 0,
+  "management_lifecycle_change_duplicate_ids": 0,
+  "management_lifecycle_change_orphans": 0,
+  "management_lifecycle_summary_missing": 0,
+  "management_lifecycle_status_reconciliation_gap": 0
 }
