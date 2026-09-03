@@ -6,6 +6,8 @@ import hashlib
 import numpy as np
 import pandas as pd
 
+from .action_execution import intervention_effects
+
 
 SEASONALITY = {1: 0.88, 2: 0.92, 3: 0.99, 4: 1.01, 5: 1.03, 6: 1.05, 7: 0.95, 8: 0.84, 9: 1.04, 10: 1.08, 11: 1.12, 12: 1.18}
 
@@ -337,13 +339,26 @@ def simulate_operations(config: dict, months: pd.PeriodIndex, macro: pd.DataFram
                             energy_sens = 0.18 if division == "Hardware" else 0.10
                             cost_unit = float(product["base_cost"]) * (1 + energy_sens * (energy_factor - 1)) * (1 + inflation * 0.55) ** (i / 12.0)
 
+                        base_quantity = quantity
+                        base_price = price
+                        base_revenue = revenue
+                        base_variable_production = quantity * cost_unit
+                        base_variable_selling = revenue * float(product["variable_sell_pct"])
+                        base_fixed_production = revenue * float(product["fixed_prod_pct"])
+                        base_marginal_contribution = revenue - base_variable_production - base_variable_selling
+                        base_gross_profit = base_marginal_contribution - base_fixed_production
+                        action_effect = intervention_effects(config, str(month), entity, division)
+                        price *= 1.0 + float(action_effect["price_uplift_pct"])
+                        quantity *= 1.0 + float(action_effect["volume_uplift_pct"])
+                        revenue *= (1.0 + float(action_effect["price_uplift_pct"])) * (1.0 + float(action_effect["volume_uplift_pct"]))
                         variable_production = quantity * cost_unit
+                        variable_production *= 1.0 - float(action_effect["variable_cost_reduction_pct"])
                         variable_selling = revenue * float(product["variable_sell_pct"])
                         fixed_production = revenue * float(product["fixed_prod_pct"])
                         marginal_contribution = revenue - variable_production - variable_selling
                         gross_profit = marginal_contribution - fixed_production
                         opex_pct = {"Software": 0.205, "Hardware": 0.095, "Events": 0.135, "Spare Parts": 0.095}[division]
-                        opex = revenue * opex_pct
+                        opex = revenue * opex_pct * (1.0 - float(action_effect["opex_reduction_pct"]))
                         ebit_before_dep = gross_profit - opex
                         factory = _factory_for(entity, str(product["product"]), i) if division in {"Hardware", "Spare Parts"} else ""
                         rows.append({
@@ -357,6 +372,15 @@ def simulate_operations(config: dict, months: pd.PeriodIndex, macro: pd.DataFram
                             "variable_selling_cost": round(variable_selling, 2), "fixed_production_cost": round(fixed_production, 2),
                             "marginal_contribution": round(marginal_contribution, 2), "gross_profit": round(gross_profit, 2),
                             "opex": round(opex, 2), "ebit_before_dep": round(ebit_before_dep, 2), "source_factory": factory,
+                            "management_action_count": int(action_effect["active_action_count"]),
+                            "management_action_price_uplift_pct": round(float(action_effect["price_uplift_pct"]), 6),
+                            "management_action_volume_uplift_pct": round(float(action_effect["volume_uplift_pct"]), 6),
+                            "management_action_variable_cost_reduction_pct": round(float(action_effect["variable_cost_reduction_pct"]), 6),
+                            "management_action_opex_reduction_pct": round(float(action_effect["opex_reduction_pct"]), 6),
+                            "management_action_revenue_impact": round(revenue - base_revenue, 2),
+                            "management_action_gross_profit_impact": round(gross_profit - base_gross_profit, 2),
+                            "management_action_opex_impact": round(base_revenue * opex_pct - opex, 2),
+                            "management_action_ebit_impact": round((gross_profit - base_gross_profit) + (base_revenue * opex_pct - opex), 2),
                         })
         events.extend(_review_portfolio(month, i, rows, products, active_products, pending, config))
 

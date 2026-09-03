@@ -53,13 +53,13 @@ CFO analytics
 
 P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.17
+## Current release: v0.18
 
-Version 0.17 adds a **persistent management action lifecycle and close history** to the reconciled monthly review.
+Version 0.18 adds **Management Action Execution & Benefits Realization** to the persistent action lifecycle.
 
-The engine still compares Actuals with Budget, prior year, prior month, prior-year FX and the latest full-year outlook. It now reconciles each required action with the prior close, preserves the action cycle and owner, records monthly snapshots and changes, and closes a trigger only with deterministic evidence from the reconciled review.
+Every action cycle receives a controlled execution plan with approval, effective and target months, owner, driver profile, expected benefit and dated evidence. Approved interventions affect future operating drivers only after their effective month. They therefore flow through operating activity, the double-entry ledger, actual statements and the integrated forecast instead of appearing as management overlays or balancing adjustments.
 
-Actions support `Open`, `In Progress`, `Closed` and `Cancelled`. Active actions expose age, carry-forward months, overdue months and management or executive escalation. Closure and cancellation require dated evidence. Group, entity, division and entity-division views use the same controlled dataset.
+Benefit evidence is deliberately separated. Per-action trigger improvement is directional and non-additive because Group, Entity and Division actions can overlap. Additive portfolio impact is recorded once in the operating and forecast bridges. Governance-only actions such as forecast-process correction and FX-exposure review carry evidence and targets but do not invent a financial benefit.
 
 Release controls require:
 
@@ -72,6 +72,11 @@ Every terminal action = dated closure or cancellation evidence
 Every overdue action = management or executive escalation
 Current required signals = one active action key each
 Action and review histories = unique monthly snapshots
+Every action cycle = one controlled execution plan
+Approval month < effective month
+Intervention rates = non-negative and capped
+Directional trigger benefits = explicitly non-additive
+Operating and forecast impact = additive causal bridge
 Review summary = current close month
 All accounting, workforce, FX and three-statement controls = passed
 ```
@@ -82,6 +87,7 @@ See:
 
 - `docs/monthly-performance-review.md`
 - `docs/management-action-lifecycle.md`
+- `docs/management-action-execution.md`
 - `docs/workforce-cost-planning.md`
 - `docs/multicurrency-fx.md`
 - `docs/integrated-three-statement-forecast.md`
@@ -104,6 +110,9 @@ The current system includes:
 - source-tied monthly performance review across group and operating scopes
 - deterministic variance explanations and owned P1/P2 management actions
 - persistent management action lifecycle, monthly snapshots and change history
+- approved action execution plans and effective dates
+- causal operating and forecast action-impact bridges
+- directional, non-additive per-action benefit tracking
 - double-entry accounting
 - legal and consolidated actual P&L / Balance Sheet / Cash Flow
 - intercompany cost-plus manufacturing and eliminations
@@ -377,6 +386,9 @@ Deployment is blocked if material controls fail. The suite includes:
 - unique active action keys and complete current-trigger coverage
 - terminal action evidence and overdue escalation
 - action, review and change-history integrity
+- one execution plan per action cycle with dated evidence
+- execution-plan scope, rates and effective-date integrity
+- complete benefit snapshots and additive forecast bridge coverage
 
 A failed control raises an exception before deployment.
 
@@ -422,6 +434,10 @@ data/processed/management_action_history.csv
 data/processed/management_action_changes.csv
 data/processed/performance_review_history.csv
 data/processed/performance_review_summary.csv
+data/processed/management_action_plans.csv
+data/processed/management_action_benefits.csv
+data/processed/management_action_actual_impact.csv
+data/processed/management_action_forecast_bridge.csv
 data/processed/software_subscription_summary.csv
 data/processed/events_backlog.csv
 data/processed/hardware_factory_economics.csv
@@ -465,11 +481,14 @@ GitHub Actions performs the complete close automatically:
 21. create owned management actions for material adverse signals
 22. reconcile actions with the prior close and append controlled history
 23. calculate age, overdue status, carry-forward and escalation
-24. assemble workforce, FX, review, lifecycle and core finance dashboard datasets
-25. run release controls
-26. publish compact CFO datasets
-27. commit generated outputs
-28. deploy GitHub Pages
+24. create or carry forward one controlled execution plan per action cycle
+25. apply approved interventions only from their effective month
+26. measure non-additive trigger improvement and additive operating/forecast impact
+27. assemble workforce, FX, review, lifecycle, execution and core finance dashboard datasets
+28. run release controls
+29. publish compact CFO datasets
+30. commit generated outputs
+31. deploy GitHub Pages
 
 No paid database, application server, LLM API or paid market-data subscription is required.
 

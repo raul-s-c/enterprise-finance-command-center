@@ -109,7 +109,9 @@ def build_forecast_vintages(
             payroll = avg_fte * cost_per_fte_month
             recruitment = hires * float(settings["recruitment_cost_per_hire"])
             personnel = payroll + recruitment
-            non_people = revenue * non_people_pct
+            non_people_before_actions = revenue * non_people_pct
+            opex_reduction = float(out.at[idx, "action_opex_reduction_pct"]) if "action_opex_reduction_pct" in out else 0.0
+            non_people = non_people_before_actions * (1.0 - opex_reduction)
 
             out.at[idx, "workforce_target_fte"] = round(target, 4)
             out.at[idx, "workforce_hires_forecast"] = round(hires, 4)
@@ -118,6 +120,11 @@ def build_forecast_vintages(
             out.at[idx, "personnel_cost_forecast"] = round(personnel, 2)
             out.at[idx, "non_people_opex_forecast"] = round(non_people, 2)
             out.at[idx, "opex_forecast"] = round(personnel + non_people, 2)
+            if "action_opex_impact_forecast" in out:
+                out.at[idx, "action_opex_impact_forecast"] = round(non_people_before_actions - non_people, 2)
+                out.at[idx, "action_ebit_impact_forecast"] = round(
+                    float(out.at[idx, "action_gross_profit_impact_forecast"]) + non_people_before_actions - non_people, 2
+                )
             current_fte = ending_fte
 
     return out

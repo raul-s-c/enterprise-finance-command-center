@@ -3,6 +3,8 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
+from .action_execution import incremental_intervention_effects
+
 
 SCENARIOS = {
     "Base": {"growth_delta": 0.0, "margin_delta": 0.0},
@@ -81,14 +83,31 @@ def _forecast_one_vintage(operations: pd.DataFrame, vintage: pd.Period, horizon:
                 gp_pct = float(base.gross_margin) + float(assumptions["margin_delta"])
                 mc_pct = float(base.mc_margin) + float(assumptions["margin_delta"]) * 0.7
                 opex_pct = float(base.opex_pct)
+                action_effect = incremental_intervention_effects(config, str(vintage), str(target), entity, division)
+                revenue_before_actions = revenue
+                gross_profit_before_actions = revenue * gp_pct
+                mc_before_actions = revenue * mc_pct
+                opex_before_actions = revenue * opex_pct
+                revenue *= (1.0 + float(action_effect["price_uplift_pct"])) * (1.0 + float(action_effect["volume_uplift_pct"]))
+                direct_cost = max(revenue_before_actions - gross_profit_before_actions, 0.0)
+                variable_cost = max(revenue_before_actions - mc_before_actions, 0.0)
+                gross_profit = revenue - direct_cost * (revenue / max(revenue_before_actions, 1.0)) * (1.0 - float(action_effect["variable_cost_reduction_pct"]))
+                marginal_contribution = revenue - variable_cost * (revenue / max(revenue_before_actions, 1.0)) * (1.0 - float(action_effect["variable_cost_reduction_pct"]))
+                opex = revenue * opex_pct * (1.0 - float(action_effect["opex_reduction_pct"]))
                 rows.append({
                     "vintage": str(vintage), "month": str(target), "horizon_month": h,
                     "entity": entity, "division": division, "scenario": scenario,
                     "revenue_forecast": round(revenue, 2),
-                    "gross_profit_forecast": round(revenue * gp_pct, 2),
-                    "marginal_contribution_forecast": round(revenue * mc_pct, 2),
-                    "opex_forecast": round(revenue * opex_pct, 2),
+                    "gross_profit_forecast": round(gross_profit, 2),
+                    "marginal_contribution_forecast": round(marginal_contribution, 2),
+                    "opex_forecast": round(opex, 2),
                     "bias_correction": round(correction, 5),
+                    "active_action_count": int(action_effect["active_action_count"]),
+                    "action_opex_reduction_pct": round(float(action_effect["opex_reduction_pct"]), 6),
+                    "action_revenue_impact_forecast": round(revenue - revenue_before_actions, 2),
+                    "action_gross_profit_impact_forecast": round(gross_profit - gross_profit_before_actions, 2),
+                    "action_opex_impact_forecast": round(opex_before_actions - opex, 2),
+                    "action_ebit_impact_forecast": round((gross_profit - gross_profit_before_actions) + (opex_before_actions - opex), 2),
                 })
     return rows
 
