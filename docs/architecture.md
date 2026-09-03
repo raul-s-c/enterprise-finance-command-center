@@ -14,6 +14,7 @@ Enterprise Finance Command Center models a fictional multinational group as a co
 8. Rolling forecast and forecast vintages
 9. CFO analytics and management commentary
 10. Management action execution and benefits realization
+11. Macro source lineage and controlled financial sensitivities
 
 ## Company model
 
@@ -38,3 +39,7 @@ The stateful product portfolio engine can launch, mature, place on watchlist and
 ## Management action rule
 
 Material adverse signals create persistent action cycles. Each cycle has one controlled execution plan. Approved interventions begin after the approval close and change only explicit operating drivers. Their consequences pass through the normal ledger and forecast chain. Directional trigger improvement is kept non-additive; additive portfolio benefit is measured only from the causal operating and forecast impact fields.
+
+## Macro and sensitivity rule
+
+Official macro observations replace deterministic values only for the same driver and observation month. Every applied value preserves source lineage and fallback status. Sensitivities use the current 12-month Base forecast as an immutable exposure baseline. Each shock is calculated independently, reconciles from entity/division detail to the Group view and is never combined with another shock or posted to the ledger.

@@ -4,7 +4,9 @@ The project separates source-like operating data, accounting data and analytical
 
 ## Macro layer
 
-`macro.csv` contains one row per month with inflation, industrial activity, energy, policy-rate and FX drivers. FX prefers ECB monthly reference rates and falls back to deterministic synthetic curves when live data is unavailable.
+`macro.csv` contains one row per month with inflation, industrial activity, energy, policy-rate and FX drivers plus one source field per driver. Inflation and industrial production prefer Eurostat, energy prefers the World Bank Pink Sheet and policy rates and FX prefer the ECB Data Portal. Missing exact-month observations retain deterministic fallback values.
+
+`macro_lineage.csv` contains one row per close, observation month and driver. It records the applied value, unit, applied source, preferred official source, public URL and Official/Fallback status.
 
 ## Master data
 
@@ -74,9 +76,15 @@ The project separates source-like operating data, accounting data and analytical
 
 `management_action_forecast_bridge.csv` contains the additive Base, Upside and Downside action impact embedded in the current forecast.
 
+## Financial sensitivity layer
+
+`financial_sensitivity_detail.csv` contains standalone 12-month Base exposure by shock, entity and division. Monetary fields include Revenue, Gross Profit, OPEX benefit, EBIT, interest expense, Net Income, Ending Cash and Net Debt impacts.
+
+`financial_sensitivity_summary.csv` reconciles detail to one Group row per controlled shock and adds Net Leverage and Interest Coverage deltas. Rows are explicitly non-additive and do not replace or mutate forecast scenarios.
+
 ## Web contract
 
-`web/data/dashboard.json` is a compact read-only payload for the GitHub Pages application. It contains actuals, management detail, working capital, cash flow, balance sheet, forecast, accuracy, profitability, PVM, intercompany, factories, CAPEX, portfolio events, management commentary, action execution, benefits, controls and source metadata.
+`web/data/dashboard.json` is a compact read-only payload for the GitHub Pages application. It contains actuals, management detail, working capital, cash flow, balance sheet, forecast, accuracy, profitability, PVM, intercompany, factories, CAPEX, portfolio events, management commentary, action execution, macro lineage, financial sensitivities, controls and source metadata.
 
 `web/data/manifest.json` describes the latest close and row counts.
 
