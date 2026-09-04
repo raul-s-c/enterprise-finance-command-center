@@ -139,10 +139,19 @@
   "sensitivity_detail_summary_max_gap": 0.0,
   "sensitivity_direction_errors": 0,
   "sensitivity_additive_summary_rows": 0,
+  "transaction_fx_integrity_errors": 0,
   "transaction_fx_document_duplicate_rows": 0,
   "transaction_fx_same_functional_currency_rows": 0,
   "transaction_fx_snapshot_duplicate_rows": 0,
   "transaction_fx_carrying_value_max_gap": 0.0,
   "transaction_fx_lifecycle_pnl_max_gap": 0.0,
-  "transaction_fx_summary_pnl_max_gap": 0.0
+  "transaction_fx_summary_pnl_max_gap": 0.0,
+  "transaction_fx_snapshot_integrity_errors": 0,
+  "transaction_fx_snapshot_source_max_gap": 0.0,
+  "transaction_fx_summary_integrity_errors": 0,
+  "transaction_fx_summary_source_max_gap": 0.0,
+  "transaction_fx_contract_integrity_errors": 0,
+  "transaction_fx_contract_source_max_gap": 0.0,
+  "transaction_fx_document_source_errors": 0,
+  "transaction_fx_document_source_max_gap": 0.0
 }
