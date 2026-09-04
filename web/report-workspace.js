@@ -91,6 +91,7 @@ function reportPages(){
     {title:'Performance',html:`<article class="financial-report"><h2 class="report-message">Understand the path from revenue to EBIT</h2>${RC.matrix(s.current,s.prior)}</article>`,custom:true},
     {title:'P&L bridge',html:`<article class="financial-report"><h2 class="report-message">Revenue to EBIT · EUR million</h2>${RC.waterfall(s.current,window.innerWidth<700)}</article>`,custom:true}
   );
+  pages.push(...ContributionExplorer.pages(state.view));
   return pages;
 }
 function reportReadRoute(){
@@ -188,6 +189,7 @@ function render(restoring=false){
   document.getElementById('reportPageSelect').innerHTML=pages.map((p,i)=>`<option value="${i}" ${i===reportState.page?'selected':''}>${i+1}. ${RM.escape(p.title)}</option>`).join('');
   reportFilterControls(pages[reportState.page],resolved);
   document.getElementById('content').innerHTML=pages[reportState.page].html;
+  ContributionExplorer.mount(data);
   document.getElementById('reportStatus').textContent=`${data.meta.end_month} · ${data.validation?.passed?'Controls passed':'CONTROLS FAILED'}`;
   document.getElementById('reportStatus').className=data.validation?.passed?'control-pass':'control-fail';
   document.getElementById('reportPageNumber').textContent=`${reportState.page+1} / ${pages.length}`;
