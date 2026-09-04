@@ -54,7 +54,18 @@
     return {items:items.slice(index*size,(index+1)*size),index,count,total:items.length,size};
   }
   const pageIndex=value=>Number.isFinite(Number(value))?Math.max(0,Math.floor(Number(value))):0;
-  const api={fields,finite,escape,aggregate,variance,priorMonth,comparisons,statement,bridge,page,pageIndex};
+  function compareDisplay(a,b,numeric=false){
+    const parse=value=>{
+      const text=String(value??'').trim();
+      if(!text||['—','-'].includes(text))return null;
+      const compact=text.replace(/[€$£,%\s]/g,'').replace(/^\((.*)\)$/,'-$1');
+      const match=compact.match(/^([+-]?(?:\d+(?:\.\d*)?|\.\d+))([KMB])?$/i);
+      return match?Number(match[1])*({K:1e3,M:1e6,B:1e9}[match[2]?.toUpperCase()]||1):null;
+    };
+    if(numeric){const x=parse(a),y=parse(b);if(x!==null&&y!==null)return x-y;if(x===null&&y!==null)return 1;if(x!==null&&y===null)return -1;}
+    return String(a??'').localeCompare(String(b??''),'en',{numeric:true});
+  }
+  const api={fields,finite,escape,aggregate,variance,priorMonth,comparisons,statement,bridge,page,pageIndex,compareDisplay};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;
   else root.FinanceReport=api;
 })(globalThis);

@@ -48,7 +48,7 @@ function reportExecutive(){
   const cf=(data.cash_flow||[]).find(r=>r.month===data.meta.end_month),wc=(data.working_capital||[]).find(r=>r.month===data.meta.end_month);
   const gm=l&&l.revenue!==0&&RM.finite(l.gross_profit)?l.gross_profit/l.revenue:null;
   const headline=v.relative===null?'Explore revenue, profitability and cash conversion':`Revenue ${v.delta>=0?'increased':'decreased'} ${Math.abs(v.relative*100).toFixed(1)}% YoY`;
-  const divisions=[...new Set((data.management_detail||[]).map(r=>r.division))].sort().filter(d=>state.division==='all'||state.division===d);
+  const divisions=ReportContext.resolve(data,ReportContext.card('Revenue'),{...state,division:'all'}).options.division.filter(d=>state.division==='all'||state.division===d);
   const values=divisions.map(division=>{
     const series=RM.aggregate(data.management_detail,{...state,division});
     return {division,ac:series.find(r=>r.month===data.meta.end_month),py:series.find(r=>r.month===RM.priorMonth(data.meta.end_month))};
@@ -68,8 +68,13 @@ function reportLegacyPages(view){
   host.innerHTML=(renderers[view]||renderers.executive)();
   const pages=[];
   const indicators=[...host.querySelectorAll('.kpi')].filter(el=>!el.closest('.panel'));
-  const chunks=window.innerWidth<700?4:6;
-  for(let i=0;i<indicators.length;i+=chunks)pages.push({title:i===0?'Key indicators':`Key indicators ${i/chunks+1}`,html:`<div class="report-indicators">${indicators.slice(i,i+chunks).map(el=>el.outerHTML).join('')}</div>`});
+  const chunks=window.innerWidth<700?4:6,groups=new Map();
+  for(const el of indicators){
+    const policy=ReportContext.card(el.querySelector('.kpi-label').textContent.trim());
+    if(!groups.has(policy.key))groups.set(policy.key,{policy,items:[]});
+    groups.get(policy.key).items.push(el);
+  }
+  for(const {policy,items} of groups.values())for(let i=0;i<items.length;i+=chunks)pages.push({title:`${policy.label}${i?` ${i/chunks+1}`:''}`,policy,html:`<div class="report-indicators">${items.slice(i,i+chunks).map(el=>el.outerHTML).join('')}</div>`});
   for(const el of host.querySelectorAll('.panel')){
     if(el.parentElement.closest('.panel'))continue;
     pages.push({title:el.querySelector('.panel-title')?.textContent||'Detail',html:el.outerHTML});
@@ -93,7 +98,8 @@ function reportReadRoute(){
   if(views.some(v=>v[0]===params.get('view')))state.view=params.get('view');
   for(const [key,id] of [['entity','entityFilter'],['division','divisionFilter']]){
     const select=document.getElementById(id),value=params.get(key)||'all';
-    if([...select.options].some(o=>o.value===value)){state[key]=value;select.value=value;}
+    state[key]=value==='all'||(data.management_detail||[]).some(r=>r[key]===value)?value:'all';
+    select.value=state[key];
   }
   reportState.page=RM.pageIndex(params.get('page'));
   reportState.section=params.get('section');
@@ -101,6 +107,29 @@ function reportReadRoute(){
   reportState.view=state.view;
 }
 function reportNavigate(page){reportState.page=RM.pageIndex(page);render();}
+function setupFilters(){
+  for(const [key,id] of [['entity','entityFilter'],['division','divisionFilter']]){
+    document.getElementById(id).onchange=event=>{
+      reportState.section=reportState.pages[reportState.page]?.title;
+      state[key]=event.target.value;render();
+    };
+  }
+}
+function reportFilterControls(page,resolved){
+  const policy=page.policy||ReportContext.panel(state.view,page.title);
+  for(const [key,id] of [['entity','entityFilter'],['division','divisionFilter']]){
+    const select=document.getElementById(id),options=resolved.options[key];
+    select.closest('label').hidden=!policy.dimensions.includes(key)||options.length===0;
+    select.innerHTML=`<option value="all">All ${key==='entity'?'entities':'divisions'}</option>`+options.map(value=>`<option value="${RM.escape(value)}">${RM.escape(value)}</option>`).join('');
+    select.value=state[key];
+  }
+  const reset=document.getElementById('reportReset');
+  reset.hidden=policy.dimensions.length===0||resolved.empty;
+  reset.disabled=policy.dimensions.every(key=>state[key]==='all');
+  const scope=policy.dimensions.length?policy.dimensions.map(key=>`${key==='entity'?'Entity':'Division'}: ${state[key]==='all'?'All':state[key]}`).join(' · '):'Group / fixed report scope · no entity or division filter applies';
+  document.getElementById('reportContext').innerHTML=`<span>${RM.escape(scope)}${resolved.adjusted.length?' · Selection adjusted':''}</span><span>${resolved.adjusted.length?`Selection broadened: ${RM.escape(resolved.adjusted.join(' and '))} had no records here.`:policy.dimensions.length?'Only available combinations are offered.':'Your operating selection is retained for other pages.'}</span>`;
+  document.getElementById('reportContext').setAttribute('aria-live','polite');
+}
 function setupNav(){
   document.body.classList.add('report-mode');
   document.getElementById('nav').innerHTML=reportGroups.map(([group,ids])=>`<div class="nav-group"><div class="nav-group-title">${group}</div>${ids.map(id=>{const v=views.find(x=>x[0]===id);return v?`<button data-view="${id}">${reportNavIcon(id)}<span>${v[1]}</span></button>`:'';}).join('')}</div>`).join('');
@@ -140,9 +169,16 @@ function render(restoring=false){
   const focusValue=focusKey?focused.dataset[focusKey]:null;
   if(!reportState.initialized){reportReadRoute();reportState.initialized=true;restoring=true;}
   if(reportState.view!==state.view){reportState.page=0;reportState.view=state.view;}
-  const config=views.find(v=>v[0]===state.view)||views[0],pages=reportPages();
+  const config=views.find(v=>v[0]===state.view)||views[0];let pages=reportPages();
   if(reportState.section){const index=pages.findIndex(p=>p.title===reportState.section);if(index>=0)reportState.page=index;reportState.section=null;}
-  reportState.pages=pages;reportState.page=Math.max(0,Math.min(pages.length-1,reportState.page));
+  reportState.page=Math.max(0,Math.min(pages.length-1,reportState.page));
+  const currentPage=pages[reportState.page],policy=currentPage.policy||ReportContext.panel(state.view,currentPage.title);
+  const resolved=ReportContext.resolve(data,policy,state);
+  if(resolved.adjusted.length){
+    Object.assign(state,resolved.scope);pages=reportPages();
+    reportState.page=Math.max(0,pages.findIndex(page=>page.title===currentPage.title));
+  }
+  reportState.pages=pages;
   document.getElementById('viewTitle').textContent=config[1];
   document.getElementById('viewSubtitle').textContent=`${data.meta.end_month} close · ${state.view==='executive'||state.view==='pnl'?'EUR million · AC / PY':'Source units shown in each report'}`;
   document.querySelectorAll('#nav [data-view]').forEach(b=>{b.classList.toggle('active',b.dataset.view===state.view);b.setAttribute('aria-current',b.dataset.view===state.view?'page':'false');});
@@ -150,7 +186,7 @@ function render(restoring=false){
   const start=Math.max(0,Math.min(reportState.page-1,pages.length-4));
   document.getElementById('reportTabs').innerHTML=pages.slice(start,start+4).map((p,i)=>`<button data-page="${start+i}" aria-current="${start+i===reportState.page?'page':'false'}">${RM.escape(p.title)}</button>`).join('');
   document.getElementById('reportPageSelect').innerHTML=pages.map((p,i)=>`<option value="${i}" ${i===reportState.page?'selected':''}>${i+1}. ${RM.escape(p.title)}</option>`).join('');
-  document.getElementById('reportContext').innerHTML=`<span><strong>Selection:</strong> ${RM.escape(reportScope())}</span><span>Group measures remain consolidated; read report scope.</span>`;
+  reportFilterControls(pages[reportState.page],resolved);
   document.getElementById('content').innerHTML=pages[reportState.page].html;
   document.getElementById('reportStatus').textContent=`${data.meta.end_month} · ${data.validation?.passed?'Controls passed':'CONTROLS FAILED'}`;
   document.getElementById('reportStatus').className=data.validation?.passed?'control-pass':'control-fail';
@@ -167,13 +203,18 @@ function render(restoring=false){
     point.onclick=show;point.onkeydown=event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();show();}};
   });
   reportKpiHelp();
+  for(const empty of document.querySelectorAll('#content .empty')){
+    empty.innerHTML=`<strong>${pages[reportState.page].title==='Overdue and escalated actions'?'No overdue actions in this close':'No records in this published report'}</strong><p>This is not a loading error. The published snapshot contains no matching detail; financial zeros remain visible elsewhere.</p><button data-return-overview>Return to Executive</button>`;
+    empty.querySelector('button').onclick=()=>{state.view='executive';render();};
+  }
   if(focusKey){
     const replacement=[...document.querySelectorAll(`[data-${focusKey}]`)].find(el=>el.dataset[focusKey]===focusValue);
     (replacement||document.getElementById('reportPageSelect')).focus({preventScroll:true});
-  }else if(focusId && document.getElementById(focusId)?.disabled){
+  }else if(focusId && (document.getElementById(focusId)?.disabled||document.getElementById(focusId)?.closest('[hidden]'))){
     document.getElementById('reportPageSelect').focus({preventScroll:true});
   }
-  requestAnimationFrame(reportEnhancePage);
+  // Measurements force layout here, so every render returns with usable pagers and sorting.
+  reportEnhancePage();
 }
 function reportKpiHelp(){
   for(const card of document.querySelectorAll('#content .kpi,#content .report-kpi')){
@@ -224,7 +265,7 @@ function reportEnhancePage(){
 function reportTable(wrap){
   if(wrap.dataset.paged)return;wrap.dataset.paged='true';
   const table=wrap.querySelector('table'),rows=[...table.tBodies[0].rows],headers=[...table.tHead.rows[0].cells];
-  let pageIndex=0,columnIndex=0,query='';
+  let pageIndex=0,columnIndex=0,query='',sortColumn=-1,sortDirection=1;
   const toolbar=document.createElement('div');toolbar.className='table-toolbar';
   toolbar.innerHTML='<label>Search rows <input type="search" placeholder="Find in this report"></label><span>Click a row for full detail</span>';
   wrap.before(toolbar);
@@ -243,9 +284,29 @@ function reportTable(wrap){
     reportRestorePagerFocus(footer,focused);
   };
   toolbar.querySelector('input').oninput=event=>{query=event.target.value.toLowerCase();pageIndex=0;update();};
+  headers.forEach((header,index)=>{
+    const label=header.textContent,button=document.createElement('button');
+    button.type='button';button.className='column-sort';button.textContent=label;
+    button.setAttribute('aria-label',`Sort by ${label}`);header.replaceChildren(button);
+    header.setAttribute('aria-sort','none');
+    button.onclick=()=>{
+      sortDirection=sortColumn===index?-sortDirection:1;sortColumn=index;pageIndex=0;
+      rows.sort((a,b)=>RM.compareDisplay(a.cells[index]?.textContent,b.cells[index]?.textContent,header.classList.contains('num'))*sortDirection);
+      table.tBodies[0].replaceChildren(...rows);
+      headers.forEach((h,i)=>h.setAttribute('aria-sort',i===index?(sortDirection===1?'ascending':'descending'):'none'));
+      update();
+    };
+  });
   for(const row of rows){
     row.tabIndex=0;
-    const show=()=>reportDialog('Row detail',`<dl class="row-detail">${headers.map((h,i)=>`<div><dt>${RM.escape(h.textContent)}</dt><dd>${RM.escape(row.cells[i]?.textContent)}</dd></div>`).join('')}</dl>`);
+    const show=()=>{
+      const selection={entity:'all',division:'all'};let hasScope=false;
+      headers.forEach((header,i)=>{const key=header.textContent.trim().toLowerCase();if(key==='entity'||key==='division'){selection[key]=row.cells[i]?.textContent.trim();hasScope=true;}});
+      const resolved=ReportContext.resolve(data,ReportContext.card('Revenue'),selection);
+      const canExplore=hasScope&&!resolved.empty&&!resolved.adjusted.length;
+      reportDialog('Row detail',`<dl class="row-detail">${headers.map((h,i)=>`<div><dt>${RM.escape(h.textContent)}</dt><dd>${RM.escape(row.cells[i]?.textContent)}</dd></div>`).join('')}</dl>${canExplore?'<button id="reportExploreScope">Explore this scope</button>':''}`);
+      if(canExplore)document.getElementById('reportExploreScope').onclick=()=>{document.getElementById('reportDialog').close();Object.assign(state,selection,{view:'executive'});render();};
+    };
     row.setAttribute('aria-label',`Open row detail: ${row.cells[0]?.textContent||'record'}`);
     row.onclick=show;row.onkeydown=event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();show();}};
     [...row.cells].forEach(cell=>cell.title=cell.textContent);

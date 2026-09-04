@@ -1,4 +1,5 @@
 /* Report canvas tokens: white paper, neutral measures, semantic variances. */
+.report-mode button.column-sort{background:transparent;border:0;padding:0;min-height:22px;max-width:100%;font:inherit;color:inherit;text-align:inherit;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.report-mode th[aria-sort="ascending"] .column-sort::after{content:' ↑'}.report-mode th[aria-sort="descending"] .column-sort::after{content:' ↓'}#reportExploreScope{margin-top:12px}.report-mode .empty strong{display:block;font-size:18px}.report-mode .empty p{max-width:560px}
 .report-mode .kpi-label-with-help{display:flex;align-items:center;gap:4px;min-height:24px}
 .report-mode button.kpi-info{flex:none;border:1px solid #a6adb5;border-radius:50%;width:24px;height:24px;min-height:24px;padding:0;font:600 12px Georgia,serif;color:#0659b7;background:#fff}
 .kpi-definition{margin:0;font-size:14px;line-height:1.6;overflow-wrap:anywhere}.kpi-definition dt{font-weight:600;margin-bottom:8px}.kpi-definition dd{margin:0;min-height:100px}

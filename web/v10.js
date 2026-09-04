@@ -58,8 +58,6 @@ renderers['balance-sheet']=function(){
 const renderDriversBeforeContracts=renderers['business-drivers'];
 renderers['business-drivers']=function(){
   const base=renderDriversBeforeContracts();
-  const show=state.division==='all'||state.division==='Software'||state.division==='Events';
-  if(!show)return base;
   const c=contractCurrent();
   const rows=scopedContracts(data.contract_entity_summary||[]);
   const extra=`<div class="section-note"><strong>Prepayment economics</strong> — recurring Software contracts and Events deposits create operating funding before revenue recognition.</div>

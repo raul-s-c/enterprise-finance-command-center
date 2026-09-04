@@ -61,7 +61,8 @@ function sparePartsBlock(){
 
 function renderBusinessDrivers(){
   const blocks=[];
-  const show=d=>state.division==='all'||state.division===d;
+  // The report catalog stays stable. Each subpage exposes only its supported filters.
+  const show=()=>true;
   if(show('Software')) blocks.push(`<div class="section-note"><strong>Software</strong> — recurring revenue, retention and ARR movement.</div>${softwareBlock()}`);
   if(show('Events')) blocks.push(`<div class="section-note"><strong>Events & Projects</strong> — bookings, backlog and conversion to recognized revenue.</div>${eventsBlock()}`);
   if(show('Hardware')) blocks.push(`<div class="section-note"><strong>Hardware</strong> — factory capacity, fixed-cost absorption and production mix.</div>${hardwareBlock()}`);
