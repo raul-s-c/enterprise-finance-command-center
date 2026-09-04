@@ -11,6 +11,16 @@ The dashboard is a code-native HTML/CSS/SVG reporting application over the exist
 - Consolidated measures are explicitly separate from selected operating scope. Existing source/subtitle scope rules remain in force; this UI does not invent division-level cash allocations.
 - On narrow screens the module selector replaces the navigation rail. The Executive preview uses six months instead of twelve; the historical subpage retains the underlying history. Group KPIs and division detail remain accessible in their own subpages.
 
+## Contextual interaction
+
+`web/report-context.js` defines the dimensions and published source for each report subpage. Entity and division choices depend on the current page and on one another. Unsupported controls are hidden; consolidated and fixed-scope reports explicitly explain their scope while retaining the operating selection for the next applicable page. An unavailable selection is broadened to All with a visible notice, never silently changed to another entity.
+
+Operating choices exclude inactive scaffold combinations in the latest close, not legitimate zero KPIs or losses. Other choices require matching published records. Missing records are explained with a route back to Executive rather than presented as a loading failure. This does not manufacture observations absent from compact source datasets.
+
+KPI cards are grouped into scope-specific subpages so software, factory, workforce and group indicators do not imply that the same filters apply to all of them. Business-driver subpages remain navigable regardless of the previous selection.
+
+Every table column can be sorted ascending or descending, including compact currency and percentage values. Row details offer **Explore this scope** when the row identifies an available operating entity/division; this opens Executive with that scope and preserves browser-history navigation. Sorting and navigation do not modify published data.
+
 ## KPI calculation help
 
 Every KPI card includes a keyboard-accessible information button. Its dialog separates Calculation, Scope, Period, Source and Display into short pages, including on mobile. Close or Escape returns focus to the opening control. `web/kpi-definitions.js` is reviewed presentation metadata, not a second accounting engine. Unknown indicators receive an explicit unavailable definition; tests reject missing definitions for the rendered catalog across all entity/division selections.
