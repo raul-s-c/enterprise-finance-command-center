@@ -345,6 +345,8 @@ See:
 
 ## CFO application
 
+The interactive reporting workspace uses fixed-height screens and named subpages, searchable/paginated tables, persistent URL filters, and custom IBCS-inspired comparison and variance visuals. Executive supports month detail and division filtering; P&L includes a prior-year matrix and a source-reconciled bridge. See `docs/reporting-workspace.md`. These are custom web visuals, not licensed or certified Zebra BI components.
+
 The GitHub Pages application contains:
 
 - Executive
