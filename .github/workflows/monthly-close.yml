@@ -48,22 +48,49 @@ jobs:
       - run: node --test tests/dashboard_scope.test.cjs
       - run: pytest -m 'not integration'
       - run: python -m enterprise_finance.cli build
-      - name: Commit generated finance data
+      - name: Stage validated close candidate
         if: github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: finance-close-candidate
+          path: |
+            data/processed
+            web
+          if-no-files-found: error
+          retention-days: 3
+
+  publish:
+    if: github.ref == 'refs/heads/main'
+    needs: [build, continuity]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Retrieve validated close candidate
+        uses: actions/download-artifact@v4
+        with:
+          name: finance-close-candidate
+          path: .
+      - name: Reject superseded source revision
+        run: |
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$GITHUB_SHA" || {
+            echo "Source revision is no longer main; refusing to publish stale finance data."
+            exit 1
+          }
+      - name: Commit generated finance data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/processed web/data
           git diff --cached --quiet || git commit -m "data: monthly synthetic finance close"
-          git push
+          git push origin HEAD:main
       - uses: actions/upload-pages-artifact@v3
-        if: github.ref == 'refs/heads/main'
         with:
           path: web
 
   deploy:
     if: github.ref == 'refs/heads/main'
-    needs: [build, continuity]
+    needs: [publish]
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
