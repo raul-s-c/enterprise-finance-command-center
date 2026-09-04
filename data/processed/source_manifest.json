@@ -23,9 +23,9 @@
       "preferred_source": "Eurostat industrial production",
       "source_url": "https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table",
       "fallback": "deterministic calibrated series",
-      "official_rows": 0,
-      "fallback_rows": 36,
-      "latest_official_month": null
+      "official_rows": 34,
+      "fallback_rows": 2,
+      "latest_official_month": "2026-06"
     },
     "energy_index": {
       "unit": "2010=100",
