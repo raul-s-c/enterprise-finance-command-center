@@ -19,9 +19,20 @@ permissions:
 
 concurrency:
   group: enterprise-finance-close-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  continuity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: python -m pip install -e ".[dev]"
+      - run: pytest -m integration
+
   build:
     runs-on: ubuntu-latest
     steps:
@@ -31,7 +42,11 @@ jobs:
           python-version: "3.11"
           cache: pip
       - run: python -m pip install -e ".[dev]"
-      - run: pytest
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node --test tests/dashboard_scope.test.cjs
+      - run: pytest -m 'not integration'
       - run: python -m enterprise_finance.cli build
       - name: Commit generated finance data
         if: github.ref == 'refs/heads/main'
@@ -48,7 +63,7 @@ jobs:
 
   deploy:
     if: github.ref == 'refs/heads/main'
-    needs: build
+    needs: [build, continuity]
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

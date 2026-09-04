@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import math
 
 import pandas as pd
 
@@ -32,6 +33,10 @@ def _rates(macro: pd.DataFrame) -> dict[tuple[str, str], float]:
 
 def _contract_currency(row: pd.Series, functional: str, entity_currency: dict[str, str]) -> str | None:
     key = f"{row.journal_id}|{row.account}|{row.entity}"
+    if str(row.account) in {"1150_IC_AR", "2150_IC_AP"}:
+        seller = str(row.entity) if str(row.account) == "1150_IC_AR" else str(row.counterparty)
+        candidate = entity_currency[seller]
+        return candidate if candidate != functional else None
     if str(row.counterparty) in entity_currency:
         candidate = entity_currency[str(row.counterparty)]
         return candidate if candidate != functional else None
@@ -41,6 +46,48 @@ def _contract_currency(row: pd.Series, functional: str, entity_currency: dict[st
     return choices[_bucket(key + "|currency", len(choices))]
 
 
+def _contract_id(row: pd.Series) -> str:
+    seller, buyer = (str(row.entity), str(row.counterparty))
+    if str(row.account) == "2150_IC_AP":
+        seller, buyer = buyer, seller
+    return f"IC-{row.month}-{seller}-{buyer}-{row.division}"
+
+
+def build_intercompany_contracts(journal: pd.DataFrame, macro: pd.DataFrame, config: dict) -> pd.DataFrame:
+    """Reconcile both legal source legs before assigning one synthetic contract policy."""
+    source = journal[
+        journal.account.isin(["1150_IC_AR", "2150_IC_AP"])
+        & journal.journal_type.isin(["intercompany_sale", "intercompany_purchase"])
+    ].copy()
+    columns = ["contract_id", "issue_month", "seller", "buyer", "division", "transaction_currency",
+               "transaction_amount", "original_reporting_eur", "receivable_journal_id",
+               "payable_journal_id", "payment_terms_months", "settlement_month"]
+    if source.empty:
+        return pd.DataFrame(columns=columns)
+    source["contract_id"] = source.apply(_contract_id, axis=1)
+    currencies, rates = _entity_currencies(config), _rates(macro)
+    records = []
+    for contract_id, group in source.groupby("contract_id", sort=True):
+        ar, ap = group[group.account.eq("1150_IC_AR")], group[group.account.eq("2150_IC_AP")]
+        if len(ar) != 1 or len(ap) != 1:
+            raise ValueError(f"Intercompany contract requires exactly two reciprocal source legs: {contract_id}")
+        receivable, payable = ar.iloc[0], ap.iloc[0]
+        ar_value = float(receivable.debit) - float(receivable.credit)
+        ap_value = float(payable.credit) - float(payable.debit)
+        if not all(math.isfinite(v) and v > 0 for v in [ar_value, ap_value]) or abs(ar_value-ap_value) > 0.02:
+            raise ValueError(f"Intercompany contract source amounts do not reconcile: {contract_id}")
+        currency = currencies[str(receivable.entity)]
+        rate = rates[(str(receivable.month), currency)]
+        if not math.isfinite(rate) or rate <= 0:
+            raise ValueError(f"Invalid contract FX rate: {contract_id}")
+        terms = 1 + _bucket(contract_id + "|terms", 2)
+        records.append(dict(zip(columns, [contract_id, str(receivable.month), str(receivable.entity),
+            str(payable.entity), str(receivable.division), currency, round(ar_value/rate, 4),
+            _money(ar_value), str(receivable.journal_id), str(payable.journal_id), terms,
+            str(pd.Period(str(receivable.month), freq="M") + terms)])))
+    return pd.DataFrame(records, columns=columns)
+
+
 def build_transaction_documents(journal: pd.DataFrame, macro: pd.DataFrame, config: dict) -> pd.DataFrame:
     """Create deterministic foreign-currency documents from actual AR/AP source journals."""
     columns = [
@@ -48,6 +95,7 @@ def build_transaction_documents(journal: pd.DataFrame, macro: pd.DataFrame, conf
         "document_type", "source_account", "functional_currency", "transaction_currency",
         "original_reporting_eur", "transaction_amount", "issue_transaction_fx_to_eur",
         "issue_functional_fx_to_eur", "original_functional_amount", "payment_terms_months",
+        "source_journal_id", "contract_id",
     ]
     if journal.empty or macro.empty:
         return pd.DataFrame(columns=columns)
@@ -73,11 +121,14 @@ def build_transaction_documents(journal: pd.DataFrame, macro: pd.DataFrame, conf
         if original <= 0 or transaction_rate <= 0 or functional_rate <= 0:
             continue
         document_id = f"FX-{row.journal_id}-{row.account}"
-        terms = 1 + _bucket(document_id + "|terms", 2)
+        contract_id = _contract_id(row) if str(row.account) in {"1150_IC_AR", "2150_IC_AP"} else document_id
+        terms = 1 + _bucket(contract_id + "|terms", 2)
         settlement = str(pd.Period(issue_month, freq="M") + terms)
         transaction_amount = original / transaction_rate
         rows.append({
             "document_id": document_id,
+            "source_journal_id": str(row.journal_id),
+            "contract_id": contract_id,
             "issue_month": issue_month,
             "settlement_month": settlement,
             "entity": str(row.entity),
@@ -192,7 +243,7 @@ def summarize_transaction_fx(snapshots: pd.DataFrame) -> pd.DataFrame:
     return out[columns]
 
 
-def validate_transaction_fx(
+def _validate_transaction_fx_identities(
     documents: pd.DataFrame, snapshots: pd.DataFrame, summary: pd.DataFrame, macro: pd.DataFrame
 ) -> dict:
     document_duplicates = int(documents.document_id.duplicated().sum()) if not documents.empty else 1
@@ -230,4 +281,85 @@ def validate_transaction_fx(
         document_duplicates == 0 and same_currency == 0 and snapshot_duplicates == 0
         and carrying_gap <= 0.02 and lifecycle_gap <= 0.02 and summary_gap <= 0.02
     )
+    return checks
+
+
+def _frame_difference(actual: pd.DataFrame, expected: pd.DataFrame, keys: list[str]) -> tuple[int, float]:
+    """Compare key coverage, metadata and every measure, not only internal arithmetic."""
+    if not set(expected.columns).issubset(actual.columns):
+        return 1, 0.0
+    if actual.duplicated(keys).any() or expected.duplicated(keys).any():
+        return 1, 0.0
+    merged = expected.merge(actual[expected.columns], on=keys, how="outer", suffixes=("_expected", "_actual"), indicator=True)
+    errors = int(merged._merge.ne("both").sum())
+    matched = merged[merged._merge.eq("both")]
+    max_gap = 0.0
+    for column in expected.columns:
+        if column in keys:
+            continue
+        left, right = matched[column + "_expected"], matched[column + "_actual"]
+        if pd.api.types.is_numeric_dtype(expected[column]):
+            values = pd.to_numeric(right, errors="coerce")
+            finite = values.map(lambda value: pd.notna(value) and math.isfinite(float(value)))
+            errors += int((~finite).sum())
+            if column in {"open_documents", "age_months", "payment_terms_months"}:
+                errors += int(left[finite].astype(float).ne(values[finite].astype(float)).sum())
+            elif "fx_to_eur" in column:
+                errors += sum(not math.isclose(float(a), float(b), rel_tol=1e-12, abs_tol=1e-12)
+                              for a, b in zip(left[finite], values[finite]))
+            gap = (left[finite].astype(float) - values[finite].astype(float)).abs().max()
+            if pd.notna(gap):
+                max_gap = max(max_gap, float(gap))
+        else:
+            errors += int(left.fillna("").astype(str).ne(right.fillna("").astype(str)).sum())
+    return errors, max_gap
+
+
+def validate_transaction_fx(
+    documents: pd.DataFrame, snapshots: pd.DataFrame, summary: pd.DataFrame, macro: pd.DataFrame,
+    *, end_month: str | None = None, journal: pd.DataFrame | None = None,
+    config: dict | None = None, contracts: pd.DataFrame | None = None,
+) -> dict:
+    """Retain v0.20 identities and add source, lifecycle and detail-to-summary tie-outs."""
+    checks = {"transaction_fx_integrity_errors": 0}
+    try:
+        if any(frame.empty for frame in [documents, snapshots, summary, macro]):
+            raise ValueError("Missing FX dataset")
+        if documents.document_id.duplicated().any() or snapshots.duplicated(["snapshot_month", "document_id"]).any():
+            raise ValueError("Duplicate document or snapshot")
+        for frame in [documents, snapshots, summary, macro]:
+            numeric = frame.select_dtypes(include="number")
+            if not numeric.map(lambda value: pd.notna(value) and math.isfinite(float(value))).all().all():
+                raise ValueError("Non-finite FX measure")
+        checks.update(_validate_transaction_fx_identities(documents, snapshots, summary, macro))
+        close_month = end_month or str(snapshots.snapshot_month.max())
+        expected_snapshots = build_transaction_fx_snapshots(documents, macro, close_month)
+        errors, gap = _frame_difference(snapshots, expected_snapshots, ["snapshot_month", "document_id"])
+        comparisons_passed = errors == 0 and gap <= 0.02
+        checks["transaction_fx_snapshot_integrity_errors"] = errors
+        checks["transaction_fx_snapshot_source_max_gap"] = round(gap, 6)
+        errors, gap = _frame_difference(summary, summarize_transaction_fx(snapshots), ["month", "entity", "transaction_currency"])
+        comparisons_passed = comparisons_passed and errors == 0 and gap <= 0.02
+        checks["transaction_fx_summary_integrity_errors"] = errors
+        checks["transaction_fx_summary_source_max_gap"] = round(gap, 6)
+        if journal is not None:
+            if config is None or contracts is None:
+                raise ValueError("Source validation requires config and contract register")
+            expected_contracts = build_intercompany_contracts(journal, macro, config)
+            errors, gap = _frame_difference(contracts, expected_contracts, ["contract_id"])
+            comparisons_passed = comparisons_passed and errors == 0 and gap <= 0.02
+            checks["transaction_fx_contract_integrity_errors"] = errors
+            checks["transaction_fx_contract_source_max_gap"] = round(gap, 6)
+            errors, gap = _frame_difference(documents, build_transaction_documents(journal, macro, config), ["document_id"])
+            comparisons_passed = comparisons_passed and errors == 0 and gap <= 0.02
+            checks["transaction_fx_document_source_errors"] = errors
+            checks["transaction_fx_document_source_max_gap"] = round(gap, 6)
+        checks["passed"] = bool(checks.get("passed", False) and comparisons_passed and all(
+            value <= (0.02 if key.endswith("max_gap") else 0)
+            for key, value in checks.items()
+            if key != "passed" and (key.endswith("errors") or key.endswith("source_max_gap"))
+        ))
+    except (KeyError, ValueError, TypeError, IndexError, ZeroDivisionError):
+        checks["transaction_fx_integrity_errors"] += 1
+        checks["passed"] = False
     return checks

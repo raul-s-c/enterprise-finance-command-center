@@ -4,7 +4,7 @@ Version 0.20 adds document-level foreign-currency exposure to the existing funct
 
 ## Document population
 
-The engine sources receivables and payables from actual journal lines in accounts `1100_AR`, `2100_AP`, `1150_IC_AR` and `2150_IC_AP`. Intercompany contract currency follows the counterparty functional currency when this creates a cross-currency exposure. A stable deterministic policy selects external cross-currency contracts and assigns one of the supported currencies. No standalone balance is invented.
+The engine sources receivables and payables from actual journal lines in accounts `1100_AR`, `2100_AP`, `1150_IC_AR` and `2150_IC_AP`. Since v0.21, reciprocal intercompany contracts use the seller's functional currency on both legal legs, with a shared deterministic settlement month. Both source legs are retained in `intercompany_fx_contracts.csv`; only foreign-currency legs enter the FX document population. A stable deterministic policy selects external cross-currency contracts and assigns one of the supported currencies. No standalone balance is invented.
 
 Each document records its source journal, issue and settlement month, entity, division, counterparty, source account, functional currency, transaction currency, original EUR and functional amount, transaction amount and payment term.
 
@@ -26,5 +26,7 @@ The change from the prior functional carrying amount is a gain for receivables w
 
 ## Release controls
 
-The release fails on duplicate documents or snapshots, same-currency documents, missing valuation identity, lifecycle P&L differences or summary P&L differences. Transaction FX does not alter CTA and does not use balancing plugs.
+The release fails on duplicate documents or snapshots, same-currency documents, missing valuation identity, lifecycle P&L differences or summary P&L differences. Since v0.21 it also checks complete key coverage, metadata, every summary measure, finite values, document source amounts, reciprocal contract source legs and all lifecycle snapshots. A coordinated change to both summary P&L components cannot evade detail-to-summary reconciliation. Transaction FX does not alter CTA and does not use balancing plugs.
+
+Settlement months remain synthetic contract-policy dates, not a claim of matched bank settlement. This analytical layer is not posted into historical financial statements. The v0.21 contract-policy correction rebuilds analytical FX history and changes its population and totals; prior financial statement artifacts remain unchanged.
 

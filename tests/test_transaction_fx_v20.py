@@ -38,9 +38,10 @@ def _fixtures():
 def test_transaction_documents_are_cross_currency_and_source_tied():
     config, macro, journal = _fixtures()
     documents = build_transaction_documents(journal, macro, config)
-    assert len(documents) == 2
+    # v0.21 uses the seller's EUR contract on both legs; only the USD buyer has FX exposure.
+    assert len(documents) == 1
     assert not documents.functional_currency.eq(documents.transaction_currency).any()
-    assert set(documents.source_account) == {"1150_IC_AR", "2150_IC_AP"}
+    assert set(documents.source_account) == {"2150_IC_AP"}
     assert documents.document_id.is_unique
 
 
