@@ -1,5 +1,5 @@
 /* Paginated reporting workspace over the unchanged release renderers and datasets. */
-const reportState={page:0,view:null,metric:'revenue',initialized:false,pages:[]};
+const reportState={page:0,view:null,metric:'revenue',initialized:false,pages:[],section:null};
 const RM=FinanceReport,RC=ReportCharts;
 // Existing report modules share this renderer: no negative bars drawn above zero.
 bars=function(rows,key,labelKey='month'){return RC.series(rows||[],key,labelKey,data?.meta?.end_month||'',window.innerWidth<700?Math.max(300,window.innerWidth-28):900);};
@@ -96,6 +96,7 @@ function reportReadRoute(){
     if([...select.options].some(o=>o.value===value)){state[key]=value;select.value=value;}
   }
   reportState.page=Math.max(0,Number(params.get('page'))||0);
+  reportState.section=params.get('section');
   reportState.metric=params.get('metric')==='ebit'?'ebit':'revenue';
   reportState.view=state.view;
 }
@@ -120,7 +121,7 @@ function setupNav(){
   window.addEventListener('popstate',()=>{if(data){reportReadRoute();render(true);}});
   window.addEventListener('hashchange',()=>{if(data){reportReadRoute();render(true);}});
   let resizeTimer;
-  window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{if(data)render(true);},120);});
+  window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{if(data){reportState.section=reportState.pages[reportState.page]?.title;render(true);}},120);});
 }
 function reportDialog(title,body){
   document.getElementById('reportDialogTitle').textContent=title;
@@ -128,12 +129,15 @@ function reportDialog(title,body){
   const dialog=document.getElementById('reportDialog');if(!dialog.open)dialog.showModal();
   const children=document.querySelector('#reportDialogBody .help-pages');
   if(children)reportListPager(children,1);
+  const detail=document.querySelector('#reportDialogBody .row-detail');
+  if(detail)reportListPager(detail,window.innerWidth<700?3:6);
 }
 function render(restoring=false){
   if(!data)return;
   if(!reportState.initialized){reportReadRoute();reportState.initialized=true;restoring=true;}
   if(reportState.view!==state.view){reportState.page=0;reportState.view=state.view;}
   const config=views.find(v=>v[0]===state.view)||views[0],pages=reportPages();
+  if(reportState.section){const index=pages.findIndex(p=>p.title===reportState.section);if(index>=0)reportState.page=index;reportState.section=null;}
   reportState.pages=pages;reportState.page=Math.max(0,Math.min(pages.length-1,reportState.page));
   document.getElementById('viewTitle').textContent=config[1];
   document.getElementById('viewSubtitle').textContent=`${data.meta.end_month} close · ${state.view==='executive'||state.view==='pnl'?'EUR million · AC / PY':'Source units shown in each report'}`;
@@ -149,7 +153,7 @@ function render(restoring=false){
   document.getElementById('reportPageNumber').textContent=`${reportState.page+1} / ${pages.length}`;
   document.getElementById('reportPrevious').disabled=reportState.page===0;
   document.getElementById('reportNext').disabled=reportState.page===pages.length-1;
-  const hash=new URLSearchParams({view:state.view,page:reportState.page,entity:state.entity,division:state.division,metric:reportState.metric});
+  const hash=new URLSearchParams({view:state.view,page:reportState.page,section:pages[reportState.page].title,entity:state.entity,division:state.division,metric:reportState.metric});
   if(location.hash!==`#${hash}`)history[restoring?'replaceState':'pushState'](null,'',`#${hash}`);
   document.querySelectorAll('[data-metric]').forEach(b=>b.onclick=()=>{reportState.metric=b.dataset.metric;render();});
   document.querySelectorAll('[data-division]').forEach(b=>b.onclick=()=>{state.division=b.dataset.division;document.getElementById('divisionFilter').value=state.division;render();});
@@ -196,7 +200,7 @@ function reportTable(wrap){
   toolbar.querySelector('input').oninput=event=>{query=event.target.value.toLowerCase();pageIndex=0;update();};
   for(const row of rows){
     row.tabIndex=0;
-    const show=()=>reportDialog('Row detail',`<div class="help-pages">${headers.map((h,i)=>`<p><strong>${RM.escape(h.textContent)}</strong><br>${RM.escape(row.cells[i]?.textContent)}</p>`).join('')}</div>`);
+    const show=()=>reportDialog('Row detail',`<dl class="row-detail">${headers.map((h,i)=>`<div><dt>${RM.escape(h.textContent)}</dt><dd>${RM.escape(row.cells[i]?.textContent)}</dd></div>`).join('')}</dl>`);
     row.onclick=show;row.onkeydown=event=>{if(event.key==='Enter'){event.preventDefault();show();}};
     [...row.cells].forEach(cell=>cell.title=cell.textContent);
   }
