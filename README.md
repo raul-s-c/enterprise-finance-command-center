@@ -493,6 +493,8 @@ Full reproducible operating and journal detail is generated at runtime and inten
 
 GitHub Actions performs the complete close automatically:
 
+Generated data is committed only after both the build checks and the consecutive-close regression pass. Publication rejects superseded source revisions, and Pages deployment depends on successful data publication. See `docs/close-publication.md`.
+
 1. install the finance engine
 2. run tests
 3. refresh macro inputs where available
