@@ -36,9 +36,9 @@ function softwareBlock(){
 
 function eventsBlock(){
   const group=data.events_summary||[];
-  const l=latest(group), detail=scopeV05(data.events_backlog_detail||[]).slice(0,30);
-  const detailAgg=detail.reduce((a,r)=>{a.bookings+=(Number(r.bookings)||0);a.revenue+=(Number(r.recognized_revenue)||0);a.backlog+=(Number(r.ending_backlog)||0);return a},{bookings:0,revenue:0,backlog:0});
-  const useSelected=state.entity!=='all' && detail.length;
+  const l=latest(group), scopedDetail=scopeV05(data.events_backlog_detail||[]),detail=scopedDetail.slice(0,30);
+  const detailAgg=scopedDetail.reduce((a,r)=>{a.bookings+=(Number(r.bookings)||0);a.revenue+=(Number(r.recognized_revenue)||0);a.backlog+=(Number(r.ending_backlog)||0);return a},{bookings:0,revenue:0,backlog:0});
+  const useSelected=state.entity!=='all';
   const bookings=useSelected?detailAgg.bookings:(l.bookings||0), revenue=useSelected?detailAgg.revenue:(l.recognized_revenue||0), backlog=useSelected?detailAgg.backlog:(l.ending_backlog||0);
   return `<div class="kpi-grid">${kpi('Bookings',eur.format(bookings))}${kpi('Recognized revenue',eur.format(revenue))}${kpi('Ending backlog',eur.format(backlog))}${kpi('Book-to-bill',num(revenue?bookings/revenue:0,2))}${kpi('Backlog coverage',`${num(l.backlog_coverage_months||0,1)} mo`)}</div><div class="panel-grid">${panel('Backlog trend','Group closing backlog',bars(group.slice(-24),'ending_backlog'),'span-7')}${panel('Bookings vs revenue','Latest group month',metricRows([['Opening backlog',eur.format(l.opening_backlog||0)],['Bookings',eur.format(l.bookings||0)],['Recognized revenue',eur.format(l.recognized_revenue||0)],['Ending backlog',eur.format(l.ending_backlog||0)],['Book-to-bill',num(l.book_to_bill||0,2)]]),'span-5')}${panel('Backlog by family','Latest close',table(detail,[{key:'entity',label:'Entity'},{key:'product_family',label:'Family'},{key:'bookings',label:'Bookings',num:true,format:v=>eur.format(v)},{key:'recognized_revenue',label:'Revenue',num:true,format:v=>eur.format(v)},{key:'ending_backlog',label:'Backlog',num:true,format:v=>eur.format(v)},{key:'book_to_bill',label:'Book-to-bill',num:true,format:v=>num(v,2)},{key:'backlog_coverage_months',label:'Coverage',num:true,format:v=>`${num(v,1)} mo`}]),'span-12')}</div>`;
 }

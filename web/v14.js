@@ -19,7 +19,7 @@ function workforceBlock(){
     a.revenue+=Number(r.revenue)||0;
     return a;
   },{opening:0,hires:0,attrition:0,ending:0,avg:0,personnel:0,revenue:0});
-  const useSelected=detail.length>0&&(state.entity!=='all'||state.division!=='all');
+  const useSelected=state.entity!=='all'||state.division!=='all';
   const ending=useSelected?selected.ending:Number(latestGroup.ending_fte)||0;
   const hires=useSelected?selected.hires:Number(latestGroup.hires)||0;
   const attrition=useSelected?selected.attrition:Number(latestGroup.attrition)||0;

@@ -11,6 +11,14 @@ The dashboard is a code-native HTML/CSS/SVG reporting application over the exist
 - Consolidated measures are explicitly separate from selected operating scope. Existing source/subtitle scope rules remain in force; this UI does not invent division-level cash allocations.
 - On narrow screens the module selector replaces the navigation rail. The Executive preview uses six months instead of twelve; the historical subpage retains the underlying history. Group KPIs and division detail remain accessible in their own subpages.
 
+## KPI calculation help
+
+Every KPI card includes a keyboard-accessible information button. Its dialog separates Calculation, Scope, Period, Source and Display into short pages, including on mobile. Close or Escape returns focus to the opening control. `web/kpi-definitions.js` is reviewed presentation metadata, not a second accounting engine. Unknown indicators receive an explicit unavailable definition; tests reject missing definitions for the rendered catalog across all entity/division selections.
+
+Definitions distinguish monthly flows, trailing/YTD flows and point-in-time forecast balances, as well as filtered operating measures and consolidated group measures. Legacy zero/missing-value display behavior is disclosed rather than silently described as a valid observation. Existing summary/watchlist limits remain documented; Events KPI aggregation uses the complete available selected detail before applying the table's display limit. Empty Events/workforce selections no longer substitute group totals.
+
+Subpage URL indices are normalized to finite nonnegative integers. Keyboard focus survives metric/subpage controls, table/list pagination and disabled pagination boundaries. Rows support both Enter and Space for full detail.
+
 ## Reporting notation
 
 The custom visuals are **IBCS-inspired**, not certified IBCS software or official Zebra BI components. Design references are [IBCS Standards](https://www.ibcs.com/standards/) and [Zebra BI Charts](https://zebrabi.com/power-bi-custom-visuals/charts/).
