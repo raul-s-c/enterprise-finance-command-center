@@ -16,10 +16,10 @@ function renderFxTranslation(){
   const foreign=latestTranslation.filter(r=>r.functional_currency!=='EUR');
   return `<div class="section-note"><strong>FX translation</strong> — functional-currency legal books are translated to EUR. Assets and liabilities use closing FX; share capital keeps its historical issue rate; retained earnings accumulate at the rates when profits arose; the residual translation difference is CTA/OCI.</div>
   <div class="kpi-grid">
-    ${kpi('Translation reserve',eur.format(cta),'CTA / OCI')}
+    ${kpi('Translation reserve',eur.format(cta),'Entity scope · all divisions')}
     ${kpi('Revenue FX effect',signed(revenueFx),'Reported vs prior-year rates')}
     ${kpi('EBIT FX effect',signed(ebitFx),'Reported vs prior-year rates')}
-    ${kpi('Functional currencies',String(new Set((data.fx_translation||[]).map(r=>r.functional_currency)).size))}
+    ${kpi('Group functional currencies',String(new Set((data.fx_translation||[]).map(r=>r.functional_currency)).size),'Group scope · not filtered')}
   </div>
   <div class="panel-grid">
     ${panel('Constant-currency performance','Current close translated at prior-year FX',table(cc,[

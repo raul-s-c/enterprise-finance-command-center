@@ -45,7 +45,7 @@ renderers['performance-review']=function(){
 const renderExecutiveBeforeLifecycle=renderers.executive;
 renderers.executive=function(){
   const base=renderExecutiveBeforeLifecycle(),group=lifecycleScope(data.management_actions||[]),active=group.filter(r=>['Open','In Progress'].includes(r.status)),overdue=active.filter(r=>r.overdue===true || r.overdue==='True');
-  return base+`<div class="panel-grid" style="margin-top:14px">${panel('Action lifecycle','Persistent group commitments',metricRows([['Active',active.length],['Overdue',overdue.length],['Carry-forward',active.filter(r=>Number(r.carry_forward_months)>0).length],['Executive escalation',active.filter(r=>r.escalation_level==='Executive').length]]),'span-12')}</div>`;
+  return base+`<div class="panel-grid" style="margin-top:14px">${panel('Action lifecycle','Persistent commitments · selected scope',metricRows([['Active',active.length],['Overdue',overdue.length],['Carry-forward',active.filter(r=>Number(r.carry_forward_months)>0).length],['Executive escalation',active.filter(r=>r.escalation_level==='Executive').length]]),'span-12')}</div>`;
 };
 
 const renderJourneyBeforeLifecycle=renderers['data-journey'];

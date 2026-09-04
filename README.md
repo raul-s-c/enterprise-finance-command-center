@@ -53,7 +53,17 @@ CFO analytics
 
 P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.20
+## Current release: v0.21
+
+Version 0.21 adds **FX Integrity & Close Continuity**. Transaction FX summaries now reconcile every measure and key to document snapshots; lifecycle snapshots reconcile to source documents and official/fallback rates; documents reconcile to the authoritative journal. Missing, duplicate, orphaned and non-finite data block release.
+
+Intercompany contracts now retain both reciprocal journal references with one seller-functional contract currency and one deterministic settlement month. The seller's domestic-currency leg stays in the contract register, not the foreign-currency exposure population. The v0.20 analytical population is rebuilt under this corrected policy; transaction FX totals are therefore not directly comparable across the policy change. Historical GL statements are unchanged.
+
+Executive explicitly distinguishes filtered operating measures from consolidated group measures. Mobile charts retain all observations with at most five visible date labels. CI runs frontend regression tests and two consecutive offline closes through the complete v0.21 wrapper in an isolated 36-month actual / 18-month forecast fixture.
+
+See `docs/v0.21-status.md` and `docs/fx-integrity-and-close-continuity.md`.
+
+### Transaction FX foundation
 
 Version 0.20 adds **Transaction FX Exposure & Remeasurement** to the connected finance model.
 
@@ -462,6 +472,7 @@ data/processed/financial_sensitivity_summary.csv
 data/processed/transaction_fx_documents.csv
 data/processed/transaction_fx_snapshots.csv
 data/processed/transaction_fx_summary.csv
+data/processed/intercompany_fx_contracts.csv
 data/processed/software_subscription_summary.csv
 data/processed/events_backlog.csv
 data/processed/hardware_factory_economics.csv

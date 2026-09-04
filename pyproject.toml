@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "enterprise-finance-command-center"
-version = "0.20.0"
+version = "0.21.0"
 requires-python = ">=3.11"
 dependencies = ["pandas>=2.2", "numpy>=1.26", "pyyaml>=6.0", "openpyxl>=3.1"]
 
@@ -14,3 +14,4 @@ dev = ["pytest>=8.0"]
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 addopts = "-q"
+markers = ["integration: full offline consecutive-close regression"]
