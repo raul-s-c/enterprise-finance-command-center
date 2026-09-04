@@ -53,7 +53,8 @@
     index=Math.max(0,Math.min(count-1,Math.floor(index)||0));
     return {items:items.slice(index*size,(index+1)*size),index,count,total:items.length,size};
   }
-  const api={fields,finite,escape,aggregate,variance,priorMonth,comparisons,statement,bridge,page};
+  const pageIndex=value=>Number.isFinite(Number(value))?Math.max(0,Math.floor(Number(value))):0;
+  const api={fields,finite,escape,aggregate,variance,priorMonth,comparisons,statement,bridge,page,pageIndex};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;
   else root.FinanceReport=api;
 })(globalThis);

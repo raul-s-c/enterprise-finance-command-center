@@ -95,12 +95,12 @@ function reportReadRoute(){
     const select=document.getElementById(id),value=params.get(key)||'all';
     if([...select.options].some(o=>o.value===value)){state[key]=value;select.value=value;}
   }
-  reportState.page=Math.max(0,Number(params.get('page'))||0);
+  reportState.page=RM.pageIndex(params.get('page'));
   reportState.section=params.get('section');
   reportState.metric=params.get('metric')==='ebit'?'ebit':'revenue';
   reportState.view=state.view;
 }
-function reportNavigate(page){reportState.page=page;render();}
+function reportNavigate(page){reportState.page=RM.pageIndex(page);render();}
 function setupNav(){
   document.body.classList.add('report-mode');
   document.getElementById('nav').innerHTML=reportGroups.map(([group,ids])=>`<div class="nav-group"><div class="nav-group-title">${group}</div>${ids.map(id=>{const v=views.find(x=>x[0]===id);return v?`<button data-view="${id}">${reportNavIcon(id)}<span>${v[1]}</span></button>`:'';}).join('')}</div>`).join('');
@@ -134,6 +134,10 @@ function reportDialog(title,body){
 }
 function render(restoring=false){
   if(!data)return;
+  const focused=document.activeElement;
+  const focusId=focused?.id;
+  const focusKey=['page','metric','division'].find(key=>focused?.dataset?.[key]!==undefined);
+  const focusValue=focusKey?focused.dataset[focusKey]:null;
   if(!reportState.initialized){reportReadRoute();reportState.initialized=true;restoring=true;}
   if(reportState.view!==state.view){reportState.page=0;reportState.view=state.view;}
   const config=views.find(v=>v[0]===state.view)||views[0],pages=reportPages();
@@ -162,13 +166,52 @@ function render(restoring=false){
     const show=()=>{const s=reportCurrent(),ac=s.rows.find(r=>r.month===point.dataset.month),py=s.rows.find(r=>r.month===RM.priorMonth(point.dataset.month));reportDialog(`${point.dataset.month} · ${reportScope()}`,`<div class="month-detail">${['revenue','gross_profit','ebit'].map(key=>{const v=RM.variance(ac?.[key],py?.[key]);return `<p><strong>${key.replaceAll('_',' ')}</strong><br>AC ${RC.money(ac?.[key])} · PY ${RC.money(py?.[key])} · Δ ${RC.signed(v.delta)} EUR m · ${RC.percent(v.relative)}</p>`;}).join('')}</div>`);};
     point.onclick=show;point.onkeydown=event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();show();}};
   });
+  reportKpiHelp();
+  if(focusKey){
+    const replacement=[...document.querySelectorAll(`[data-${focusKey}]`)].find(el=>el.dataset[focusKey]===focusValue);
+    (replacement||document.getElementById('reportPageSelect')).focus({preventScroll:true});
+  }else if(focusId && document.getElementById(focusId)?.disabled){
+    document.getElementById('reportPageSelect').focus({preventScroll:true});
+  }
   requestAnimationFrame(reportEnhancePage);
+}
+function reportKpiHelp(){
+  for(const card of document.querySelectorAll('#content .kpi,#content .report-kpi')){
+    const labelNode=card.querySelector('.kpi-label')||card.firstElementChild;
+    const label=labelNode.textContent.trim(),definition=KpiDefinitions.get(label);
+    const button=document.createElement('button');
+    button.type='button';button.className='kpi-info';button.textContent='i';
+    button.setAttribute('aria-label',`How ${label} is calculated`);
+    button.setAttribute('aria-haspopup','dialog');
+    button.title=`How ${label} is calculated`;
+    button.dataset.kpi=label;
+    button.onclick=()=>{
+      const value=card.querySelector('.kpi-value,strong')?.textContent.trim()||'—';
+      const fields=definition?[
+        ['Calculation',definition.formula],
+        ['Scope',`${definition.scope} Current selection: ${reportScope()}.`],
+        ['Period',`${definition.period} Published close: ${data.meta.end_month}.`],
+        ['Source',`dashboard.json → ${definition.source}`],
+        ['Display',`Shown value: ${value}. Values are rounded for display (m/M = million). These labels do not change source calculations or controls. Some legacy cards display 0 for missing source values or zero denominators; a displayed zero alone does not establish data availability.`],
+      ]:[['Definition unavailable','This indicator has no reviewed definition yet. Do not infer its calculation from its label.']];
+      reportDialog(`${label} · calculation`,`<dl class="kpi-definition">${fields.map(([key,text])=>`<div><dt>${RM.escape(key)}</dt><dd>${RM.escape(text)}</dd></div>`).join('')}</dl>`);
+      reportListPager(document.querySelector('.kpi-definition'),1);
+    };
+    labelNode.classList.add('kpi-label-with-help');labelNode.append(button);
+  }
 }
 function reportListPager(container,size){
   const items=[...container.children];if(items.length<=size)return;
   let index=0;const controls=document.createElement('div');controls.className='table-pagination';
   container.after(controls);
-  const update=()=>{const p=RM.page(items,index,size);index=p.index;items.forEach((el,i)=>el.hidden=i<index*size||i>=(index+1)*size);controls.innerHTML=`<button data-prev ${index===0?'disabled':''}>Previous items</button><span>${index+1} / ${p.count}</span><button data-next ${index===p.count-1?'disabled':''}>Next items</button>`;controls.querySelector('[data-prev]').onclick=()=>{index--;update();};controls.querySelector('[data-next]').onclick=()=>{index++;update();};};update();
+  const update=()=>{const focused=reportPagerFocus(controls);const p=RM.page(items,index,size);index=p.index;items.forEach((el,i)=>el.hidden=i<index*size||i>=(index+1)*size);controls.innerHTML=`<button data-prev ${index===0?'disabled':''}>Previous items</button><span aria-live="polite">${index+1} / ${p.count}</span><button data-next ${index===p.count-1?'disabled':''}>Next items</button>`;controls.querySelector('[data-prev]').onclick=()=>{index--;update();};controls.querySelector('[data-next]').onclick=()=>{index++;update();};reportRestorePagerFocus(controls,focused);};update();
+}
+function reportPagerFocus(container){
+  const active=document.activeElement;
+  return container.contains(active)?['data-prev','data-next','data-col-prev','data-col-next'].find(key=>active.hasAttribute(key)):null;
+}
+function reportRestorePagerFocus(container,key){
+  if(key)(container.querySelector(`[${key}]:not(:disabled)`)||container.querySelector('button:not(:disabled)'))?.focus({preventScroll:true});
 }
 function reportEnhancePage(){
   const content=document.getElementById('content');
@@ -190,18 +233,21 @@ function reportTable(wrap){
   const size=Math.max(1,Math.floor((height-38)/36));
   const columns=Math.max(2,Math.floor(wrap.clientWidth/140)),columnCount=Math.max(1,Math.ceil((headers.length-1)/(columns-1)));
   const update=()=>{
+    const focused=reportPagerFocus(footer);
     const selected=rows.filter(r=>r.textContent.toLowerCase().includes(query)),p=RM.page(selected,pageIndex,size);pageIndex=p.index;
     rows.forEach(r=>r.hidden=!p.items.includes(r));
     for(const row of [table.tHead.rows[0],...rows])for(let i=0;i<row.cells.length;i++)row.cells[i].hidden=i!==0&&(i<1+columnIndex*(columns-1)||i>=1+(columnIndex+1)*(columns-1));
     footer.innerHTML=`<span>${selected.length?`${pageIndex*size+1}–${Math.min((pageIndex+1)*size,selected.length)}`:'0'} of ${selected.length} rows</span><div><button data-prev ${pageIndex===0?'disabled':''} aria-label="Previous rows">${reportIcon('prev')}</button><span>${pageIndex+1} / ${p.count}</span><button data-next ${pageIndex===p.count-1?'disabled':''} aria-label="Next rows">${reportIcon()}</button></div>${columnCount>1?`<div><button data-col-prev ${columnIndex===0?'disabled':''} aria-label="Previous columns">${reportIcon('prev')}</button><span>Columns ${columnIndex+1} / ${columnCount}</span><button data-col-next ${columnIndex===columnCount-1?'disabled':''} aria-label="Next columns">${reportIcon()}</button></div>`:''}`;
     footer.querySelector('[data-prev]').onclick=()=>{pageIndex--;update();};footer.querySelector('[data-next]').onclick=()=>{pageIndex++;update();};
     if(columnCount>1){footer.querySelector('[data-col-prev]').onclick=()=>{columnIndex--;update();};footer.querySelector('[data-col-next]').onclick=()=>{columnIndex++;update();};}
+    reportRestorePagerFocus(footer,focused);
   };
   toolbar.querySelector('input').oninput=event=>{query=event.target.value.toLowerCase();pageIndex=0;update();};
   for(const row of rows){
     row.tabIndex=0;
     const show=()=>reportDialog('Row detail',`<dl class="row-detail">${headers.map((h,i)=>`<div><dt>${RM.escape(h.textContent)}</dt><dd>${RM.escape(row.cells[i]?.textContent)}</dd></div>`).join('')}</dl>`);
-    row.onclick=show;row.onkeydown=event=>{if(event.key==='Enter'){event.preventDefault();show();}};
+    row.setAttribute('aria-label',`Open row detail: ${row.cells[0]?.textContent||'record'}`);
+    row.onclick=show;row.onkeydown=event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();show();}};
     [...row.cells].forEach(cell=>cell.title=cell.textContent);
   }
   update();
