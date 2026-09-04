@@ -13,6 +13,8 @@ The dashboard is a code-native HTML/CSS/SVG reporting application over the exist
 
 ## Contextual interaction
 
+See [Contribution explorer](contribution-explorer.md) for signed attribution charts, source-record drill-down, CAPEX movement direction, and explicit coverage limits for partial WC schedules.
+
 `web/report-context.js` defines the dimensions and published source for each report subpage. Entity and division choices depend on the current page and on one another. Unsupported controls are hidden; consolidated and fixed-scope reports explicitly explain their scope while retaining the operating selection for the next applicable page. An unavailable selection is broadened to All with a visible notice, never silently changed to another entity.
 
 Operating choices exclude inactive scaffold combinations in the latest close, not legitimate zero KPIs or losses. Other choices require matching published records. Missing records are explained with a route back to Executive rather than presented as a loading failure. This does not manufacture observations absent from compact source datasets.
