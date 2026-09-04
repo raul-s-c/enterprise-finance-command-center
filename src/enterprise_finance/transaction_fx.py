@@ -330,9 +330,11 @@ def validate_transaction_fx(
         close_month = end_month or str(snapshots.snapshot_month.max())
         expected_snapshots = build_transaction_fx_snapshots(documents, macro, close_month)
         errors, gap = _frame_difference(snapshots, expected_snapshots, ["snapshot_month", "document_id"])
+        comparisons_passed = errors == 0 and gap <= 0.02
         checks["transaction_fx_snapshot_integrity_errors"] = errors
         checks["transaction_fx_snapshot_source_max_gap"] = round(gap, 6)
         errors, gap = _frame_difference(summary, summarize_transaction_fx(snapshots), ["month", "entity", "transaction_currency"])
+        comparisons_passed = comparisons_passed and errors == 0 and gap <= 0.02
         checks["transaction_fx_summary_integrity_errors"] = errors
         checks["transaction_fx_summary_source_max_gap"] = round(gap, 6)
         if journal is not None:
@@ -340,12 +342,14 @@ def validate_transaction_fx(
                 raise ValueError("Source validation requires config and contract register")
             expected_contracts = build_intercompany_contracts(journal, macro, config)
             errors, gap = _frame_difference(contracts, expected_contracts, ["contract_id"])
+            comparisons_passed = comparisons_passed and errors == 0 and gap <= 0.02
             checks["transaction_fx_contract_integrity_errors"] = errors
             checks["transaction_fx_contract_source_max_gap"] = round(gap, 6)
             errors, gap = _frame_difference(documents, build_transaction_documents(journal, macro, config), ["document_id"])
+            comparisons_passed = comparisons_passed and errors == 0 and gap <= 0.02
             checks["transaction_fx_document_source_errors"] = errors
             checks["transaction_fx_document_source_max_gap"] = round(gap, 6)
-        checks["passed"] = bool(checks.get("passed", False) and all(
+        checks["passed"] = bool(checks.get("passed", False) and comparisons_passed and all(
             value <= (0.02 if key.endswith("max_gap") else 0)
             for key, value in checks.items()
             if key != "passed" and (key.endswith("errors") or key.endswith("source_max_gap"))
