@@ -302,6 +302,11 @@ def _frame_difference(actual: pd.DataFrame, expected: pd.DataFrame, keys: list[s
             values = pd.to_numeric(right, errors="coerce")
             finite = values.map(lambda value: pd.notna(value) and math.isfinite(float(value)))
             errors += int((~finite).sum())
+            if column in {"open_documents", "age_months", "payment_terms_months"}:
+                errors += int(left[finite].astype(float).ne(values[finite].astype(float)).sum())
+            elif "fx_to_eur" in column:
+                errors += sum(not math.isclose(float(a), float(b), rel_tol=1e-12, abs_tol=1e-12)
+                              for a, b in zip(left[finite], values[finite]))
             gap = (left[finite].astype(float) - values[finite].astype(float)).abs().max()
             if pd.notna(gap):
                 max_gap = max(max_gap, float(gap))

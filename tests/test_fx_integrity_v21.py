@@ -58,6 +58,19 @@ def test_summary_exposure_and_counts_reconcile_to_snapshots(column):
     assert not validate(parts)["passed"]
 
 
+def test_fractional_document_count_cannot_use_financial_tolerance():
+    parts = fixture()
+    parts[-1]["open_documents"] = parts[-1].open_documents.astype(float)
+    parts[-1].loc[0, "open_documents"] += 0.001
+    assert not validate(parts)["passed"]
+
+
+def test_source_fx_rate_cannot_use_financial_tolerance():
+    parts = fixture()
+    parts[4].loc[0, "issue_functional_fx_to_eur"] += 0.001
+    assert not validate(parts)["passed"]
+
+
 @pytest.mark.parametrize("mutation", ["missing", "extra", "duplicate", "nan", "scope"])
 def test_summary_coverage_and_finite_values(mutation):
     parts = list(fixture())
