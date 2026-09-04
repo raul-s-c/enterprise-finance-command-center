@@ -85,14 +85,14 @@ function reportLegacyPages(view){
   return pages;
 }
 function reportPages(){
-  const pages=reportLegacyPages(state.view),s=reportCurrent();
-  if(state.view==='executive')pages.unshift({title:'Overview',html:reportExecutive(),custom:true});
+  let pages=reportLegacyPages(state.view),s=reportCurrent();
+  if(state.view==='executive')return ManagementBook.executivePages(data,state,reportExecutive());
   if(state.view==='pnl')pages.unshift(
     {title:'Performance',html:`<article class="financial-report"><h2 class="report-message">Understand the path from revenue to EBIT</h2>${RC.matrix(s.current,s.prior)}</article>`,custom:true},
     {title:'P&L bridge',html:`<article class="financial-report"><h2 class="report-message">Revenue to EBIT · EUR million</h2>${RC.waterfall(s.current,window.innerWidth<700)}</article>`,custom:true}
   );
   pages.push(...ContributionExplorer.pages(state.view));
-  return pages;
+  return ManagementBook.compose(pages);
 }
 function reportReadRoute(){
   const params=new URLSearchParams(location.hash.slice(1));
@@ -184,12 +184,17 @@ function render(restoring=false){
   document.getElementById('viewSubtitle').textContent=`${data.meta.end_month} close · ${state.view==='executive'||state.view==='pnl'?'EUR million · AC / PY':'Source units shown in each report'}`;
   document.querySelectorAll('#nav [data-view]').forEach(b=>{b.classList.toggle('active',b.dataset.view===state.view);b.setAttribute('aria-current',b.dataset.view===state.view?'page':'false');});
   document.getElementById('reportModule').value=state.view;
-  const start=Math.max(0,Math.min(reportState.page-1,pages.length-4));
-  document.getElementById('reportTabs').innerHTML=pages.slice(start,start+4).map((p,i)=>`<button data-page="${start+i}" aria-current="${start+i===reportState.page?'page':'false'}">${RM.escape(p.title)}</button>`).join('');
+  const chapterLabels=pages.length<=4?pages.map(p=>p.title):['Overview','Performance','Detail','Context'];
+  const chapterIndexes=pages.length<=4?pages.map((_,i)=>i):chapterLabels.map((_,i)=>Math.round(i*(pages.length-1)/3));
+  document.getElementById('reportTabs').innerHTML=chapterLabels.map((title,i)=>`<button data-page="${chapterIndexes[i]}" aria-current="${i===chapterIndexes.findLastIndex(index=>index<=reportState.page)?'page':'false'}">${RM.escape(title)}</button>`).join('');
   document.getElementById('reportPageSelect').innerHTML=pages.map((p,i)=>`<option value="${i}" ${i===reportState.page?'selected':''}>${i+1}. ${RM.escape(p.title)}</option>`).join('');
   reportFilterControls(pages[reportState.page],resolved);
   document.getElementById('content').innerHTML=pages[reportState.page].html;
   ContributionExplorer.mount(data);
+  reportStoryBoards();
+  document.querySelectorAll('[data-story-view]').forEach(button=>button.onclick=()=>{state.view=button.dataset.storyView;reportState.page=0;render();});
+  document.querySelectorAll('[data-story-division]').forEach(button=>button.onclick=()=>{state.division=button.dataset.storyDivision;state.view='pnl';reportState.page=0;render();});
+  document.querySelectorAll('[data-action-id]').forEach(button=>button.onclick=()=>{const action=(data.management_actions||[]).find(a=>a.action_id===button.dataset.actionId);if(action)reportDialog(action.trigger_metric,`<dl class="row-detail">${Object.entries(action).map(([key,value])=>`<div><dt>${RM.escape(key.replaceAll('_',' '))}</dt><dd>${RM.escape(value)}</dd></div>`).join('')}</dl>`);});
   document.getElementById('reportStatus').textContent=`${data.meta.end_month} · ${data.validation?.passed?'Controls passed':'CONTROLS FAILED'}`;
   document.getElementById('reportStatus').className=data.validation?.passed?'control-pass':'control-fail';
   document.getElementById('reportPageNumber').textContent=`${reportState.page+1} / ${pages.length}`;
@@ -217,6 +222,16 @@ function render(restoring=false){
   }
   // Measurements force layout here, so every render returns with usable pagers and sorting.
   reportEnhancePage();
+}
+function reportStoryBoards(){
+  if(window.innerWidth>900)return;
+  for(const board of document.querySelectorAll('.story-board')){
+    const regions=[...board.querySelectorAll(':scope > .story-composite')];if(regions.length<2)continue;
+    const controls=document.createElement('nav');controls.className='story-panel-switch';controls.setAttribute('aria-label','Dashboard regions');
+    controls.innerHTML=regions.map((region,index)=>`<button aria-pressed="${index===0}">${index+1}. ${RM.escape(region.dataset.sourceSection||`Region ${index+1}`)}</button>`).join('');
+    board.before(controls);regions.forEach((region,index)=>region.hidden=index!==0);
+    [...controls.children].forEach((button,index)=>button.onclick=()=>{regions.forEach((region,i)=>region.hidden=i!==index);[...controls.children].forEach((item,i)=>item.setAttribute('aria-pressed',i===index));regions[index].querySelector('button,select,input,[tabindex]')?.focus({preventScroll:true});reportEnhancePage();});
+  }
 }
 function reportKpiHelp(){
   for(const card of document.querySelectorAll('#content .kpi,#content .report-kpi')){

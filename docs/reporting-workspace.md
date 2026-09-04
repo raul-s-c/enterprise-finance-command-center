@@ -46,6 +46,10 @@ The custom visuals are **IBCS-inspired**, not certified IBCS software or officia
 
 White report canvas; pale-gray navigation and context strip; Segoe UI with tabular figures; charcoal actuals, gray comparatives, blue navigation, green/red variance; thin rules and square-edged controls. The Executive report combines a message, a flat KPI band, monthly comparison/variance charts and a clickable division matrix. The P&L provides a comparable statement matrix and bridge. The existing report catalog uses the same typographic and pagination system.
 
+The application is organized as a four-chapter management book rather than an index of isolated tables. Executive provides **Overview**, **Drivers**, **Outlook** and **Actions** screens: each combines the decision message, KPIs, trend, attribution, management response and company timeline needed to understand the close. The remaining modules pair related source sections into multi-visual screens while the Subpage selector retains every original section and its traceability. On narrow screens an explicit region switch replaces the two-column composition, so neither panel becomes an undiscoverable hidden continuation.
+
+The dark navigation rail is a persistent map of the complete report. Chapter tabs always fit the available width; reports with more than four composed screens expose four stable landmarks plus the complete named Subpage selector. No financial observations are duplicated or invented by this composition layer. Gross-margin variance is labelled in percentage points, while value measures retain percentage change versus prior year.
+
 Concept-to-implementation adaptations are deliberate: illustrative concept numbers are replaced with real published figures; all existing source panel names are retained instead of the concept's abbreviated tabs; a full subpage selector provides access to the much larger existing catalog; mobile uses a module selector and dedicated detail pages. No mockup image is shipped as UI.
 
 ## Verification
