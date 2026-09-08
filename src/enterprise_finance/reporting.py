@@ -82,7 +82,9 @@ def profitability(operations: pd.DataFrame, end_month: str) -> tuple[pd.DataFram
     end = pd.Period(end_month, freq="M")
     scope = operations[(operations.month >= str(end - 11)) & (operations.month <= end_month)].copy()
     product = scope.groupby(["division", "product"], as_index=False).agg(
-        revenue=("revenue", "sum"), marginal_contribution=("marginal_contribution", "sum"), gross_profit=("gross_profit", "sum"),
+        revenue=("revenue", "sum"), variable_production_cost=("variable_production_cost", "sum"),
+        variable_selling_cost=("variable_selling_cost", "sum"), fixed_production_cost=("fixed_production_cost", "sum"),
+        marginal_contribution=("marginal_contribution", "sum"), gross_profit=("gross_profit", "sum"),
         opex=("opex", "sum"), quantity=("quantity", "sum"),
     )
     product["mc_pct"] = product.marginal_contribution / product.revenue.replace(0, np.nan)
@@ -95,6 +97,51 @@ def profitability(operations: pd.DataFrame, end_month: str) -> tuple[pd.DataFram
     customer["gross_margin_pct"] = customer.gross_profit / customer.revenue.replace(0, np.nan)
     customer["operating_contribution"] = customer.gross_profit - customer.opex
     return product.fillna(0.0), customer.fillna(0.0)
+
+
+def entity_product_profitability(operations: pd.DataFrame, end_month: str) -> pd.DataFrame:
+    """Build a trailing-12-month operating bridge at entity x product grain.
+
+    Depreciation, interest, tax and consolidation entries remain unallocated,
+    so this dataset stops at operating contribution rather than product EBIT.
+    """
+    end = pd.Period(end_month, freq="M")
+    scope = operations[(operations.month >= str(end - 11)) & (operations.month <= end_month)].copy()
+    product = scope.groupby(["entity", "division", "product"], as_index=False).agg(
+        revenue=("revenue", "sum"),
+        variable_production_cost=("variable_production_cost", "sum"),
+        variable_selling_cost=("variable_selling_cost", "sum"),
+        fixed_production_cost=("fixed_production_cost", "sum"),
+        marginal_contribution=("marginal_contribution", "sum"),
+        gross_profit=("gross_profit", "sum"),
+        opex=("opex", "sum"),
+        quantity=("quantity", "sum"),
+    )
+    product["mc_pct"] = product.marginal_contribution / product.revenue.replace(0, np.nan)
+    product["gross_margin_pct"] = product.gross_profit / product.revenue.replace(0, np.nan)
+    product["operating_contribution"] = product.gross_profit - product.opex
+    return product.fillna(0.0)
+
+
+def validate_entity_product_profitability(product: pd.DataFrame, entity_product: pd.DataFrame) -> dict:
+    additive = [
+        "revenue", "variable_production_cost", "variable_selling_cost", "fixed_production_cost",
+        "marginal_contribution", "gross_profit", "opex", "operating_contribution",
+    ]
+    entity_rollup = entity_product.groupby(["division", "product"], as_index=False)[additive].sum()
+    product_rollup = product[["division", "product", *additive]]
+    lineage = product_rollup.merge(
+        entity_rollup, on=["division", "product"], how="outer", suffixes=("_product", "_entity")
+    ).fillna(0.0)
+    max_gap = max(
+        (lineage[f"{key}_product"] - lineage[f"{key}_entity"]).abs().max() for key in additive
+    ) if not lineage.empty else 0.0
+    duplicates = int(entity_product.duplicated(["entity", "division", "product"]).sum())
+    return {
+        "entity_product_profitability_max_gap": round(float(max_gap), 2),
+        "entity_product_profitability_duplicate_rows": duplicates,
+        "passed": bool(max_gap <= 0.02 and duplicates == 0),
+    }
 
 
 def price_volume_mix(operations: pd.DataFrame, end_month: str) -> pd.DataFrame:

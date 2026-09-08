@@ -33,3 +33,11 @@ test('partial WC coverage and unavailable product/entity attribution are explici
   assert.ok(!C.definitions.products.dimensions.includes('entity'));
   assert.match(C.definitions.products.period,/Trailing 12/);
 });
+test('enhanced product lineage activates only when entity-product records are published',()=>{
+  const enhanced={entity_product_profitability:[{entity:'US01',division:'Hardware',product_family:'Devices',product_subfamily:'Edge',product_type:'Terminal',quality_tier:'Premium',product:'HW-1',revenue:100,variable_production_cost:45,variable_selling_cost:5,fixed_production_cost:10,marginal_contribution:50,gross_profit:40,opex:8,operating_contribution:32}]};
+  assert.equal(C.source(enhanced,'products'),'entity_product_profitability');
+  assert.deepEqual(C.dimensions(enhanced,'products'),['entity','division','product_family','product_subfamily','product_type','quality_tier','product']);
+  assert.ok(C.metrics(enhanced,'products').includes('variable_production_cost'));
+  assert.equal(C.records(enhanced,'products','2026-08').length,1);
+  assert.equal(C.source(data,'products'),'product_profitability');
+});

@@ -9,6 +9,7 @@ import pandas as pd
 from .engine import load_config
 from .engine_v19 import _dump_json
 from .engine_v20 import build as build_v20
+from .reporting import validate_entity_product_profitability
 from .transaction_fx import build_intercompany_contracts, validate_transaction_fx
 
 VERSION = "0.21.0"
@@ -25,6 +26,11 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
         read("transaction_fx_documents"), read("transaction_fx_snapshots"), read("transaction_fx_summary"),
         macro, end_month=end_month, journal=journal, config=config, contracts=contracts,
     )
+    lineage_checks = validate_entity_product_profitability(
+        read("product_profitability"), read("entity_product_profitability")
+    )
+    checks.update({key: value for key, value in lineage_checks.items() if key != "passed"})
+    checks["passed"] = bool(checks["passed"] and lineage_checks["passed"])
     if not checks["passed"]:
         raise RuntimeError(f"Transaction FX source integrity failed: {checks}")
     contracts.to_csv("data/processed/intercompany_fx_contracts.csv", index=False)
@@ -39,5 +45,6 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
         elif name.endswith("manifest.json"):
             payload["version"] = VERSION
             payload["intercompany_fx_contract_rows"] = len(contracts)
+            payload["entity_product_profitability_rows"] = len(read("entity_product_profitability"))
         _dump_json(payload, name, allow_nan=False, indent=None if name.endswith("dashboard.json") else 2)
     return result

@@ -20,7 +20,7 @@ from .operating_schedules import (
     spare_parts_schedule,
     validate_operating_schedules,
 )
-from .reporting import consolidation_bridge, group_balance_sheet, management_commentary, management_pnl, price_volume_mix, profitability, validate_all, working_capital
+from .reporting import consolidation_bridge, entity_product_profitability, group_balance_sheet, management_commentary, management_pnl, price_volume_mix, profitability, validate_all, validate_entity_product_profitability, working_capital
 from .working_capital_detail import (
     ar_aging_summary,
     build_ar_aging,
@@ -158,7 +158,7 @@ def _group_events_summary(events: pd.DataFrame) -> pd.DataFrame:
     return out.fillna(0.0)
 
 
-def _dashboard_payload(*, end_month: str, management: pd.DataFrame, group_bs: pd.DataFrame, cf: pd.DataFrame, wc: pd.DataFrame, ar_aging: pd.DataFrame, inventory_aging: pd.DataFrame, software_detail: pd.DataFrame, software_summary: pd.DataFrame, events_schedule: pd.DataFrame, factory_economics: pd.DataFrame, hardware_mix: pd.DataFrame, spare_parts_economics: pd.DataFrame, latest_fc: pd.DataFrame, product_profit: pd.DataFrame, customer_profit: pd.DataFrame, products: pd.DataFrame, pvm: pd.DataFrame, intercompany: pd.DataFrame, factory: pd.DataFrame, capex: pd.DataFrame, portfolio_events: pd.DataFrame, forecast_acc: pd.DataFrame, commentary: list[dict], checks: dict, sources: dict) -> dict:
+def _dashboard_payload(*, end_month: str, management: pd.DataFrame, group_bs: pd.DataFrame, cf: pd.DataFrame, wc: pd.DataFrame, ar_aging: pd.DataFrame, inventory_aging: pd.DataFrame, software_detail: pd.DataFrame, software_summary: pd.DataFrame, events_schedule: pd.DataFrame, factory_economics: pd.DataFrame, hardware_mix: pd.DataFrame, spare_parts_economics: pd.DataFrame, latest_fc: pd.DataFrame, product_profit: pd.DataFrame, entity_product_profit: pd.DataFrame, customer_profit: pd.DataFrame, products: pd.DataFrame, pvm: pd.DataFrame, intercompany: pd.DataFrame, factory: pd.DataFrame, capex: pd.DataFrame, portfolio_events: pd.DataFrame, forecast_acc: pd.DataFrame, commentary: list[dict], checks: dict, sources: dict) -> dict:
     monthly = management.groupby("month", as_index=False).agg(
         revenue=("revenue", "sum"), marginal_contribution=("marginal_contribution", "sum"), gross_profit=("gross_profit", "sum"),
         opex=("opex", "sum"), depreciation=("depreciation", "sum"), ebit=("ebit", "sum"), net_income=("net_income", "sum"),
@@ -219,6 +219,7 @@ def _dashboard_payload(*, end_month: str, management: pd.DataFrame, group_bs: pd
         "forecast_detail": _records(latest_fc),
         "forecast_accuracy": _records(acc_summary),
         "product_profitability": _records(product_profit.sort_values("operating_contribution")),
+        "entity_product_profitability": _records(entity_product_profit.sort_values("operating_contribution")),
         "product_family_profitability": _records(family_profit.sort_values(["division", "revenue"], ascending=[True, False])),
         "quality_tier_profitability": _records(quality_profit.sort_values(["division", "quality_tier"])),
         "product_catalog": _records(catalog_summary),
@@ -259,8 +260,10 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     spare_parts_economics = spare_parts_schedule(simulation.operations, inventory_aging)
 
     product_profit, customer_profit = profitability(simulation.operations, end_month)
+    entity_product_profit = entity_product_profitability(simulation.operations, end_month)
     hierarchy_cols = ["product", "name", "product_family", "product_subfamily", "product_type", "quality_tier", "quality_score", "generation", "strategic_role"]
     product_profit = product_profit.merge(simulation.products[hierarchy_cols], on="product", how="left")
+    entity_product_profit = entity_product_profit.merge(simulation.products[hierarchy_cols], on="product", how="left")
     customer_profit = customer_profit.merge(simulation.customers[["customer", "customer_name"]].drop_duplicates("customer"), on="customer", how="left")
     pvm = price_volume_mix(simulation.operations, end_month)
     bridge = consolidation_bridge(legal, management)
@@ -282,9 +285,12 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     checks["catalog_product_count"] = int(len(simulation.products))
     checks["catalog_family_count"] = int(simulation.products[["division", "product_family"]].drop_duplicates().shape[0])
     checks["sold_product_count"] = int(simulation.operations["product"].nunique())
+    lineage_checks = validate_entity_product_profitability(product_profit, entity_product_profit)
+    checks.update({key: value for key, value in lineage_checks.items() if key != "passed"})
     checks["passed"] = bool(
         checks["passed"] and schedule_checks["passed"] and operating_checks["passed"]
         and lookahead_errors == 0 and checks["catalog_product_count"] >= 200 and checks["sold_product_count"] >= 150
+        and lineage_checks["passed"]
     )
     if not checks["passed"]:
         raise RuntimeError(f"Financial controls failed: {checks}")
@@ -327,6 +333,7 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     _write_csv(accounting.factory, out / "factory.csv")
     _write_csv(accounting.capex, out / "capex.csv")
     _write_csv(product_profit, out / "product_profitability.csv")
+    _write_csv(entity_product_profit, out / "entity_product_profitability.csv")
     _write_csv(customer_profit, out / "customer_profitability.csv")
     _write_csv(pvm, out / "price_volume_mix.csv")
     _write_csv(bridge, out / "consolidation_bridge.csv")
@@ -345,7 +352,7 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
         ar_aging=ar_aging, inventory_aging=inventory_aging,
         software_detail=software_detail, software_summary=software_summary, events_schedule=events_schedule,
         factory_economics=factory_economics, hardware_mix=hardware_mix, spare_parts_economics=spare_parts_economics,
-        latest_fc=latest_fc, product_profit=product_profit, customer_profit=customer_profit, products=simulation.products, pvm=pvm,
+        latest_fc=latest_fc, product_profit=product_profit, entity_product_profit=entity_product_profit, customer_profit=customer_profit, products=simulation.products, pvm=pvm,
         intercompany=accounting.intercompany, factory=accounting.factory, capex=accounting.capex,
         portfolio_events=simulation.portfolio_events, forecast_acc=accuracy, commentary=commentary, checks=checks, sources=sources,
     )
@@ -367,6 +374,7 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
         "forecast_months": forecast_months,
         "catalog_products": len(simulation.products),
         "sold_products": int(simulation.operations["product"].nunique()),
+        "entity_product_profitability_rows": len(entity_product_profit),
         "product_families": int(simulation.products[["division", "product_family"]].drop_duplicates().shape[0]),
         "operational_rows": len(simulation.operations),
         "journal_rows": len(accounting.journal),
