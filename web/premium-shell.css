@@ -26,6 +26,7 @@
 .report-mode.contribution-active .report-subnav,.report-mode.contribution-active .report-context{display:none}
 .report-mode.contribution-active .content{padding-top:10px}
 .report-mode.contribution-active .cx-workspace{flex:none;height:clamp(460px,calc(100dvh - 420px),600px)}
+.report-mode.close-journey-active .topbar,.report-mode.close-journey-active .report-subnav,.report-mode.close-journey-active .report-context,.report-mode.close-journey-active .report-footer{display:none}.report-mode.close-journey-active .content{padding:10px 20px;overflow:hidden}
 @media(max-width:1180px){.report-mode .app-shell{padding:0;grid-template-columns:190px minmax(0,1fr)}.report-mode .sidebar,.report-mode .main-shell{border-radius:0}.global-search{width:310px}.user-name{display:none}}
 @media(max-width:900px),(max-height:650px){.report-mode .app-shell{padding:0;grid-template-columns:1fr}.global-bar{height:40px;padding:0 12px}.global-search{width:min(440px,55vw)}.global-utilities{gap:8px}.user-avatar,.user-name,.utility-button span{display:none}}
 @media(max-width:600px){.global-search{width:48vw}.global-utilities>strong{display:none}.global-bar{gap:8px}.report-mode .topbar{padding:9px 12px}.report-mode .content{padding:8px 12px}}

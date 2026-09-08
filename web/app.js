@@ -3,6 +3,7 @@ const pct=v=>Number.isFinite(v)?`${(v*100).toFixed(1)}%`:'-';
 const num=(v,d=1)=>Number.isFinite(v)?Number(v).toLocaleString('en-US',{maximumFractionDigits:d}):'-';
 const safe=v=>v===null||v===undefined?'':String(v);
 const views=[
+['close-journey','Close Journey','A guided, evidence-linked tour from business activity to management action.'],
 ['executive','Executive','Group performance, cash conversion and forward outlook.'],
 ['pnl','P&L','Management P&L across entity and division.'],
 ['margin','Margin Engine','Marginal contribution, gross profit and price-volume-mix.'],

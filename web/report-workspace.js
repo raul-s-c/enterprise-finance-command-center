@@ -4,7 +4,7 @@ const RM=FinanceReport,RC=ReportCharts;
 // Existing report modules share this renderer: no negative bars drawn above zero.
 bars=function(rows,key,labelKey='month'){return RC.series(rows||[],key,labelKey,data?.meta?.end_month||'',window.innerWidth<700?Math.max(300,window.innerWidth-28):900);};
 const reportGroups=[
-  ['Overview',['executive','performance-review','action-execution']],
+  ['Overview',['close-journey','executive','performance-review','action-execution']],
   ['Financials',['pnl','margin','working-capital','cash-flow','treasury','balance-sheet']],
   ['Planning',['forecast','macro-sensitivities']],
   ['Operations',['business-drivers','profitability','intercompany','operations-capex','fx']],
@@ -13,6 +13,7 @@ const reportGroups=[
 const reportIcon=(name='next')=>`<svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5">${name==='prev'?'<path d="m12 4-6 6 6 6"/>':name==='next'?'<path d="m8 4 6 6-6 6"/>':name==='chart'?'<path d="M3 3v14h14M5 12l4-5 4 3 4-6"/>':'<circle cx="10" cy="10" r="7"/><path d="M8 7c0-3 6-2 4 1l-2 2v2M10 14v1"/>'}</svg>`;
 function reportNavIcon(id){
   const paths={
+    'close-journey':'M3 5h4v4h6V5h4M7 9v6h6V9M3 15h4m6 0h4',
     executive:'M3 3v14h14M5 12l4-5 4 3 4-6',
     'performance-review':'M5 3h10v14H5zM7 7h6M7 10h6M7 13h4',
     'action-execution':'m3 5 2 2 3-4M10 5h7m-14 8 2 2 3-4m2 2h7',
@@ -86,6 +87,7 @@ function reportLegacyPages(view){
 }
 function reportPages(){
   let pages=reportLegacyPages(state.view),s=reportCurrent();
+  if(state.view==='close-journey')return globalThis.CloseJourney.pages(data);
   if(state.view==='executive')return ManagementBook.executivePages(data,state,reportExecutive());
   if(state.view==='pnl')pages.unshift(
     {title:'Performance',html:`<article class="financial-report"><h2 class="report-message">Understand the path from revenue to EBIT</h2>${RC.matrix(s.current,s.prior)}</article>`,custom:true},
@@ -181,6 +183,7 @@ function render(restoring=false){
   }
   reportState.pages=pages;
   document.body.classList.toggle('contribution-active',Boolean(currentPage.contribution));
+  document.body.classList.toggle('close-journey-active',state.view==='close-journey');
   document.getElementById('viewTitle').textContent=config[1];
   document.getElementById('viewSubtitle').textContent=`${data.meta.end_month} close · ${state.view==='executive'||state.view==='pnl'?'EUR million · AC / PY':'Source units shown in each report'}`;
   document.querySelectorAll('#nav [data-view]').forEach(b=>{b.classList.toggle('active',b.dataset.view===state.view);b.setAttribute('aria-current',b.dataset.view===state.view?'page':'false');});
@@ -191,6 +194,7 @@ function render(restoring=false){
   document.getElementById('reportPageSelect').innerHTML=pages.map((p,i)=>`<option value="${i}" ${i===reportState.page?'selected':''}>${i+1}. ${RM.escape(p.title)}</option>`).join('');
   reportFilterControls(pages[reportState.page],resolved);
   document.getElementById('content').innerHTML=pages[reportState.page].html;
+  globalThis.CloseJourney?.mount(data);
   ContributionExplorer.mount(data);
   reportStoryBoards();
   document.querySelectorAll('[data-story-view]').forEach(button=>button.onclick=()=>{state.view=button.dataset.storyView;reportState.page=0;render();});
