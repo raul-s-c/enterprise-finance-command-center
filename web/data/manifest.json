@@ -4,6 +4,7 @@
   "forecast_months": 18,
   "catalog_products": 236,
   "sold_products": 231,
+  "entity_product_profitability_rows": 568,
   "product_families": 19,
   "operational_rows": 58764,
   "journal_rows": 593165,
@@ -176,7 +177,9 @@
     "transaction_fx_contract_integrity_errors": 0,
     "transaction_fx_contract_source_max_gap": 0.0,
     "transaction_fx_document_source_errors": 0,
-    "transaction_fx_document_source_max_gap": 0.0
+    "transaction_fx_document_source_max_gap": 0.0,
+    "entity_product_profitability_max_gap": 0.0,
+    "entity_product_profitability_duplicate_rows": 0
   },
   "version": "0.21.0",
   "latest_factory_absorption_variance": 614045.8,

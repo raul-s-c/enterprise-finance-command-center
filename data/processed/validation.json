@@ -153,5 +153,7 @@
   "transaction_fx_contract_integrity_errors": 0,
   "transaction_fx_contract_source_max_gap": 0.0,
   "transaction_fx_document_source_errors": 0,
-  "transaction_fx_document_source_max_gap": 0.0
+  "transaction_fx_document_source_max_gap": 0.0,
+  "entity_product_profitability_max_gap": 0.0,
+  "entity_product_profitability_duplicate_rows": 0
 }
