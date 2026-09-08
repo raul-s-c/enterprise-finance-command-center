@@ -143,5 +143,11 @@ def test_full_pipeline(tmp_path, monkeypatch):
     dashboard = json.loads((tmp_path / "web" / "data" / "dashboard.json").read_text(encoding="utf-8"))
     assert dashboard["entity_product_profitability"]
     assert dashboard["validation"]["entity_product_profitability_max_gap"] == 0.0
+    for csv_name, source_name in [
+        ("ar_aging.csv", "ar_customer_aging"),
+        ("inventory_aging.csv", "inventory_sku_aging"),
+    ]:
+        schedule = pd.read_csv(tmp_path / "data" / "processed" / csv_name)
+        assert len(dashboard[source_name]) == int(schedule.month.eq("2026-07").sum())
     products = pd.read_csv(tmp_path / "data" / "processed" / "products.csv")
     assert len(products) >= 200

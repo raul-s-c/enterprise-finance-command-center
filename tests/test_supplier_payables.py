@@ -99,6 +99,7 @@ def test_v08_full_close_outputs_supplier_schedules(tmp_path, monkeypatch):
     dashboard = json.loads((tmp_path / "web" / "data" / "dashboard.json").read_text(encoding="utf-8"))
     manifest = json.loads((tmp_path / "web" / "data" / "manifest.json").read_text(encoding="utf-8"))
     assert dashboard["meta"]["version"] == "0.8.0"
+    assert len(dashboard["ap_supplier_aging"]) == int(ap.month.eq("2026-08").sum())
     assert manifest["version"] == "0.8.0"
     assert manifest["supplier_count"] == len(suppliers)
     assert "latest_supplier_top5_concentration" in manifest

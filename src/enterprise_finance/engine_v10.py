@@ -260,10 +260,10 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     )
     ar_summary = ar_aging_summary(ar_aging)
     inv_summary = inventory_aging_summary(inventory_aging)
-    latest_ar = ar_aging[ar_aging.month.eq(end_month)].sort_values(["overdue_ar", "total_ar"], ascending=False).head(60) if not ar_aging.empty else pd.DataFrame()
-    latest_ecl = credit_loss[credit_loss.month.eq(end_month)].sort_values("credit_loss_allowance", ascending=False).head(60) if not credit_loss.empty else pd.DataFrame()
-    latest_inv = inventory_provision[inventory_provision.month.eq(end_month)].sort_values("inventory_provision", ascending=False).head(80) if not inventory_provision.empty else pd.DataFrame()
-    latest_ap = ap_aging[ap_aging.month.eq(end_month)].sort_values(["overdue_ap", "total_ap"], ascending=False).head(80) if not ap_aging.empty else pd.DataFrame()
+    latest_ar = ar_aging[ar_aging.month.eq(end_month)].sort_values(["overdue_ar", "total_ar"], ascending=False) if not ar_aging.empty else pd.DataFrame()
+    latest_ecl = credit_loss[credit_loss.month.eq(end_month)].sort_values("credit_loss_allowance", ascending=False) if not credit_loss.empty else pd.DataFrame()
+    latest_inv = inventory_provision[inventory_provision.month.eq(end_month)].sort_values("inventory_provision", ascending=False) if not inventory_provision.empty else pd.DataFrame()
+    latest_ap = ap_aging[ap_aging.month.eq(end_month)].sort_values(["overdue_ap", "total_ap"], ascending=False) if not ap_aging.empty else pd.DataFrame()
     inv_family = _inventory_family_summary(inventory_aging, end_month)
     perf_scope = performance[performance.budget_year.eq(current_year)] if not performance.empty else performance
 

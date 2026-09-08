@@ -158,6 +158,7 @@ The current system includes:
 - Events bookings / backlog / book-to-bill
 - Spare Parts installed-base economics
 - entity-to-product, family, quality-tier and customer profitability
+- complete closing external AR/AP and legal SKU inventory contribution schedules
 - price / volume / mix analysis
 - deterministic product lifecycle decisions
 - frozen Annual Budget
