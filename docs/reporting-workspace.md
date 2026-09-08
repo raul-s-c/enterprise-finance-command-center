@@ -2,6 +2,10 @@
 
 The dashboard is a code-native HTML/CSS/SVG reporting application over the existing version 0.21.0 finance dataset. No financial engine, balances, tolerances or generated outputs are changed by this redesign. It does not require Power BI hosting or a paid visualization dependency.
 
+## Guided close journey
+
+`Close Journey` is the teaching layer of the application. It presents the full finance operating model as eight connected stages: drivers, transactions, double-entry ledger, legal close, consolidation and FX, financial statements, forecast and review, and actions and benefits. Selecting a stage explains what happens, names its inputs and outputs, shows three published release controls, and links directly to three existing reports that prove the result. The competency map makes the contribution of Accounting, Controlling, Treasury, Consolidation, FP&A and Governance explicit, so a visitor can understand both the process and the ownership model without prior knowledge of the project.
+
 ## Navigation and context
 
 - Seventeen report modules are grouped into Overview, Financials, Planning, Operations and Data.
@@ -56,7 +60,7 @@ The dark navigation rail is a persistent map of the complete report. Chapter tab
 
 Concept-to-implementation adaptations are deliberate: illustrative concept numbers are replaced with real published figures; all existing source panel names are retained instead of the concept's abbreviated tabs; a full subpage selector provides access to the much larger existing catalog; mobile uses a module selector and dedicated detail pages. No mockup image is shipped as UI.
 
-The implementation references used to review hierarchy and density are stored in `docs/design/enterprise-control-tower.png` and `docs/design/contribution-analysis.png`. They are design evidence only; the application itself remains code-native HTML, CSS and SVG.
+The implementation references used to review hierarchy and density are stored in `docs/design/enterprise-control-tower.png`, `docs/design/contribution-analysis.png`, `docs/design/premium-finance-experience.png`, and `docs/design/close-journey.png`. The references establish the light enterprise shell, global utility bar, compact finance controls, formula tiles, contribution ranking, flow view, inspector, underlying-record grid, and guided close narrative. They are design evidence only; the application itself remains code-native HTML, CSS and SVG.
 
 ## Verification
 

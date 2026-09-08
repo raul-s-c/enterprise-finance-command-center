@@ -15,7 +15,8 @@ test('CAPEX separates cash spending from noncash asset transfers',()=>{
 test('every dimension and measure reconciles to its own source, without changing data',()=>{
   const before=JSON.stringify(data);
   for(const [key,def]of Object.entries(C.definitions)){
-    const months=[...new Set(data[def.source].map(r=>r.month||data.meta.end_month))];
+    const sourceRows=key==='nwc'?C.records(data,key,data.meta.end_month):data[def.source];
+    const months=[...new Set(sourceRows.map(r=>r.month||data.meta.end_month))];
     for(const month of months)for(const event of key==='capex'?['SPEND','GO_LIVE']:['SPEND']){
       const rows=C.records(data,key,month,event);
       for(const metric of def.metrics)for(const dimension of def.dimensions){
@@ -27,6 +28,14 @@ test('every dimension and measure reconciles to its own source, without changing
     }
   }
   assert.equal(JSON.stringify(data),before);
+});
+test('combined working-capital contribution reconciles legal subledgers and consolidation reserve',()=>{
+  const month=data.meta.end_month,rows=C.records(data,'nwc',month),published=data.working_capital.find(row=>row.month===month);
+  const result=C.aggregate(rows,'net_working_capital','component');
+  assert.ok(Math.abs(result.total-published.provision_adjusted_net_working_capital)<0.1);
+  const reserve=rows.find(row=>row.contributor==='Intercompany inventory profit reserve');
+  assert.ok(reserve);assert.ok(reserve.net_working_capital<0);assert.equal(reserve.entity,'CONSOLIDATION');
+  assert.equal(JSON.stringify(data),JSON.stringify(require('../web/data/dashboard.json')));
 });
 test('legacy coverage and unavailable product/entity attribution are explicit',()=>{
   for(const key of ['ar','inventory'])assert.match(C.definitions[key].note,/watchlist only/);
