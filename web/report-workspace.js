@@ -180,6 +180,7 @@ function render(restoring=false){
     reportState.page=Math.max(0,pages.findIndex(page=>page.title===currentPage.title));
   }
   reportState.pages=pages;
+  document.body.classList.toggle('contribution-active',Boolean(currentPage.contribution));
   document.getElementById('viewTitle').textContent=config[1];
   document.getElementById('viewSubtitle').textContent=`${data.meta.end_month} close · ${state.view==='executive'||state.view==='pnl'?'EUR million · AC / PY':'Source units shown in each report'}`;
   document.querySelectorAll('#nav [data-view]').forEach(b=>{b.classList.toggle('active',b.dataset.view===state.view);b.setAttribute('aria-current',b.dataset.view===state.view?'page':'false');});

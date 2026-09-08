@@ -56,7 +56,7 @@ The dark navigation rail is a persistent map of the complete report. Chapter tab
 
 Concept-to-implementation adaptations are deliberate: illustrative concept numbers are replaced with real published figures; all existing source panel names are retained instead of the concept's abbreviated tabs; a full subpage selector provides access to the much larger existing catalog; mobile uses a module selector and dedicated detail pages. No mockup image is shipped as UI.
 
-The implementation references used to review hierarchy and density are stored in `docs/design/enterprise-control-tower.png` and `docs/design/contribution-analysis.png`. They are design evidence only; the application itself remains code-native HTML, CSS and SVG.
+The implementation references used to review hierarchy and density are stored in `docs/design/enterprise-control-tower.png`, `docs/design/contribution-analysis.png`, and `docs/design/premium-finance-experience.png`. The latest reference establishes the light enterprise shell, global utility bar, compact finance controls, formula tiles, contribution ranking, flow view, inspector, and underlying-record grid. They are design evidence only; the application itself remains code-native HTML, CSS and SVG.
 
 ## Verification
 
