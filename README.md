@@ -157,7 +157,7 @@ The current system includes:
 - Software ARR / MRR / churn / NRR
 - Events bookings / backlog / book-to-bill
 - Spare Parts installed-base economics
-- product, family, quality-tier and customer profitability
+- entity-to-product, family, quality-tier and customer profitability
 - price / volume / mix analysis
 - deterministic product lifecycle decisions
 - frozen Annual Budget
@@ -479,6 +479,7 @@ data/processed/software_subscription_summary.csv
 data/processed/events_backlog.csv
 data/processed/hardware_factory_economics.csv
 data/processed/spare_parts_economics.csv
+data/processed/entity_product_profitability.csv
 data/processed/annual_budget.csv
 data/processed/budget_performance.csv
 data/processed/fy_plan_bridge.csv
