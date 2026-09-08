@@ -10,9 +10,9 @@ Bars use a signed zero baseline and neutral actual-value notation. Amounts are E
 | --- | --- | --- |
 | P&L | management_detail | Monthly entity/division management allocations; not product legal postings |
 | Products | entity_product_profitability | Trailing 12 months, entity/division/family/subfamily/type/quality tier/product |
-| Receivables | ar_customer_aging | Closing customer watchlist, not complete group gross AR |
-| Inventory | inventory_sku_aging | Closing analytical SKU watchlist, before provisions/consolidation |
-| Payables | ap_supplier_aging | Closing supplier watchlist; spend is trailing 12 months |
+| Receivables | credit_loss_detail | Complete closing external-customer schedule, gross/ECL/net |
+| Inventory | inventory_provision_detail | Complete closing legal SKU schedule, gross/provision/net |
+| Payables | ap_supplier_aging | Complete closing external-supplier schedule; spend is trailing 12 months |
 | CAPEX | capex | Event month/entity/division/project; SPEND and GO_LIVE strictly separated |
 | Cash | cash_flow_detail | Monthly legal-entity cash flows; internal transfers are not external revenue |
 
@@ -20,11 +20,11 @@ CAPEX SPEND corresponds to a debit to 1510_CIP and credit to 1000_CASH. GO_LIVE 
 
 Product lineage exposes revenue, variable production cost, variable selling cost, fixed production cost, marginal contribution, gross profit, OPEX and operating contribution through the complete entity-to-SKU hierarchy. Its entity rows reconcile to the existing group product view. Depreciation, interest, tax and consolidation remain explicitly outside product attribution, so operating contribution is not presented as product EBIT.
 
-These pages reconcile to their own selected published records. They do not claim that a watchlist reconciles to the whole consolidated balance sheet, or that management product economics equal group EBIT. The WC schedules cannot be added together to derive a group NWC from these partial extracts.
+The AR and AP schedules reconcile to their respective external legal-ledger control accounts. The inventory schedule reconciles gross legal inventory and its obsolescence provision; the unrealized intercompany markup reserve remains a separate consolidation adjustment and is not allocated to products. Intercompany receivables and payables are also separate, so these three schedules must not be added together and presented as consolidated group NWC. Product operating contribution is not group EBIT.
 
 ## Remaining lineage work
 
-Complete end-to-end attribution still requires publishing full reconciled AR, AP and inventory schedules, provisions and consolidation adjustments, plus transaction identifiers connecting source postings, counterparties and CAPEX projects. The entity/product operating cross-tab is now published and reconciled without allocating financial or consolidation lines. No accounting output is changed.
+Complete end-to-end attribution still requires document identifiers connecting customer invoices and collections, supplier accruals and payments, inventory movements, provisions, consolidation adjustments and CAPEX projects to their source journal postings. The complete closing WC schedules and entity/product operating cross-tab are published without allocating financial or consolidation lines. No accounting output is changed.
 
 ## Verification
 

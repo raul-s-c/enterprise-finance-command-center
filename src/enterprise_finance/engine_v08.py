@@ -62,7 +62,7 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     with open("web/data/dashboard.json", "r", encoding="utf-8") as handle:
         dashboard = json.load(handle)
     latest_ap = ap_aging[ap_aging.month.eq(end_month)].copy()
-    latest_ap = latest_ap.sort_values(["overdue_ap", "total_ap"], ascending=False).head(80) if not latest_ap.empty else latest_ap
+    latest_ap = latest_ap.sort_values(["overdue_ap", "total_ap"], ascending=False) if not latest_ap.empty else latest_ap
     dashboard["meta"]["version"] = VERSION
     dashboard["ap_aging_summary"] = base_engine._records(ap_summary)
     dashboard["ap_supplier_aging"] = base_engine._records(latest_ap)
