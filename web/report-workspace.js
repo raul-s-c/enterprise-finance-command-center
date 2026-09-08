@@ -193,6 +193,7 @@ function render(restoring=false){
   ContributionExplorer.mount(data);
   reportStoryBoards();
   document.querySelectorAll('[data-story-view]').forEach(button=>button.onclick=()=>{state.view=button.dataset.storyView;reportState.page=0;render();});
+  ManagementBook.mount();
   document.querySelectorAll('[data-story-division]').forEach(button=>button.onclick=()=>{state.division=button.dataset.storyDivision;state.view='pnl';reportState.page=0;render();});
   document.querySelectorAll('[data-action-id]').forEach(button=>button.onclick=()=>{const action=(data.management_actions||[]).find(a=>a.action_id===button.dataset.actionId);if(action)reportDialog(action.trigger_metric,`<dl class="row-detail">${Object.entries(action).map(([key,value])=>`<div><dt>${RM.escape(key.replaceAll('_',' '))}</dt><dd>${RM.escape(value)}</dd></div>`).join('')}</dl>`);});
   document.getElementById('reportStatus').textContent=`${data.meta.end_month} · ${data.validation?.passed?'Controls passed':'CONTROLS FAILED'}`;

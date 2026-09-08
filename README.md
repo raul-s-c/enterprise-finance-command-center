@@ -346,7 +346,7 @@ See:
 
 ## CFO application
 
-The interactive reporting workspace uses fixed-height screens and named subpages, searchable/paginated tables, persistent URL filters, and custom IBCS-inspired comparison and variance visuals. Executive supports month detail and division filtering; P&L includes a prior-year matrix and a source-reconciled bridge. See `docs/reporting-workspace.md`. These are custom web visuals, not licensed or certified Zebra BI components.
+The interactive reporting workspace uses fixed-height screens and named subpages, searchable/paginated tables, persistent URL filters, and custom IBCS-inspired comparison and variance visuals. Executive is a one-screen control tower with selectable KPI evidence, AC/PY history, EBIT attribution, a cash-flow driver tree, management priorities and a 36-month company story. Dedicated contribution workspaces connect reconciled totals to entity, division, customer, supplier, product and project evidence without inventing allocations. See `docs/reporting-workspace.md` and `docs/contribution-explorer.md`. These are custom web visuals, not licensed or certified Zebra BI components.
 
 The GitHub Pages application contains:
 

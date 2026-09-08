@@ -52,5 +52,5 @@ test('enhanced product lineage activates only when entity-product records are pu
   assert.deepEqual(C.dimensions(enhanced,'products'),['entity','division','product_family','product_subfamily','product_type','quality_tier','product']);
   assert.ok(C.metrics(enhanced,'products').includes('variable_production_cost'));
   assert.equal(C.records(enhanced,'products','2026-08').length,1);
-  assert.equal(C.source(data,'products'),'product_profitability');
+  assert.equal(C.source({product_profitability:data.product_profitability},'products'),'product_profitability');
 });
