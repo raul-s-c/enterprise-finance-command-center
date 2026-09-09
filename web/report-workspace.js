@@ -89,7 +89,9 @@ function reportPages(){
   let pages=reportLegacyPages(state.view),s=reportCurrent();
   if(state.view==='close-journey')return globalThis.CloseJourney.pages(data);
   if(state.view==='executive')return ManagementBook.executivePages(data,state,reportExecutive());
-  if(state.view==='pnl')pages.unshift(
+  const statementPages=globalThis.StatementWorkspace?.pages(state.view,data,state)||[];
+  if(statementPages.length)pages=statementPages.concat(pages);
+  if(state.view==='pnl')pages.splice(statementPages.length,0,
     {title:'Performance',html:`<article class="financial-report"><h2 class="report-message">Understand the path from revenue to EBIT</h2>${RC.matrix(s.current,s.prior)}</article>`,custom:true},
     {title:'P&L bridge',html:`<article class="financial-report"><h2 class="report-message">Revenue to EBIT · EUR million</h2>${RC.waterfall(s.current,window.innerWidth<700)}</article>`,custom:true}
   );
@@ -195,6 +197,7 @@ function render(restoring=false){
   reportFilterControls(pages[reportState.page],resolved);
   document.getElementById('content').innerHTML=pages[reportState.page].html;
   globalThis.CloseJourney?.mount(data);
+  globalThis.StatementWorkspace?.mount();
   ContributionExplorer.mount(data);
   reportStoryBoards();
   document.querySelectorAll('[data-story-view]').forEach(button=>button.onclick=()=>{state.view=button.dataset.storyView;reportState.page=0;render();});
