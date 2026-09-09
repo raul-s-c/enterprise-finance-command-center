@@ -30,3 +30,4 @@
 @media(max-width:1180px){.report-mode .app-shell{padding:0;grid-template-columns:190px minmax(0,1fr)}.report-mode .sidebar,.report-mode .main-shell{border-radius:0}.global-search{width:310px}.user-name{display:none}}
 @media(max-width:900px),(max-height:650px){.report-mode .app-shell{padding:0;grid-template-columns:1fr}.global-bar{height:40px;padding:0 12px}.global-search{width:min(440px,55vw)}.global-utilities{gap:8px}.user-avatar,.user-name,.utility-button span{display:none}}
 @media(max-width:600px){.global-search{width:48vw}.global-utilities>strong{display:none}.global-bar{gap:8px}.report-mode .topbar{padding:9px 12px}.report-mode .content{padding:8px 12px}}
+@media(max-width:600px){.global-utilities{gap:5px}.global-control{font-size:0;gap:0}.global-control i{margin:0}.report-mode .global-search input{font-size:10px}.report-mode .utility-button{padding-inline:3px}}

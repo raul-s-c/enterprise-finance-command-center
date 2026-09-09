@@ -69,7 +69,7 @@
     const result=[];
     for(let i=0;i<pages.length;){
       const page=pages[i];
-      if(page?.contribution){result.push(page);i+=1;continue;}
+      if(page?.contribution||page?.fullScreen){result.push(page);i+=1;continue;}
       const next=pages[i+1];
       const pair=next&&!next.contribution?[page,next]:[page];
       const sameScope=pair.length===1||pair.every(p=>(p.policy?.key||'group')===(pair[0].policy?.key||'group'));
