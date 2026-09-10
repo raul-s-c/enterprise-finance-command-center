@@ -6,9 +6,9 @@ global.ReportContext=require('../web/report-context.js');
 require('../web/statement-workspace.js');
 const data=require('../web/data/dashboard.json');
 
-test('core financial statements open with a premium one-screen cockpit',()=>{
+test('core finance modules open with a premium one-screen cockpit',()=>{
   const state={entity:'all',division:'all'};
-  for(const view of ['pnl','cash-flow','balance-sheet']){
+  for(const view of ['pnl','cash-flow','balance-sheet','forecast','treasury','profitability','operations-capex']){
     const pages=global.StatementWorkspace.pages(view,data,state);
     assert.equal(pages.length,1,view);
     assert.equal(pages[0].custom,true,view);
@@ -18,6 +18,24 @@ test('core financial statements open with a premium one-screen cockpit',()=>{
     assert.equal((pages[0].html.match(/class="sw-kpi"/g)||[]).length,5,view);
     assert.doesNotMatch(pages[0].html,/undefined|NaN/,view);
   }
+});
+
+test('operating cockpits expose linked calculations without inventing missing allocations',()=>{
+  const state={entity:'all',division:'all'};
+  const forecast=global.StatementWorkspace.pages('forecast',data,state)[0].html;
+  const treasury=global.StatementWorkspace.pages('treasury',data,state)[0].html;
+  const profitability=global.StatementWorkspace.pages('profitability',data,state)[0].html;
+  const operations=global.StatementWorkspace.pages('operations-capex',data,state)[0].html;
+  assert.match(forecast,/One forecast · three linked statements/);
+  assert.match(forecast,/Balance check/);
+  assert.match(treasury,/Cash − minimum operating cash \+ undrawn RCF/);
+  assert.match(treasury,/Post-pooling position/);
+  assert.match(profitability,/Revenue − variable production cost − variable selling cost/);
+  assert.match(profitability,/entity_product_profitability \+ customer_profitability/);
+  assert.match(operations,/GO_LIVE is excluded/);
+  assert.match(operations,/PPE at go-live/);
+  assert.match(operations,/vs 2026-07/);
+  assert.doesNotMatch(operations,/— vs 2026-07/);
 });
 
 test('statement cockpits preserve reconciliation language and evidence routes',()=>{
