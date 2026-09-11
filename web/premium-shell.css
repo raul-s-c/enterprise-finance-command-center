@@ -6,7 +6,7 @@
 .report-mode .brand-mark{border:0;padding:0;width:35px;height:auto;font-size:27px;font-weight:750;letter-spacing:-.06em;color:var(--premium-blue)}
 .report-mode .brand-name{font-size:16px;font-weight:700;color:var(--premium-navy)}.report-mode .brand-sub{display:none}
 .report-mode .nav{gap:0;padding-top:8px;overflow:auto}.report-mode .nav-group{border:0;padding:0}.report-mode .nav-group-title{display:none}
-.report-mode .nav button{position:relative;min-height:34px;padding:7px 10px;border-radius:3px;color:#40516b;font-size:12px;font-weight:450;gap:10px}
+.report-mode .nav button{position:relative;min-height:44px;padding:9px 10px;border-radius:3px;color:#40516b;font-size:12px;font-weight:500;gap:10px}
 .report-mode .nav button:hover{background:#f3f7fc;color:var(--premium-blue)}
 .report-mode .nav button.active{background:#eaf3ff;color:#075bd6;font-weight:650}
 .report-mode .nav button.active:before{content:"";position:absolute;left:-10px;top:0;bottom:0;width:4px;background:var(--premium-blue)}

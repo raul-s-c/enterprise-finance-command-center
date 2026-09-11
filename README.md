@@ -346,24 +346,16 @@ See:
 
 ## CFO application
 
-The interactive reporting workspace uses a light enterprise application shell, fixed-height screens and named subpages, searchable/paginated tables, persistent URL filters, and custom IBCS-inspired comparison and variance visuals. Close Journey teaches the complete chain from public drivers and business activity through journal creation, legal close, consolidation, statements, forecast, performance review and accountable action; every stage exposes its inputs, outputs, release controls and direct links to published evidence. Executive is a one-screen control tower with selectable KPI evidence, AC/PY history, EBIT attribution, a cash-flow driver tree, management priorities and a 36-month company story. P&L, Cash Flow, Balance Sheet, Plan & Forecast, Macro & Sensitivities, Treasury, Business Drivers, Profitability, Intercompany, Operations & CAPEX, and FX & Translation now open with premium one-screen cockpits that combine selectable KPIs, history or outlook, bridges or equations, signed contribution, drill-through and calculation/source/control evidence while retaining every original detail page. Macro shocks remain standalone and non-additive; business drivers connect demand and delivery evidence to the statements; intercompany cost-plus transfers remain visible through elimination and inventory-profit reserve; transaction FX P&L remains separate from CTA/OCI. Dedicated contribution workspaces connect reconciled totals to entity, division, customer, supplier, product and project evidence without inventing allocations. The combined NWC analysis adds a prior-year bridge, source-tied formula, dependent entity/division filters, signed ranking, value-flow view, inspector, and underlying records on one screen. See `docs/reporting-workspace.md` and `docs/contribution-explorer.md`. These are custom web visuals, not licensed or certified Zebra BI components.
+The interactive reporting workspace uses a light enterprise application shell, fixed-height desktop screens and named subpages, searchable/paginated tables, persistent URL filters, and custom IBCS-inspired comparison and variance visuals. Six primary decision areas replace the former eighteen-item navigation rail; contextual report tabs expose all eighteen views without turning the sidebar into an index. Close Journey teaches the complete chain from public drivers and business activity through journal creation, legal close, consolidation, statements, forecast, performance review and accountable action; every stage exposes its inputs, outputs, release controls and direct links to published evidence. Executive is a one-screen control tower with selectable KPI evidence, AC/PY history, EBIT attribution, a cash-flow driver tree, management priorities and a 36-month company story. P&L, Cash Flow, Balance Sheet, Plan & Forecast, Macro & Sensitivities, Treasury, Business Drivers, Profitability, Intercompany, Operations & CAPEX, and FX & Translation open with premium one-screen cockpits that combine selectable KPIs, history or outlook, bridges or equations, signed contribution, drill-through and calculation/source/control evidence while retaining every original detail page. Macro shocks remain standalone and non-additive; business drivers connect demand and delivery evidence to the statements; intercompany cost-plus transfers remain visible through elimination and inventory-profit reserve; transaction FX P&L remains separate from CTA/OCI. Dedicated contribution workspaces connect reconciled totals to entity, division, customer, supplier, product and project evidence without inventing allocations. The combined NWC analysis adds a prior-year bridge, source-tied formula, dependent entity/division filters, signed ranking, value-flow view, inspector, and underlying records on one screen. See `docs/reporting-workspace.md` and `docs/contribution-explorer.md`. These are custom web visuals, not licensed or certified Zebra BI components.
 
-The GitHub Pages application contains:
+The GitHub Pages application contains six decision areas and eighteen contextual reports:
 
-- Executive
-- Business Drivers
-- P&L
-- Margin Engine
-- Working Capital
-- Cash Flow
-- Treasury
-- Balance Sheet
-- Plan & Forecast
-- Profitability
-- Intercompany
-- Operations & CAPEX
-- FX & Translation
-- Data Journey
+- **Executive:** Executive
+- **Performance:** P&L, Margin Engine and Profitability
+- **Cash & Balance:** Working Capital, Cash Flow, Treasury and Balance Sheet
+- **Plan & Outlook:** Plan & Forecast and Macro & Sensitivities
+- **Operations:** Business Drivers, Intercompany, Operations & CAPEX and FX & Translation
+- **Close & Controls:** Close Journey, Performance Review, Action Execution and Data Journey
 
 The P&L, Balance Sheet and Cash Flow pages combine actual reporting with the Base forward statement. Plan & Forecast compares Base, Upside and Downside three-statement consequences; Treasury connects liquidity and covenant headroom; Profitability traces published product and customer economics; Operations & CAPEX separates cash investment from non-cash asset commissioning.
 
