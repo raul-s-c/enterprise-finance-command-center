@@ -8,12 +8,12 @@ The dashboard is a code-native HTML/CSS/SVG reporting application over the exist
 
 ## Navigation and context
 
-- Seventeen report modules are grouped into Overview, Financials, Planning, Operations and Data.
+- Six primary decision areas group all eighteen report views: Executive; Performance; Cash & Balance; Plan & Outlook; Operations; and Close & Controls. The active area's reports appear as contextual tabs beside the title, so the main rail remains stable and immediately understandable.
 - Each existing indicator group, report panel and explanatory note is available as a named subpage. The Subpage selector lists the complete catalog; Previous/Next traverses it without vertical page scrolling.
 - Tables use row search, row pagination and column pagination with the first identifier column retained. Selecting a row opens its complete field detail, including truncated cell text.
 - Entity, division, report, subpage and Executive metric are encoded in the URL. Reload and browser Back/Forward preserve that context.
 - Consolidated measures are explicitly separate from selected operating scope. Existing source/subtitle scope rules remain in force; this UI does not invent division-level cash allocations.
-- On narrow screens the module selector replaces the navigation rail. The Executive preview uses six months instead of twelve; the historical subpage retains the underlying history. Group KPIs and division detail remain accessible in their own subpages.
+- On narrow screens paired Area and Report selectors replace the navigation rail, the KPI band becomes horizontally scrollable and the evidence inspector opens only on request. The complete twelve-month Executive comparison remains visible; group KPIs and division detail remain accessible in their own subpages.
 
 ## Contextual interaction
 
@@ -60,9 +60,9 @@ Plan & Forecast links the 12-month Revenue, EBIT, Free Cash Flow and ending-cash
 
 These cockpits do not replace the original report pages: every matrix, schedule, portfolio event and context page remains available immediately after the cockpit. Filters appear only where the published data supports the requested grain. On mobile, KPI cards use a horizontal strip and analytical regions follow a deliberate chart, explanation, contribution and evidence sequence.
 
-The application is organized as a four-chapter management book rather than an index of isolated tables. Executive provides **Overview**, **Drivers**, **Outlook** and **Actions** screens: each combines the decision message, KPIs, trend, attribution, management response and company timeline needed to understand the close. The remaining modules pair related source sections into multi-visual screens while the Subpage selector retains every original section and its traceability. On narrow screens an explicit region switch replaces the two-column composition, so neither panel becomes an undiscoverable hidden continuation.
+The application is organized as a six-area management book rather than an index of isolated tables. Executive provides **Overview**, **Drivers**, **Outlook** and **Actions** screens: each combines the decision message, KPIs, trend, attribution, management response and company timeline needed to understand the close. The remaining reports pair related source sections into multi-visual screens while the Subpage selector retains every original section and its traceability. On narrow screens an explicit region switch replaces the two-column composition, so neither panel becomes an undiscoverable hidden continuation.
 
-The dark navigation rail is a persistent map of the complete report. Chapter tabs always fit the available width; reports with more than four composed screens expose four stable landmarks plus the complete named Subpage selector. No financial observations are duplicated or invented by this composition layer. Gross-margin variance is labelled in percentage points, while value measures retain percentage change versus prior year.
+The pale navigation rail is a persistent map of six decision areas. Contextual report tabs always remain within the selected area; reports with more than four composed screens expose four stable landmarks plus the complete named Subpage selector. Direct URLs to every report remain compatible. No financial observations are duplicated or invented by this composition layer. Gross-margin variance is labelled in percentage points, while value measures retain percentage change versus prior year.
 
 Concept-to-implementation adaptations are deliberate: illustrative concept numbers are replaced with real published figures; all existing source panel names are retained instead of the concept's abbreviated tabs; a full subpage selector provides access to the much larger existing catalog; mobile uses a module selector and dedicated detail pages. No mockup image is shipped as UI.
 

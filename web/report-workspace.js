@@ -3,13 +3,7 @@ const reportState={page:0,view:null,metric:'revenue',initialized:false,pages:[],
 const RM=FinanceReport,RC=ReportCharts;
 // Existing report modules share this renderer: no negative bars drawn above zero.
 bars=function(rows,key,labelKey='month'){return RC.series(rows||[],key,labelKey,data?.meta?.end_month||'',window.innerWidth<700?Math.max(300,window.innerWidth-28):900);};
-const reportGroups=[
-  ['Overview',['close-journey','executive','performance-review','action-execution']],
-  ['Financials',['pnl','margin','working-capital','cash-flow','treasury','balance-sheet']],
-  ['Planning',['forecast','macro-sensitivities']],
-  ['Operations',['business-drivers','profitability','intercompany','operations-capex','fx']],
-  ['Data',['data-journey']]
-];
+const RN=ReportNavigation;
 const reportIcon=(name='next')=>`<svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5">${name==='prev'?'<path d="m12 4-6 6 6 6"/>':name==='next'?'<path d="m8 4 6 6-6 6"/>':name==='chart'?'<path d="M3 3v14h14M5 12l4-5 4 3 4-6"/>':'<circle cx="10" cy="10" r="7"/><path d="M8 7c0-3 6-2 4 1l-2 2v2M10 14v1"/>'}</svg>`;
 function reportNavIcon(id){
   const paths={
@@ -137,17 +131,21 @@ function reportFilterControls(page,resolved){
 }
 function setupNav(){
   document.body.classList.add('report-mode');
-  document.getElementById('nav').innerHTML=reportGroups.map(([group,ids])=>`<div class="nav-group"><div class="nav-group-title">${group}</div>${ids.map(id=>{const v=views.find(x=>x[0]===id);return v?`<button data-view="${id}">${reportNavIcon(id)}<span>${v[1]}</span></button>`:'';}).join('')}</div>`).join('');
-  document.getElementById('nav').addEventListener('click',event=>{const button=event.target.closest('[data-view]');if(button){state.view=button.dataset.view;render();}});
+  document.getElementById('nav').innerHTML=RN.areas.map(area=>`<button data-area="${area.id}" title="${RM.escape(area.description)}">${reportNavIcon(area.landing)}<span>${RM.escape(area.label)}</span></button>`).join('');
+  document.getElementById('nav').addEventListener('click',event=>{const button=event.target.closest('[data-area]');if(button){const area=RN.areas.find(item=>item.id===button.dataset.area);state.view=area.landing;reportState.page=0;render();}});
   document.querySelector('.filters').insertAdjacentHTML('beforeend','<button id="reportReset" title="Reset entity and division filters">Reset</button><button id="reportHelp">Help</button>');
-  document.querySelector('.topbar').insertAdjacentHTML('beforebegin',`<label class="mobile-module">Report<select id="reportModule">${views.map(v=>`<option value="${v[0]}">${v[1]}</option>`).join('')}</select></label>`);
+  document.querySelector('.topbar>div:first-child').insertAdjacentHTML('afterbegin','<span id="reportAreaLabel" class="report-area-label"></span>');
+  document.querySelector('.topbar>div:first-child').insertAdjacentHTML('beforeend','<nav id="reportModules" class="report-modules" aria-label="Reports in current area"></nav>');
+  document.querySelector('.topbar').insertAdjacentHTML('beforebegin',`<div class="mobile-module"><label>Area<select id="reportArea">${RN.areas.map(area=>`<option value="${area.id}">${RM.escape(area.label)}</option>`).join('')}</select></label><label>Report<select id="reportModule"></select></label></div>`);
   document.querySelector('.topbar').insertAdjacentHTML('afterend','<div class="report-subnav"><nav id="reportTabs" aria-label="Report subpages"></nav><label class="report-page-select">Subpage<select id="reportPageSelect"></select></label></div><div id="reportContext" class="report-context"></div>');
   document.querySelector('.main-shell').insertAdjacentHTML('beforeend',`<footer class="report-footer"><span id="reportStatus"></span><span class="synthetic-note">Synthetic enterprise · source-tied reporting</span><div class="report-page-controls"><button id="reportPrevious" aria-label="Previous subpage">${reportIcon('prev')}<span>Previous</span></button><span id="reportPageNumber" aria-live="polite"></span><button id="reportNext" aria-label="Next subpage"><span>Next</span>${reportIcon()}</button></div></footer>`);
   document.body.insertAdjacentHTML('beforeend','<dialog id="reportDialog" aria-labelledby="reportDialogTitle"><div class="dialog-heading"><h2 id="reportDialogTitle"></h2><button id="reportDialogClose">Close</button></div><div id="reportDialogBody"></div></dialog>');
   document.getElementById('reportDialogClose').onclick=()=>document.getElementById('reportDialog').close();
-  document.getElementById('reportHelp').onclick=()=>reportDialog('How to read this report',`<div class="help-pages"><p><strong>Navigate.</strong> Choose a module on the left and a subpage above. Previous / Next visits every report block; the Subpage selector lists them all.</p><p><strong>Filter.</strong> Entity and division control supported operating detail. Group cash, working capital and other consolidated measures stay at group scope. Read each panel subtitle; no artificial allocation is made.</p><p><strong>Compare.</strong> AC is solid charcoal, PY gray. Green means favorable variance, red unfavorable. Negative amounts are not automatically unfavorable. Costs use lower-is-favorable logic. Missing comparisons show —, not zero.</p><p><strong>Explore.</strong> Select a month for values, click a division to filter, switch Revenue / EBIT, or open the P&L bridge. Tables have search, row pages and column pages; selecting a row opens its full detail.</p><p><strong>Trust.</strong> Data is from the synthetic company’s published close. FX remeasurement is analytical, not bank-matched. IBCS-inspired notation and custom visuals; not official or certified Zebra BI components.</p></div>`);
+  document.getElementById('reportHelp').onclick=()=>reportDialog('How to read this report',`<div class="help-pages"><p><strong>Navigate.</strong> Start with one of six decision areas on the left, then choose a related report under the page title. Previous / Next visits every report block; the Subpage selector lists them all.</p><p><strong>Filter.</strong> Entity and division control supported operating detail. Group cash, working capital and other consolidated measures stay at group scope. Read each panel subtitle; no artificial allocation is made.</p><p><strong>Compare.</strong> AC is solid charcoal, PY gray. Green means favorable variance, red unfavorable. Negative amounts are not automatically unfavorable. Costs use lower-is-favorable logic. Missing comparisons show —, not zero.</p><p><strong>Explore.</strong> Select a month for values, click a division to filter, switch Revenue / EBIT, or open the P&L bridge. Tables have search, row pages and column pages; selecting a row opens its full detail.</p><p><strong>Trust.</strong> Data is from the synthetic company’s published close. FX remeasurement is analytical, not bank-matched. IBCS-inspired notation and custom visuals; not official or certified Zebra BI components.</p></div>`);
   document.getElementById('reportReset').onclick=()=>{state.entity=state.division='all';document.getElementById('entityFilter').value='all';document.getElementById('divisionFilter').value='all';render();};
+  document.getElementById('reportArea').onchange=event=>{const area=RN.areas.find(item=>item.id===event.target.value);state.view=area.landing;reportState.page=0;render();};
   document.getElementById('reportModule').onchange=event=>{state.view=event.target.value;render();};
+  document.getElementById('reportModules').onclick=event=>{const button=event.target.closest('[data-view]');if(button){state.view=button.dataset.view;reportState.page=0;render();}};
   document.getElementById('reportTabs').onclick=event=>{const button=event.target.closest('[data-page]');if(button)reportNavigate(Number(button.dataset.page));};
   document.getElementById('reportPageSelect').onchange=event=>reportNavigate(Number(event.target.value));
   document.getElementById('reportPrevious').onclick=()=>reportNavigate(reportState.page-1);
@@ -188,7 +186,12 @@ function render(restoring=false){
   document.body.classList.toggle('close-journey-active',state.view==='close-journey');
   document.getElementById('viewTitle').textContent=config[1];
   document.getElementById('viewSubtitle').textContent=`${data.meta.end_month} close · ${state.view==='executive'||state.view==='pnl'?'EUR million · AC / PY':'Source units shown in each report'}`;
-  document.querySelectorAll('#nav [data-view]').forEach(b=>{b.classList.toggle('active',b.dataset.view===state.view);b.setAttribute('aria-current',b.dataset.view===state.view?'page':'false');});
+  const activeArea=RN.areaFor(state.view),activeModules=RN.modules(activeArea,views);
+  document.getElementById('reportAreaLabel').textContent=activeArea.label;
+  document.querySelectorAll('#nav [data-area]').forEach(b=>{b.classList.toggle('active',b.dataset.area===activeArea.id);b.setAttribute('aria-current',b.dataset.area===activeArea.id?'page':'false');});
+  document.getElementById('reportModules').innerHTML=activeModules.map(module=>`<button data-view="${module[0]}" aria-current="${module[0]===state.view?'page':'false'}">${RM.escape(module[1])}</button>`).join('');
+  document.getElementById('reportArea').value=activeArea.id;
+  document.getElementById('reportModule').innerHTML=activeModules.map(module=>`<option value="${module[0]}">${RM.escape(module[1])}</option>`).join('');
   document.getElementById('reportModule').value=state.view;
   const chapterLabels=pages.length<=4?pages.map(p=>p.title):['Overview','Performance','Detail','Context'];
   const chapterIndexes=pages.length<=4?pages.map((_,i)=>i):chapterLabels.map((_,i)=>Math.round(i*(pages.length-1)/3));
