@@ -19,6 +19,12 @@ test('compact trend charts retain every observation in a keyboard-focusable scro
   assert.equal((html.match(/data-month=/g)||[]).length,12);
   assert.match(html,/--chart-width:760px/);
   assert.doesNotMatch(C.trend(rows,'Revenue',760,300),/report-chart-scroll/);
+  const bridge=narrow.ReportCharts.waterfall(row('2026-08',100),true);
+  assert.match(bridge,/--chart-width:900px/);
+  assert.match(bridge,/data-chart-anchor="start"/);
+  const series=narrow.ReportCharts.series(rows,'actual','month','2026-12',320);
+  assert.match(series,/--chart-width:660px/);
+  assert.match(series,/data-chart-anchor="end"/);
 });
 
 test('presentation aggregation sums duplicate source lines, scopes and leaves inputs untouched',()=>{

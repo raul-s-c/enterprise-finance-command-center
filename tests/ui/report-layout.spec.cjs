@@ -55,6 +55,11 @@ test('statement analysis survives live resize without an overlapping inspector',
       });
       expect(bounds.top).toBe(true);expect(bounds.bottom).toBe(true);
     }
+    const valueSizes=await page.locator('.sw-secondary svg text:not(.axis-text)').evaluateAll(labels=>labels.map(label=>{
+      const matrix=label.getScreenCTM();
+      return parseFloat(getComputedStyle(label).fontSize)*Math.hypot(matrix.a,matrix.b);
+    }));
+    expect(Math.min(...valueSizes),`Unreadable chart values at ${width}x${height}`).toBeGreaterThanOrEqual(10);
     const screenshot=testInfo.outputPath(`margin-${width}x${height}.png`);
     await page.screenshot({path:screenshot});
     await testInfo.attach(`margin-${width}x${height}`,{path:screenshot,contentType:'image/png'});

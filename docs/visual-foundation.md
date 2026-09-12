@@ -7,7 +7,7 @@
 - At widths up to 1500 CSS pixels, statement and contribution workspaces provide explicit analysis-focus controls. The selected focus survives resize and filter rerenders.
 - A statement KPI opens calculation and source evidence in the existing accessible modal on compact screens. It does not place a permanent inspector over the charts.
 - Compact mobile screens retain every KPI in a horizontal band and allow natural report scrolling. Desktop overflow is contained within the report, not hidden by a fixed-height panel.
-- Mobile trend charts preserve every observation on a readable horizontal canvas, initially positioned at the latest months. The focusable region supports keyboard scrolling; it is not a reduced-data thumbnail.
+- Mobile charts preserve every observation on a readable horizontal canvas. Time series initially show the latest months; waterfalls start at the opening step. The focusable region supports keyboard scrolling; it is not a reduced-data thumbnail.
 - Definitions accompany evidence in a disclosure rather than a sparse standalone page.
 - Gross-to-net carrying values show signed deductions and published closing balances. Review coverage uses actual observation counts, never synthetic display metrics.
 
@@ -44,4 +44,5 @@ This change does not certify universal pixel-perfect fidelity or exhaustive enti
 - Exercised Margin at 1784×991, 1366×768, 1280×720 and 1024×768, plus a 390×844 mobile viewport. Verified that the selected bridge survives a live resize from 1280 to 1024 pixels.
 - Verified the compact KPI evidence modal, its close control, and the source calculation content.
 - The frontend suite contains 48 passing tests, including preservation of all twelve observations in a compact trend chart.
+- The resize regression also checks the effective on-screen size of waterfall values (SVG font size multiplied by its rendered transform), with a 10 CSS-pixel floor. This catches charts that fit geometrically but shrink their figures into unreadable thumbnails.
 - These checks are not an exhaustive cross-product of every viewport, filter and record selection. Some technical appendix pages deliberately remain text or tables.

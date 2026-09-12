@@ -2,7 +2,7 @@
 (function(root){
   let selectedPanel='cx-ranking';
   function positionCharts(){
-    document.querySelectorAll('.report-chart-scroll').forEach(chart=>{chart.scrollLeft=chart.scrollWidth;});
+    document.querySelectorAll('.report-chart-scroll').forEach(chart=>{chart.scrollLeft=chart.dataset.chartAnchor==='end'?chart.scrollWidth:0;});
   }
   function mount(){
     positionCharts();

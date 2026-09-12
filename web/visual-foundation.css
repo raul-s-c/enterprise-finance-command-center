@@ -41,11 +41,14 @@
   .report-mode.contribution-active .cx-workspace>.analysis-selected{min-height:300px}
 }
 .report-mode{font-variant-numeric:tabular-nums}
-.report-mode .report-svg text{font-size:18px}
-.report-mode .report-svg .axis-text{font-size:16px}
-.report-chart-scroll{overflow-x:auto;overflow-y:hidden;min-width:0;flex:1;scrollbar-gutter:stable;padding-top:8px}
-.report-mode .report-chart-scroll>.report-svg{width:var(--chart-width)!important;min-width:var(--chart-width);height:300px!important;max-height:none;display:block}
+.report-mode .report-svg text{font-size:24px}
+.report-mode .report-svg .axis-text{font-size:20px}
+.report-chart-scroll{overflow-x:auto;overflow-y:hidden;min-width:0;min-height:var(--chart-height,300px);flex:none;scrollbar-gutter:stable;padding-top:8px}
+.report-mode .report-chart-scroll>.report-svg{width:var(--chart-width)!important;min-width:var(--chart-width);height:var(--chart-height,300px)!important;max-height:none;display:block}
 .chart-scroll-hint{font-size:12px;color:#5f6f86;padding-top:6px}
+.chart-variance-caption{font-size:12px;color:#5f6f86;line-height:1.4;flex:none;padding-top:4px}
+.report-mode .horizontal-bridge text{font-size:14px}
+.report-mode .horizontal-bridge .axis-text{font-size:12px}
 .report-mode .app-shell{padding:8px;grid-template-columns:190px minmax(0,1fr)}
 .report-mode .brand{padding-inline:4px;gap:6px}
 .report-mode .brand-mark{width:28px;font-size:24px}
@@ -73,10 +76,10 @@
 .report-mode .sw-panel-head h3,.report-mode .sw-inspector h3{font-size:15px;line-height:1.3}
 .report-mode .sw-panel-head small,.report-mode .sw-panel-head button,.report-mode .sw-inspector header span{font-size:12px;line-height:1.4}
 .report-mode .sw-primary .report-svg,.report-mode .sw-secondary .bridge-svg{width:100%;height:auto;min-height:185px;flex:1;max-height:360px}
-.report-mode .statement-workspace .report-svg text{font-size:18px;fill:#27364a}
+.report-mode .statement-workspace .report-svg text{font-size:24px;fill:#27364a}
 .report-mode .statement-workspace .report-svg .favorable{fill:#067647}
 .report-mode .statement-workspace .report-svg .unfavorable{fill:#b42318}
-.report-mode .statement-workspace .report-svg .axis-text{font-size:16px}
+.report-mode .statement-workspace .report-svg .axis-text{font-size:20px}
 .report-mode .sw-head button:first-child span{color:#fff}
 .report-mode .sw-inspector{position:static;inset:auto;width:auto;grid-column:3;grid-row:1/3;box-shadow:none;z-index:auto}
 .report-mode .sw-inspector>div{height:auto;min-height:0}
