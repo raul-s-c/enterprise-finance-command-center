@@ -28,7 +28,7 @@
   function preparedRows(data,key){return key==='nwc'?nwcRows(data):(data[source(data,key)]||[]);}
   function source(data,key){const def=definitions[key];if(key==='nwc')return def.source;return def.enhancedSource&&(data[def.enhancedSource]||[]).length?def.enhancedSource:def.source;}
   function dimensions(data,key){const def=definitions[key],rows=preparedRows(data,key);return (source(data,key)===def.enhancedSource?def.enhancedDimensions:def.dimensions).filter(d=>rows.some(r=>r[d]!==null&&r[d]!==undefined&&r[d]!==''));}
-  function metrics(data,key){const def=definitions[key],rows=preparedRows(data,key);return (source(data,key)===def.enhancedSource?def.enhancedMetrics:def.metrics).filter(m=>rows.some(r=>typeof r[m]==='number'&&Number.isFinite(r[m])));}
+  function metrics(data,key){const def=definitions[key],rows=preparedRows(data,key);return (key==='nwc'?['net_working_capital']:source(data,key)===def.enhancedSource?def.enhancedMetrics:def.metrics).filter(m=>rows.some(r=>typeof r[m]==='number'&&Number.isFinite(r[m])));}
   function note(data,key){const def=definitions[key];return source(data,key)===def.enhancedSource&&def.enhancedNote?def.enhancedNote:def.note;}
   function records(data,key,month,event='SPEND'){
     return preparedRows(data,key).filter(r=>(!r.month||r.month===month)&&(key!=='capex'||r.event===event));

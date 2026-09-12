@@ -9,4 +9,8 @@ test('ledger evidence discloses legal scope without inventing customer settlemen
   assert.equal(result.scope.customer,undefined);
   assert.equal(C.ledgerEvidence(data,[{entity:'CONSOLIDATION'}],'2026-08').postings.length,0);
   assert.equal(C.ledgerEvidence({},[],'2026-08').balances.length,0);
+  assert.equal(C.ledgerEvidence(data,[],'2026-08').postings.length,0);
+});
+test('the integrated NWC bridge only offers its reconciled NWC measure',()=>{
+  assert.deepEqual(C.metrics({credit_loss_detail:[{month:'2026-08',gross_ar:100,credit_loss_allowance:5,net_ar:95}]},'nwc'),['net_working_capital']);
 });
