@@ -26,6 +26,14 @@
 .report-mode.contribution-active .report-subnav,.report-mode.contribution-active .report-context{display:none}
 .report-mode.contribution-active .content{padding-top:10px}
 .report-mode.contribution-active .cx-workspace{flex:1;min-height:0;height:auto;grid-template-rows:minmax(0,1fr) 190px}
+@media(min-width:701px) and (max-height:820px){
+  .report-mode.contribution-active .cx-workspace{grid-template-rows:minmax(0,1fr) 110px}
+  .report-mode.contribution-active .cx-inspector{overflow:auto}
+  .report-mode.contribution-active .cx-flow-map button{height:42px}
+  .report-mode.contribution-active .cx-flow-map.nwc-flow button{min-height:32px;padding:3px}
+  .report-mode.contribution-active .cx-flow-map.nwc-flow .cx-flow-focus{min-height:64px}
+  .report-mode.contribution-active .cx-flow-map.nwc-flow .cx-flow-output{min-height:58px}
+}
 @media(max-width:700px){
   .report-mode.contribution-active .content{overflow:auto}
   .report-mode.contribution-active .contribution-explorer{height:auto;min-height:100%}
