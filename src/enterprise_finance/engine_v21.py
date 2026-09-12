@@ -11,6 +11,7 @@ from .engine_v19 import _dump_json
 from .engine_v20 import build as build_v20
 from .reporting import validate_entity_product_profitability
 from .transaction_fx import build_intercompany_contracts, validate_transaction_fx
+from .working_capital_lineage import build_working_capital_lineage
 
 VERSION = "0.21.0"
 
@@ -20,6 +21,11 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     def read(name):
         return pd.read_csv(f"data/processed/{name}.csv", low_memory=False)
     journal = pd.read_csv("data/runtime/journal.csv.gz", low_memory=False)
+    wc_detail, wc_history, wc_checks = build_working_capital_lineage(journal, end_month)
+    if not wc_checks["passed"]:
+        raise RuntimeError(f"Working-capital source lineage failed: {wc_checks}")
+    wc_detail.to_csv("data/processed/working_capital_postings.csv", index=False)
+    wc_history.to_csv("data/processed/working_capital_rollforward.csv", index=False)
     config, macro = load_config(config_path), read("macro")
     contracts = build_intercompany_contracts(journal, macro, config)
     checks = validate_transaction_fx(
@@ -30,6 +36,7 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
         read("product_profitability"), read("entity_product_profitability")
     )
     checks.update({key: value for key, value in lineage_checks.items() if key != "passed"})
+    checks.update({key: value for key, value in wc_checks.items() if key != "passed"})
     checks["passed"] = bool(checks["passed"] and lineage_checks["passed"])
     if not checks["passed"]:
         raise RuntimeError(f"Transaction FX source integrity failed: {checks}")
@@ -42,9 +49,13 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
         validation["passed"] = bool(prior_passed and checks["passed"])
         if name.endswith("dashboard.json"):
             payload["meta"]["version"] = VERSION
+            payload["working_capital_postings"] = wc_detail.to_dict("records")
+            payload["working_capital_rollforward"] = wc_history.to_dict("records")
         elif name.endswith("manifest.json"):
             payload["version"] = VERSION
             payload["intercompany_fx_contract_rows"] = len(contracts)
             payload["entity_product_profitability_rows"] = len(read("entity_product_profitability"))
+            payload["working_capital_posting_rows"] = len(wc_detail)
+            payload["working_capital_rollforward_rows"] = len(wc_history)
         _dump_json(payload, name, allow_nan=False, indent=None if name.endswith("dashboard.json") else 2)
     return result
