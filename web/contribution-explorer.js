@@ -40,7 +40,17 @@
     const total=[...groups.values()].reduce((a,b)=>a+b,0);
     return {total,missing,groups:[...groups].map(([name,value])=>({name,value,share:Math.abs(total)<1e-9?null:value/total})).sort((a,b)=>Math.abs(b.value)-Math.abs(a.value)||a.name.localeCompare(b.name))};
   }
-  const api={definitions,source,dimensions,metrics,note,records,aggregate};
+  function ledgerEvidence(data,selection,month){
+    const accounts={Receivables:'1100_AR',Payables:'2100_AP',Inventory:'1200_INVENTORY'};
+    const scope={};
+    for(const field of ['entity','division','component']){
+      const values=[...new Set(selection.map(row=>row[field]).filter(Boolean))];
+      if(values.length===1)scope[field]=values[0];
+    }
+    const matches=row=>row.month===month&&(!scope.entity||row.entity===scope.entity)&&(!scope.division||row.division===scope.division)&&(!scope.component||row.account===accounts[scope.component]);
+    return {scope,postings:(data.working_capital_postings||[]).filter(matches),balances:(data.working_capital_rollforward||[]).filter(matches)};
+  }
+  const api={definitions,source,dimensions,metrics,note,records,aggregate,ledgerEvidence};
   if(typeof module!=='undefined'&&module.exports){module.exports=api;return;}
   root.ContributionExplorer=api;
   const settings={};
@@ -97,6 +107,18 @@
       evidencePager.innerHTML=`<span aria-live="polite">${evidenceRows.length?s.evidencePage*6+1:0}–${Math.min((s.evidencePage+1)*6,evidenceRows.length)} of ${evidenceRows.length}</span> <button id="cx-evidence-prev" aria-label="Previous evidence page" ${s.evidencePage?'':'disabled'}>‹</button> <button id="cx-evidence-next" aria-label="Next evidence page" ${s.evidencePage+1<evidencePages?'':'disabled'}>›</button>`;
       if(evidencePanel)evidencePanel.append(evidencePager);
       else host.querySelector('#cx-search').closest('label').after(evidencePager);
+      if(['nwc','ar','ap','inventory'].includes(key)&&(data.working_capital_rollforward||[]).length){
+        const ledgerButton=document.createElement('button');ledgerButton.id='cx-ledger';ledgerButton.textContent='Trace ledger';
+        host.querySelector('.cx-commands').append(ledgerButton);
+        ledgerButton.onclick=()=>{
+          const component={ar:'Receivables',ap:'Payables',inventory:'Inventory'}[key];
+          const selection=(selectedRows.length?selectedRows:rows).map(row=>component?{...row,component}:row);
+          const evidence=ledgerEvidence(data,selection,s.month);
+          const title=Object.entries(evidence.scope).map(([field,value])=>`${label(field)}: ${value}`).join(' · ')||'All legal working-capital accounts';
+          reportDialog('Legal ledger evidence',`<p>${e(title)} · ${e(s.month)}</p><p>Gross legal balances, debit-positive. Customer, supplier and SKU selections do not imply invoice settlement or stock-lot attribution. Provisions and consolidation adjustments remain separate.</p><div class="row-detail">${evidence.balances.map(row=>`<div><dt>${e(row.entity)} / ${e(row.division)} / ${e(row.account)}</dt><dd>${e(compactMoney(row.opening_balance))} + ${e(compactMoney(row.debits))} − ${e(compactMoney(row.credits))} = ${e(compactMoney(row.closing_balance))}</dd></div>`).join('')||'<p>No legal ledger account exists for this selection (for example, consolidation adjustments).</p>'}</div><p>${evidence.postings.length} posted movements in this month. These explain movement, not the open-invoice population.</p><button id="cx-ledger-records" ${evidence.postings.length?'':'disabled'}>Inspect journal postings</button>`);
+          document.getElementById('cx-ledger-records').onclick=()=>showRecords(evidence.postings);
+        };
+      }
       document.getElementById('cx-evidence-prev').onclick=()=>{s.evidencePage--;paint();};
       document.getElementById('cx-evidence-next').onclick=()=>{s.evidencePage++;paint();};
       if(key==='nwc'){
