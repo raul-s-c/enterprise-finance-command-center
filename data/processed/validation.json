@@ -155,5 +155,6 @@
   "transaction_fx_document_source_errors": 0,
   "transaction_fx_document_source_max_gap": 0.0,
   "entity_product_profitability_max_gap": 0.0,
-  "entity_product_profitability_duplicate_rows": 0
+  "entity_product_profitability_duplicate_rows": 0,
+  "working_capital_lineage_max_gap": 7.450580596923828e-09
 }

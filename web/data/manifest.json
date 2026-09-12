@@ -179,7 +179,8 @@
     "transaction_fx_document_source_errors": 0,
     "transaction_fx_document_source_max_gap": 0.0,
     "entity_product_profitability_max_gap": 0.0,
-    "entity_product_profitability_duplicate_rows": 0
+    "entity_product_profitability_duplicate_rows": 0,
+    "working_capital_lineage_max_gap": 7.450580596923828e-09
   },
   "version": "0.21.0",
   "latest_factory_absorption_variance": 614045.8,
@@ -322,5 +323,7 @@
   "transaction_fx_net_exposure_eur": -16506247.3,
   "transaction_fx_unrealized_pnl_eur": -42044.71,
   "transaction_fx_realized_pnl_eur": 33472.36,
-  "intercompany_fx_contract_rows": 414
+  "intercompany_fx_contract_rows": 414,
+  "working_capital_posting_rows": 7451,
+  "working_capital_rollforward_rows": 1152
 }
