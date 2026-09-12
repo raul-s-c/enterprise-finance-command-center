@@ -24,7 +24,7 @@
     const secondary=`<div class="sw-panel-head"><div><h3>Revenue to EBIT bridge</h3><small>Current close · no balancing plug</small></div></div>${C().waterfall(ac,false)}`;
     const tertiary=`<div class="sw-panel-head"><div><h3>EBIT contribution by division</h3><small>Selected operating scope · click a row to filter</small></div><button data-story-view="profitability">Open profitability</button></div>${rank(ranked,'ebit','division','division')}`;
     const details=inspector('revenue','Revenue',compact(ac.revenue),variance(ac.revenue,py.revenue),'Sum of management P&L revenue','management_detail',scope,'pnl')+inspector('gross-profit','Gross profit',compact(ac.gross_profit),variance(ac.gross_profit,py.gross_profit),'Revenue − variable and fixed production cost','management_detail',scope,'margin')+inspector('gross-margin','Gross margin',`${(grossMargin*100).toFixed(1)}%`,variance(grossMargin,priorMargin),'Gross profit / revenue','management_detail',scope,'margin')+inspector('ebit','EBIT',compact(ac.ebit),variance(ac.ebit,py.ebit),'Gross profit − OPEX − depreciation','management_detail',scope,'pnl')+inspector('net-income','Net income',compact(ac.net_income),variance(ac.net_income,py.net_income),'EBIT − interest − tax','management_detail',scope,'pnl');
-    return {title:'Performance cockpit',custom:true,fullScreen:true,policy:root.ReportContext.card('Revenue'),html:shell('P&L performance cockpit',`Understand growth, margin conversion and operating result for ${data.meta.end_month}`,cards,primary,secondary,tertiary,details)};
+    return {title:'Performance cockpit',custom:true,fullScreen:true,policy:root.ReportContext.card('Revenue'),html:root.PnlVisual.render(ac,py,data.meta.end_month,scope)};
   }
   function margin(data,state){
     const rows=M().aggregate(data.management_detail,state),ac=rows.find(row=>row.month===data.meta.end_month)||{},py=rows.find(row=>row.month===M().priorMonth(data.meta.end_month))||{};
@@ -155,6 +155,44 @@
   }
   function pages(view,data,state){if(view==='pnl')return [pnl(data,state)];if(view==='cash-flow')return [cash(data)];if(view==='balance-sheet')return [balance(data)];if(view==='forecast')return [forecast(data)];if(view==='macro-sensitivities')return [macro(data,state)];if(view==='treasury')return [treasury(data)];if(view==='business-drivers')return [drivers(data)];if(view==='profitability')return [profitability(data,state)];if(view==='intercompany')return [intercompany(data)];if(view==='operations-capex')return [operations(data,state)];if(view==='fx')return [fx(data,state)];return [];}
   function mount(){const body=document.getElementById('swInspectorBody');if(!body)return;const rows=()=>document.querySelectorAll('[data-sw-row]'),open=key=>{const template=document.querySelector(`template[data-sw-detail="${key}"]`);if(!template)return;body.replaceChildren(template.content.cloneNode(true));document.querySelectorAll('[data-sw-focus]').forEach(button=>button.setAttribute('aria-pressed',button.dataset.swFocus===key));body.querySelectorAll('[data-story-view]').forEach(button=>button.onclick=()=>{state.view=button.dataset.storyView;reportState.page=0;render();});};document.querySelectorAll('[data-sw-focus]').forEach(button=>button.onclick=()=>{rows().forEach(row=>row.setAttribute('aria-pressed','false'));open(button.dataset.swFocus);});rows().forEach(button=>button.onclick=()=>{const filter=button.dataset.swFilter;if(filter){state[filter]=button.dataset.swRow;reportState.page=filter==='entity'?1:0;render();return;}rows().forEach(row=>row.setAttribute('aria-pressed',row===button?'true':'false'));if(button.dataset.swRowFocus)open(button.dataset.swRowFocus);});document.querySelector('[data-sw-action="explain"]')?.addEventListener('click',()=>open(document.querySelector('[data-sw-focus][aria-pressed="true"]')?.dataset.swFocus||document.querySelector('[data-sw-focus]')?.dataset.swFocus));open(document.querySelector('[data-sw-focus]')?.dataset.swFocus);}
-  root.StatementWorkspace={pages:(view,data,state)=>view==='margin'?[margin(data,state)]:pages(view,data,state),mount};
+  const analysisFocus=new Map();
+  function mountResponsive(){
+    mount();
+    const workspace=document.querySelector('.statement-workspace');
+    if(!workspace)return;
+    const grid=workspace.querySelector('.sw-grid');
+    const nav=document.createElement('nav');
+    nav.className='sw-analysis-nav';nav.setAttribute('aria-label','Analysis focus');
+    const panels=['primary','secondary','detail'].map(key=>workspace.querySelector(`.sw-${key}`));
+    const reportKey=workspace.querySelector('h2').textContent;
+    const selected=analysisFocus.get(reportKey)||0;
+    const labels=['Trend & drivers','Bridge & composition','Contribution & detail'];
+    panels.forEach((panel,index)=>{
+      panel.id=`sw-analysis-${index}`;
+      const button=document.createElement('button');button.type='button';
+      button.textContent=labels[index];button.setAttribute('aria-controls',panel.id);
+      button.setAttribute('aria-pressed',String(index===selected));
+      panel.classList.toggle('analysis-selected',index===selected);
+      button.onclick=()=>{
+        analysisFocus.set(reportKey,index);
+        panels.forEach(p=>p.classList.toggle('analysis-selected',p===panel));
+        nav.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+        root.VisualLayout?.positionCharts();
+      };
+      nav.append(button);
+    });
+    grid.before(nav);
+    workspace.addEventListener('click',event=>{
+      if(!event.target.closest('[data-sw-focus],[data-sw-row-focus],[data-sw-action="explain"]'))return;
+      if(!window.matchMedia('(max-width:1500px)').matches)return;
+      const body=document.getElementById('swInspectorBody');
+      reportDialog('Calculation & supporting evidence',`<div class="sw-evidence-dialog">${body.innerHTML}</div>`);
+      document.querySelectorAll('#reportDialogBody [data-story-view]').forEach(button=>button.onclick=()=>{
+        document.getElementById('reportDialog').close();
+        state.view=button.dataset.storyView;reportState.page=0;render();
+      });
+    });
+  }
+  root.StatementWorkspace={pages:(view,data,state)=>view==='margin'?[margin(data,state)]:pages(view,data,state),mount:mountResponsive};
   if(typeof module!=='undefined')module.exports={};
 })(globalThis);

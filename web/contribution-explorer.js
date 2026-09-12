@@ -91,7 +91,7 @@
     function nwcComparison(){if(key!=='nwc')return '';const wc=data.working_capital||[],current=wc.find(r=>r.month===data.meta.end_month)||wc.at(-1),prior=wc.find(r=>r.month===FinanceReport.priorMonth(data.meta.end_month))||wc.at(-13),delta=current&&prior&&prior.net_working_capital?current.net_working_capital/prior.net_working_capital-1:null;return delta===null?'':`<em class="${delta>=0?'favorable':'unfavorable'}">${delta>=0?'+':''}${(delta*100).toFixed(1)}% vs PY</em>`;}
     function paint(){
       let base=records(data,key,s.month,s.event);if(key==='capex'&&!base.length){const events=[...new Set((data.capex||[]).filter(r=>r.month===s.month).map(r=>r.event))];s.event=events[0]||'SPEND';base=records(data,key,s.month,s.event);}
-      const rows=base.filter(r=>Object.entries(s.filters).every(([field,value])=>r[field]===value)),result=aggregate(rows,s.metric,s.dimension),size=innerWidth<700||innerHeight<1000?4:8;
+      const rows=base.filter(r=>Object.entries(s.filters).every(([field,value])=>r[field]===value)),result=aggregate(rows,s.metric,s.dimension),size=innerWidth>1500?(innerHeight>1000?8:innerHeight>900?6:4):4;
       s.page=Math.max(0,Math.min(s.page,Math.max(0,Math.ceil(result.groups.length/size)-1)));const visible=result.groups.slice(s.page*size,(s.page+1)*size),max=Math.max(1,...result.groups.map(g=>Math.abs(g.value)));
       if(!s.selected||!result.groups.some(g=>g.name===s.selected))s.selected=result.groups[0]?.name||null;
       const selected=result.groups.find(g=>g.name===s.selected)||{name:'No selection',value:0,share:null},selectedRows=rows.filter(r=>(r[s.dimension]||'Unattributed')===selected.name),next=availableDimensions.find(d=>d!==s.dimension&&!Object.hasOwn(s.filters,d));

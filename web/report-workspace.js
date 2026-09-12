@@ -135,7 +135,8 @@ function setupNav(){
   document.body.classList.add('report-mode');
   document.getElementById('nav').innerHTML=RN.areas.map(area=>`<button data-area="${area.id}" title="${RM.escape(area.description)}">${reportNavIcon(area.landing)}<span>${RM.escape(area.label)}</span></button>`).join('');
   document.getElementById('nav').addEventListener('click',event=>{const button=event.target.closest('[data-area]');if(button){const area=RN.areas.find(item=>item.id===button.dataset.area);state.view=area.landing;reportState.page=0;render();}});
-  document.querySelector('.filters').insertAdjacentHTML('beforeend','<button id="reportReset" title="Reset entity and division filters">Reset</button><button id="reportHelp">Help</button>');
+  document.querySelector('.filters').insertAdjacentHTML('beforeend','<button id="reportBack" title="Return to the previous report and filters">Back</button><button id="reportReset" title="Reset entity and division filters">Reset</button><button id="reportHelp">Help</button>');
+  document.getElementById('reportBack').onclick=()=>history.back();
   document.querySelector('.topbar>div:first-child').insertAdjacentHTML('afterbegin','<span id="reportAreaLabel" class="report-area-label"></span>');
   document.querySelector('.topbar>div:first-child').insertAdjacentHTML('beforeend','<nav id="reportModules" class="report-modules" aria-label="Reports in current area"></nav>');
   document.querySelector('.topbar').insertAdjacentHTML('beforebegin',`<div class="mobile-module"><label>Area<select id="reportArea">${RN.areas.map(area=>`<option value="${area.id}">${RM.escape(area.label)}</option>`).join('')}</select></label><label>Report<select id="reportModule"></select></label></div>`);
@@ -185,6 +186,7 @@ function render(restoring=false){
   }
   reportState.pages=pages;
   document.body.classList.toggle('contribution-active',Boolean(currentPage.contribution));
+  document.body.classList.toggle('statement-active',Boolean(currentPage.fullScreen));
   document.body.classList.toggle('close-journey-active',state.view==='close-journey');
   document.getElementById('viewTitle').textContent=config[1];
   document.getElementById('viewSubtitle').textContent=`${data.meta.end_month} close · ${state.view==='executive'||state.view==='pnl'?'EUR million · AC / PY':'Source units shown in each report'}`;
@@ -207,6 +209,7 @@ function render(restoring=false){
   reportStoryBoards();
   document.querySelectorAll('[data-story-view]').forEach(button=>button.onclick=()=>{state.view=button.dataset.storyView;reportState.page=0;render();});
   ManagementBook.mount();
+  globalThis.VisualLayout?.mount();
   document.querySelectorAll('[data-story-division]').forEach(button=>button.onclick=()=>{state.division=button.dataset.storyDivision;state.view='pnl';reportState.page=0;render();});
   document.querySelectorAll('[data-action-id]').forEach(button=>button.onclick=()=>{const action=(data.management_actions||[]).find(a=>a.action_id===button.dataset.actionId);if(action)reportDialog(action.trigger_metric,`<dl class="row-detail">${Object.entries(action).map(([key,value])=>`<div><dt>${RM.escape(key.replaceAll('_',' '))}</dt><dd>${RM.escape(value)}</dd></div>`).join('')}</dl>`);});
   document.getElementById('reportStatus').textContent=`${data.meta.end_month} · ${data.validation?.passed?'Controls passed':'CONTROLS FAILED'}`;
@@ -215,7 +218,15 @@ function render(restoring=false){
   document.getElementById('reportPrevious').disabled=reportState.page===0;
   document.getElementById('reportNext').disabled=reportState.page===pages.length-1;
   const hash=new URLSearchParams({view:state.view,page:reportState.page,section:pages[reportState.page].title,entity:state.entity,division:state.division,metric:reportState.metric});
-  if(location.hash!==`#${hash}`)history[restoring?'replaceState':'pushState'](null,'',`#${hash}`);
+  const depth=history.state?.reportDepth||0;
+  if(location.hash!==`#${hash}`)history[restoring?'replaceState':'pushState']({reportDepth:restoring?depth:depth+1},'',`#${hash}`);
+  document.getElementById('reportBack').disabled=!(history.state?.reportDepth>0);
+  document.querySelectorAll('[data-pnl-key]').forEach(button=>button.onclick=()=>{
+    const s=reportCurrent(),row=PnlVisual.rows(s.current,s.prior||{},RM).find(r=>r.key===button.dataset.pnlKey);
+    if(!row)return;
+    const formulas={variable:'Revenue − marginal contribution',fixed:'Marginal contribution − gross profit',below_ebit:'EBIT − net income',revenue:'Sum of revenue',marginal_contribution:'Revenue − variable costs',gross_profit:'Marginal contribution − fixed production costs',opex:'Sum of OPEX',depreciation:'Sum of depreciation',ebit:'Gross profit − OPEX − depreciation',net_income:'EBIT − net finance costs and tax'};
+    reportDialog(row.label,`<p>AC ${RC.money(row.value)} · PY ${RC.money(row.prior)} · EUR million</p><p><strong>Calculation:</strong> ${RM.escape(formulas[row.key])}</p><p>Source: management_detail · ${RM.escape(reportScope())}</p>`);
+  });
   document.querySelectorAll('[data-metric]').forEach(b=>b.onclick=()=>{reportState.metric=b.dataset.metric;render();});
   document.querySelectorAll('[data-division]').forEach(b=>b.onclick=()=>{state.division=b.dataset.division;document.getElementById('divisionFilter').value=state.division;render();});
   document.querySelectorAll('[data-open-pnl]').forEach(b=>b.onclick=()=>{state.view='pnl';render();});
