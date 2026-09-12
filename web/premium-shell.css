@@ -25,7 +25,35 @@
 .report-mode.contribution-active .topbar{min-height:62px;padding-block:7px}
 .report-mode.contribution-active .report-subnav,.report-mode.contribution-active .report-context{display:none}
 .report-mode.contribution-active .content{padding-top:10px}
-.report-mode.contribution-active .cx-workspace{flex:none;height:clamp(460px,calc(100dvh - 420px),600px)}
+.report-mode.contribution-active .cx-workspace{flex:1;min-height:0;height:auto;grid-template-rows:minmax(0,1fr) 190px}
+@media(min-width:701px) and (max-height:820px){
+  .report-mode.contribution-active .cx-workspace{grid-template-rows:minmax(0,1fr) 110px}
+  .report-mode.contribution-active .cx-inspector{overflow:auto}
+  .report-mode.contribution-active .cx-flow-map button{height:42px}
+  .report-mode.contribution-active .cx-flow-map.nwc-flow button{min-height:32px;padding:3px}
+  .report-mode.contribution-active .cx-flow-map.nwc-flow .cx-flow-focus{min-height:64px}
+  .report-mode.contribution-active .cx-flow-map.nwc-flow .cx-flow-output{min-height:58px}
+}
+@media(max-width:700px){
+  .report-mode.contribution-active .content{overflow:auto}
+  .report-mode.contribution-active .contribution-explorer{height:auto;min-height:100%}
+  .report-mode.contribution-active .cx-head{display:block}
+  .report-mode.contribution-active .cx-commands{justify-content:flex-start;margin-top:10px}
+  .report-mode.contribution-active .cx-scopebar{display:grid;grid-template-columns:1fr 1fr}
+  .report-mode.contribution-active .cx-scopebar label{min-width:0;margin:0}
+  .report-mode.contribution-active .cx-scopebar select{width:100%;min-width:0}
+  .report-mode.contribution-active .cx-summary.nwc-summary{grid-template-columns:1fr}
+  .report-mode.contribution-active .cx-bridge{min-width:0}
+  .report-mode.contribution-active .cx-workspace{display:flex;flex-direction:column;flex:none;height:auto}
+  .report-mode.contribution-active .cx-ranking{min-height:210px}
+  .report-mode.contribution-active .cx-flow{display:block;height:260px}
+  .report-mode.contribution-active .cx-inspector{display:block}
+  .report-mode.contribution-active .cx-evidence{height:210px;flex:none}
+  .report-mode.contribution-active .cx-region-title{flex-wrap:wrap}
+  .report-mode.contribution-active .cx-table-wrap{overflow:auto;height:150px}
+  .report-mode.contribution-active .cx-evidence table{min-width:700px}
+  .report-mode.contribution-active .contribution-note{max-height:none;white-space:normal}
+}
 .report-mode.close-journey-active .topbar,.report-mode.close-journey-active .report-subnav,.report-mode.close-journey-active .report-context,.report-mode.close-journey-active .report-footer{display:none}.report-mode.close-journey-active .content{padding:10px 20px;overflow:hidden}
 @media(max-width:1180px){.report-mode .app-shell{padding:0;grid-template-columns:190px minmax(0,1fr)}.report-mode .sidebar,.report-mode .main-shell{border-radius:0}.global-search{width:310px}.user-name{display:none}}
 @media(max-width:900px),(max-height:650px){.report-mode .app-shell{padding:0;grid-template-columns:1fr}.global-bar{height:40px;padding:0 12px}.global-search{width:min(440px,55vw)}.global-utilities{gap:8px}.user-avatar,.user-name,.utility-button span{display:none}}

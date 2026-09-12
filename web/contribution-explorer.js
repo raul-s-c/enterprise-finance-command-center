@@ -28,7 +28,7 @@
   function preparedRows(data,key){return key==='nwc'?nwcRows(data):(data[source(data,key)]||[]);}
   function source(data,key){const def=definitions[key];if(key==='nwc')return def.source;return def.enhancedSource&&(data[def.enhancedSource]||[]).length?def.enhancedSource:def.source;}
   function dimensions(data,key){const def=definitions[key],rows=preparedRows(data,key);return (source(data,key)===def.enhancedSource?def.enhancedDimensions:def.dimensions).filter(d=>rows.some(r=>r[d]!==null&&r[d]!==undefined&&r[d]!==''));}
-  function metrics(data,key){const def=definitions[key],rows=preparedRows(data,key);return (source(data,key)===def.enhancedSource?def.enhancedMetrics:def.metrics).filter(m=>rows.some(r=>typeof r[m]==='number'&&Number.isFinite(r[m])));}
+  function metrics(data,key){const def=definitions[key],rows=preparedRows(data,key);return (key==='nwc'?['net_working_capital']:source(data,key)===def.enhancedSource?def.enhancedMetrics:def.metrics).filter(m=>rows.some(r=>typeof r[m]==='number'&&Number.isFinite(r[m])));}
   function note(data,key){const def=definitions[key];return source(data,key)===def.enhancedSource&&def.enhancedNote?def.enhancedNote:def.note;}
   function records(data,key,month,event='SPEND'){
     return preparedRows(data,key).filter(r=>(!r.month||r.month===month)&&(key!=='capex'||r.event===event));
@@ -40,7 +40,18 @@
     const total=[...groups.values()].reduce((a,b)=>a+b,0);
     return {total,missing,groups:[...groups].map(([name,value])=>({name,value,share:Math.abs(total)<1e-9?null:value/total})).sort((a,b)=>Math.abs(b.value)-Math.abs(a.value)||a.name.localeCompare(b.name))};
   }
-  const api={definitions,source,dimensions,metrics,note,records,aggregate};
+  function ledgerEvidence(data,selection,month){
+    if(!selection.length)return {scope:{},postings:[],balances:[]};
+    const accounts={Receivables:'1100_AR',Payables:'2100_AP',Inventory:'1200_INVENTORY'};
+    const scope={};
+    for(const field of ['entity','division','component']){
+      const values=[...new Set(selection.map(row=>row[field]).filter(Boolean))];
+      if(values.length===1)scope[field]=values[0];
+    }
+    const matches=row=>row.month===month&&(!scope.entity||row.entity===scope.entity)&&(!scope.division||row.division===scope.division)&&(!scope.component||row.account===accounts[scope.component]);
+    return {scope,postings:(data.working_capital_postings||[]).filter(matches),balances:(data.working_capital_rollforward||[]).filter(matches)};
+  }
+  const api={definitions,source,dimensions,metrics,note,records,aggregate,ledgerEvidence};
   if(typeof module!=='undefined'&&module.exports){module.exports=api;return;}
   root.ContributionExplorer=api;
   const settings={};
@@ -80,23 +91,36 @@
     function nwcComparison(){if(key!=='nwc')return '';const wc=data.working_capital||[],current=wc.find(r=>r.month===data.meta.end_month)||wc.at(-1),prior=wc.find(r=>r.month===FinanceReport.priorMonth(data.meta.end_month))||wc.at(-13),delta=current&&prior&&prior.net_working_capital?current.net_working_capital/prior.net_working_capital-1:null;return delta===null?'':`<em class="${delta>=0?'favorable':'unfavorable'}">${delta>=0?'+':''}${(delta*100).toFixed(1)}% vs PY</em>`;}
     function paint(){
       let base=records(data,key,s.month,s.event);if(key==='capex'&&!base.length){const events=[...new Set((data.capex||[]).filter(r=>r.month===s.month).map(r=>r.event))];s.event=events[0]||'SPEND';base=records(data,key,s.month,s.event);}
-      const rows=base.filter(r=>Object.entries(s.filters).every(([field,value])=>r[field]===value)),result=aggregate(rows,s.metric,s.dimension),size=innerWidth<700?4:8;
+      const rows=base.filter(r=>Object.entries(s.filters).every(([field,value])=>r[field]===value)),result=aggregate(rows,s.metric,s.dimension),size=innerWidth<700||innerHeight<1000?4:8;
       s.page=Math.max(0,Math.min(s.page,Math.max(0,Math.ceil(result.groups.length/size)-1)));const visible=result.groups.slice(s.page*size,(s.page+1)*size),max=Math.max(1,...result.groups.map(g=>Math.abs(g.value)));
       if(!s.selected||!result.groups.some(g=>g.name===s.selected))s.selected=result.groups[0]?.name||null;
       const selected=result.groups.find(g=>g.name===s.selected)||{name:'No selection',value:0,share:null},selectedRows=rows.filter(r=>(r[s.dimension]||'Unattributed')===selected.name),next=availableDimensions.find(d=>d!==s.dimension&&!Object.hasOwn(s.filters,d));
       const evidenceRows=(selectedRows.length?selectedRows:rows).filter(row=>Object.values(row).some(value=>String(value).toLowerCase().includes(s.query)));
       const evidenceKey=JSON.stringify([s.filters,s.dimension,s.selected,s.month,s.metric,s.query]);
       if(s.evidenceKey!==evidenceKey){s.evidenceKey=evidenceKey;s.evidencePage=0;}
-      const evidencePages=Math.max(1,Math.ceil(evidenceRows.length/6));
+      const evidenceSize=innerWidth>700&&innerHeight<820?2:6;
+      const evidencePages=Math.max(1,Math.ceil(evidenceRows.length/evidenceSize));
       s.evidencePage=Math.max(0,Math.min(s.evidencePage||0,evidencePages-1));
-      const cols=fields(selectedRows.length?selectedRows:rows),evidence=evidenceRows.slice(s.evidencePage*6,(s.evidencePage+1)*6),flowTarget=selectedRows[0]?.contributor||selectedRows[0]?.customer_name||selectedRows[0]?.supplier_name||selectedRows[0]?.product||selectedRows[0]?.project_name||label(s.metric);
+      const cols=fields(selectedRows.length?selectedRows:rows),evidence=evidenceRows.slice(s.evidencePage*evidenceSize,(s.evidencePage+1)*evidenceSize),flowTarget=selectedRows[0]?.contributor||selectedRows[0]?.customer_name||selectedRows[0]?.supplier_name||selectedRows[0]?.product||selectedRows[0]?.project_name||label(s.metric);
       const formulaParts=formula(rows);
       host.innerHTML=`<header class="cx-head"><div><p>${Object.entries(s.filters).map(([field,value])=>`${e(label(field))}: ${e(value)}`).join(' / ')||'All published contributors'}</p><h2>${key==='nwc'?'Working capital contribution analysis':`Contribution analysis · ${e(label(s.metric))}`}</h2></div><div class="cx-commands"><button id="cx-method">${key==='nwc'?'Explain variance':'Explain calculation'}</button><button id="cx-trace">Trace records</button><button id="cx-change">Change dimension</button><button id="cx-export">Export selection</button></div></header><div class="cx-summary ${key==='nwc'?'nwc-summary':''}"><div><strong>${e(money(result.total))}</strong>${nwcComparison()}<span>${rows.length} records · ${e(def.period)}</span></div>${bridge()}<div class="cx-formula">${formulaParts.map((part,index)=>`<div><span>${e(part[0])}</span><strong>${typeof part[1]==='number'?e(money(part[1])):e(part[1])}</strong></div>`).join('')}</div></div><div class="cx-toolbar"><b>Dimension:</b>${select('metric','Metric',availableMetrics,s.metric)}${months.length>1?select('month','Period',months,s.month):''}${key==='capex'?select('event','Event',[...new Set((data.capex||[]).filter(r=>r.month===s.month).map(r=>r.event))],s.event):''}<div class="cx-dimensions" aria-label="Break down by">${availableDimensions.map(d=>`<button data-dimension="${e(d)}" aria-pressed="${d===s.dimension}">${e(label(d))}</button>`).join('')}</div><div class="cx-display"><b>Show:</b><button data-display="value" aria-pressed="${s.display==='value'}">Value</button><button data-display="share" aria-pressed="${s.display==='share'}">Share</button></div></div><div class="cx-workspace"><section class="cx-ranking"><div class="cx-region-title"><h3>Contribution by ${e(label(s.dimension).toLowerCase())}</h3><span>Click to select · double-click to drill</span></div><div class="contribution-bars">${visible.map((g,i)=>`<button class="contribution-row" data-contributor="${i}" aria-pressed="${g.name===s.selected}" title="Select ${e(g.name)}"><span>${e(g.name)}</span><span>${s.display==='share'&&g.share!==null?`${(g.share*100).toFixed(1)}%`:e(money(g.value))}</span><span class="contribution-track"><i style="left:${g.value<0?50-Math.abs(g.value)/max*50:50}%;width:${Math.abs(g.value)/max*50}%"></i></span></button>`).join('')||'<p>No published records in this scope.</p>'}</div><div class="contribution-pager"><button id="cx-prev" ${s.page?'':'disabled'}>Previous</button><span>${s.page+1} / ${Math.max(1,Math.ceil(result.groups.length/size))}</span><button id="cx-next" ${(s.page+1)*size>=result.groups.length?'disabled':''}>Next</button></div></section><section class="cx-flow"><div class="cx-region-title"><h3>Value flow · ${e(selected.name)}</h3><span>Source → contributor → financial line</span></div><div class="cx-flow-map"><button><span>Published source</span><strong>${e(sourceName)}</strong></button><i>→</i><button class="selected"><span>${e(label(s.dimension))}</span><strong>${e(selected.name)}</strong></button><i>→</i><button><span>Destination</span><strong>${e(flowTarget)}</strong></button><i>→</i><button><span>Measure</span><strong>${e(label(s.metric))}</strong></button></div></section><aside class="cx-inspector"><div class="cx-region-title"><h3>Selected item details</h3><span>${e(selected.name)}</span></div><dl><div><dt>Selected value</dt><dd>${e(money(selected.value))}</dd></div><div><dt>Share of total</dt><dd>${selected.share===null?'Unavailable':`${(selected.share*100).toFixed(1)}%`}</dd></div><div><dt>Record count</dt><dd>${selectedRows.length}</dd></div><div><dt>Source table</dt><dd>${e(sourceName)}</dd></div><div><dt>Integrity</dt><dd class="favorable">● Recomputed from source</dd></div><div><dt>Drill path</dt><dd>${e([...Object.values(s.filters),selected.name].join(' › '))}</dd></div></dl><div><button id="cx-drill" ${next?'':'disabled'}>${next?`Drill to ${e(label(next))}`:'Lowest published level'}</button><button id="cx-up" ${Object.keys(s.filters).length?'':'disabled'}>Up one level</button><button id="cx-reset" ${Object.keys(s.filters).length?'':'disabled'}>Reset</button></div></aside><section class="cx-evidence"><div class="cx-region-title"><h3>Underlying evidence · ${e(selected.name)}</h3><label>Search <input id="cx-search" type="search" value="${e(s.query)}" placeholder="Customer, supplier, product…"></label></div><div class="cx-table-wrap"><table><thead><tr>${cols.map(field=>`<th>${e(label(field))}</th>`).join('')}</tr></thead><tbody>${evidence.map(row=>`<tr>${cols.map(field=>`<td>${typeof row[field]==='number'?e(money(row[field])):e(row[field])}</td>`).join('')}</tr>`).join('')}</tbody></table></div></section></div><p class="contribution-note">${e(note(data,key))}${result.missing?` ${result.missing} records with unavailable measures are excluded; no value is imputed.`:''}</p>`;
       const evidencePanel=host.querySelector('#cx-search').closest('header');
       const evidencePager=document.createElement('span');
-      evidencePager.innerHTML=`<span aria-live="polite">${evidenceRows.length?s.evidencePage*6+1:0}–${Math.min((s.evidencePage+1)*6,evidenceRows.length)} of ${evidenceRows.length}</span> <button id="cx-evidence-prev" aria-label="Previous evidence page" ${s.evidencePage?'':'disabled'}>‹</button> <button id="cx-evidence-next" aria-label="Next evidence page" ${s.evidencePage+1<evidencePages?'':'disabled'}>›</button>`;
+      evidencePager.innerHTML=`<span aria-live="polite">${evidenceRows.length?s.evidencePage*evidenceSize+1:0}–${Math.min((s.evidencePage+1)*evidenceSize,evidenceRows.length)} of ${evidenceRows.length}</span> <button id="cx-evidence-prev" aria-label="Previous evidence page" ${s.evidencePage?'':'disabled'}>‹</button> <button id="cx-evidence-next" aria-label="Next evidence page" ${s.evidencePage+1<evidencePages?'':'disabled'}>›</button>`;
       if(evidencePanel)evidencePanel.append(evidencePager);
       else host.querySelector('#cx-search').closest('label').after(evidencePager);
+      if(['nwc','ar','ap','inventory'].includes(key)&&(data.working_capital_rollforward||[]).length){
+        const ledgerButton=document.createElement('button');ledgerButton.id='cx-ledger';ledgerButton.textContent='Trace ledger';
+        host.querySelector('.cx-commands').append(ledgerButton);
+        ledgerButton.onclick=()=>{
+          const component={ar:'Receivables',ap:'Payables',inventory:'Inventory'}[key];
+          const selection=(selectedRows.length?selectedRows:rows).map(row=>component?{...row,component}:row);
+          const evidence=ledgerEvidence(data,selection,s.month);
+          const title=Object.entries(evidence.scope).map(([field,value])=>`${label(field)}: ${value}`).join(' · ')||'All legal working-capital accounts';
+          reportDialog('Legal ledger evidence',`<p>${e(title)} · ${e(s.month)}</p><p>Gross legal balances, debit-positive. Customer, supplier and SKU selections do not imply invoice settlement or stock-lot attribution. Provisions and consolidation adjustments remain separate.</p><div class="row-detail">${evidence.balances.map(row=>`<div><dt>${e(row.entity)} / ${e(row.division)} / ${e(row.account)}</dt><dd>${e(compactMoney(row.opening_balance))} + ${e(compactMoney(row.debits))} − ${e(compactMoney(row.credits))} = ${e(compactMoney(row.closing_balance))}</dd></div>`).join('')||'<p>No legal ledger account exists for this selection (for example, consolidation adjustments).</p>'}</div><p>${evidence.postings.length} posted movements in this month. These explain movement, not the open-invoice population.</p><button id="cx-ledger-records" ${evidence.postings.length?'':'disabled'}>Inspect journal postings</button>`);
+          document.getElementById('cx-ledger-records').onclick=()=>showRecords(evidence.postings);
+        };
+      }
       document.getElementById('cx-evidence-prev').onclick=()=>{s.evidencePage--;paint();};
       document.getElementById('cx-evidence-next').onclick=()=>{s.evidencePage++;paint();};
       if(key==='nwc'){
