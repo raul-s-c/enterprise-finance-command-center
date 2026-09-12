@@ -5,3 +5,6 @@ __pycache__/
 .venv/
 .DS_Store
 data/runtime/
+node_modules/
+test-results/
+playwright-report/

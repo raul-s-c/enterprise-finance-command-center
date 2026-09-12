@@ -22,6 +22,27 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  visual:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:ui
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: responsive-ui-evidence
+          path: test-results
+          retention-days: 7
+
   continuity:
     runs-on: ubuntu-latest
     steps:
@@ -61,7 +82,7 @@ jobs:
 
   publish:
     if: github.ref == 'refs/heads/main'
-    needs: [build, continuity]
+    needs: [build, continuity, visual]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
