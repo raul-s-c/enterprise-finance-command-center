@@ -9,6 +9,16 @@ function context(){
   vm.runInContext(fs.readFileSync(path.join(root, 'web/app.js'), 'utf8'), ctx);
   return ctx;
 }
+test('gross-to-net visuals retain signed deductions and the published closing value',()=>{
+  const ctx=context();
+  vm.runInContext(fs.readFileSync(path.join(root,'web/v07.js'),'utf8'),ctx);
+  const html=vm.runInContext("carryingValueRows([['Gross',100],['Allowance',-15],['Net',85]])",ctx);
+  assert.match(html,/carrying-value-chart/);
+  assert.match(html,/width:15%/);
+  assert.match(html,/class="deduction"/);
+  assert.match(html,/width:85%/);
+  assert.match(html,/published net balance/);
+});
 test('mobile charts retain every value and expose at most five evenly spaced ticks',()=>{
   const ctx=context();
   for(const count of [1,2,5,12,24,36]){

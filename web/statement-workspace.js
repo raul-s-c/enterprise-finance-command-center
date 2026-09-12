@@ -155,6 +155,43 @@
   }
   function pages(view,data,state){if(view==='pnl')return [pnl(data,state)];if(view==='cash-flow')return [cash(data)];if(view==='balance-sheet')return [balance(data)];if(view==='forecast')return [forecast(data)];if(view==='macro-sensitivities')return [macro(data,state)];if(view==='treasury')return [treasury(data)];if(view==='business-drivers')return [drivers(data)];if(view==='profitability')return [profitability(data,state)];if(view==='intercompany')return [intercompany(data)];if(view==='operations-capex')return [operations(data,state)];if(view==='fx')return [fx(data,state)];return [];}
   function mount(){const body=document.getElementById('swInspectorBody');if(!body)return;const rows=()=>document.querySelectorAll('[data-sw-row]'),open=key=>{const template=document.querySelector(`template[data-sw-detail="${key}"]`);if(!template)return;body.replaceChildren(template.content.cloneNode(true));document.querySelectorAll('[data-sw-focus]').forEach(button=>button.setAttribute('aria-pressed',button.dataset.swFocus===key));body.querySelectorAll('[data-story-view]').forEach(button=>button.onclick=()=>{state.view=button.dataset.storyView;reportState.page=0;render();});};document.querySelectorAll('[data-sw-focus]').forEach(button=>button.onclick=()=>{rows().forEach(row=>row.setAttribute('aria-pressed','false'));open(button.dataset.swFocus);});rows().forEach(button=>button.onclick=()=>{const filter=button.dataset.swFilter;if(filter){state[filter]=button.dataset.swRow;reportState.page=filter==='entity'?1:0;render();return;}rows().forEach(row=>row.setAttribute('aria-pressed',row===button?'true':'false'));if(button.dataset.swRowFocus)open(button.dataset.swRowFocus);});document.querySelector('[data-sw-action="explain"]')?.addEventListener('click',()=>open(document.querySelector('[data-sw-focus][aria-pressed="true"]')?.dataset.swFocus||document.querySelector('[data-sw-focus]')?.dataset.swFocus));open(document.querySelector('[data-sw-focus]')?.dataset.swFocus);}
-  root.StatementWorkspace={pages:(view,data,state)=>view==='margin'?[margin(data,state)]:pages(view,data,state),mount};
+  const analysisFocus=new Map();
+  function mountResponsive(){
+    mount();
+    const workspace=document.querySelector('.statement-workspace');
+    if(!workspace)return;
+    const grid=workspace.querySelector('.sw-grid');
+    const nav=document.createElement('nav');
+    nav.className='sw-analysis-nav';nav.setAttribute('aria-label','Analysis focus');
+    const panels=['primary','secondary','detail'].map(key=>workspace.querySelector(`.sw-${key}`));
+    const reportKey=workspace.querySelector('h2').textContent;
+    const selected=analysisFocus.get(reportKey)||0;
+    const labels=['Trend & drivers','Bridge & composition','Contribution & detail'];
+    panels.forEach((panel,index)=>{
+      panel.id=`sw-analysis-${index}`;
+      const button=document.createElement('button');button.type='button';
+      button.textContent=labels[index];button.setAttribute('aria-controls',panel.id);
+      button.setAttribute('aria-pressed',String(index===selected));
+      panel.classList.toggle('analysis-selected',index===selected);
+      button.onclick=()=>{
+        analysisFocus.set(reportKey,index);
+        panels.forEach(p=>p.classList.toggle('analysis-selected',p===panel));
+        nav.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+      };
+      nav.append(button);
+    });
+    grid.before(nav);
+    workspace.addEventListener('click',event=>{
+      if(!event.target.closest('[data-sw-focus],[data-sw-row-focus],[data-sw-action="explain"]'))return;
+      if(!window.matchMedia('(max-width:1500px)').matches)return;
+      const body=document.getElementById('swInspectorBody');
+      reportDialog('Calculation & supporting evidence',`<div class="sw-evidence-dialog">${body.innerHTML}</div>`);
+      document.querySelectorAll('#reportDialogBody [data-story-view]').forEach(button=>button.onclick=()=>{
+        document.getElementById('reportDialog').close();
+        state.view=button.dataset.storyView;reportState.page=0;render();
+      });
+    });
+  }
+  root.StatementWorkspace={pages:(view,data,state)=>view==='margin'?[margin(data,state)]:pages(view,data,state),mount:mountResponsive};
   if(typeof module!=='undefined')module.exports={};
 })(globalThis);
