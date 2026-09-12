@@ -55,7 +55,9 @@ test('statement analysis survives live resize without an overlapping inspector',
       });
       expect(bounds.top).toBe(true);expect(bounds.bottom).toBe(true);
     }
-    await testInfo.attach(`margin-${width}x${height}`,{body:await page.screenshot(),contentType:'image/png'});
+    const screenshot=testInfo.outputPath(`margin-${width}x${height}.png`);
+    await page.screenshot({path:screenshot});
+    await testInfo.attach(`margin-${width}x${height}`,{path:screenshot,contentType:'image/png'});
   }
   await page.locator('.sw-kpi').first().click();
   await expect(page.locator('#reportDialog')).toBeVisible();

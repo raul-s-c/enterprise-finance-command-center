@@ -31,6 +31,7 @@ def test_visual_job_runs_browser_regressions_and_retains_evidence():
     assert not any(step.get("continue-on-error") for step in steps)
     evidence = next(step for step in steps if step.get("uses") == "actions/upload-artifact@v4")
     assert evidence["with"]["name"] == "responsive-ui-evidence"
+    assert evidence["with"]["if-no-files-found"] == "error"
 
 
 def test_build_stages_same_run_candidate_without_persistent_publication():
