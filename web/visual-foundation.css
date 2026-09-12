@@ -1,6 +1,28 @@
 /* Shared readability and layout contract. Loaded after the legacy report themes.
    Charts keep a usable canvas; evidence never overlays the analysis by default. */
 :root{--report-caption:12px;--report-text:13px;--report-heading:16px}
+.pnl-visual{height:100%;display:flex;flex-direction:column;min-height:0}
+.pnl-visual h2{font-size:22px;margin:0 0 6px}.pnl-visual p{font-size:12px;color:#52647c;margin:4px 0 12px}
+.pnl-scroll{overflow:auto;flex:1;min-height:0}.pnl-grid{min-width:820px;height:100%;display:flex;flex-direction:column}
+.pnl-heading,.report-mode button.pnl-row{display:grid;grid-template-columns:minmax(190px,1.2fr) 80px minmax(230px,1.5fr) minmax(145px,1fr) minmax(140px,1fr);gap:12px;align-items:center}
+.pnl-heading{font-size:12px;padding:10px 8px;color:#52647c;border-bottom:2px solid #9199a3}
+.report-mode button.pnl-row{flex:1;min-height:39px;width:100%;border:0;border-radius:0;background:white;padding:3px 8px;color:#243247;font-size:14px;text-align:left;font-weight:400}
+.report-mode button.pnl-row:hover,.report-mode button.pnl-row:focus-visible{background:#edf5ff;outline:2px solid #0874ed;outline-offset:-2px}
+.report-mode button.pnl-row.subtotal{font-weight:700;border-top:1px solid #aeb6c0}
+.pnl-row>span:nth-child(2){text-align:right}.pnl-track,.pnl-delta,.pnl-percent{position:relative;height:30px;display:flex;align-items:center}
+.pnl-track i{position:absolute;height:26px;background:#414548}.pnl-track b{z-index:1;background:#fff;padding:2px 4px;font-size:13px;min-width:54px;font-weight:inherit}
+.pnl-delta:before,.pnl-percent:before{content:'';position:absolute;left:50%;height:100%;border-left:1px solid #aab0b8}
+.pnl-delta i{position:absolute;height:25px;background:#aab0b8;opacity:.35}.pnl-percent i{position:absolute;height:3px;background:#aab0b8}.pnl-percent i:after{content:'';position:absolute;right:0;top:-2px;width:7px;height:7px;border-radius:50%;background:currentColor}
+.pnl-delta b,.pnl-percent b{position:relative;font-size:13px;background:#ffffffd9;padding:1px 3px}.pnl-row .good{color:#087b42}.pnl-row .bad{color:#c82028}.pnl-row .good i{background:#36aa45}.pnl-row .bad i{background:#e5363f}
+.pnl-note{padding-top:10px;flex:none;line-height:1.4}
+.report-mode .sw-inspector-value{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+.report-mode .sw-inspector-value small{max-width:100%;overflow-wrap:anywhere}
+/* Factory cards size to their panel, not the browser width. */
+.report-mode .sw-factories{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));height:auto;align-content:start}
+.report-mode .sw-factories>button{grid-template-columns:90px minmax(0,1fr) 12px;padding:12px;min-width:0;min-height:175px}
+.report-mode .sw-factories .sw-gauge{width:86px;height:86px}
+.report-mode .sw-factories>button>div{min-width:0}.report-mode .sw-factories span,.report-mode .sw-factories dd{overflow-wrap:anywhere}
+.report-mode .sw-factories dl{grid-template-columns:repeat(2,minmax(0,1fr))}
 .report-mode .cx-region-title h3{font-size:15px}
 .report-mode .contribution-explorer h2{font-size:22px}
 .report-mode .cx-bridge>div strong{font-size:13px}

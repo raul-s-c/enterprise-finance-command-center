@@ -1,5 +1,27 @@
 const {test,expect}=require('@playwright/test');
 
+test('graphical P&L restores filters with Back and factory content stays inside cards',async({page})=>{
+  await page.setViewportSize({width:1366,height:900});
+  await page.goto('/#view=pnl');
+  await expect(page.locator('[data-pnl-key]')).toHaveCount(10);
+  await page.locator('#entityFilter').selectOption('US01');
+  await page.getByRole('button',{name:'Margin Engine',exact:true}).click();
+  await page.getByRole('button',{name:'Back',exact:true}).click();
+  await expect(page.locator('#viewTitle')).toHaveText('P&L');
+  await expect(page.locator('#entityFilter')).toHaveValue('US01');
+  await page.locator('[data-pnl-key="opex"]').click();
+  await expect(page.locator('#reportDialog')).toBeVisible();
+  await expect(page.locator('#reportDialogBody')).toContainText('Sum of OPEX');
+  await page.getByRole('button',{name:'Close',exact:true}).click();
+  for(const width of [1784,1392,1024,390]){
+    await page.setViewportSize({width,height:991});
+    await page.goto('/#view=operations-capex');
+    await expect(page.locator('.sw-factories')).toBeVisible();
+    const overflow=await page.locator('.sw-factories>button').evaluateAll(cards=>cards.some(card=>card.scrollWidth>card.clientWidth+1));
+    expect(overflow).toBe(false);
+  }
+});
+
 test('all report destinations retain evidence instead of standalone KPI pages',async({page})=>{
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
   const reports=['executive','pnl','margin','working-capital','cash-flow','treasury','balance-sheet','forecast','macro-sensitivities','business-drivers','profitability','intercompany','operations-capex','fx','performance-review','action-execution','data-journey','close-journey'];
