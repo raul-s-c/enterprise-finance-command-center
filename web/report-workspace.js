@@ -89,7 +89,9 @@ function reportPages(){
     {title:'Performance',html:`<article class="financial-report"><h2 class="report-message">Understand the path from revenue to EBIT</h2>${RC.matrix(s.current,s.prior)}</article>`,custom:true},
     {title:'P&L bridge',html:`<article class="financial-report"><h2 class="report-message">Revenue to EBIT · EUR million</h2>${RC.waterfall(s.current,window.innerWidth<700)}</article>`,custom:true}
   );
-  pages.push(...ContributionExplorer.pages(state.view));
+  const contributionPages=ContributionExplorer.pages(state.view);
+  if(state.view==='working-capital')pages.unshift(...contributionPages);
+  else pages.push(...contributionPages);
   return ManagementBook.compose(pages);
 }
 function reportReadRoute(){
