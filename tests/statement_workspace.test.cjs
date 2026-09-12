@@ -8,7 +8,7 @@ const data=require('../web/data/dashboard.json');
 
 test('core finance and operating modules open with a premium one-screen cockpit',()=>{
   const state={entity:'all',division:'all'};
-  for(const view of ['pnl','cash-flow','balance-sheet','forecast','macro-sensitivities','treasury','business-drivers','profitability','intercompany','operations-capex','fx']){
+  for(const view of ['pnl','margin','cash-flow','balance-sheet','forecast','macro-sensitivities','treasury','business-drivers','profitability','intercompany','operations-capex','fx']){
     const pages=global.StatementWorkspace.pages(view,data,state);
     assert.equal(pages.length,1,view);
     assert.equal(pages[0].custom,true,view);
@@ -32,7 +32,11 @@ test('driver, consolidation and FX cockpits keep accounting paths explicit',()=>
   assert.match(macro,/data-sw-detail="ma-shock-energy-index-10"/);
   assert.match(drivers,/Operational evidence precedes accounting output/);
   assert.match(drivers,/Opening FTE \+ hires − attrition/);
-  assert.match(drivers,/-36\.2% vs 2026-07/);
+  const factoryRows=data.hardware_factory_economics||[];
+  const previousMonth=[...new Set(factoryRows.map(row=>row.month))].filter(month=>month<data.meta.end_month).sort().at(-1);
+  const utilization=month=>{const rows=factoryRows.filter(row=>row.month===month);return rows.reduce((s,r)=>s+r.produced_units,0)/rows.reduce((s,r)=>s+r.capacity_units,0);};
+  const expected=global.ReportCharts.percent(global.FinanceReport.variance(utilization(data.meta.end_month),utilization(previousMonth)).relative);
+  assert.ok(drivers.includes(`${expected} vs ${previousMonth}`));
   assert.doesNotMatch(drivers,/— vs 2026-07/);
   assert.match(intercompany,/Revenue &amp; COGS eliminated/);
   assert.match(intercompany,/Maximum reciprocal, revenue and EBIT consolidation gap/);
