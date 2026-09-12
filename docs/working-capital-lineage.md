@@ -17,6 +17,10 @@ remain separate. Supplier accrual journal IDs are not supplier invoice numbers.
 Cash collections in the ledger are not bank-matched invoice settlements.
 Inventory attribution remains analytical, not a physical warehouse lot register.
 
-Remaining work: expose the source register in the evidence inspector, add
-invoice-level settlement allocations with explicit policy and reconciliation,
+Use **Trace ledger** in a working-capital contribution screen to inspect the
+selected legal scope's opening, debits, credits and closing balance. **Inspect
+journal postings** opens source IDs and all available fields. Legacy artifacts
+without the register retain their existing evidence controls.
+
+Remaining work: add invoice-level settlement allocations with explicit policy and reconciliation,
 and connect provisions and consolidation adjustments to the net balance.

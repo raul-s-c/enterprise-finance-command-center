@@ -6,6 +6,8 @@ The project models economic activity first and derives accounting, financial sta
 
 Live application: https://raul-s-c.github.io/enterprise-finance-command-center/
 
+Working-capital contribution screens connect to [legal ledger evidence](docs/working-capital-lineage.md): source journal postings and monthly account rollforwards, with explicit separation from analytical invoice allocations and consolidation adjustments.
+
 ## Synthetic group
 
 The fictional company is **Aureon Systems Group** with four deliberately different business models:
