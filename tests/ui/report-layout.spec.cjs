@@ -2,8 +2,9 @@ const {test,expect}=require('@playwright/test');
 
 test('all report destinations retain evidence instead of standalone KPI pages',async({page})=>{
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
-  await page.setViewportSize({width:1366,height:768});
   const reports=['executive','pnl','margin','working-capital','cash-flow','treasury','balance-sheet','forecast','macro-sensitivities','business-drivers','profitability','intercompany','operations-capex','fx','performance-review','action-execution','data-journey','close-journey'];
+  for(const viewport of [{width:1366,height:768},{width:1024,height:768},{width:390,height:844}]){
+  await page.setViewportSize(viewport);
   for(const report of reports){
     await page.goto(`/#view=${report}`);
     await expect(page.locator('#content')).not.toBeEmpty();
@@ -28,6 +29,7 @@ test('all report destinations retain evidence instead of standalone KPI pages',a
       expect(evidence.horizontalOverflow,`${report} page ${index} overflows the document`).toBe(false);
       if(evidence.cards)expect(evidence.supporting,`${report} page ${index} contains only KPIs`).toBeGreaterThan(0);
     }
+  }
   }
   expect(errors).toEqual([]);
 });
