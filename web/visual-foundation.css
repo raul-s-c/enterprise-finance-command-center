@@ -17,6 +17,10 @@
 .report-mode .cx-flow-map button span{font-size:12px;opacity:1}
 .report-mode .cx-flow-map button strong{font-size:16px}
 .report-mode .cx-ranking,.report-mode .cx-flow,.report-mode .cx-inspector{overflow:auto}
+.report-mode .cx-inspector{display:flex;flex-direction:column;overflow:hidden}
+.report-mode .cx-inspector dl{flex:1;min-height:0;overflow:auto}
+.report-mode .cx-inspector>div:last-child{flex:none;background:#fbfcfe}
+@media(min-width:1501px){.report-mode .contribution-row{min-height:34px!important}}
 .report-mode .cx-table-wrap{overflow:auto}
 .report-mode .cx-evidence th,.report-mode .cx-evidence td{height:30px;font-size:12px}
 @media(max-width:1500px){
@@ -39,6 +43,9 @@
 .report-mode{font-variant-numeric:tabular-nums}
 .report-mode .report-svg text{font-size:18px}
 .report-mode .report-svg .axis-text{font-size:16px}
+.report-chart-scroll{overflow-x:auto;overflow-y:hidden;min-width:0;flex:1;scrollbar-gutter:stable;padding-top:8px}
+.report-mode .report-chart-scroll>.report-svg{width:var(--chart-width)!important;min-width:var(--chart-width);height:300px!important;max-height:none;display:block}
+.chart-scroll-hint{font-size:12px;color:#5f6f86;padding-top:6px}
 .report-mode .app-shell{padding:8px;grid-template-columns:190px minmax(0,1fr)}
 .report-mode .brand{padding-inline:4px;gap:6px}
 .report-mode .brand-mark{width:28px;font-size:24px}

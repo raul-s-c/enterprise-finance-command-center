@@ -1,7 +1,11 @@
 /* Responsive focus controls preserve every analytical panel without shrinking it. */
 (function(root){
   let selectedPanel='cx-ranking';
+  function positionCharts(){
+    document.querySelectorAll('.report-chart-scroll').forEach(chart=>{chart.scrollLeft=chart.scrollWidth;});
+  }
   function mount(){
+    positionCharts();
     const workspace=document.querySelector('.cx-workspace');
     if(!workspace)return;
     const nav=document.createElement('nav');
@@ -21,5 +25,5 @@
     });
     workspace.before(nav);
   }
-  root.VisualLayout={mount};
+  root.VisualLayout={mount,positionCharts};
 })(globalThis);

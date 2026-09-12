@@ -177,6 +177,7 @@
         analysisFocus.set(reportKey,index);
         panels.forEach(p=>p.classList.toggle('analysis-selected',p===panel));
         nav.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+        root.VisualLayout?.positionCharts();
       };
       nav.append(button);
     });

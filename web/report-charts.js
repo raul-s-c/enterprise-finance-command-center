@@ -29,7 +29,9 @@
       }else svg+=`<text x="${x}" y="${deltaY-14}" text-anchor="middle">—</text>`;
       svg+='</g>';
     });
-    return svg+`<text x="${left}" y="${bottom+43}" class="axis-text">Δ YoY · EUR m</text><line x1="${left}" x2="${width-right}" y1="${deltaY}" y2="${deltaY}" class="axis"/></svg>`;
+    const chart=svg+`<text x="${left}" y="${bottom+43}" class="axis-text">Δ YoY · EUR m</text><line x1="${left}" x2="${width-right}" y1="${deltaY}" y2="${deltaY}" class="axis"/></svg>`;
+    // Preserve every month on phones at a readable scale, not a compressed thumbnail.
+    return root.innerWidth<600&&width>root.innerWidth?`<div class="report-chart-scroll" tabindex="0" role="region" aria-label="${esc(metricLabel)} complete chart; scroll horizontally to see all months" style="--chart-width:${width}px">${chart}</div><small class="chart-scroll-hint">Scroll chart to explore all months</small>`:chart;
   }
   function varianceBar(value,max){
     const delta=value.delta,extent=M.finite(delta)?Math.abs(delta)/Math.max(max,1)*48:0;
