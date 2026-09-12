@@ -34,3 +34,10 @@ Run `node --test tests/*.test.cjs`. Composition regressions cover KPI/evidence p
 Browser QA must separately exercise wide desktop, laptop, intermediate widths and mobile. Resize while a non-default analysis focus is selected; verify the focus remains selected. Open a KPI calculation, close it, select a division and confirm that the report updates. Inspect both chart labels and controls: a clean console alone is not visual approval.
 
 This change does not certify universal pixel-perfect fidelity or exhaustive entity/product/filter coverage. Source-data controls remain independent of presentation QA.
+
+### September 2026 implementation checks
+
+- Traversed all 18 report destinations and their desktop subpages using the in-app browser. No document-level horizontal overflow or browser console errors were observed during that traversal.
+- Exercised Margin at 1784×991, 1366×768, 1280×720 and 1024×768, plus a 390×844 mobile viewport. Verified that the selected bridge survives a live resize from 1280 to 1024 pixels.
+- Verified the compact KPI evidence modal, its close control, and the source calculation content.
+- These checks are not an exhaustive cross-product of every viewport, filter and record selection. Some technical appendix pages deliberately remain text or tables.
