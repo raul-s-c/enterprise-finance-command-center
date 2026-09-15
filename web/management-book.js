@@ -71,17 +71,52 @@
   function actionSummary(data){const s=(data.performance_review_summary||[])[0]||{};return `<div class="action-summary"><div><strong>${s.open_actions??0}</strong><span>Open</span></div><div><strong>${s.in_progress_actions??0}</strong><span>In progress</span></div><div><strong>${s.overdue_actions??0}</strong><span>Overdue</span></div><div><strong>${s.closed_actions??0}</strong><span>Closed</span></div></div>`;}
   function compose(pages){
     if(pages.length<=1)return pages;
+    pages=pages.map(page=>page.fullScreen||page.contribution?page:{...page});
+    const definitions=pages.find(page=>page.title==='Context & definitions');
+    const definitionHost=pages.filter(page=>page!==definitions&&!page.fullScreen&&!page.contribution&&!page.html?.includes('class="report-indicators"')).at(-1);
+    if(definitions&&definitionHost){
+      definitionHost.html+=`<details class="report-definitions"><summary>Context & definitions</summary>${definitions.html}</details>`;
+      pages=pages.filter(page=>page!==definitions);
+    }
+    // Indicator bands are supporting context, never a destination on their own.
+    // Distribute them alongside evidence rather than pairing two KPI-only pages.
+    const bands=pages.filter(p=>p.html?.includes('class="report-indicators"'));
+    const evidence=pages.filter(p=>!bands.includes(p));
+    if(bands.length&&evidence.length){
+      const targets=evidence.filter(p=>!p.fullScreen&&!p.contribution);
+      if(targets.length){
+        bands.forEach((band,index)=>{
+          const target=targets[index%targets.length];
+          target.html=`<section class="report-context-band" aria-label="${esc(band.title)}">${band.html}</section>${target.html}`;
+          if((target.policy?.key||'group')!==(band.policy?.key||'group'))target.policy=root.ReportContext.group;
+        });
+        pages=evidence;
+      }
+    }
     const result=[];
     for(let i=0;i<pages.length;){
       const page=pages[i];
       if(page?.contribution||page?.fullScreen){result.push(page);i+=1;continue;}
       const next=pages[i+1];
-      const pair=next&&!next.contribution?[page,next]:[page];
+      const pair=next&&!next.contribution&&!next.fullScreen?[page,next]:[page];
       const sameScope=pair.length===1||pair.every(p=>(p.policy?.key||'group')===(pair[0].policy?.key||'group'));
       result.push({title:pair.map(p=>p.title).join(' · '),policy:sameScope?pair[0].policy:root.ReportContext.group,custom:pair.some(p=>p.custom),html:`<div class="story-board ${pair.length===1?'story-single':''}">${pair.map(p=>`<section class="story-composite" data-source-section="${esc(p.title)}">${p.html}</section>`).join('')}</div>`});
       i+=pair.length;
     }
     return result;
   }
-  root.ManagementBook={executivePages,compose,mount};
+  function mountResponsive(){
+    mount();
+    const tower=document.querySelector('.control-tower');
+    if(!tower)return;
+    tower.addEventListener('click',event=>{
+      if(!event.target.closest('[data-story-focus]')||!window.matchMedia('(max-width:1700px)').matches)return;
+      const body=document.getElementById('storyInspectorBody');
+      reportDialog('Calculation & supporting evidence',`<div class="sw-evidence-dialog">${body.innerHTML}</div>`);
+      document.querySelectorAll('#reportDialogBody [data-story-view]').forEach(button=>button.onclick=()=>{
+        document.getElementById('reportDialog').close();state.view=button.dataset.storyView;reportState.page=0;render();
+      });
+    });
+  }
+  root.ManagementBook={executivePages,compose,mount:mountResponsive};
 })(globalThis);

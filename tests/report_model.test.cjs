@@ -9,6 +9,24 @@ const ctx=vm.createContext({FinanceReport:M});
 vm.runInContext(fs.readFileSync(path.join(__dirname,'../web/report-charts.js'),'utf8'),ctx);
 const C=ctx.ReportCharts;
 
+test('compact trend charts retain every observation in a keyboard-focusable scroll region',()=>{
+  const narrow=vm.createContext({FinanceReport:M,innerWidth:390});
+  vm.runInContext(fs.readFileSync(path.join(__dirname,'../web/report-charts.js'),'utf8'),narrow);
+  const rows=Array.from({length:12},(_,i)=>({month:`2026-${String(i+1).padStart(2,'0')}`,actual:100+i,prior:90+i}));
+  const html=narrow.ReportCharts.trend(rows,'Revenue',760,300);
+  assert.match(html,/report-chart-scroll/);
+  assert.match(html,/tabindex="0" role="region"/);
+  assert.equal((html.match(/data-month=/g)||[]).length,12);
+  assert.match(html,/--chart-width:760px/);
+  assert.doesNotMatch(C.trend(rows,'Revenue',760,300),/report-chart-scroll/);
+  const bridge=narrow.ReportCharts.waterfall(row('2026-08',100),true);
+  assert.match(bridge,/--chart-width:900px/);
+  assert.match(bridge,/data-chart-anchor="start"/);
+  const series=narrow.ReportCharts.series(rows,'actual','month','2026-12',320);
+  assert.match(series,/--chart-width:660px/);
+  assert.match(series,/data-chart-anchor="end"/);
+});
+
 test('presentation aggregation sums duplicate source lines, scopes and leaves inputs untouched',()=>{
   const rows=[row('2026-08',100),row('2026-08',50),row('2026-08',200,'DE01'),row('2026-08',300,'US01','Hardware')];
   const before=JSON.stringify(rows);

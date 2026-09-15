@@ -1,4 +1,4 @@
-"""Release topology regression: no persistent publication before both test jobs pass."""
+"""Release topology regression: publication requires finance and rendered UI checks."""
 from pathlib import Path
 
 import yaml
@@ -11,14 +11,27 @@ def jobs():
     return yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))["jobs"]
 
 
-def test_publication_requires_both_independent_validation_jobs():
+def test_publication_requires_all_independent_validation_jobs():
     workflow = jobs()
     assert "needs" not in workflow["build"]
     assert "needs" not in workflow["continuity"]
-    assert set(workflow["publish"]["needs"]) == {"build", "continuity"}
+    assert "needs" not in workflow["visual"]
+    assert set(workflow["publish"]["needs"]) == {"build", "continuity", "visual"}
     assert workflow["publish"]["if"] == "github.ref == 'refs/heads/main'"
     assert workflow["deploy"]["needs"] == ["publish"]
     assert workflow["deploy"]["if"] == "github.ref == 'refs/heads/main'"
+
+
+def test_visual_job_runs_browser_regressions_and_retains_evidence():
+    steps = jobs()["visual"]["steps"]
+    commands = [step.get("run") for step in steps]
+    assert "npm ci --ignore-scripts" in commands
+    assert "npx playwright install --with-deps chromium" in commands
+    assert "npm run test:ui" in commands
+    assert not any(step.get("continue-on-error") for step in steps)
+    evidence = next(step for step in steps if step.get("uses") == "actions/upload-artifact@v4")
+    assert evidence["with"]["name"] == "responsive-ui-evidence"
+    assert evidence["with"]["if-no-files-found"] == "error"
 
 
 def test_build_stages_same_run_candidate_without_persistent_publication():

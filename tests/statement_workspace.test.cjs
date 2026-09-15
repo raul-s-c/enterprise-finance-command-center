@@ -3,6 +3,7 @@ const assert=require('node:assert/strict');
 global.FinanceReport=require('../web/report-model.js');
 require('../web/report-charts.js');
 global.ReportContext=require('../web/report-context.js');
+global.PnlVisual=require('../web/pnl-visual.js');
 require('../web/statement-workspace.js');
 const data=require('../web/data/dashboard.json');
 
@@ -13,9 +14,14 @@ test('core finance and operating modules open with a premium one-screen cockpit'
     assert.equal(pages.length,1,view);
     assert.equal(pages[0].custom,true,view);
     assert.equal(pages[0].fullScreen,true,view);
-    assert.match(pages[0].html,/statement-workspace/,view);
-    assert.match(pages[0].html,/Evidence inspector/,view);
-    assert.equal((pages[0].html.match(/class="sw-kpi"/g)||[]).length,5,view);
+    if(view==='pnl'){
+      assert.match(pages[0].html,/pnl-visual/);
+      assert.equal((pages[0].html.match(/data-pnl-key=/g)||[]).length,10);
+    }else{
+      assert.match(pages[0].html,/statement-workspace/,view);
+      assert.match(pages[0].html,/Evidence inspector/,view);
+      assert.equal((pages[0].html.match(/class="sw-kpi"/g)||[]).length,5,view);
+    }
     assert.doesNotMatch(pages[0].html,/undefined|NaN/,view);
   }
 });
@@ -73,8 +79,18 @@ test('statement cockpits preserve reconciliation language and evidence routes',(
   const pnl=global.StatementWorkspace.pages('pnl',data,state)[0].html;
   const cash=global.StatementWorkspace.pages('cash-flow',data,state)[0].html;
   const balance=global.StatementWorkspace.pages('balance-sheet',data,state)[0].html;
-  assert.match(pnl,/no balancing plug/i);
+  assert.match(pnl,/Net finance costs and tax/);
   assert.match(cash,/Operating cash flow \+ investing cash flow/);
   assert.match(balance,/Assets − liabilities − equity/);
-  for(const html of [pnl,cash,balance])assert.match(html,/Reconciled to the published close/);
+  for(const html of [cash,balance])assert.match(html,/Reconciled to the published close/);
+});
+
+test('graphical P&L reconciles through net income and applies cost polarity',()=>{
+  const ac={revenue:100,marginal_contribution:60,gross_profit:40,opex:15,depreciation:5,ebit:20,net_income:12};
+  const py={...ac,opex:10,ebit:25,net_income:17};
+  const rows=PnlVisual.rows(ac,py,FinanceReport);
+  assert.equal(rows.find(r=>r.key==='below_ebit').value,8);
+  assert.equal(rows.at(-1).end,12);
+  assert.equal(rows.find(r=>r.key==='opex').change.favorable,false);
+  assert.equal(PnlVisual.rows(ac,{},FinanceReport)[0].change.relative,null);
 });
