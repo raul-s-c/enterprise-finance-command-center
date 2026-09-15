@@ -1,6 +1,20 @@
 const {test,expect}=require('@playwright/test');
 
 test('P&L retains a readable canvas in short windows and signed endpoints',async({page})=>{
+  // Test-only financial scenario: a cost reduction must exist regardless of the
+  // current generated close. Never modify repository or production data.
+  await page.route('**/data/dashboard.json*',async route=>{
+    const response=await route.fetch(),fixture=await response.json();
+    const current=fixture.meta.end_month,prior=`${Number(current.slice(0,4))-1}${current.slice(4)}`;
+    for(const row of fixture.management_detail){
+      if(row.entity==='US01'&&row.division==='Hardware'&&[current,prior].includes(row.month)){
+        row.opex=row.month===current?100:200;
+        row.ebit=row.gross_profit-row.opex-row.depreciation;
+        row.net_income=row.ebit-10;
+      }
+    }
+    await route.fulfill({response,json:fixture});
+  });
   await page.setViewportSize({width:870,height:422});
   await page.goto('/#view=pnl&entity=US01&division=Hardware');
   const canvas=page.locator('.pnl-scroll');await expect(canvas).toBeVisible();
