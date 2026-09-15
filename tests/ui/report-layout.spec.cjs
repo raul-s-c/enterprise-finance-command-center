@@ -1,5 +1,15 @@
 const {test,expect}=require('@playwright/test');
 
+test('P&L retains a readable canvas in short windows and signed endpoints',async({page})=>{
+  await page.setViewportSize({width:870,height:422});
+  await page.goto('/#view=pnl&entity=US01&division=Hardware');
+  const canvas=page.locator('.pnl-scroll');await expect(canvas).toBeVisible();
+  expect((await canvas.boundingBox()).height).toBeGreaterThanOrEqual(420);
+  await expect(page.locator('[data-pnl-key="revenue"]')).toBeVisible();
+  const endpoints=await page.locator('.pnl-percent.negative i').evaluateAll(nodes=>nodes.map(n=>getComputedStyle(n,'::after').left));
+  expect(endpoints.length).toBeGreaterThan(0);expect(endpoints.every(x=>x==='0px')).toBe(true);
+});
+
 test('graphical P&L restores filters with Back and factory content stays inside cards',async({page})=>{
   await page.setViewportSize({width:1366,height:900});
   await page.goto('/#view=pnl');
