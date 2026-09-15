@@ -13,6 +13,14 @@ test('graphical P&L restores filters with Back and factory content stays inside 
   await expect(page.locator('#reportDialog')).toBeVisible();
   await expect(page.locator('#reportDialogBody')).toContainText('Sum of OPEX');
   await expect(page.locator('#reportDialogBody')).toContainText('Contribution by entity and division');
+  const downloadEvent=page.waitForEvent('download');
+  await page.getByRole('button',{name:'Export evidence CSV',exact:true}).click();
+  const download=await downloadEvent;
+  expect(download.suggestedFilename()).toMatch(/^aureon-pnl-opex-.*-evidence\.csv$/);
+  const stream=await download.createReadStream(),chunks=[];
+  for await(const chunk of stream)chunks.push(chunk);
+  const exported=Buffer.concat(chunks).toString('utf8');
+  expect(exported).toContain('actual_eur');expect(exported).toContain('"US01"');expect(exported).not.toContain('"DE01"');
   await page.locator('[data-pnl-entity="US01"][data-pnl-division="Hardware"]').click();
   await expect(page.locator('#reportDialog')).not.toBeVisible();
   await expect(page.locator('#divisionFilter')).toHaveValue('Hardware');

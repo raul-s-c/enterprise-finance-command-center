@@ -226,6 +226,13 @@ function render(restoring=false){
     if(!row)return;
     const formulas={variable:'Revenue − marginal contribution',fixed:'Marginal contribution − gross profit',below_ebit:'EBIT − net income',revenue:'Sum of revenue',marginal_contribution:'Revenue − variable costs',gross_profit:'Marginal contribution − fixed production costs',opex:'Sum of OPEX',depreciation:'Sum of depreciation',ebit:'Gross profit − OPEX − depreciation',net_income:'EBIT − net finance costs and tax'};
     reportDialog(row.label,`<p>AC ${RC.money(row.value)} · PY ${RC.money(row.prior)} · EUR million</p><p><strong>Calculation:</strong> ${RM.escape(formulas[row.key])}</p><p>Source: management_detail · ${RM.escape(reportScope())}</p>${PnlVisual.detail(data,state,row.key)}`);
+    document.querySelector('.pnl-source-detail').insertAdjacentHTML('afterbegin','<button id="pnlExportEvidence">Export evidence CSV</button><span id="pnlExportStatus" role="status"></span>');
+    document.getElementById('pnlExportEvidence').onclick=()=>{
+      const blob=new Blob(['\ufeff',PnlVisual.csv(data,state,row.key)],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),link=document.createElement('a');
+      link.href=url;link.download=`aureon-pnl-${row.key}-${data.meta.end_month}-evidence.csv`;
+      document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+      document.getElementById('pnlExportStatus').textContent=' Export prepared · full EUR values · current selection';
+    };
     document.querySelectorAll('[data-pnl-entity]').forEach(target=>target.onclick=()=>{
       state.entity=target.dataset.pnlEntity;state.division=target.dataset.pnlDivision;
       document.getElementById('reportDialog').close();render();

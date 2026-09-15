@@ -33,5 +33,15 @@
     const C={money:precise,signed:v=>M.finite(v)?`${v>0?'+':''}${precise(v)}`:'—'};
     return `<section class="pnl-source-detail"><h3>Contribution by entity and division</h3><p>Published management summary records, not individual ledger postings. Select a scope to explore its full P&amp;L.</p><div class="pnl-source-scroll"><table><thead><tr><th>Entity / division</th><th>AC (€m)</th><th>PY (€m)</th><th>Δ (€m)</th><th>Contribution magnitude</th></tr></thead><tbody>${parts.map(r=>`<tr><th><button data-pnl-entity="${esc(r.entity)}" data-pnl-division="${esc(r.division)}">${esc(r.entity)} / ${esc(r.division)}</button></th><td>${C.money(r.actual)}</td><td>${C.money(r.prior)}</td><td>${C.signed(r.change?.delta)}</td><td><span class="pnl-source-bar" aria-label="${r.actual<0?'Negative':'Positive'} contribution"><i style="width:${Math.abs(r.actual||0)/max*100}%;background:${r.actual<0?'#c82028':'#0874ed'}"></i></span></td></tr>`).join('')}</tbody></table></div><p>${parts.reduce((n,r)=>n+r.records,0)} current-period source rows · Missing comparisons remain unavailable, not zero. Bar length shows magnitude; signs are retained in the values.</p></section>`;
   }
-  const api={rows,render,contributions,detail};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.PnlVisual=api;
+  function csv(data,scope,key,M=root.FinanceReport){
+    const cell=value=>{
+      if(typeof value==='number')return Number.isFinite(value)?String(value):'';
+      let text=String(value??'');
+      if(/^[\s]*[=+\-@]/.test(text))text="'"+text;
+      return `"${text.replaceAll('"','""')}"`;
+    };
+    const header=['period','comparison_period','line','entity','division','actual_eur','prior_eur','variance_eur','variance_ratio','current_source_rows','source'];
+    return [header,...contributions(data,scope,key,M).map(r=>[data.meta.end_month,M.priorMonth(data.meta.end_month),key,r.entity,r.division,r.actual,r.prior,r.change?.delta,r.change?.relative,r.records,'management_detail'])].map(row=>row.map(cell).join(',')).join('\r\n');
+  }
+  const api={rows,render,contributions,detail,csv};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.PnlVisual=api;
 })(globalThis);
