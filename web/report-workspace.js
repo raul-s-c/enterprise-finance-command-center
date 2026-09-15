@@ -225,7 +225,11 @@ function render(restoring=false){
     const s=reportCurrent(),row=PnlVisual.rows(s.current,s.prior||{},RM).find(r=>r.key===button.dataset.pnlKey);
     if(!row)return;
     const formulas={variable:'Revenue − marginal contribution',fixed:'Marginal contribution − gross profit',below_ebit:'EBIT − net income',revenue:'Sum of revenue',marginal_contribution:'Revenue − variable costs',gross_profit:'Marginal contribution − fixed production costs',opex:'Sum of OPEX',depreciation:'Sum of depreciation',ebit:'Gross profit − OPEX − depreciation',net_income:'EBIT − net finance costs and tax'};
-    reportDialog(row.label,`<p>AC ${RC.money(row.value)} · PY ${RC.money(row.prior)} · EUR million</p><p><strong>Calculation:</strong> ${RM.escape(formulas[row.key])}</p><p>Source: management_detail · ${RM.escape(reportScope())}</p>`);
+    reportDialog(row.label,`<p>AC ${RC.money(row.value)} · PY ${RC.money(row.prior)} · EUR million</p><p><strong>Calculation:</strong> ${RM.escape(formulas[row.key])}</p><p>Source: management_detail · ${RM.escape(reportScope())}</p>${PnlVisual.detail(data,state,row.key)}`);
+    document.querySelectorAll('[data-pnl-entity]').forEach(target=>target.onclick=()=>{
+      state.entity=target.dataset.pnlEntity;state.division=target.dataset.pnlDivision;
+      document.getElementById('reportDialog').close();render();
+    });
   });
   document.querySelectorAll('[data-metric]').forEach(b=>b.onclick=()=>{reportState.metric=b.dataset.metric;render();});
   document.querySelectorAll('[data-division]').forEach(b=>b.onclick=()=>{state.division=b.dataset.division;document.getElementById('divisionFilter').value=state.division;render();});

@@ -12,7 +12,12 @@ test('graphical P&L restores filters with Back and factory content stays inside 
   await page.locator('[data-pnl-key="opex"]').click();
   await expect(page.locator('#reportDialog')).toBeVisible();
   await expect(page.locator('#reportDialogBody')).toContainText('Sum of OPEX');
-  await page.getByRole('button',{name:'Close',exact:true}).click();
+  await expect(page.locator('#reportDialogBody')).toContainText('Contribution by entity and division');
+  await page.locator('[data-pnl-entity="US01"][data-pnl-division="Hardware"]').click();
+  await expect(page.locator('#reportDialog')).not.toBeVisible();
+  await expect(page.locator('#divisionFilter')).toHaveValue('Hardware');
+  await page.getByRole('button',{name:'Back',exact:true}).click();
+  await expect(page.locator('#divisionFilter')).toHaveValue('all');
   for(const width of [1784,1392,1024,390]){
     await page.setViewportSize({width,height:991});
     await page.goto('/#view=operations-capex');

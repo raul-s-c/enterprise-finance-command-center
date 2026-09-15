@@ -15,6 +15,14 @@
 .pnl-delta i{position:absolute;height:25px;background:#aab0b8;opacity:.35}.pnl-percent i{position:absolute;height:3px;background:#aab0b8}.pnl-percent i:after{content:'';position:absolute;right:0;top:-2px;width:7px;height:7px;border-radius:50%;background:currentColor}
 .pnl-delta b,.pnl-percent b{position:relative;font-size:13px;background:#ffffffd9;padding:1px 3px}.pnl-row .good{color:#087b42}.pnl-row .bad{color:#c82028}.pnl-row .good i{background:#36aa45}.pnl-row .bad i{background:#e5363f}
 .pnl-note{padding-top:10px;flex:none;line-height:1.4}
+.pnl-source-scroll{overflow:auto;max-height:45vh}
+.report-mode #reportDialog:has(.pnl-source-detail){width:min(1000px,calc(100vw - 32px));max-width:calc(100vw - 32px);box-sizing:border-box}
+.pnl-source-detail table{width:100%;min-width:620px;border-collapse:collapse;font-size:13px}
+.pnl-source-detail th,.pnl-source-detail td{padding:8px;border-bottom:1px solid #dce3ed;text-align:right}
+.pnl-source-detail th:first-child{text-align:left}.pnl-source-detail th button{text-align:left;white-space:normal}
+.pnl-source-detail thead{position:sticky;top:0;background:white}
+.pnl-source-detail p{font-size:12px;color:#52647c;line-height:1.5}
+.pnl-source-bar{display:block;width:140px;height:12px;background:#eef2f7}.pnl-source-bar i{display:block;height:100%}
 .report-mode .sw-inspector-value{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
 .report-mode .sw-inspector-value small{max-width:100%;overflow-wrap:anywhere}
 /* Factory cards size to their panel, not the browser width. */

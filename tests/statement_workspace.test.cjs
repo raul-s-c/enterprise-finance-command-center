@@ -94,3 +94,22 @@ test('graphical P&L reconciles through net income and applies cost polarity',()=
   assert.equal(rows.find(r=>r.key==='opex').change.favorable,false);
   assert.equal(PnlVisual.rows(ac,{},FinanceReport)[0].change.relative,null);
 });
+
+test('every P&L contribution line reconciles to the selected scope',()=>{
+  for(const scope of [{entity:'all',division:'all'},{entity:'US01',division:'all'},{entity:'all',division:'Hardware'}]){
+    const aggregated=FinanceReport.aggregate(data.management_detail,scope);
+    const ac=aggregated.find(r=>r.month===data.meta.end_month),py=aggregated.find(r=>r.month===FinanceReport.priorMonth(data.meta.end_month));
+    for(const line of PnlVisual.rows(ac,py,FinanceReport)){
+      const parts=PnlVisual.contributions(data,scope,line.key,FinanceReport);
+      assert.ok(Math.abs(parts.reduce((n,r)=>n+r.actual,0)-line.value)<.01,line.key);
+      assert.ok(Math.abs(parts.reduce((n,r)=>n+r.prior,0)-line.prior)<.01,line.key+' PY');
+    }
+  }
+});
+
+test('source evidence preserves losses and missing comparisons',()=>{
+  const fixture={meta:{end_month:'2026-08'},management_detail:[{month:'2026-08',entity:'A',division:'Hardware',revenue:10,marginal_contribution:5,gross_profit:2,opex:6,depreciation:1,ebit:-5,net_income:-7}]};
+  const parts=PnlVisual.contributions(fixture,{entity:'all',division:'all'},'ebit',FinanceReport);
+  assert.equal(parts[0].actual,-5);assert.equal(parts[0].prior,null);assert.equal(parts[0].change.delta,null);
+  assert.equal(PnlVisual.rows(undefined,undefined,FinanceReport).length,10);
+});
