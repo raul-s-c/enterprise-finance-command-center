@@ -2,7 +2,7 @@
   "fx": {
     "preferred_source": "ECB Data Portal EXR monthly reference rates",
     "fallback": "deterministic synthetic FX curves",
-    "live_rows": 144
+    "live_rows": 0
   },
   "economic_drivers": {
     "current": "official public observations by driver with deterministic month-level fallback",
@@ -23,9 +23,9 @@
       "preferred_source": "Eurostat industrial production",
       "source_url": "https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table",
       "fallback": "deterministic calibrated series",
-      "official_rows": 34,
-      "fallback_rows": 2,
-      "latest_official_month": "2026-06"
+      "official_rows": 35,
+      "fallback_rows": 1,
+      "latest_official_month": "2026-07"
     },
     "energy_index": {
       "unit": "2010=100",
@@ -50,36 +50,36 @@
       "preferred_source": "ECB reference exchange rate",
       "source_url": "https://data.ecb.europa.eu/data/datasets/EXR",
       "fallback": "deterministic calibrated series",
-      "official_rows": 36,
-      "fallback_rows": 0,
-      "latest_official_month": "2026-08"
+      "official_rows": 0,
+      "fallback_rows": 36,
+      "latest_official_month": null
     },
     "JPY": {
       "unit": "EUR per currency unit",
       "preferred_source": "ECB reference exchange rate",
       "source_url": "https://data.ecb.europa.eu/data/datasets/EXR",
       "fallback": "deterministic calibrated series",
-      "official_rows": 36,
-      "fallback_rows": 0,
-      "latest_official_month": "2026-08"
+      "official_rows": 0,
+      "fallback_rows": 36,
+      "latest_official_month": null
     },
     "CNY": {
       "unit": "EUR per currency unit",
       "preferred_source": "ECB reference exchange rate",
       "source_url": "https://data.ecb.europa.eu/data/datasets/EXR",
       "fallback": "deterministic calibrated series",
-      "official_rows": 36,
-      "fallback_rows": 0,
-      "latest_official_month": "2026-08"
+      "official_rows": 0,
+      "fallback_rows": 36,
+      "latest_official_month": null
     },
     "CZK": {
       "unit": "EUR per currency unit",
       "preferred_source": "ECB reference exchange rate",
       "source_url": "https://data.ecb.europa.eu/data/datasets/EXR",
       "fallback": "deterministic calibrated series",
-      "official_rows": 36,
-      "fallback_rows": 0,
-      "latest_official_month": "2026-08"
+      "official_rows": 0,
+      "fallback_rows": 36,
+      "latest_official_month": null
     }
   }
 }
