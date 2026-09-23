@@ -1,0 +1,155 @@
+/* Accounting-first reporting system: white paper, disciplined totals, semantic variance. */
+:root{
+  --acca-paper:#fff;
+  --acca-ink:#14243b;
+  --acca-muted:#5f6b7a;
+  --acca-rule:#d8dee7;
+  --acca-rule-strong:#707b88;
+  --acca-wash:#f4f6f9;
+  --acca-blue:#0b63ce;
+  --acca-blue-wash:#eaf2fc;
+  --acca-good:#18733d;
+  --acca-bad:#bf2935;
+  --acca-actual:#3f454d;
+  --acca-prior:#aab0b7;
+}
+.report-mode{
+  color:var(--acca-ink);
+  background:var(--acca-paper);
+  font-family:"Segoe UI Variable","Segoe UI",Arial,sans-serif;
+  font-variant-numeric:tabular-nums lining-nums;
+  letter-spacing:0;
+}
+.report-mode .app-shell{grid-template-columns:212px minmax(0,1fr);padding:0;gap:0;background:var(--acca-paper)}
+.report-mode .sidebar{background:#fff!important;color:var(--acca-ink)!important;border:0!important;border-right:1px solid var(--acca-rule)!important;border-radius:0!important;box-shadow:none!important;padding:0 10px 10px}
+.report-mode .brand{height:60px;min-height:60px;padding:0 8px;border-bottom:1px solid var(--acca-rule);gap:9px}
+.report-mode .brand-mark{width:34px;height:auto;padding:0;border:0!important;color:var(--acca-blue)!important;font-size:25px;font-weight:750;letter-spacing:-.07em}
+.report-mode .brand-name{font-size:15px;font-weight:700;color:var(--acca-ink)!important}
+.report-mode .brand-sub{display:none}
+.report-mode .nav{gap:2px;padding-top:9px}
+.report-mode .nav button{position:relative;min-height:40px;padding:8px 10px;border:0;border-radius:2px;color:#35445a!important;background:transparent!important;font-size:12px;font-weight:550;gap:9px}
+.report-mode .nav button:hover{color:var(--acca-blue)!important;background:#f4f7fb!important}
+.report-mode .nav button.active{color:#064fa9!important;background:var(--acca-blue-wash)!important;font-weight:650}
+.report-mode .nav button.active:before{content:"";position:absolute;left:-10px;top:0;bottom:0;width:3px;background:var(--acca-blue)}
+.report-mode .nav button svg{width:15px;height:15px;stroke-width:1.75}
+.report-mode .sidebar-footer{border-top:1px solid var(--acca-rule);color:var(--acca-muted)!important;padding:10px 8px 0;margin-top:auto;font-size:10px}
+.report-mode .sidebar-footer a{color:var(--acca-blue)!important}
+.report-mode .main-shell{background:#fff;border:0;border-radius:0;box-shadow:none;min-width:0}
+.report-mode .global-bar{height:46px;padding:0 18px;border-bottom:1px solid var(--acca-rule);background:#fff;gap:16px}
+.report-mode .global-search{height:30px;border-color:#cbd4df;background:#fff}
+.report-mode .global-utilities{font-size:11px;color:var(--acca-ink)}
+.report-mode .global-control{color:var(--acca-good)}
+.report-mode .topbar{min-height:82px;padding:9px 20px;border-bottom:1px solid var(--acca-rule);background:#fff;gap:14px}
+.report-mode .topbar h1{font-size:23px;font-weight:680;line-height:1.15;letter-spacing:-.025em;color:var(--acca-ink)}
+.report-mode .topbar p{font-size:11px;line-height:1.4;color:var(--acca-muted);margin-top:4px}
+.report-area-label{font-size:9px;color:var(--acca-muted)}
+.report-mode .report-modules{margin-top:5px;gap:3px}
+.report-mode .report-modules button{min-height:25px;padding:3px 8px;font-size:11px;color:#46556a}
+.report-mode .report-modules button[aria-current=page]{color:#064fa9;border-bottom-color:var(--acca-blue)}
+.report-mode .filters{align-items:end;gap:8px}
+.report-mode .filters label{font-size:10px;color:var(--acca-muted)}
+.report-mode .filters select{min-width:126px;height:32px;padding:5px 25px 5px 8px;border-color:#cbd4df;color:var(--acca-ink);font-size:12px}
+.report-mode .filters button{min-height:32px;padding:5px 10px;font-size:11px}
+.report-mode :focus-visible{outline:2px solid var(--acca-blue);outline-offset:2px}
+.report-mode .report-subnav{height:43px;padding:0 18px;border-bottom:1px solid var(--acca-rule);gap:10px}
+.report-mode .report-subnav nav{gap:5px}
+.report-mode .report-subnav nav button{min-height:42px;padding:9px 10px;font-size:11px;color:#455267}
+.report-mode .report-subnav nav button[aria-current=page]{color:#064fa9;border-bottom-color:var(--acca-blue)}
+.report-mode .report-page-select{font-size:10px;color:var(--acca-muted)}
+.report-mode .report-page-select select{min-height:28px!important;border-color:#cbd4df;font-size:11px!important;color:var(--acca-ink)}
+.report-mode .report-context{min-height:30px;padding:5px 20px;background:#f7f8fa;border-bottom:1px solid #e8ebef;color:var(--acca-muted);font-size:10px}
+.report-mode .content{padding:14px 20px;min-width:0}
+.report-mode .report-footer{height:38px;padding:4px 18px;border-top:1px solid var(--acca-rule);font-size:10px;color:var(--acca-muted)}
+.report-mode .report-page-controls{gap:8px}
+.report-mode .report-page-controls button{min-height:28px;border-color:#cbd4df;font-size:11px}
+.report-mode .control-pass,.report-mode .favorable{color:var(--acca-good);fill:var(--acca-good)}
+.report-mode .control-fail,.report-mode .unfavorable{color:var(--acca-bad);fill:var(--acca-bad)}
+.report-mode .neutral{color:#5e6875;fill:#5e6875}
+.report-mode .report-kpis{margin-bottom:16px}
+.report-mode .report-kpi{padding:0 13px;border-color:var(--acca-rule)}
+.report-mode .report-kpi>div{font-size:11px;font-weight:600;color:#36465b}
+.report-mode .report-kpi strong{font-size:29px;font-weight:650;letter-spacing:-.03em;color:var(--acca-ink)}
+.report-mode .report-kpi small{font-size:10px;color:var(--acca-muted)}
+.report-mode .report-overview{border-color:var(--acca-rule)}
+.report-mode .report-trend,.report-mode .report-divisions{padding:13px}
+.report-mode h3,.report-mode .panel-title{color:var(--acca-ink)}
+.report-mode .report-svg .actual{fill:var(--acca-actual)}
+.report-mode .report-svg .prior{fill:var(--acca-prior)}
+.report-mode .report-svg .axis{stroke:#828b96}
+.report-mode .report-svg .connector{stroke:#8c949d}
+.report-mode .division-matrix th,.report-mode .division-matrix td{border-color:#e1e5ea}
+.report-mode .statement-table{font-size:13px}
+.report-mode .statement-table th,.report-mode .statement-table td{padding:9px 10px;border-color:#e1e5ea}
+.report-mode .statement-table thead th{font-size:11px;color:#49576b;border-bottom:2px solid var(--acca-rule-strong)}
+.report-mode .statement-table .subtotal th,.report-mode .statement-table .subtotal td{font-weight:700;border-top:1px solid #9aa3ad;border-bottom:1px solid #9aa3ad}
+.report-mode .financial-report>.report-note{margin-top:10px;padding:8px 10px;background:#f7f8fa;border-left:2px solid #8793a0;color:var(--acca-muted);font-size:10px}
+
+/* The graphical statement keeps its IBCS bridge, but makes the accounting hierarchy explicit. */
+.report-mode .pnl-visual{gap:0;overflow:hidden}
+.report-mode .pnl-visual>header{flex:none;padding:0 0 10px;border-bottom:1px solid var(--acca-rule)}
+.report-mode .pnl-visual h2{margin:0;font-size:21px;line-height:1.2;font-weight:680;letter-spacing:-.025em;color:var(--acca-ink)}
+.report-mode .pnl-visual p{font-size:11px;line-height:1.45;color:var(--acca-muted);margin:4px 0 0}
+.report-mode .pnl-scroll{flex:1 1 auto;min-height:0;max-height:100%;overflow:auto;scrollbar-gutter:stable}
+.report-mode .pnl-grid{min-width:860px}
+.report-mode .pnl-heading,.report-mode button.pnl-row{grid-template-columns:minmax(205px,1.15fr) 78px minmax(240px,1.45fr) minmax(140px,.9fr) minmax(130px,.85fr);gap:12px}
+.report-mode .pnl-heading{position:sticky;top:0;z-index:1;min-height:38px;padding:7px 9px;background:#f2f4f7;color:#445267;border-bottom:2px solid var(--acca-rule-strong);font-size:11px;font-weight:650}
+.report-mode .pnl-heading span:not(:first-child){text-align:right}
+.report-mode button.pnl-row{min-height:42px;padding:4px 9px;border-bottom:1px solid #e7eaee;background:#fff;color:var(--acca-ink);font-size:13px}
+.report-mode button.pnl-row:nth-of-type(odd){background:#fbfcfd}
+.report-mode button.pnl-row:hover,.report-mode button.pnl-row:focus-visible{background:#edf4fc;color:var(--acca-ink);outline:2px solid var(--acca-blue);outline-offset:-2px}
+.report-mode button.pnl-row.subtotal{min-height:44px;background:#f5f7f9;border-top:1px solid #909aa6;border-bottom:1px solid #909aa6;font-weight:700}
+.report-mode .pnl-row>span:first-child{font-size:13px;line-height:1.25}
+.report-mode .pnl-row[data-line-type="cost"]>span:first-child{padding-left:13px}
+.report-mode .pnl-row>span:nth-child(2){color:#566171;font-size:12px}
+.report-mode .pnl-track,.report-mode .pnl-delta,.report-mode .pnl-percent{height:32px}
+.report-mode .pnl-track i{height:25px;background:var(--acca-actual)}
+.report-mode .pnl-track b{background:#ffffffed;color:#18283d;font-size:12px;min-width:56px;text-align:center}
+.report-mode .pnl-delta:before,.report-mode .pnl-percent:before{border-left-color:#8b939d}
+.report-mode .pnl-delta i{height:24px;background:#66717e;opacity:.4}
+.report-mode .pnl-percent i{height:3px;background:#66717e}
+.report-mode .pnl-delta b,.report-mode .pnl-percent b{background:#ffffffed;color:currentColor;font-size:12px}
+.report-mode .pnl-row .good,.report-mode .pnl-row .good b{color:var(--acca-good)}
+.report-mode .pnl-row .bad,.report-mode .pnl-row .bad b{color:var(--acca-bad)}
+.report-mode .pnl-row .good i{background:var(--acca-good)}
+.report-mode .pnl-row .bad i{background:var(--acca-bad)}
+.report-mode .pnl-note{flex:none;padding:8px 0 0;border-top:1px solid var(--acca-rule);font-size:10px;color:var(--acca-muted)}
+.report-mode .pnl-source-detail h3{font-size:15px}
+.report-mode .pnl-source-detail table{font-size:12px}
+.report-mode .pnl-source-detail th,.report-mode .pnl-source-detail td{border-color:#e1e5ea}
+
+@media(max-width:1100px){
+  .report-mode .app-shell{grid-template-columns:176px minmax(0,1fr)}
+  .report-mode .content{padding:12px 14px}
+  .report-mode .report-kpi strong{font-size:26px}
+  .report-mode .topbar{padding-inline:14px}
+  .report-mode .report-page-select select{max-width:170px}
+}
+@media(max-width:900px){
+  .report-mode .app-shell{grid-template-columns:minmax(0,1fr)}
+  .report-mode .sidebar{display:none}
+  .report-mode .topbar{min-height:68px}
+  .report-mode .mobile-module{background:#f7f8fa;border-bottom-color:var(--acca-rule)}
+  .report-mode .mobile-module select{border-color:#cbd4df;color:var(--acca-ink)}
+  .report-mode .content{overflow:auto}
+  .report-mode .pnl-visual{min-height:560px;height:auto;overflow:visible}
+  .report-mode .pnl-scroll{flex:1 1 auto;min-height:430px;overflow:auto}
+  .report-mode .report-footer{height:40px}
+}
+@media(max-width:600px){
+  .report-mode .global-bar{padding-inline:10px}
+  .report-mode .global-search{width:min(54vw,300px)}
+  .report-mode .global-utilities{gap:7px}
+  .report-mode .topbar{padding:8px 12px}
+  .report-mode .topbar h1{font-size:20px}
+  .report-mode .filters{width:100%;min-width:0;gap:5px}
+  .report-mode .filters label{min-width:0}
+  .report-mode .filters select{min-width:0;width:100%;font-size:11px;padding-inline:6px}
+  .report-mode .report-context{padding-inline:12px}
+  .report-mode .content{padding:10px 12px}
+  .report-mode .pnl-visual h2{font-size:19px}
+  .report-mode .pnl-grid{min-width:820px}
+  .report-mode .pnl-heading,.report-mode button.pnl-row{grid-template-columns:minmax(190px,1.1fr) 70px minmax(225px,1.3fr) minmax(125px,.9fr) minmax(115px,.8fr);gap:9px}
+  .report-mode button.pnl-row{min-height:40px;font-size:12px}
+  .report-mode .pnl-note{font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){.report-mode *{scroll-behavior:auto!important;transition:none!important}}
