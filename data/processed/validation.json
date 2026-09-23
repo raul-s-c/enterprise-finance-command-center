@@ -81,7 +81,7 @@
   "functional_currency_journal_max_gap": 0.0,
   "fx_roundtrip_max_gap": 0.02,
   "fx_translation_balance_max_gap": 0.0,
-  "fx_local_rounding_adjustment_eur_max": 0.02,
+  "fx_local_rounding_adjustment_eur_max": 0.03,
   "functional_currency_journal_missing": 0,
   "fx_translation_schedule_missing": 0,
   "constant_currency_analysis_missing": 0,
