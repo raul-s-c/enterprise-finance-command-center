@@ -261,6 +261,50 @@ test('close journey stays readable and navigable at laptop, tablet and mobile wi
   expect(errors).toEqual([]);
 });
 
+test('short desktop windows keep story, contribution and close controls reachable',async({page})=>{
+  await page.setViewportSize({width:1024,height:600});
+  for(const index of [1,2]){
+    await page.goto(`/#view=executive&page=${index}`);
+    await expect(page.locator('.story-region').first()).toBeVisible();
+    const regions=await page.locator('.story-region').evaluateAll(nodes=>nodes.filter(node=>getComputedStyle(node).display!=='none').map(node=>({
+      height:node.clientHeight,
+      content:node.scrollHeight
+    })));
+    expect(regions.length).toBeGreaterThan(0);
+    expect(regions.every(region=>region.height>=400),`Executive page ${index} collapsed: ${JSON.stringify(regions)}`).toBe(true);
+    const board=page.locator('.story-board');
+    expect(await board.evaluate(element=>getComputedStyle(element).overflowY)).toBe('auto');
+    await board.evaluate(element=>element.scrollTo({top:element.scrollHeight,behavior:'instant'}));
+    await expect(board.locator('> :last-child')).toBeInViewport();
+  }
+
+  await page.goto('/#view=working-capital');
+  const contribution=page.locator('.cx-workspace');
+  await expect(contribution).toBeVisible();
+  expect((await contribution.boundingBox()).height).toBeGreaterThanOrEqual(300);
+  const analysis=page.locator('#content');
+  const scroll=await analysis.evaluate(element=>({
+    overflow:getComputedStyle(element).overflowY,
+    content:element.scrollHeight,
+    viewport:element.clientHeight
+  }));
+  expect(scroll.overflow).toBe('auto');
+  expect(scroll.content).toBeGreaterThan(scroll.viewport);
+
+  await page.goto('/#view=close-journey');
+  const journey=page.locator('#content');
+  const journeyScroll=await journey.evaluate(element=>({
+    overflow:getComputedStyle(element).overflowY,
+    content:element.scrollHeight,
+    viewport:element.clientHeight
+  }));
+  expect(journeyScroll.overflow).toBe('auto');
+  expect(journeyScroll.content).toBeGreaterThan(journeyScroll.viewport);
+  await journey.evaluate(element=>element.scrollTo({top:element.scrollHeight,behavior:'instant'}));
+  await expect(page.locator('#cj-next')).toBeInViewport();
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
+
 test('statement analysis survives live resize without an overlapping inspector',async({page},testInfo)=>{
   await page.setViewportSize({width:1280,height:720});
   await page.goto('/#view=margin');
