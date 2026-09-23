@@ -9,7 +9,7 @@
   const spare=domain('spare','Aftermarket indicators',['spare_parts_economics'],['entity']);
   const workforce=domain('workforce','Workforce indicators',['workforce_detail']);
   const contracts=domain('contracts','Customer funding indicators',['contract_entity_summary']);
-  const review=domain('review','Review indicators',['performance_review'],undefined,{levels:true});
+  const review=domain('review','Review indicators',['performance_review'],['entity','division'],{levels:true});
   const action=domain('actions','Action indicators',['management_actions'],undefined,{levels:true});
   const fx=domain('fx','Constant-currency indicators',['constant_currency']);
   const translation=domain('translation','Translation indicators',['fx_translation'],['entity']);

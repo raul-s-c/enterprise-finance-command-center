@@ -44,6 +44,24 @@ test('all offered choices have real records in the exact applicable scope',()=>{
   }
 });
 
+test('Performance Review exposes only entity and division combinations with exact-scope review rows',()=>{
+  const policy=context.panel('performance-review','CFO performance narrative');
+  assert.deepEqual(policy.dimensions,['entity','division']);
+  const selected=context.resolve(data,policy,{entity:'US01',division:'Hardware'});
+  assert.deepEqual(selected.scope,{entity:'US01',division:'Hardware'});
+  const selectedRows=context.rows(data,policy).filter(row=>context.matches(row,selected.scope,policy));
+  assert.ok(selectedRows.length>0);
+  assert.ok(selectedRows.every(row=>row.scope_level==='Entity Division'&&row.entity==='US01'&&row.division==='Hardware'));
+  for(const entity of selected.options.entity){
+    const scoped=context.resolve(data,policy,{entity,division:'all'});
+    assert.ok(context.rows(data,policy).some(row=>context.matches(row,scoped.scope,policy)),`review rows for ${entity}`);
+  }
+  for(const division of selected.options.division){
+    const scoped=context.resolve(data,policy,{entity:'all',division});
+    assert.ok(context.rows(data,policy).some(row=>context.matches(row,scoped.scope,policy)),`review rows for ${division}`);
+  }
+});
+
 test('Software and factory pages only expose their own entity domain',()=>{
   const software=context.resolve(data,context.card('ARR'),{entity:'all',division:'Hardware'});
   assert.ok(!software.options.entity.includes('CN01'));
