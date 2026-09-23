@@ -179,6 +179,43 @@ test('all report destinations retain evidence instead of standalone KPI pages',a
   expect(errors).toEqual([]);
 });
 
+test('close journey stays readable and navigable at laptop, tablet and mobile widths',async({page},testInfo)=>{
+  const errors=[];page.on('pageerror',error=>errors.push(error.message));
+  for(const viewport of [{width:1366,height:768},{width:1024,height:768},{width:390,height:844}]){
+    await page.setViewportSize(viewport);
+    await page.goto('/#view=close-journey');
+    await expect(page.getByRole('heading',{name:'From business activity to management action'})).toBeVisible();
+    await expect(page.locator('[data-cj-step]')).toHaveCount(8);
+    const sizes=await page.evaluate(()=>Object.fromEntries([
+      ['stage', '.cj-steps strong'],['status','.cj-steps span'],['outcome','.cj-steps small'],
+      ['explanation','.cj-workspace p'],['inputs','.cj-io ul'],['controls','.cj-controls table'],
+      ['proof','.cj-proof-chain strong'],['evidence','.cj-evidence-row small'],['guide','.cj-guide']
+    ].map(([key,selector])=>[key,parseFloat(getComputedStyle(document.querySelector(selector)).fontSize)])));
+    expect(sizes.stage,`${viewport.width}px stage label: ${JSON.stringify(sizes)}`).toBeGreaterThanOrEqual(viewport.width<=600?11:12);
+    expect(sizes.explanation,`${viewport.width}px explanation: ${JSON.stringify(sizes)}`).toBeGreaterThanOrEqual(viewport.width<=600?12:11);
+    expect(sizes.controls,`${viewport.width}px control table: ${JSON.stringify(sizes)}`).toBeGreaterThanOrEqual(10);
+    expect(sizes.proof,`${viewport.width}px proof chain: ${JSON.stringify(sizes)}`).toBeGreaterThanOrEqual(11);
+    expect(sizes.evidence,`${viewport.width}px evidence link: ${JSON.stringify(sizes)}`).toBeGreaterThanOrEqual(viewport.width<=600?11:10);
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`document overflows at ${viewport.width}px`).toBe(true);
+    if(viewport.width>900){
+      const canvas=await page.locator('#content').evaluate(element=>({scrollHeight:element.scrollHeight,clientHeight:element.clientHeight}));
+      expect(canvas.scrollHeight,`close journey requires vertical page scrolling at ${viewport.width}px: ${JSON.stringify(canvas)}`).toBeLessThanOrEqual(canvas.clientHeight+1);
+    }
+    if(viewport.width>600){
+      expect(await page.evaluate(()=>parseFloat(getComputedStyle(document.querySelector('.cj-matrix table')).fontSize))).toBeGreaterThanOrEqual(10);
+    }
+    if(viewport.width===1366||viewport.width===390){
+      const screenshot=testInfo.outputPath(`close-journey-${viewport.width}x${viewport.height}.png`);
+      await page.screenshot({path:screenshot});
+      await testInfo.attach(`close-journey-${viewport.width}x${viewport.height}`,{path:screenshot,contentType:'image/png'});
+    }
+    await page.locator('[data-cj-step="1"]').click();
+    await expect(page.locator('#cj-next')).toBeEnabled();
+    await expect(page.locator('.cj-guide')).toContainText('2 of 8 · Transactions');
+  }
+  expect(errors).toEqual([]);
+});
+
 test('statement analysis survives live resize without an overlapping inspector',async({page},testInfo)=>{
   await page.setViewportSize({width:1280,height:720});
   await page.goto('/#view=margin');
