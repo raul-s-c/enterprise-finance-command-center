@@ -108,6 +108,13 @@ test('Executive keeps every overview region reachable on tablet and mobile',asyn
       expect(filterBounds.right,`filters end outside the viewport: ${JSON.stringify(filterBounds)}`).toBeLessThanOrEqual(filterBounds.viewport+1);
       for(const filter of ['#entityFilter','#divisionFilter'])expect(await page.locator(filter).evaluate(element=>{const rect=element.getBoundingClientRect();return rect.left>=0&&rect.right<=innerWidth}),`${filter} is clipped at ${viewport.width}px`).toBe(true);
     }
+    if(viewport.width<=600){
+      const cards=await page.locator('.story-kpis').evaluate(element=>({display:getComputedStyle(element).display,scrollWidth:element.scrollWidth,clientWidth:element.clientWidth,viewport:innerWidth,items:[...element.children].filter(item=>getComputedStyle(item).display!=='none').map(item=>{const rect=item.getBoundingClientRect();return{left:rect.left,right:rect.right}})}));
+      expect(cards.display).toBe('grid');
+      expect(cards.scrollWidth).toBeLessThanOrEqual(cards.clientWidth+1);
+      expect(cards.items).toHaveLength(5);
+      expect(cards.items.every(item=>item.left>=0&&item.right<=cards.viewport+1)).toBe(true);
+    }
     const switcher=page.getByRole('navigation',{name:'Executive overview regions'});
     await expect(switcher).toBeVisible();
     for(const [label,index] of [['Performance trend',0],['EBIT contribution',1],['Cash drivers',2],['Company story',3]]){
