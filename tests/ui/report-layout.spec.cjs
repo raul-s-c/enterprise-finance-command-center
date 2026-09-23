@@ -1,11 +1,21 @@
 const {test,expect}=require('@playwright/test');
 
 test('global search navigates reports and financial scope with keyboard and mouse',async({page})=>{
+  let releaseDashboard,signalDashboardRequest;
+  const dashboardRequest=new Promise(resolve=>{signalDashboardRequest=resolve;});
+  const dashboardGate=new Promise(resolve=>{releaseDashboard=resolve;});
+  await page.route('**/data/dashboard.json*',async route=>{
+    signalDashboardRequest();
+    await dashboardGate;
+    await route.continue();
+  });
   await page.setViewportSize({width:1366,height:900});
   await page.goto('/#view=executive');
   const search=page.getByRole('combobox',{name:'Search reports, entities and divisions'});
   const results=page.getByRole('listbox',{name:'Finance search results'});
+  await dashboardRequest;
   await search.fill('US01');
+  releaseDashboard();
   await expect(results).toBeVisible();
   await expect(results.getByRole('option',{name:/US01/})).toBeVisible();
   await search.press('ArrowDown');
@@ -30,6 +40,9 @@ test('global search navigates reports and financial scope with keyboard and mous
   await expect(search).toHaveAttribute('aria-expanded','false');
 
   await page.setViewportSize({width:390,height:844});
+  const globalHelp=page.locator('#globalHelp');
+  await expect(globalHelp).toHaveAccessibleName('Help');
+  await expect(globalHelp).toBeVisible();
   await search.fill('Hardware');
   const bounds=await results.boundingBox();
   expect(bounds.x).toBeGreaterThanOrEqual(0);

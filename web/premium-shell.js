@@ -71,6 +71,7 @@
     });
     results.addEventListener('click',event=>{const option=event.target.closest('[data-search-index]');if(option)choose(matches[Number(option.dataset.searchIndex)]);});
     document.addEventListener('click',event=>{if(!results.contains(event.target)&&!input.closest('.global-search').contains(event.target))close();});
+    if(input.value.trim())paint();
   }
   root.mountPremiumShell=function(){
     const period=document.getElementById('globalPeriod'),control=document.getElementById('globalControl');
