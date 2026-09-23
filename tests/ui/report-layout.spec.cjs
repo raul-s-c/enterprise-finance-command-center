@@ -138,6 +138,15 @@ test('P&L contribution explains actual vs prior year and shows truthful statemen
   await expect(flow.locator('.pnl-flow button').nth(1).locator('span')).toHaveText('Division');
   const bounds=await page.locator('body').evaluate(element=>({scrollWidth:element.scrollWidth,clientWidth:element.clientWidth}));
   expect(bounds.scrollWidth).toBeLessThanOrEqual(bounds.clientWidth+1);
+  const summaryOverflow=await page.locator('.cx-summary>div:first-child').evaluate(element=>element.scrollWidth-element.clientWidth);
+  expect(summaryOverflow).toBeLessThanOrEqual(1);
+  await page.setViewportSize({width:390,height:844});
+  await expect(page.locator('.cx-formula')).toBeVisible();
+  await expect(page.locator('.cx-formula')).toContainText('Actual · 2026-08');
+  await expect(page.locator('.cx-formula')).toContainText('Prior year · 2025-08');
+  await expect(page.locator('.cx-formula')).toContainText('Δ vs PY');
+  const mobileBounds=await page.locator('body').evaluate(element=>({scrollWidth:element.scrollWidth,clientWidth:element.clientWidth}));
+  expect(mobileBounds.scrollWidth).toBeLessThanOrEqual(mobileBounds.clientWidth+1);
 });
 
 test('Executive keeps every overview region reachable on tablet and mobile',async({page})=>{
