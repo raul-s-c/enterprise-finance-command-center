@@ -1,5 +1,44 @@
 const {test,expect}=require('@playwright/test');
 
+test('global search navigates reports and financial scope with keyboard and mouse',async({page})=>{
+  await page.setViewportSize({width:1366,height:900});
+  await page.goto('/#view=executive');
+  const search=page.getByRole('combobox',{name:'Search reports, entities and divisions'});
+  const results=page.getByRole('listbox',{name:'Finance search results'});
+  await search.fill('US01');
+  await expect(results).toBeVisible();
+  await expect(results.getByRole('option',{name:/US01/})).toBeVisible();
+  await search.press('ArrowDown');
+  await expect(search).toHaveAttribute('aria-activedescendant','global-search-option-0');
+  await search.press('Enter');
+  await expect(page.locator('#viewTitle')).toHaveText('P&L');
+  await expect(page.locator('#entityFilter')).toHaveValue('US01');
+  await expect(page.locator('#viewTitle')).toBeFocused();
+  await page.getByRole('button',{name:'Back',exact:true}).click();
+  await expect(page.locator('#viewTitle')).toHaveText('Executive');
+  await expect(page.locator('#entityFilter')).toHaveValue('all');
+
+  await search.fill('cash flow');
+  await search.press('ArrowDown');
+  await search.press('Enter');
+  await expect(page.locator('#viewTitle')).toHaveText('Cash Flow');
+  await search.fill('no matching finance item');
+  await expect(results).toContainText('No reports, entities or divisions match this search.');
+  await expect(page.locator('#nav button').first()).toBeVisible();
+  await search.press('Escape');
+  await expect(results).toBeHidden();
+  await expect(search).toHaveAttribute('aria-expanded','false');
+
+  await page.setViewportSize({width:390,height:844});
+  await search.fill('Hardware');
+  const bounds=await results.boundingBox();
+  expect(bounds.x).toBeGreaterThanOrEqual(0);
+  expect(bounds.x+bounds.width).toBeLessThanOrEqual(391);
+  await results.getByRole('option',{name:/Hardware/}).first().click();
+  await expect(page.locator('#divisionFilter')).toHaveValue('Hardware');
+  await expect(page.locator('#viewTitle')).toHaveText('P&L');
+});
+
 test('P&L retains a readable canvas in short windows and signed endpoints',async({page})=>{
   // Test-only financial scenario: a cost reduction must exist regardless of the
   // current generated close. Never modify repository or production data.
@@ -68,6 +107,13 @@ test('Executive keeps every overview region reachable on tablet and mobile',asyn
       expect(filterBounds.x,`filters start outside the viewport: ${JSON.stringify(filterBounds)}`).toBeGreaterThanOrEqual(0);
       expect(filterBounds.right,`filters end outside the viewport: ${JSON.stringify(filterBounds)}`).toBeLessThanOrEqual(filterBounds.viewport+1);
       for(const filter of ['#entityFilter','#divisionFilter'])expect(await page.locator(filter).evaluate(element=>{const rect=element.getBoundingClientRect();return rect.left>=0&&rect.right<=innerWidth}),`${filter} is clipped at ${viewport.width}px`).toBe(true);
+    }
+    if(viewport.width<=600){
+      const cards=await page.locator('.story-kpis').evaluate(element=>({display:getComputedStyle(element).display,scrollWidth:element.scrollWidth,clientWidth:element.clientWidth,viewport:innerWidth,items:[...element.children].filter(item=>getComputedStyle(item).display!=='none').map(item=>{const rect=item.getBoundingClientRect();return{left:rect.left,right:rect.right}})}));
+      expect(cards.display).toBe('grid');
+      expect(cards.scrollWidth).toBeLessThanOrEqual(cards.clientWidth+1);
+      expect(cards.items).toHaveLength(5);
+      expect(cards.items.every(item=>item.left>=0&&item.right<=cards.viewport+1)).toBe(true);
     }
     const switcher=page.getByRole('navigation',{name:'Executive overview regions'});
     await expect(switcher).toBeVisible();

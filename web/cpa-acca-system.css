@@ -139,6 +139,11 @@
   .report-mode .global-bar{padding-inline:10px}
   .report-mode .global-search{width:min(54vw,300px)}
   .report-mode .global-utilities{gap:7px}
+  .report-mode .story-kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));overflow:visible;scroll-snap-type:none}
+  .report-mode button.story-kpi{grid-column:span 2;min-width:0;flex:none}
+  .report-mode button.story-kpi:nth-child(4){grid-column:2/span 2}
+  .report-mode button.story-kpi:nth-child(5){grid-column:4/span 2}
+  .report-mode .story-kpi strong{font-size:clamp(14px,4.2vw,17px);white-space:normal}
   .report-mode .topbar{padding:8px 12px}
   .report-mode .topbar h1{font-size:20px}
   .report-mode .filters{width:100%;min-width:0;gap:5px}
