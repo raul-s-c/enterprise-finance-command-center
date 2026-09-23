@@ -111,6 +111,35 @@ test('graphical P&L restores filters with Back and factory content stays inside 
   }
 });
 
+test('P&L contribution explains actual vs prior year and shows truthful statement lineage',async({page})=>{
+  await page.setViewportSize({width:1366,height:768});
+  await page.goto('/#view=pnl&page=5&section=P%26L+contribution');
+  await expect(page.locator('.cx-summary')).toBeVisible();
+  await expect(page.locator('.cx-formula')).toContainText('Actual · 2026-08');
+  await expect(page.locator('.cx-formula')).toContainText('Prior year · 2025-08');
+  await expect(page.locator('.cx-formula')).toContainText('Δ vs PY');
+  const expected=await page.evaluate(async()=>{
+    const data=await(await fetch('/data/dashboard.json')).json(),sum=month=>data.management_detail.filter(row=>row.month===month).reduce((total,row)=>total+row.revenue,0),actual=sum(data.meta.end_month),prior=sum(`${Number(data.meta.end_month.slice(0,4))-1}${data.meta.end_month.slice(4)}`),format=value=>new Intl.NumberFormat('en-GB',{style:'currency',currency:'EUR',maximumFractionDigits:2}).format(value);
+    return [format(actual),format(prior),format(actual-prior)];
+  });
+  const formula=page.locator('.cx-formula>div');
+  for(let index=0;index<expected.length;index++)await expect(formula.nth(index)).toContainText(expected[index]);
+  const flow=page.locator('.cx-flow');
+  await expect(flow).toBeVisible();
+  for(const selector of ['.cx-ranking','.cx-inspector','.cx-evidence'])await expect(page.locator(selector)).toBeVisible();
+  await expect(page.locator('.cx-analysis-nav')).toBeHidden();
+  await expect(flow.locator('h3')).toContainText('P&L lineage');
+  await expect(flow).toContainText('Published source');
+  await expect(flow).toContainText('P&L line');
+  await expect(flow).toContainText('Close period');
+  await expect(flow).not.toContainText('Destination');
+  await page.locator('[data-dimension="division"]').click();
+  await expect(flow.locator('h3')).toContainText('P&L lineage');
+  await expect(flow.locator('.pnl-flow button').nth(1).locator('span')).toHaveText('Division');
+  const bounds=await page.locator('body').evaluate(element=>({scrollWidth:element.scrollWidth,clientWidth:element.clientWidth}));
+  expect(bounds.scrollWidth).toBeLessThanOrEqual(bounds.clientWidth+1);
+});
+
 test('Executive keeps every overview region reachable on tablet and mobile',async({page})=>{
   for(const viewport of [{width:1100,height:820},{width:900,height:820},{width:390,height:844}]){
     await page.setViewportSize(viewport);

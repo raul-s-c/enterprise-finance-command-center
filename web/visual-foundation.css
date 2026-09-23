@@ -54,7 +54,7 @@
 @media(min-width:1501px){.report-mode .contribution-row{min-height:34px!important}}
 .report-mode .cx-table-wrap{overflow:auto}
 .report-mode .cx-evidence th,.report-mode .cx-evidence td{height:30px;font-size:12px}
-@media(max-width:1500px){
+@media(max-width:1100px){
   .report-mode.contribution-active .cx-workspace{display:flex;flex-direction:column;overflow:auto;min-height:0}
   .report-mode.contribution-active .cx-workspace> :is(.cx-ranking,.cx-flow,.cx-evidence,.cx-inspector){display:none}
   .report-mode.contribution-active .cx-workspace>.analysis-selected{display:flex;flex-direction:column;flex:1;min-height:220px;height:auto;border:0}
@@ -200,6 +200,7 @@
   .report-mode .sw-detail .sw-ranking{grid-template-columns:1fr;gap:12px;margin-top:16px}
   .report-mode .sw-detail .sw-ranking button{min-height:46px;font-size:14px}
 }
+@media(min-width:1101px) and (max-width:1500px){.cx-analysis-nav{display:none}}
 @media(min-width:901px) and (max-height:820px){
   .report-mode .statement-workspace .sw-head>div:first-child>span{display:none}
   .report-mode.statement-active .report-context{display:none}
