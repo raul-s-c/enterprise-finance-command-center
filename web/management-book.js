@@ -109,6 +109,15 @@
     mount();
     const tower=document.querySelector('.control-tower');
     if(!tower)return;
+    const analytics=tower.querySelector('.tower-analytics');
+    const regions=[analytics?.querySelector('.story-trend'),analytics?.querySelector('.tower-contribution'),analytics?.querySelector('.tower-drivers'),tower.querySelector('.story-timeline')].filter(Boolean);
+    if(analytics&&regions.length>1&&window.innerWidth<=1100){
+      const switcher=document.createElement('nav');switcher.className='tower-region-switch';switcher.setAttribute('aria-label','Executive overview regions');
+      const labels=['Performance trend','EBIT contribution','Cash drivers','Company story'];
+      switcher.innerHTML=regions.map((region,index)=>`<button type="button" aria-pressed="${index===0}" aria-controls="executive-region-${index}">${labels[index]}</button>`).join('');
+      regions.forEach((region,index)=>{region.id=`executive-region-${index}`;region.hidden=index!==0;});analytics.before(switcher);
+      [...switcher.children].forEach((button,index)=>button.onclick=()=>{regions.forEach((region,i)=>region.hidden=i!==index);[...switcher.children].forEach((item,i)=>item.setAttribute('aria-pressed',String(i===index)));regions[index].querySelector('button,select,input,[tabindex]')?.focus({preventScroll:true});});
+    }
     tower.addEventListener('click',event=>{
       if(!event.target.closest('[data-story-focus]')||!window.matchMedia('(max-width:1700px)').matches)return;
       const body=document.getElementById('storyInspectorBody');

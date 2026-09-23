@@ -59,6 +59,23 @@ test('graphical P&L restores filters with Back and factory content stays inside 
   }
 });
 
+test('Executive keeps every overview region reachable on tablet and mobile',async({page})=>{
+  for(const viewport of [{width:1100,height:820},{width:900,height:820},{width:390,height:844}]){
+    await page.setViewportSize(viewport);
+    await page.goto('/#view=executive');
+    const switcher=page.getByRole('navigation',{name:'Executive overview regions'});
+    await expect(switcher).toBeVisible();
+    for(const [label,index] of [['Performance trend',0],['EBIT contribution',1],['Cash drivers',2],['Company story',3]]){
+      const control=switcher.getByRole('button',{name:label,exact:true});
+      await control.click();
+      await expect(control).toHaveAttribute('aria-pressed','true');
+      const region=page.locator(`#executive-region-${index}`);
+      await expect(region).toBeVisible();
+      expect(await region.evaluate(element=>element.scrollWidth<=element.clientWidth+1),`${label} overflows at ${viewport.width}px`).toBe(true);
+    }
+  }
+});
+
 test('all report destinations retain evidence instead of standalone KPI pages',async({page})=>{
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
   const reports=['executive','pnl','margin','working-capital','cash-flow','treasury','balance-sheet','forecast','macro-sensitivities','business-drivers','profitability','intercompany','operations-capex','fx','performance-review','action-execution','data-journey','close-journey'];
