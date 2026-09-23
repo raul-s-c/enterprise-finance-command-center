@@ -13,14 +13,14 @@
     const body=items.map(r=>{
       const tone=r.change.favorable===true?'good':r.change.favorable===false?'bad':'neutral';
       const relative=r.change.relative,sign=relative<0?'negative':'positive';
-      return `<button class="pnl-row ${r.total?'subtotal':''}" data-pnl-key="${r.key}" aria-label="${esc(r.label)}: actual ${amount(r.value)}, prior year ${amount(r.prior)}">
+      return `<button class="pnl-row ${r.total?'subtotal':''}" data-pnl-key="${r.key}" data-line-type="${r.total?'total':r.cost?'cost':'income'}" aria-label="${esc(r.label)}: actual ${amount(r.value)}, prior year ${amount(r.prior)}">
         <span>${r.total?'= ':'− '}${esc(r.label)}</span><span>${amount(r.prior)}</span>
         <span class="pnl-track">${bar(r.start,r.end,max,42)}<b>${amount(r.value)}</b></span>
         <span class="pnl-delta ${tone}">${bar(0,r.change.delta,deltaMax,45)}<b>${signed(r.change.delta)}</b></span>
         <span class="pnl-percent ${tone} ${sign}">${bar(0,relative,pctMax,45)}<b>${M.finite(relative)?`${relative>0?'+':''}${(relative*100).toFixed(1)}%`:'—'}</b></span>
       </button>`;
     }).join('');
-    return `<article class="pnl-visual"><header><h2>Income statement · Actual vs prior year</h2><p>${esc(month)} · EUR million · ${esc(scope)} · Select a line for its calculation</p></header><div class="pnl-scroll" tabindex="0" role="region" aria-label="Graphical income statement; scroll to explore all columns"><div class="pnl-grid"><div class="pnl-heading"><span>Income statement</span><span>PY</span><span>AC · income bridge</span><span>Δ PY</span><span>Δ PY %</span></div>${body}</div></div><p class="pnl-note">Green = favorable; red = unfavorable. Costs use lower-is-better. Net finance costs and tax are shown together because this operating dataset does not provide their separate allocation.</p></article>`;
+    return `<article class="pnl-visual"><header><h2>Income statement · Actual vs prior year</h2><p>${esc(month)} · EUR million · ${esc(scope)} · Select a line to inspect calculation and source</p></header><div class="pnl-scroll" tabindex="0" role="region" aria-label="Graphical income statement; scroll to explore all columns"><div class="pnl-grid"><div class="pnl-heading"><span>Income statement</span><span>PY</span><span>Actual · cumulative bridge</span><span>Δ PY</span><span>Δ PY %</span></div>${body}</div></div><p class="pnl-note">Variance colour reflects earnings impact; cost lines use lower-is-favourable logic. Net finance costs and tax are shown together because the published operating dataset does not support a separate allocation.</p></article>`;
   }
   function contributions(data,scope,key,M){
     const groups=new Map();
