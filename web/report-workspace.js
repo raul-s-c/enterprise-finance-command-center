@@ -72,7 +72,8 @@ function reportLegacyPages(view){
   for(const {policy,items} of groups.values())for(let i=0;i<items.length;i+=chunks)pages.push({title:`${policy.label}${i?` ${i/chunks+1}`:''}`,policy,html:`<div class="report-indicators">${items.slice(i,i+chunks).map(el=>el.outerHTML).join('')}</div>`});
   for(const el of host.querySelectorAll('.panel')){
     if(el.parentElement.closest('.panel'))continue;
-    pages.push({title:el.querySelector('.panel-title')?.textContent||'Detail',html:el.outerHTML});
+    const title=el.querySelector('.panel-title')?.textContent||'Detail';
+    pages.push({title,policy:ReportContext.panel(view,title),html:el.outerHTML});
   }
   const notes=[...host.querySelectorAll('.section-note')].filter(el=>!el.closest('.panel'));
   if(notes.length)pages.push({title:'Context & definitions',html:`<article class="panel"><div class="panel-head"><div class="panel-title">Context & definitions</div></div><div class="report-text-pages">${notes.map(el=>`<div class="report-text-item">${el.outerHTML}</div>`).join('')}</div></article>`});
