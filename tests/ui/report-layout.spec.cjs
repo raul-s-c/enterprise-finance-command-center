@@ -182,7 +182,7 @@ test('Executive keeps every overview region reachable on tablet and mobile',asyn
 test('all report destinations retain evidence instead of standalone KPI pages',async({page})=>{
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
   const reports=['executive','pnl','margin','working-capital','cash-flow','treasury','balance-sheet','forecast','macro-sensitivities','business-drivers','profitability','intercompany','operations-capex','fx','performance-review','action-execution','data-journey','close-journey'];
-  for(const viewport of [{width:1366,height:768},{width:1024,height:768},{width:390,height:844}]){
+  for(const viewport of [{width:1366,height:768},{width:1024,height:768},{width:900,height:900},{width:390,height:844}]){
   await page.setViewportSize(viewport);
   for(const report of reports){
     await page.goto(`/#view=${report}`);
@@ -238,6 +238,13 @@ test('close journey stays readable and navigable at laptop, tablet and mobile wi
     if(viewport.width>900){
       const canvas=await page.locator('#content').evaluate(element=>({scrollHeight:element.scrollHeight,clientHeight:element.clientHeight}));
       expect(canvas.scrollHeight,`close journey requires vertical page scrolling at ${viewport.width}px: ${JSON.stringify(canvas)}`).toBeLessThanOrEqual(canvas.clientHeight+1);
+    }
+    if(viewport.width<=900){
+      const canvas=await page.locator('#content').evaluate(element=>({overflowY:getComputedStyle(element).overflowY,scrollHeight:element.scrollHeight,clientHeight:element.clientHeight}));
+      expect(canvas.overflowY,`close journey must allow compact-screen scrolling at ${viewport.width}px`).toBe('auto');
+      expect(canvas.scrollHeight,`close journey content must be reachable at ${viewport.width}px`).toBeGreaterThan(canvas.clientHeight+1);
+      await page.locator('#content').evaluate(element=>element.scrollTo({top:element.scrollHeight,behavior:'instant'}));
+      await expect(page.locator('#cj-next')).toBeInViewport();
     }
     if(viewport.width>600){
       expect(await page.evaluate(()=>parseFloat(getComputedStyle(document.querySelector('.cj-matrix table')).fontSize))).toBeGreaterThanOrEqual(10);
