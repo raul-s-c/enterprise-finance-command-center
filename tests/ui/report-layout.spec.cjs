@@ -63,6 +63,12 @@ test('Executive keeps every overview region reachable on tablet and mobile',asyn
   for(const viewport of [{width:1100,height:820},{width:900,height:820},{width:390,height:844}]){
     await page.setViewportSize(viewport);
     await page.goto('/#view=executive');
+    if(viewport.width<=600){
+      const filterBounds=await page.locator('.filters').evaluate(element=>{const rect=element.getBoundingClientRect();return{x:rect.x,right:rect.right,width:rect.width,viewport:innerWidth}});
+      expect(filterBounds.x,`filters start outside the viewport: ${JSON.stringify(filterBounds)}`).toBeGreaterThanOrEqual(0);
+      expect(filterBounds.right,`filters end outside the viewport: ${JSON.stringify(filterBounds)}`).toBeLessThanOrEqual(filterBounds.viewport+1);
+      for(const filter of ['#entityFilter','#divisionFilter'])expect(await page.locator(filter).evaluate(element=>{const rect=element.getBoundingClientRect();return rect.left>=0&&rect.right<=innerWidth}),`${filter} is clipped at ${viewport.width}px`).toBe(true);
+    }
     const switcher=page.getByRole('navigation',{name:'Executive overview regions'});
     await expect(switcher).toBeVisible();
     for(const [label,index] of [['Performance trend',0],['EBIT contribution',1],['Cash drivers',2],['Company story',3]]){
@@ -87,6 +93,10 @@ test('all report destinations retain evidence instead of standalone KPI pages',a
     if(report==='close-journey'){
       await expect(page.getByRole('heading',{name:'From business activity to management action'})).toBeVisible();
       continue;
+    }
+    if(viewport.width<=600){
+      const bounds=await page.locator('.filters').evaluate(element=>{if(getComputedStyle(element).display==='none')return null;const rect=element.getBoundingClientRect();return{x:rect.x,right:rect.right,viewport:innerWidth}});
+      if(bounds){expect(bounds.x,`${report} filters start outside mobile viewport: ${JSON.stringify(bounds)}`).toBeGreaterThanOrEqual(0);expect(bounds.right,`${report} filters end outside mobile viewport: ${JSON.stringify(bounds)}`).toBeLessThanOrEqual(bounds.viewport+1);}
     }
     await expect(page.locator('#reportPageSelect option').first()).toBeAttached();
     const count=await page.locator('#reportPageSelect option').count();

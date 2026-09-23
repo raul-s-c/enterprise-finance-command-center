@@ -141,8 +141,9 @@
   .report-mode .global-utilities{gap:7px}
   .report-mode .topbar{padding:8px 12px}
   .report-mode .topbar h1{font-size:20px}
-  .report-mode .filters{gap:5px}
-  .report-mode .filters select{font-size:11px;padding-inline:6px}
+  .report-mode .filters{width:100%;min-width:0;gap:5px}
+  .report-mode .filters label{min-width:0}
+  .report-mode .filters select{min-width:0;width:100%;font-size:11px;padding-inline:6px}
   .report-mode .report-context{padding-inline:12px}
   .report-mode .content{padding:10px 12px}
   .report-mode .pnl-visual h2{font-size:19px}
