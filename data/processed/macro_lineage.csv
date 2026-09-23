@@ -4,286 +4,286 @@ close_month,observation_month,driver,value,unit,source,official_source,source_ur
 2026-08,2023-09,energy_index,117.7,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2023-09,policy_rate,0.045,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2023-09,USD,0.92458445,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2023-09,JPY,0.00631205,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2023-09,CNY,0.12967524,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2023-09,CZK,0.04042565,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2023-09,JPY,0.00633733,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2023-09,CNY,0.12825994,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2023-09,CZK,0.04101659,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2023-10,inflation,0.029,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2023-10,industrial_index,98.8,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2023-10,energy_index,115.7,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2023-10,policy_rate,0.045,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2023-10,USD,0.91227085,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2023-10,JPY,0.00634561,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2023-10,CNY,0.12915823,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2023-10,CZK,0.03995423,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2023-10,JPY,0.0063276,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2023-10,CNY,0.12953376,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2023-10,CZK,0.04067626,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2023-11,inflation,0.024,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2023-11,industrial_index,100.1,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2023-11,energy_index,106.2,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2023-11,policy_rate,0.045,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2023-11,USD,0.92489227,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2023-11,JPY,0.0063303,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2023-11,CNY,0.12753086,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2023-11,CZK,0.03996947,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2023-11,JPY,0.00617879,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2023-11,CNY,0.12806177,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2023-11,CZK,0.04084171,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2023-12,inflation,0.029,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2023-12,industrial_index,99.2,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2023-12,energy_index,99.6,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2023-12,policy_rate,0.045,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2023-12,USD,0.91025289,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2023-12,JPY,0.00635101,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2023-12,CNY,0.1294088,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2023-12,CZK,0.04036887,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2023-12,JPY,0.00636081,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2023-12,CNY,0.12841977,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2023-12,CZK,0.04085371,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2024-01,inflation,0.028,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2024-01,industrial_index,98.2,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2024-01,energy_index,101.2,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2024-01,policy_rate,0.045,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2024-01,USD,0.92173252,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-01,JPY,0.00615056,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-01,CNY,0.12926488,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-01,CZK,0.04016862,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2024-01,JPY,0.00627124,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2024-01,CNY,0.12787523,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2024-01,CZK,0.04045992,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2024-02,inflation,0.026,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2024-02,industrial_index,98.6,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2024-02,energy_index,102.2,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2024-02,policy_rate,0.045,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2024-02,USD,0.90579048,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-02,JPY,0.00617185,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-02,CNY,0.12952664,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-02,CZK,0.03990666,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2024-02,JPY,0.00619666,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2024-02,CNY,0.12878197,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2024-02,CZK,0.03963214,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2024-03,inflation,0.024,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2024-03,industrial_index,97.9,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2024-03,energy_index,104.2,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2024-03,policy_rate,0.045,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2024-03,USD,0.90307017,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-03,JPY,0.00612999,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-03,CNY,0.1255314,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-03,CZK,0.03971221,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2024-03,JPY,0.00614354,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2024-03,CNY,0.12771898,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2024-03,CZK,0.03953843,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2024-04,inflation,0.024,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2024-04,industrial_index,98.6,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2024-04,energy_index,109.6,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2024-04,policy_rate,0.045,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2024-04,USD,0.91559671,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-04,JPY,0.00616979,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-04,CNY,0.12619169,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-04,CZK,0.03989022,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2024-04,JPY,0.00605952,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2024-04,CNY,0.12876981,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2024-04,CZK,0.03956002,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2024-05,inflation,0.026,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2024-05,industrial_index,96.8,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2024-05,energy_index,102.6,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2024-05,policy_rate,0.045,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2024-05,USD,0.89619845,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-05,JPY,0.00611464,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-05,CNY,0.1250348,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-05,CZK,0.03974664,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2024-05,JPY,0.00593344,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2024-05,CNY,0.12786691,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2024-05,CZK,0.04029252,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2024-06,inflation,0.025,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2024-06,industrial_index,98.4,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2024-06,energy_index,103.8,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2024-06,policy_rate,0.0425,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2024-06,USD,0.87836758,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-06,JPY,0.00611149,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-06,CNY,0.12799917,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-06,CZK,0.03979938,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2024-06,JPY,0.00588883,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2024-06,CNY,0.12812168,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2024-06,CZK,0.04035716,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2024-07,inflation,0.026,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2024-07,industrial_index,97.7,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2024-07,energy_index,106.0,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2024-07,policy_rate,0.0425,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2024-07,USD,0.89260842,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-07,JPY,0.00609323,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-07,CNY,0.12399622,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-07,CZK,0.039947,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2024-07,JPY,0.00584212,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2024-07,CNY,0.12698448,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2024-07,CZK,0.0395278,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2024-08,inflation,0.022,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2024-08,industrial_index,98.2,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2024-08,energy_index,102.6,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2024-08,policy_rate,0.0425,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2024-08,USD,0.89010787,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-08,JPY,0.00608859,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-08,CNY,0.12573929,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-08,CZK,0.0397896,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2024-08,JPY,0.00620904,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2024-08,CNY,0.12700722,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2024-08,CZK,0.03971599,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2024-09,inflation,0.017,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2024-09,industrial_index,97.5,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2024-09,energy_index,95.4,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2024-09,policy_rate,0.0365,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2024-09,USD,0.89783833,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-09,JPY,0.00599959,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-09,CNY,0.125419,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-09,CZK,0.03956053,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2024-09,JPY,0.00628611,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2024-09,CNY,0.12720881,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2024-09,CZK,0.03984154,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2024-10,inflation,0.02,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2024-10,industrial_index,97.7,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2024-10,energy_index,97.7,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2024-10,policy_rate,0.034,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2024-10,USD,0.8927847,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-10,JPY,0.00599298,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-10,CNY,0.12655327,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-10,CZK,0.03952786,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2024-10,JPY,0.00612757,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2024-10,CNY,0.12940665,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2024-10,CZK,0.03952882,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2024-11,inflation,0.022,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2024-11,industrial_index,97.8,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2024-11,energy_index,96.5,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2024-11,policy_rate,0.034,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2024-11,USD,0.88544709,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-11,JPY,0.00600881,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-11,CNY,0.12475921,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-11,CZK,0.03950607,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2024-11,JPY,0.00612618,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2024-11,CNY,0.13051958,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2024-11,CZK,0.03952391,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2024-12,inflation,0.024,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2024-12,industrial_index,96.9,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2024-12,energy_index,96.5,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2024-12,policy_rate,0.0315,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2024-12,USD,0.89613107,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-12,JPY,0.00621083,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-12,CNY,0.12385498,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2024-12,CZK,0.03948633,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2024-12,JPY,0.00620796,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2024-12,CNY,0.13106443,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2024-12,CZK,0.0397835,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2025-01,inflation,0.025,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2025-01,industrial_index,99.1,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2025-01,energy_index,103.5,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2025-01,policy_rate,0.0315,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2025-01,USD,0.89286488,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-01,JPY,0.00608639,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-01,CNY,0.12534701,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-01,CZK,0.03961229,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2025-01,JPY,0.00617584,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2025-01,CNY,0.13234516,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2025-01,CZK,0.03974039,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2025-02,inflation,0.023,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2025-02,industrial_index,99.7,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2025-02,energy_index,99.2,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2025-02,policy_rate,0.029,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2025-02,USD,0.91421979,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-02,JPY,0.00602955,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-02,CNY,0.12426743,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-02,CZK,0.03979551,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2025-02,JPY,0.00632563,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2025-02,CNY,0.13201468,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2025-02,CZK,0.03987773,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2025-03,inflation,0.022,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2025-03,industrial_index,102.6,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2025-03,energy_index,95.1,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2025-03,policy_rate,0.0265,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2025-03,USD,0.90952165,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-03,JPY,0.00601268,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-03,CNY,0.12638293,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-03,CZK,0.03945923,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2025-03,JPY,0.00620476,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2025-03,CNY,0.12762683,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2025-03,CZK,0.03999802,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2025-04,inflation,0.022,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2025-04,industrial_index,99.1,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2025-04,energy_index,87.9,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2025-04,policy_rate,0.024,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2025-04,USD,0.90677095,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-04,JPY,0.00597399,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-04,CNY,0.12695364,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-04,CZK,0.03968676,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2025-04,JPY,0.00618542,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2025-04,CNY,0.12217434,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2025-04,CZK,0.03993778,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2025-05,inflation,0.019,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2025-05,industrial_index,99.8,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2025-05,energy_index,84.0,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2025-05,policy_rate,0.024,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2025-05,USD,0.90009556,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-05,JPY,0.00596003,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-05,CNY,0.12585728,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-05,CZK,0.03962474,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2025-05,JPY,0.00612954,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2025-05,CNY,0.12292793,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2025-05,CZK,0.04012381,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2025-06,inflation,0.02,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2025-06,industrial_index,99.1,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2025-06,energy_index,92.2,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2025-06,policy_rate,0.0215,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2025-06,USD,0.92672548,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-06,JPY,0.00595173,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-06,CNY,0.12574758,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-06,CZK,0.03958065,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2025-06,JPY,0.00600516,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2025-06,CNY,0.12091857,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2025-06,CZK,0.04031561,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2025-07,inflation,0.02,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2025-07,industrial_index,99.4,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2025-07,energy_index,91.7,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2025-07,policy_rate,0.0215,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2025-07,USD,0.89946501,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-07,JPY,0.00609854,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-07,CNY,0.12490295,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-07,CZK,0.03949281,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2025-07,JPY,0.00582984,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2025-07,CNY,0.11939759,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2025-07,CZK,0.04060978,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2025-08,inflation,0.02,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2025-08,industrial_index,99.3,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2025-08,energy_index,88.1,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2025-08,policy_rate,0.0215,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2025-08,USD,0.92185497,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-08,JPY,0.00617509,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-08,CNY,0.12570991,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-08,CZK,0.03960072,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2025-08,JPY,0.00582108,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2025-08,CNY,0.1198442,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2025-08,CZK,0.04078866,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2025-09,inflation,0.022,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2025-09,industrial_index,98.8,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2025-09,energy_index,87.6,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2025-09,policy_rate,0.0215,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2025-09,USD,0.950719,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-09,JPY,0.0061751,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-09,CNY,0.12613468,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-09,CZK,0.03974404,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2025-09,JPY,0.00576207,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2025-09,CNY,0.119637,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2025-09,CZK,0.04107321,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2025-10,inflation,0.021,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2025-10,industrial_index,99.0,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2025-10,energy_index,84.3,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2025-10,policy_rate,0.0215,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2025-10,USD,0.95133804,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-10,JPY,0.00618614,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-10,CNY,0.12532486,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-10,CZK,0.03975948,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2025-10,JPY,0.0056769,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2025-10,CNY,0.12075786,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2025-10,CZK,0.04112621,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2025-11,inflation,0.021,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2025-11,industrial_index,99.7,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2025-11,energy_index,84.0,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2025-11,policy_rate,0.0215,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2025-11,USD,0.95219991,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-11,JPY,0.00612946,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-11,CNY,0.12635696,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-11,CZK,0.03971632,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2025-11,JPY,0.00557675,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2025-11,CNY,0.1217298,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2025-11,CZK,0.04126425,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2025-12,inflation,0.02,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2025-12,industrial_index,99.2,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2025-12,energy_index,82.9,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2025-12,policy_rate,0.0215,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2025-12,USD,0.9454705,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-12,JPY,0.0062327,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-12,CNY,0.125348,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2025-12,CZK,0.0399006,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2025-12,JPY,0.00547954,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2025-12,CNY,0.12122591,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2025-12,CZK,0.04122133,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2026-01,inflation,0.017,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2026-01,industrial_index,97.4,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2026-01,energy_index,92.8,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2026-01,policy_rate,0.0215,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2026-01,USD,0.9595588,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2026-01,JPY,0.00637179,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2026-01,CNY,0.12674494,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2026-01,CZK,0.04004103,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2026-01,JPY,0.0054366,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2026-01,CNY,0.12223971,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2026-01,CZK,0.04118931,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2026-02,inflation,0.019,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2026-02,industrial_index,98.2,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2026-02,energy_index,92.4,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2026-02,policy_rate,0.0215,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2026-02,USD,0.94653496,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2026-02,JPY,0.00629615,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2026-02,CNY,0.12603899,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2026-02,CZK,0.04012826,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2026-02,JPY,0.00545103,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2026-02,CNY,0.12242674,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2026-02,CZK,0.0412208,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2026-03,inflation,0.026,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2026-03,industrial_index,98.8,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2026-03,energy_index,130.6,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2026-03,policy_rate,0.0215,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2026-03,USD,0.97908194,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2026-03,JPY,0.00639079,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2026-03,CNY,0.12834377,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2026-03,CZK,0.04001102,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2026-03,JPY,0.00545259,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2026-03,CNY,0.12546636,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2026-03,CZK,0.04092041,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2026-04,inflation,0.03,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2026-04,industrial_index,99.3,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2026-04,energy_index,146.7,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2026-04,policy_rate,0.0215,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2026-04,USD,0.99445616,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2026-04,JPY,0.00627473,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2026-04,CNY,0.12940266,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2026-04,CZK,0.0400871,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2026-04,JPY,0.0053704,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2026-04,CNY,0.12499266,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2026-04,CZK,0.04101504,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2026-05,inflation,0.032,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2026-05,industrial_index,99.3,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2026-05,energy_index,133.7,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2026-05,policy_rate,0.0215,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2026-05,USD,0.96554839,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2026-05,JPY,0.00635823,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2026-05,CNY,0.1271507,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2026-05,CZK,0.0402889,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2026-05,JPY,0.00541391,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2026-05,CNY,0.12602124,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2026-05,CZK,0.04113043,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2026-06,inflation,0.027,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2026-06,industrial_index,99.0,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2026-06,energy_index,109.9,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2026-06,policy_rate,0.024,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2026-06,USD,0.95585466,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2026-06,JPY,0.0064866,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2026-06,CNY,0.12909914,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2026-06,CZK,0.04046942,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2026-06,JPY,0.00540207,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2026-06,CNY,0.12813188,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2026-06,CZK,0.04130827,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2026-07,inflation,0.029,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2026-07,industrial_index,98.7,2021=100,Eurostat_STS,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Official
 2026-08,2026-07,energy_index,108.8,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2026-07,policy_rate,0.024,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2026-07,USD,0.97166992,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2026-07,JPY,0.00651437,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2026-07,CNY,0.12899384,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2026-07,CZK,0.04038762,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2026-07,JPY,0.0053897,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2026-07,CNY,0.12924812,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2026-07,CZK,0.04130992,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
 2026-08,2026-08,inflation,0.032,Annual rate,Eurostat_HICP,Eurostat HICP,https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_minr/default/table,Official
 2026-08,2026-08,industrial_index,104.66736915,2021=100,deterministic_fallback,Eurostat industrial production,https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table,Fallback
 2026-08,2026-08,energy_index,118.4,2010=100,World_Bank_Pink_Sheet,World Bank Pink Sheet energy index,https://thedocs.worldbank.org/en/doc/74e8be41ceb20fa0da750cda2f6b9e4e-0050012026/related/CMO-Historical-Data-Monthly.xlsx,Official
 2026-08,2026-08,policy_rate,0.024,Annual rate,ECB_MRO,ECB main refinancing operations,https://data.ecb.europa.eu/data/datasets/FM,Official
 2026-08,2026-08,USD,0.95503963,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2026-08,JPY,0.00657634,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2026-08,CNY,0.12828012,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
-2026-08,2026-08,CZK,0.04032337,EUR per currency unit,deterministic_fallback,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Fallback
+2026-08,2026-08,JPY,0.00543177,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2026-08,CNY,0.12805479,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
+2026-08,2026-08,CZK,0.04135853,EUR per currency unit,ECB_EXR,ECB reference exchange rate,https://data.ecb.europa.eu/data/datasets/EXR,Official
