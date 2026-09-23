@@ -263,3 +263,28 @@
   .report-mode.contribution-active .cx-summary:not(.nwc-summary)>.cx-formula span{font-size:9px;white-space:normal}
   .report-mode.contribution-active .cx-summary:not(.nwc-summary)>.cx-formula strong{font-size:clamp(10px,3vw,12px);white-space:normal;overflow-wrap:anywhere}
 }
+
+/* A short desktop window needs scrollable analysis, not collapsed grid tracks. */
+@media(min-width:901px) and (max-height:650px){
+  .report-mode .story-board:has(>.story-wide){
+    grid-template-rows:none;
+    grid-auto-rows:minmax(430px,auto);
+  }
+  .report-mode.contribution-active .content{
+    overflow-x:hidden;
+    overflow-y:auto;
+  }
+  .report-mode.contribution-active .contribution-explorer{
+    height:auto;
+    min-height:100%;
+  }
+  .report-mode.contribution-active .cx-workspace{
+    flex:none;
+    height:340px;
+    min-height:340px;
+  }
+  .report-mode.close-journey-active .content{
+    overflow-x:hidden;
+    overflow-y:auto;
+  }
+}
