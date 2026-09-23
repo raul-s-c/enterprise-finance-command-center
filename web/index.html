@@ -28,10 +28,11 @@
 
     <main class="main-shell">
       <div class="global-bar">
-        <label class="global-search" aria-label="Search reports">
+        <label class="global-search" aria-label="Search reports, entities and divisions">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg>
-          <input id="globalSearch" type="search" placeholder="Search reports, entities, customers, accounts..." autocomplete="off">
+          <input id="globalSearch" type="search" placeholder="Search reports, entities, divisions..." autocomplete="off" role="combobox" aria-autocomplete="list" aria-haspopup="listbox" aria-controls="globalSearchResults" aria-expanded="false">
         </label>
+        <div id="globalSearchResults" class="global-search-results" role="listbox" aria-label="Finance search results" hidden></div>
         <div class="global-utilities">
           <strong id="globalPeriod">2026-08</strong>
           <span id="globalControl" class="global-control"><i></i> Controls passed</span>
@@ -85,7 +86,7 @@
   <link rel="stylesheet" href="contribution-explorer.css?v=8">
   <link rel="stylesheet" href="management-book.css?v=11">
   <link rel="stylesheet" href="executive-responsive.css?v=1">
-  <link rel="stylesheet" href="premium-shell.css?v=7">
+  <link rel="stylesheet" href="premium-shell.css?v=8">
   <link rel="stylesheet" href="close-journey.css?v=1">
   <link rel="stylesheet" href="statement-workspace.css?v=10">
   <script src="contribution-explorer.js?v=18"></script>
@@ -98,7 +99,7 @@
   <script src="statement-workspace.js?v=22"></script>
   <script src="report-navigation.js?v=1"></script>
   <script src="report-workspace.js?v=26"></script>
-  <script src="premium-shell.js?v=2"></script>
+  <script src="premium-shell.js?v=3"></script>
   <script>init()</script>
 </body>
 </html>
