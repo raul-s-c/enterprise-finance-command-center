@@ -5,7 +5,7 @@ test('mobile P&L exposes both actuals and signed variances without sideways scro
   await page.goto('/#view=pnl&page=0');
   await expect(page.locator('[data-pnl-key]')).toHaveCount(10);
   const statement=page.locator('.pnl-visual');
-  const controls=page.getByRole('group',{name:'Mobile P&L columns'});
+  const controls=page.getByRole('group',{name:'Compact P&L columns'});
   await expect(controls).toBeVisible();
   await expect(controls.getByRole('button',{name:'Values'})).toHaveAttribute('aria-pressed','true');
   await expect(statement.locator('.pnl-heading>span:nth-child(2)')).toBeVisible();
@@ -27,6 +27,13 @@ test('mobile P&L exposes both actuals and signed variances without sideways scro
   await controls.getByRole('button',{name:'Values'}).click();
   await expect(statement.locator('.pnl-heading>span:nth-child(2)')).toBeVisible();
   await expect(statement.locator('.pnl-heading>span:nth-child(4)')).toBeHidden();
+
+  await page.setViewportSize({width:768,height:720});
+  await expect(controls).toBeVisible();
+  expect(await statement.locator('.pnl-scroll').evaluate(node=>node.scrollWidth>node.clientWidth+1)).toBe(false);
+  await controls.getByRole('button',{name:'Δ PY'}).click();
+  await expect(statement.locator('.pnl-heading>span:nth-child(4)')).toBeVisible();
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
 
   await page.setViewportSize({width:1280,height:720});
   await expect(controls).toBeHidden();
