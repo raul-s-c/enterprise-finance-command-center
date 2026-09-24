@@ -305,6 +305,58 @@ test('short desktop windows keep story, contribution and close controls reachabl
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
 
+test('short laptop cockpits keep charts legible and use one reachable report scroll',async({page})=>{
+  await page.setViewportSize({width:1024,height:600});
+  await page.goto('/#view=executive');
+  await expect(page.locator('#executive-region-0')).toBeVisible();
+  const switcher=page.getByRole('navigation',{name:'Executive overview regions'});
+  for(const [label,index] of [['Performance trend',0],['EBIT contribution',1],['Cash drivers',2],['Company story',3]]){
+    await switcher.getByRole('button',{name:label,exact:true}).click();
+    const region=page.locator(`#executive-region-${index}`);
+    await expect(region).toBeVisible();
+    const fit=await region.evaluate(element=>({
+      width:element.clientWidth,
+      parent:element.parentElement.clientWidth
+    }));
+    expect(fit.width,`${label} is squeezed into a spare grid column`).toBeGreaterThanOrEqual(fit.parent-2);
+  }
+  await switcher.getByRole('button',{name:'Performance trend',exact:true}).click();
+  const executive=await page.locator('#content').evaluate(element=>({
+    overflow:getComputedStyle(element).overflowY,
+    scrollHeight:element.scrollHeight,
+    clientHeight:element.clientHeight
+  }));
+  expect(executive.overflow).toBe('auto');
+  expect(executive.scrollHeight).toBeGreaterThan(executive.clientHeight);
+  const trendSizes=await page.locator('#executive-region-0 svg text').evaluateAll(nodes=>nodes.map(node=>{
+    const matrix=node.getScreenCTM();
+    return parseFloat(getComputedStyle(node).fontSize)*Math.hypot(matrix.a,matrix.b);
+  }));
+  expect(trendSizes.length).toBeGreaterThan(0);
+  expect(Math.min(...trendSizes)).toBeGreaterThanOrEqual(10);
+
+  await page.goto('/#view=forecast');
+  await expect(page.locator('.sw-primary .report-svg')).toBeVisible();
+  const forecast=await page.locator('#content').evaluate(element=>({
+    overflow:getComputedStyle(element).overflowY,
+    scrollHeight:element.scrollHeight,
+    clientHeight:element.clientHeight,
+    chartHeight:element.querySelector('.sw-primary .report-svg').getBoundingClientRect().height
+  }));
+  expect(forecast.overflow).toBe('auto');
+  expect(forecast.scrollHeight).toBeGreaterThan(forecast.clientHeight);
+  expect(forecast.chartHeight).toBeGreaterThanOrEqual(280);
+  const forecastSizes=await page.locator('.sw-primary .report-svg text:not(.axis-text)').evaluateAll(nodes=>nodes.map(node=>{
+    const matrix=node.getScreenCTM();
+    return parseFloat(getComputedStyle(node).fontSize)*Math.hypot(matrix.a,matrix.b);
+  }));
+  expect(forecastSizes.length).toBeGreaterThan(0);
+  expect(Math.min(...forecastSizes)).toBeGreaterThanOrEqual(10);
+  await page.locator('#content').evaluate(element=>element.scrollTo({top:element.scrollHeight,behavior:'instant'}));
+  await expect(page.locator('.sw-primary')).toBeInViewport();
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
+
 test('statement analysis survives live resize without an overlapping inspector',async({page},testInfo)=>{
   await page.setViewportSize({width:1280,height:720});
   await page.goto('/#view=margin');
