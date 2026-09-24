@@ -24,6 +24,8 @@ test('action execution shows source-tied stages and monthly impact',async({page}
     await page.setViewportSize({width,height:844});
     expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
   }
+  const firstPageFit=await page.locator('.story-composite').first().evaluate(el=>el.getBoundingClientRect().bottom<=el.nextElementSibling.getBoundingClientRect().top+1);
+  expect(firstPageFit).toBe(true);
   await page.screenshot({path:'test-results/action-execution-mobile.png',fullPage:true});
 });
 
@@ -42,5 +44,8 @@ test('benefit tracking explains why actual recognition is zero at this close',as
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
   await expect(page.locator('.aev-benefit-summary')).toBeVisible();
   await expect(page.locator('.aev-recognition')).toBeVisible();
+  const mobileFit=await page.locator('.aev-benefits').evaluate(el=>{const panel=el.closest('.panel').getBoundingClientRect(),summary=el.querySelector('.aev-records summary').getBoundingClientRect(),next=el.closest('.story-composite').nextElementSibling.getBoundingClientRect();return {evidenceInside:summary.bottom<=panel.bottom+1,panelsSeparate:panel.bottom<=next.top+1}});
+  expect(mobileFit.evidenceInside).toBe(true);
+  expect(mobileFit.panelsSeparate).toBe(true);
   await page.screenshot({path:'test-results/action-execution-recognition-mobile.png',fullPage:true});
 });

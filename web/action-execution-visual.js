@@ -7,10 +7,10 @@
   const stages=['Approved','Implementing','Benefits tracking','Benefits validated'];
 
   function portfolio(plans,fullTable){
-    const rows=plans||[],counts=stages.map(stage=>rows.filter(row=>row.execution_status===stage).length);
+    const rows=plans||[],labels=[...stages,...new Set(rows.map(row=>row.execution_status||'Unspecified').filter(stage=>!stages.includes(stage)))],counts=labels.map(stage=>rows.filter(row=>(row.execution_status||'Unspecified')===stage).length);
     const leaders=[...rows].sort((a,b)=>String(a.priority).localeCompare(String(b.priority))||String(a.effective_month).localeCompare(String(b.effective_month))).slice(0,3);
     return `<div class="aev-portfolio action-execution-visual">
-      <div class="aev-stage-list" aria-label="Approved plan count by execution stage">${stages.map((stage,index)=>`<div class="aev-stage"><span>${stage}</span><div class="aev-stage-track"><i style="width:${rows.length?counts[index]/rows.length*100:0}%"></i></div><strong>${counts[index]}</strong></div>`).join('')}</div>
+      <div class="aev-stage-list" aria-label="Approved plan count by execution stage">${labels.map((stage,index)=>`<div class="aev-stage"><span>${esc(stage)}</span><div class="aev-stage-track"><i style="width:${rows.length?counts[index]/rows.length*100:0}%"></i></div><strong>${counts[index]}</strong></div>`).join('')}</div>
       <div class="aev-list-heading"><strong>Priority actions</strong><span>${Math.min(3,rows.length)} of ${rows.length} scoped plans</span></div>
       <div class="aev-plan-list">${leaders.map(row=>`<details class="aev-plan"><summary><b>${esc(row.priority)}</b><span><strong>${esc(row.intervention_type)}</strong><small>${esc(row.primary_driver)} · ${esc(row.owner_role)}</small></span><em>${esc(row.effective_month)}</em></summary><div class="aev-plan-evidence"><p><b>Expected outcome:</b> ${esc(row.expected_outcome)}</p><p><b>Evidence:</b> ${esc(row.execution_evidence)}</p><p><b>Source review:</b> ${esc(row.source_review_id)}</p><p><b>Gross case, non-additive:</b> ${amount(row.expected_benefit_eur)}</p></div></details>`).join('')||'<p class="aev-empty">No approved plans in this scope.</p>'}</div>
       <details class="aev-records"><summary>View all ${rows.length} approved plans and source fields</summary>${fullTable}</details>

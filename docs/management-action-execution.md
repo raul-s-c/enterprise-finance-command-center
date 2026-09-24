@@ -46,7 +46,8 @@ Publication fails when:
 - directional evidence is incorrectly marked additive;
 - the scenario forecast bridge is missing or duplicated; or
 - the actual operating impact schedule is missing.
-# Visual execution cockpit
+
+## Visual execution cockpit
 
 The Action Execution first screen now presents the plan lifecycle and the Base 12-month additive EBIT bridge together. Stage counts and the priority list come from `management_action_plans`; the monthly bars and selected-month Revenue/EBIT values come from `management_action_forecast_bridge`, aggregated by the existing selected-scope logic. The action list expands to its approved outcome, source-review ID and execution evidence. Both panels retain their complete source tables behind explicit disclosures.
 

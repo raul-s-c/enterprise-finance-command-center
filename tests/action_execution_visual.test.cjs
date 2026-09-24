@@ -6,12 +6,14 @@ const visual=globalThis.FinanceActionVisual;
 test('portfolio stage counts use published statuses, not invented progress',()=>{
   const rows=[
     {priority:'P1',execution_status:'Approved',intervention_type:'Pricing',primary_driver:'Price',owner_role:'CFO',effective_month:'2026-09',expected_outcome:'<script>alert(1)</script>',execution_evidence:'Approved plan',source_review_id:'REV-1',expected_benefit_eur:100},
-    {priority:'P2',execution_status:'Benefits tracking',intervention_type:'Cost',primary_driver:'OPEX',owner_role:'Controller',effective_month:'2026-10',expected_outcome:'Cost recovery',execution_evidence:'Source control',source_review_id:'REV-2',expected_benefit_eur:200}
+    {priority:'P2',execution_status:'Benefits tracking',intervention_type:'Cost',primary_driver:'OPEX',owner_role:'Controller',effective_month:'2026-10',expected_outcome:'Cost recovery',execution_evidence:'Source control',source_review_id:'REV-2',expected_benefit_eur:200},
+    {priority:'P3',execution_status:'Cancelled',intervention_type:'Withdrawn',primary_driver:'None',owner_role:'CFO',effective_month:'2026-11',expected_outcome:'No change',execution_evidence:'Cancellation log',source_review_id:'REV-3',expected_benefit_eur:0}
   ];
   const html=visual.portfolio(rows,'<table></table>');
   assert.match(html,/Approved<\/span>[\s\S]*?<strong>1<\/strong>/);
   assert.match(html,/Benefits tracking<\/span>[\s\S]*?<strong>1<\/strong>/);
-  assert.match(html,/View all 2 approved plans/);
+  assert.match(html,/Cancelled<\/span>[\s\S]*?<strong>1<\/strong>/);
+  assert.match(html,/View all 3 approved plans/);
   assert.match(html,/&lt;script&gt;alert\(1\)&lt;\/script&gt;/);
   assert.doesNotMatch(html,/<script>alert\(1\)<\/script>/);
 });

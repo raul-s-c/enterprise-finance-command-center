@@ -79,4 +79,6 @@
 .report-mode .aev-actual-history p{margin:3px 0 9px;color:#52647b;line-height:1.4}
 @media(max-width:900px){.report-mode .aev-chart{max-height:none}.report-mode .aev-selected>div{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:900px){.report-mode .action-story-overview{height:auto}.report-mode .action-story-indicators{grid-template-columns:repeat(2,minmax(0,1fr))}.report-mode .action-story-all{grid-column:1/-1}.report-mode .action-story-overview>.story-board{height:auto}}
+@media(max-width:900px){.report-mode .story-composite:has(.action-execution-visual){height:max-content;min-height:0;overflow:visible}.report-mode .story-composite:has(.action-execution-visual)>.panel{height:max-content;min-height:0;flex:none}}
+@media(max-width:900px){.report-mode .story-board:has(.action-execution-visual){grid-auto-rows:max-content;align-content:start;overflow:auto}}
 @media(max-width:480px){.report-mode .aev-chart-caption{flex-wrap:wrap}.report-mode .aev-selected>div{gap:4px}.report-mode .aev-selected b{font-size:11px}}
