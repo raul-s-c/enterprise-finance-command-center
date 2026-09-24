@@ -102,10 +102,11 @@
     const bands=pages.filter(p=>p.html?.includes('class="report-indicators"'));
     const evidence=pages.filter(p=>!bands.includes(p));
     const reviewOverview=typeof state!=='undefined'&&state.view==='performance-review'&&bands.length&&evidence.length;
+    const statementOverview=typeof state!=='undefined'&&['pnl','working-capital','treasury','balance-sheet'].includes(state.view)&&bands.length&&evidence.length;
     if(bands.length&&evidence.length){
       const targets=evidence.filter(p=>!p.fullScreen&&!p.contribution);
       if(targets.length){
-        if(!reviewOverview)bands.forEach((band,index)=>{
+        if(!reviewOverview&&!statementOverview)bands.forEach((band,index)=>{
           const target=targets.find(candidate=>(candidate.policy?.key||'group')===(band.policy?.key||'group'))||targets[index%targets.length];
           target.html=`<section class="report-context-band" aria-label="${esc(band.title)}">${band.html}</section>${target.html}`;
           if((target.policy?.key||'group')!==(band.policy?.key||'group'))target.policy=root.ReportContext.group;
@@ -125,6 +126,17 @@
     }
     if(reviewOverview&&result.length){
       result[0].html=`<div class="performance-review-overview"><section class="performance-review-indicators" aria-label="Review indicators">${bands.map(band=>band.html).join('')}</section>${result[0].html}</div>`;
+    }
+    if(statementOverview){
+      const firstStory=result.find(page=>page.html?.startsWith('<div class="story-board'));
+      if(firstStory){
+        const host=document.createElement('div');
+        host.innerHTML=bands.map(band=>band.html).join('');
+        const cards=[...host.querySelectorAll('.kpi')];
+        const priorities={pnl:['Revenue','Gross profit','EBIT','12M forecast EBIT'],'working-capital':['Gross receivables','Gross inventory','Trade payables','Provision-adjusted NWC'],treasury:['Group cash','Net cash','Liquidity headroom','Covenant status'],'balance-sheet':['Assets','Liabilities','Equity','Balance check']}[state.view];
+        const headline=priorities.map(label=>cards.find(card=>card.querySelector('.kpi-label')?.textContent.trim()===label)).filter(Boolean);
+        firstStory.html=`<div class="statement-story-overview statement-story-${esc(state.view)}"><section class="statement-story-indicators" aria-label="Key financial indicators">${headline.map(card=>card.outerHTML).join('')}<details class="statement-story-all"><summary>All ${cards.length} indicators</summary><div class="statement-story-all-grid">${cards.map(card=>card.outerHTML).join('')}</div></details></section>${firstStory.html}</div>`;
+      }
     }
     return result;
   }

@@ -25,7 +25,7 @@ function renderTreasury(){
     ${kpi('Covenant status',safe(l.covenant_status||'-'))}
   </div>
   <div class="panel-grid">
-    ${panel('Liquidity trend','Cash, leverage and covenant headroom',table(liq.slice(-24),[
+    ${panel('Liquidity trend','Group cash · last 12 closes; full liquidity record below',`${bars(liq.slice(-12),'cash')}<details class="treasury-trend-records"><summary>Explore 24-month cash, debt and covenant records</summary>${table(liq.slice(-24),[
       {key:'month',label:'Month'},
       {key:'cash',label:'Cash',num:true,format:v=>eur.format(v)},
       {key:'gross_debt',label:'Gross debt',num:true,format:v=>eur.format(v)},
@@ -34,7 +34,7 @@ function renderTreasury(){
       {key:'net_leverage',label:'Net leverage',num:true,format:v=>`${num(v,2)}x`},
       {key:'interest_coverage',label:'Interest cover',num:true,format:v=>`${num(v,1)}x`},
       {key:'covenant_status',label:'Covenant'}
-    ]),'span-8')}
+    ])}</details>`,'span-8')}
     ${panel('Current liquidity bridge','Latest group position',metricRows([
       ['Group cash',eur.format(groupCash)],
       ['Minimum operating cash',eur.format(Number(l.minimum_operating_cash)||0)],
