@@ -111,6 +111,42 @@ test('graphical P&L restores filters with Back and factory content stays inside 
   }
 });
 
+test('factory cards show source-tied 12-month utilization without clipping',async({page})=>{
+  await page.setViewportSize({width:1366,height:768});
+  await page.goto('/#view=operations-capex');
+  await expect(page.locator('.sw-factory-trend')).toHaveCount(2);
+  const expected=await page.evaluate(async()=>{
+    const data=await(await fetch('/data/dashboard.json')).json(),rows=data.hardware_factory_economics;
+    const months=[...new Set(rows.map(row=>row.month))].filter(month=>month<=data.meta.end_month).sort().slice(-12);
+    const scale=Math.max(.1,Math.ceil(Math.max(...rows.filter(row=>months.includes(row.month)).map(row=>row.utilization))*10)/10);
+    return rows.filter(row=>row.month===data.meta.end_month).map(factory=>{
+      const history=rows.filter(row=>row.factory===factory.factory&&months.includes(row.month)).sort((a,b)=>a.month.localeCompare(b.month));
+      return {factory:factory.factory,months:history.length,scale:Math.round(scale*100),lastY:Number((43-history.at(-1).utilization/scale*38).toFixed(1))};
+    });
+  });
+  for(const [index,item] of expected.entries()){
+    const card=page.locator('.sw-factories>button').nth(index);
+    await expect(card.locator('.sw-factory-trend small')).toContainText(`0–${item.scale}% scale`);
+    const points=await card.locator('.sw-factory-trend polyline').getAttribute('points');
+    expect(points.split(' ')).toHaveLength(item.months);
+    expect(Number(points.split(' ').at(-1).split(',')[1])).toBe(item.lastY);
+  }
+  for(const [width,height] of [[1366,768],[1024,600],[390,844]]){
+    await page.setViewportSize({width,height});
+    const fit=await page.locator('.sw-primary').evaluate(panel=>({
+      clipped:panel.scrollHeight>panel.clientHeight+1,
+      cardOverflow:[...panel.querySelectorAll('.sw-factories>button')].some(card=>card.scrollWidth>card.clientWidth+1)
+    }));
+    expect(fit.clipped,`Factory chart clipped at ${width}×${height}`).toBe(false);
+    expect(fit.cardOverflow).toBe(false);
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+  }
+  await page.setViewportSize({width:1366,height:768});
+  await page.locator('.sw-factories>button').first().click();
+  await expect(page.locator('#reportDialog')).toBeVisible();
+  await expect(page.locator('#reportDialogBody')).toContainText('Produced units / capacity units');
+});
+
 test('P&L contribution explains actual vs prior year and shows truthful statement lineage',async({page})=>{
   await page.setViewportSize({width:1366,height:768});
   await page.goto('/#view=pnl&page=5&section=P%26L+contribution');
