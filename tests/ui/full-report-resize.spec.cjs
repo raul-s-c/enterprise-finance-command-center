@@ -4,7 +4,7 @@ test('every report page avoids horizontal overflow at laptop and mobile widths',
   test.setTimeout(300000);
   const failures=[];
   let audited=0;
-  for(const width of [1280,390]){
+  for(const width of [1280,768,390]){
     await page.setViewportSize({width,height:width===390?844:720});
     await page.goto('/#view=executive&page=0');
     await expect.poll(()=>page.evaluate(()=>reportState.pages.length)).toBeGreaterThan(0);
@@ -23,5 +23,5 @@ test('every report page avoids horizontal overflow at laptop and mobile widths',
     }
   }
   expect(failures).toEqual([]);
-  expect(audited).toBeGreaterThan(150);
+  expect(audited).toBeGreaterThan(225);
 });
