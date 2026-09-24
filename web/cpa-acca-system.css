@@ -179,3 +179,31 @@
   .report-mode .pnl-note{font-size:10px;padding-top:5px}
 }
 @media(prefers-reduced-motion:reduce){.report-mode *{scroll-behavior:auto!important;transition:none!important}}
+.pnl-title-compact,.pnl-mobile-switch{display:none}
+.pnl-variance-context{display:none}
+@media(max-width:600px){
+  .report-mode .pnl-visual>header{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:6px}
+  .report-mode .pnl-visual>header h2{grid-column:1;grid-row:1;min-width:0}
+  .report-mode .pnl-visual>header p{grid-column:1/-1;grid-row:2}
+  .report-mode .pnl-title-full{display:none}
+  .report-mode .pnl-title-compact{display:inline}
+  .report-mode .pnl-visual[data-mobile-view=variance] .pnl-values-context{display:none}
+  .report-mode .pnl-visual[data-mobile-view=variance] .pnl-variance-context{display:inline}
+  .report-mode .pnl-mobile-switch{display:flex;grid-column:2;grid-row:1;border:1px solid #cbd8e8;border-radius:3px;overflow:hidden}
+  .report-mode .pnl-mobile-switch button{border:0;background:#fff;color:#294665;font-size:10px;font-weight:650;min-height:27px;padding:4px 7px;cursor:pointer}
+  .report-mode .pnl-mobile-switch button[aria-pressed=true]{background:#0869e1;color:#fff}
+  .report-mode .pnl-scroll{overflow-x:hidden}
+  .report-mode .pnl-grid{min-width:0;width:100%}
+  .report-mode .pnl-heading,.report-mode button.pnl-row{grid-template-columns:minmax(0,1.62fr) minmax(0,.64fr) minmax(0,.74fr);gap:4px}
+  .report-mode button.pnl-row{min-width:0}
+  .report-mode .pnl-row>span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px}
+  .report-mode .pnl-track,.report-mode .pnl-delta,.report-mode .pnl-percent{justify-content:flex-end;min-width:0}
+  .report-mode .pnl-track i,.report-mode .pnl-delta i,.report-mode .pnl-percent i,.report-mode .pnl-delta:before,.report-mode .pnl-percent:before{display:none}
+  .report-mode .pnl-track b,.report-mode .pnl-delta b,.report-mode .pnl-percent b{font-size:11px;white-space:nowrap}
+  .report-mode .pnl-visual[data-mobile-view=values] .pnl-heading>span:nth-child(n+4),
+  .report-mode .pnl-visual[data-mobile-view=values] .pnl-row>span:nth-child(n+4),
+  .report-mode .pnl-visual[data-mobile-view=variance] .pnl-heading>span:nth-child(2),
+  .report-mode .pnl-visual[data-mobile-view=variance] .pnl-heading>span:nth-child(3),
+  .report-mode .pnl-visual[data-mobile-view=variance] .pnl-row>span:nth-child(2),
+  .report-mode .pnl-visual[data-mobile-view=variance] .pnl-row>span:nth-child(3){display:none}
+}
