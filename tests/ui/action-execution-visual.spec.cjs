@@ -49,3 +49,10 @@ test('benefit tracking explains why actual recognition is zero at this close',as
   expect(mobileFit.panelsSeparate).toBe(true);
   await page.screenshot({path:'test-results/action-execution-recognition-mobile.png',fullPage:true});
 });
+
+test('Action Execution ignores hidden operating filters on its fixed group scope',async({page})=>{
+  await page.goto('/#view=action-execution&page=0&entity=US01&division=Hardware');
+  await expect(page.locator('#reportContext')).toContainText('Group / fixed report scope');
+  await expect(page.locator('.aev-stage').first()).toContainText('18');
+  await expect(page.locator('.action-story-indicators .kpi')).toContainText(['18','€1.7M','€4.3M','€0']);
+});

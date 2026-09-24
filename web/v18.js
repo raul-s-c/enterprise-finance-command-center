@@ -1,5 +1,6 @@
 function executionScope(rows){
   const all=rows||[];
+  if(state.view==='action-execution')return all; // This report's declared policy is group / fixed scope.
   if(state.entity==='all' && state.division==='all') return all;
   if(state.entity!=='all' && state.division==='all') return all.filter(r=>r.scope_level==='Entity' && r.entity===state.entity);
   if(state.entity==='all' && state.division!=='all') return all.filter(r=>r.scope_level==='Division' && r.division===state.division);
@@ -13,8 +14,8 @@ function executionStatus(value){
 
 function scopedActionBridge(){
   let rows=(data.management_action_forecast_bridge||[]).filter(r=>r.scenario==='Base' && Number(r.horizon_month)<=12);
-  if(state.entity!=='all') rows=rows.filter(r=>r.entity===state.entity);
-  if(state.division!=='all') rows=rows.filter(r=>r.division===state.division);
+  if(state.view!=='action-execution' && state.entity!=='all') rows=rows.filter(r=>r.entity===state.entity);
+  if(state.view!=='action-execution' && state.division!=='all') rows=rows.filter(r=>r.division===state.division);
   const map=new Map();
   for(const r of rows){
     const x=map.get(r.month)||{month:r.month,horizon_month:r.horizon_month,scenario:r.scenario,action_revenue_impact:0,action_gross_profit_impact:0,action_opex_impact:0,action_ebit_impact:0,active_action_count:0};
@@ -26,8 +27,8 @@ function scopedActionBridge(){
 
 function scopedActualImpact(){
   let rows=data.management_action_actual_impact||[];
-  if(state.entity!=='all') rows=rows.filter(r=>r.entity===state.entity);
-  if(state.division!=='all') rows=rows.filter(r=>r.division===state.division);
+  if(state.view!=='action-execution' && state.entity!=='all') rows=rows.filter(r=>r.entity===state.entity);
+  if(state.view!=='action-execution' && state.division!=='all') rows=rows.filter(r=>r.division===state.division);
   const map=new Map();
   for(const r of rows){
     const x=map.get(r.month)||{month:r.month,action_revenue_impact:0,action_gross_profit_impact:0,action_opex_impact:0,action_ebit_impact:0,active_action_count:0};
