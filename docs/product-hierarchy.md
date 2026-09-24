@@ -85,3 +85,5 @@ The dashboard exposes:
 - customer profitability
 
 This keeps the synthetic company explorable at CFO level without making the dashboard dependent on a toy-sized catalog.
+
+The profitability report now places Family economics and Quality-tier economics side by side. Both views switch between trailing-12-month Revenue and Operating contribution. The family ranking groups only the lower-ranked rows visually; the quality-tier matrix retains each division/tier combination. A visible control compares the totals from the two published grains to the cent, and both original source tables remain expandable. The division selector is offered only for divisions present in the source; no entity-level family or tier allocation is invented.

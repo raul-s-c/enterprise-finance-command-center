@@ -187,6 +187,8 @@ Commercial tiers are typically Essential, Professional and Premium. Customers re
 
 See `docs/product-hierarchy.md`.
 
+The profitability mix report compares families with division/quality tiers on a shared Revenue or Operating contribution measure, displays their reconciliation, and keeps both original schedules available.
+
 ## Working Capital and customer funding
 
 The Working Capital asset-quality pages pair ranked ECL/SKU provision exposure with five-bucket AR/inventory aging and 12-month risk-share trends; the original schedules remain one click away.
