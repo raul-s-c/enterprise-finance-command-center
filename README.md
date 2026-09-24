@@ -109,6 +109,8 @@ All accounting, workforce, FX and three-statement controls = passed
 
 The v0.15 workforce, multi-currency and integrated forecast capabilities remain fully active underneath the review layer. The Balance Sheet still has no balancing plug: cash comes from liquidity, Working Capital from operating drivers, PPE/CIP from CAPEX, debt from its roll-forward and retained earnings from forecast Net Income.
 
+The Plan & Forecast report pairs a published three-scenario comparison with a Group Base workforce outlook. Readers can switch Revenue, EBIT, free cash flow and ending cash, inspect the balance-sheet equation, compare FTE with its target, and open the original source tables. These are fixed Group measures; entity/division selections do not silently change one side of the comparison.
+
 See:
 
 - `docs/monthly-performance-review.md`

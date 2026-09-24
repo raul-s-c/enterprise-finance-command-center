@@ -15,7 +15,6 @@
   const translation=domain('translation','Translation indicators',['fx_translation'],['entity']);
   const transactions=domain('transactions','Transaction FX indicators',['transaction_fx_close_documents']);
   const plan=domain('plan','Plan indicators',['fy_plan_bridge']);
-  const workforcePlan=domain('workforce-plan','Workforce plan indicators',['workforce_forecast']);
   const actionPlan=domain('action-plan','Execution indicators',['management_action_plans'],undefined,{levels:true,allLevels:true});
   const actionBridge=domain('action-bridge','Action forecast indicators',['management_action_forecast_bridge']);
   const panels=Object.create(null);
@@ -27,7 +26,6 @@
   register(factory,['Factory absorption accounting']);
   register(spare,['Installed base by entity','Aftermarket trend']);
   register(workforce,['Workforce by function']);
-  register(workforcePlan,['Base workforce plan']);
   register(contracts,['Prepayment funding by business']);
   register(review,['CFO performance narrative','Review coverage','Driver scorecard']);
   register(action,['Management action register','Persistent action register','Action lifecycle','Overdue and escalated actions']);
@@ -46,6 +44,7 @@
   // These renderers are group-only even if the source itself has dimensions.
   const groupPanels=['Group management commentary','Financial position','Close priorities','Management commitments','Benefits realization','Base forecast P&L','OPEX composition','Price / Volume / Mix','Asset-quality trend','Provision impact','AR aging','Inventory aging','AP aging','Contract-liability trend','Free cash flow','Latest cash bridge','Treasury overlay','Base forecast Cash Flow','Receivables carrying value','Inventory carrying value','Funding structure','Total assets trend','Customer prepayment funding','Contract liability trend','Base forecast Balance Sheet','Rolling forecast scenarios','Forecast accuracy','Liquidity by forecast scenario','Integrated three-statement scenarios','Family economics','Quality-tier economics','SKU profitability','Catalog structure','Intercompany flow','Consolidation logic','Factory utilization','CAPEX portfolio','Portfolio decisions','Backlog trend','Bookings vs revenue','Production mix','Group prepayment trend','FTE trend','Liquidity trend','Current liquidity bridge','Debt maturity ladder','Latest cash-pool movements','Base liquidity outlook','Scenario liquidity summary','Base liquidity bridge','Translation reserve trend','Close-month macro observations','Source coverage','Group covenant sensitivity'];
   register(group,groupPanels);
+  register(group,['Base workforce plan']);
   const cards=Object.create(null);
   function cardGroup(policy,labels){for(const label of labels.split('|'))cards[label]=policy;}
   cardGroup(operating,'Revenue|Gross margin|Marginal contribution|Gross profit|OPEX|EBIT');

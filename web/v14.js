@@ -57,7 +57,7 @@ renderers['business-drivers']=function(){
 const forecastBeforeWorkforce=renderers.forecast;
 renderers.forecast=function(){
   const base=forecastBeforeWorkforce();
-  let rows=workforceScope(data.workforce_forecast||[]).filter(r=>r.scenario==='Base'&&Number(r.horizon_month)<=12);
+  let rows=(data.workforce_forecast||[]).filter(r=>r.scenario==='Base'&&r.vintage===data.meta.end_month&&Number(r.horizon_month)<=12);
   const byMonth=new Map();
   for(const r of rows){
     const x=byMonth.get(r.month)||{month:r.month,fte:0,target:0,hires:0,attrition:0,personnel:0,non_people:0,opex:0};
