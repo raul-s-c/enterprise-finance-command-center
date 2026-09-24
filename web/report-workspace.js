@@ -83,6 +83,7 @@ function reportLegacyPages(view){
 function reportPages(){
   let pages=reportLegacyPages(state.view),s=reportCurrent();
   if(state.view==='close-journey')return globalThis.CloseJourney.pages(data);
+  if(state.view==='data-journey')return [globalThis.DataJourneyCockpit.page(data),...ManagementBook.compose(pages.filter(page=>page.title!=='End-to-end finance pipeline'))];
   if(state.view==='executive')return ManagementBook.executivePages(data,state,reportExecutive());
   const statementPages=globalThis.StatementWorkspace?.pages(state.view,data,state)||[];
   if(statementPages.length)pages=statementPages.concat(pages);
@@ -205,6 +206,7 @@ function render(restoring=false){
   reportFilterControls(pages[reportState.page],resolved);
   document.getElementById('content').innerHTML=pages[reportState.page].html;
   globalThis.CloseJourney?.mount(data);
+  globalThis.DataJourneyCockpit?.mount(data);
   globalThis.StatementWorkspace?.mount();
   ContributionExplorer.mount(data);
   reportStoryBoards();
