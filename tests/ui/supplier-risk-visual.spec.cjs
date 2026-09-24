@@ -30,6 +30,7 @@ test('supplier spend and AP rank from the same selected source without fake over
   await page.screenshot({path:'test-results/supplier-ap-maturity-desktop.png',fullPage:true});
   await page.setViewportSize({width:390,height:844});
   await page.goto(`/#view=working-capital&page=${suppliers.index}`);
+  await expect(page.locator('.sr-visual')).toHaveCount(2);
   const regions=page.getByRole('navigation',{name:'Dashboard regions'});
   await expect(regions.getByRole('button')).toHaveCount(2);
   await regions.getByRole('button').nth(1).click();
