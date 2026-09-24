@@ -101,10 +101,11 @@
     // Distribute them alongside evidence rather than pairing two KPI-only pages.
     const bands=pages.filter(p=>p.html?.includes('class="report-indicators"'));
     const evidence=pages.filter(p=>!bands.includes(p));
+    const reviewOverview=typeof state!=='undefined'&&state.view==='performance-review'&&bands.length&&evidence.length;
     if(bands.length&&evidence.length){
       const targets=evidence.filter(p=>!p.fullScreen&&!p.contribution);
       if(targets.length){
-        bands.forEach((band,index)=>{
+        if(!reviewOverview)bands.forEach((band,index)=>{
           const target=targets.find(candidate=>(candidate.policy?.key||'group')===(band.policy?.key||'group'))||targets[index%targets.length];
           target.html=`<section class="report-context-band" aria-label="${esc(band.title)}">${band.html}</section>${target.html}`;
           if((target.policy?.key||'group')!==(band.policy?.key||'group'))target.policy=root.ReportContext.group;
@@ -121,6 +122,9 @@
       const sameScope=pair.length===1||pair.every(p=>(p.policy?.key||'group')===(pair[0].policy?.key||'group'));
       result.push({title:pair.map(p=>p.title).join(' · '),policy:sameScope?pair[0].policy:root.ReportContext.group,custom:pair.some(p=>p.custom),html:`<div class="story-board ${pair.length===1?'story-single':''}">${pair.map(p=>`<section class="story-composite" data-source-section="${esc(p.title)}">${p.html}</section>`).join('')}</div>`});
       i+=pair.length;
+    }
+    if(reviewOverview&&result.length){
+      result[0].html=`<div class="performance-review-overview"><section class="performance-review-indicators" aria-label="Review indicators">${bands.map(band=>band.html).join('')}</section>${result[0].html}</div>`;
     }
     return result;
   }

@@ -1,5 +1,34 @@
 const {test,expect}=require('@playwright/test');
 
+test('performance review keeps every KPI and source visible on a laptop canvas',async({page})=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=performance-review&page=0&entity=all&division=all');
+  const overview=page.locator('.performance-review-overview');
+  await expect(overview).toBeVisible();
+  await expect(overview.locator('.kpi')).toHaveCount(10);
+  await expect(overview.getByText('CFO performance narrative')).toBeVisible();
+  await expect(overview.getByText('Review coverage')).toBeVisible();
+  const layout=await overview.evaluate(node=>{
+    const strip=node.querySelector('.performance-review-indicators').getBoundingClientRect();
+    const cards=[...node.querySelectorAll('.performance-review-indicators .kpi')];
+    const coverage=node.querySelector('.review-coverage');
+    const pane=coverage.closest('.story-composite').getBoundingClientRect();
+    const coveragePane=coverage.closest('.story-composite');
+    return {cardsVisible:cards.every(card=>{const rect=card.getBoundingClientRect();return rect.left>=strip.left-1&&rect.right<=strip.right+1}),coverageCount:coverage.children.length,lastSourceVisible:coverage.lastElementChild.getBoundingClientRect().bottom<=pane.bottom+1,coverageFits:coveragePane.scrollHeight<=coveragePane.clientHeight+1,horizontal:document.documentElement.scrollWidth>innerWidth};
+  });
+  expect(layout.cardsVisible).toBe(true);
+  expect(layout.coverageCount).toBe(8);
+  expect(layout.lastSourceVisible).toBe(true);
+  expect(layout.coverageFits).toBe(true);
+  expect(layout.horizontal).toBe(false);
+  await overview.getByRole('button',{name:'How Revenue vs budget is calculated'}).click();
+  await expect(page.locator('#reportDialog')).toBeVisible();
+  await page.locator('#reportDialog').getByRole('button',{name:'Close'}).click();
+  await page.setViewportSize({width:390,height:844});
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
+  await expect(overview.locator('.kpi')).toHaveCount(10);
+});
+
 test('global search navigates reports and financial scope with keyboard and mouse',async({page})=>{
   let releaseDashboard,signalDashboardRequest;
   const dashboardRequest=new Promise(resolve=>{signalDashboardRequest=resolve;});

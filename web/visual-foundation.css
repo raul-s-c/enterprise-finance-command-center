@@ -141,7 +141,21 @@
 .report-mode .report-context-band .report-indicators{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;height:auto}
 .report-mode .report-context-band .report-indicators{display:flex;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x proximity}
 .report-mode .report-context-band .report-indicators>.kpi{flex:0 0 170px;scroll-snap-align:start}
+.report-mode .performance-review-overview{height:100%;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr);gap:10px}
+.report-mode .performance-review-indicators{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;min-width:0}
+.report-mode .performance-review-indicators .report-indicators{display:contents}
+.report-mode .performance-review-indicators .kpi{min-width:0;min-height:0;padding:4px 7px;border:1px solid #d9e2ef;border-left:3px solid #0867f2;background:#f7faff}
+.report-mode .performance-review-indicators .kpi-label-with-help{min-height:20px;font-size:11px}
+.report-mode .performance-review-indicators button.kpi-info{width:19px;height:19px;min-height:19px;font-size:10px;padding:0}
+.report-mode .performance-review-indicators .kpi-value{font-size:20px;line-height:1.15;margin-top:1px}
+.report-mode .performance-review-indicators .kpi-note{font-size:10px;line-height:1.2;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.report-mode .performance-review-overview>.story-board{min-height:0}
+.report-mode .performance-review-overview .story-composite>.panel{min-height:0}
+@media(max-width:900px){.report-mode .performance-review-overview{height:auto;display:block}.report-mode .performance-review-indicators{grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:12px}.report-mode .performance-review-overview>.story-board{height:auto}}
 .review-coverage{display:grid;gap:16px;padding:16px 0}
+.performance-review-overview .review-coverage{gap:2px;padding:2px 0}
+.performance-review-overview .review-coverage>div{font-size:11px;gap:8px}
+.performance-review-overview .review-coverage i{height:10px}
 .review-coverage>div{display:grid;grid-template-columns:minmax(130px,1fr) minmax(70px,1fr) 30px;align-items:center;gap:12px;font-size:13px}
 .review-coverage i{height:14px;background:#edf2f8}
 .review-coverage i b{display:block;height:100%;background:#1673d8}
