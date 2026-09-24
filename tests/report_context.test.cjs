@@ -70,6 +70,22 @@ test('Software and factory pages only expose their own entity domain',()=>{
   assert.deepEqual(factory.options.entity,['CN01','CZ01']);
 });
 
+test('asset-quality filters offer only current scopes with positive inventory reserves',()=>{
+  const ecl=context.panel('working-capital','Expected credit loss exposure');
+  const inventory=context.panel('working-capital','Inventory provision exposure');
+  assert.equal(ecl.key,inventory.key);
+  const records=context.rows(data,ecl);
+  assert.ok(records.length>0);
+  assert.ok(records.every(row=>row.month===data.meta.end_month&&Number(row.inventory_provision)>0));
+  for(const entity of ['all',...new Set(data.management_detail.map(row=>row.entity))]){
+    const result=context.resolve(data,ecl,{entity,division:'all'});
+    for(const division of result.options.division){
+      const scope={entity:result.scope.entity,division};
+      assert.ok(records.some(row=>context.matches(row,scope,ecl)),`${entity}/${division} has no positive provision`);
+    }
+  }
+});
+
 test('table sorting compares compact currency, negatives, percentages and numeric identifiers',()=>{
   assert.ok(model.compareDisplay('€900K','€2M',true)<0);
   assert.ok(model.compareDisplay('-€2M','€0',true)<0);

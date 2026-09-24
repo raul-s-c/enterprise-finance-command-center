@@ -41,6 +41,9 @@
   function decorate(html,source,scope){
     if(!root.document)return html;
     const host=document.createElement('div');host.innerHTML=html;
+    // Pair the two selectable reserve panels, then the two fixed-group aging panels.
+    const titled=title=>[...host.querySelectorAll('article.panel')].find(panel=>panel.querySelector('.panel-title')?.textContent.trim()===title);
+    titled('Expected credit loss exposure')?.after(titled('Inventory provision exposure'));
     const current=rows=>(rows||[]).filter(row=>row.month===source.meta.end_month);
     const scoped=rows=>{let result=current(rows);if(scope.entity!=='all')result=result.filter(row=>row.entity===scope.entity);if(scope.division!=='all')result=result.filter(row=>row.division===scope.division);return result;};
     const ar=(source.ar_aging_summary||[]).at(-1),inventory=(source.inventory_aging_summary||[]).at(-1);
