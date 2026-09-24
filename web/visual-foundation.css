@@ -100,6 +100,8 @@
 .report-mode .report-subnav{padding-inline:16px}
 .report-mode .report-subnav nav{min-width:0;overflow-x:auto}
 .report-mode .report-subnav nav button{white-space:nowrap;font-size:12px}
+.report-mode .report-page-select select{width:clamp(245px,27vw,360px);max-width:none}
+@media(max-width:900px){.report-mode .report-page-select select{width:100%}}
 .report-mode .statement-workspace .sw-head p{display:none}
 .report-mode .sw-head{gap:12px;padding-bottom:10px}
 .report-mode .sw-head h2{font-size:22px}
@@ -152,6 +154,33 @@
 .report-mode .performance-review-overview>.story-board{min-height:0}
 .report-mode .performance-review-overview .story-composite>.panel{min-height:0}
 @media(max-width:900px){.report-mode .performance-review-overview{height:auto;display:block}.report-mode .performance-review-indicators{grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:12px}.report-mode .performance-review-overview>.story-board{height:auto}}
+.report-mode .statement-story-overview{height:100%;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr);gap:8px}
+.report-mode .statement-story-indicators{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;min-width:0;position:relative}
+.report-mode .statement-story-indicators .kpi{min-width:0;min-height:0;padding:4px 7px;border:1px solid #d9e2ef;border-left:3px solid #0867f2;background:#f7faff;box-shadow:none}
+.report-mode .statement-story-indicators .kpi-label-with-help{min-height:18px;font-size:10px}
+.report-mode .statement-story-indicators button.kpi-info{width:18px;height:18px;min-height:18px;font-size:10px;padding:0}
+.report-mode .statement-story-indicators .kpi-value{font-size:18px;line-height:1.1;margin-top:1px}
+.report-mode .statement-story-indicators .kpi-note{font-size:10px;line-height:1.15;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.report-mode .statement-story-all{min-width:0;position:relative;border:1px solid #b9cce7;background:#f7faff;color:#0754bd}
+.report-mode .statement-story-all summary{display:flex;align-items:center;justify-content:center;height:100%;min-height:57px;padding:4px 8px;cursor:pointer;font-size:12px;font-weight:700;list-style:none;text-align:center}
+.report-mode .statement-story-all summary::-webkit-details-marker{display:none}
+.report-mode .statement-story-all summary:hover,.report-mode .statement-story-all summary:focus-visible{background:#e9f2ff;outline:2px solid #0867f2;outline-offset:-2px}
+.report-mode .statement-story-all-grid{position:absolute;z-index:10;right:0;top:calc(100% + 5px);width:min(900px,calc(100vw - 250px));max-height:min(355px,calc(100dvh - 330px));overflow:auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;padding:10px;border:1px solid #a9c4e8;background:white;box-shadow:0 12px 28px #21304724}
+.report-mode .statement-story-overview>.story-board{min-height:0}
+.report-mode .statement-story-overview .story-composite>.panel{min-height:0}
+.report-mode .statement-story-pnl>.story-board{grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr)}
+.report-mode .statement-story-pnl .financial-report>.report-message{font-size:18px;line-height:1.2;margin-bottom:5px}
+.report-mode .statement-story-pnl .statement-table{flex:0;font-size:11px}
+.report-mode .statement-story-pnl .statement-table th,.report-mode .statement-story-pnl .statement-table td{padding:3px 4px;line-height:1.1}
+.report-mode .statement-story-pnl .statement-table thead th{font-size:10px}
+.report-mode .statement-story-pnl .financial-report>.report-note{font-size:10px;line-height:1.25;margin-top:4px;padding:5px}
+.report-mode .statement-story-treasury .story-composite>.panel>.chart-legend{flex:none}
+.report-mode .statement-story-treasury .story-composite>.panel>.report-chart-scroll{flex:1;min-height:0;height:auto}
+.report-mode .statement-story-treasury .story-composite>.panel>.report-chart-scroll>.report-svg{height:100%!important;min-height:0}
+.report-mode .treasury-trend-records{flex:none;border-top:1px solid #d9e2ef;margin-top:5px;font-size:11px}
+.report-mode .treasury-trend-records summary{padding:7px 0;color:#075bd6;font-weight:600;cursor:pointer}
+.report-mode .treasury-trend-records[open]{max-height:280px;overflow:auto}
+@media(max-width:900px){.report-mode .statement-story-overview{height:auto;display:block}.report-mode .statement-story-indicators{grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:10px}.report-mode .statement-story-all-grid{right:auto;left:0;width:min(520px,calc(100vw - 40px));grid-template-columns:repeat(2,minmax(0,1fr));max-height:330px}.report-mode .statement-story-overview>.story-board{height:auto}.report-mode .statement-story-pnl>.story-board{grid-template-columns:1fr}}
 .review-coverage{display:grid;gap:16px;padding:16px 0}
 .performance-review-overview .review-coverage{gap:2px;padding:2px 0}
 .performance-review-overview .review-coverage>div{font-size:11px;gap:8px}
