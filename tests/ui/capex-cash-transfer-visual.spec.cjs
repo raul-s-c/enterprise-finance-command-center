@@ -23,6 +23,8 @@ test('CAPEX portfolio separates cash spend, noncash go-live and remaining CIP',a
   await expect(page.locator('.ct-control')).toContainText('reconciled');
   await expect(page.locator('.ct-bs-control')).toContainText('reconciled');
   const projectSource=page.locator('.ct-source').filter({hasText:'View published project table'});
+  const desktopSourceBounds=await projectSource.locator('summary').boundingBox();
+  expect(desktopSourceBounds.y+desktopSourceBounds.height).toBeLessThan(667);
   await projectSource.locator('summary').click();
   await expect(projectSource.locator('table')).toBeVisible();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
