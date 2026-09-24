@@ -62,9 +62,10 @@ test('benefit tracking explains why actual recognition is zero at this close',as
 
 test('Action Execution ignores hidden operating filters on its fixed group scope',async({page})=>{
   await page.goto('/#view=action-execution&page=0');
+  await expect(page.locator('.action-story-indicators .kpi')).toHaveCount(4);
   const groupIndicators=await page.locator('.action-story-indicators .kpi').allTextContents();
   await page.goto('/#view=action-execution&page=0&entity=US01&division=Hardware');
   await expect(page.locator('#reportContext')).toContainText('Group / fixed report scope');
   await expect(page.locator('.aev-stage').first()).toContainText(String(published.management_action_plans.filter(row=>row.execution_status==='Approved').length));
-  expect(await page.locator('.action-story-indicators .kpi').allTextContents()).toEqual(groupIndicators);
+  await expect(page.locator('.action-story-indicators .kpi')).toHaveText(groupIndicators);
 });
