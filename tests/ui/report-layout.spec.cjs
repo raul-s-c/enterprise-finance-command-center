@@ -171,6 +171,38 @@ test('the complete income statement fits standard laptop heights',async({page})=
   expect(await page.locator('.pnl-heading').evaluate(header=>getComputedStyle(header).position)).toBe('sticky');
 });
 
+test('Data Journey shows the full controlled chain and routes to source evidence',async({page})=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=data-journey');
+  await expect(page.locator('.dj-stage')).toHaveCount(10);
+  const expected=await page.evaluate(async()=>{
+    const data=await(await fetch('/data/dashboard.json')).json();
+    return {controls:Object.keys(data.validation).filter(key=>key!=='passed').length,macroOfficial:Object.values(data.sources.macro_drivers).reduce((sum,row)=>sum+row.official_rows,0),macroFallback:Object.values(data.sources.macro_drivers).reduce((sum,row)=>sum+row.fallback_rows,0)};
+  });
+  await expect(page.locator('.dj-passed')).toContainText(`${expected.controls} measures · Passed`);
+  await expect(page.locator('.dj-source-row').first()).toContainText(`${expected.macroOfficial} official · ${expected.macroFallback} fallback`);
+  const count=await page.locator('.dj-control-row strong').allTextContents();
+  expect(count.map(Number).reduce((sum,value)=>sum+value,0)).toBe(expected.controls);
+  const fit=await page.locator('.dj-cockpit').evaluate(element=>({clipped:element.scrollHeight>element.clientHeight+1,overflow:document.documentElement.scrollWidth>innerWidth+1}));
+  expect(fit).toEqual({clipped:false,overflow:false});
+  await page.locator('[data-dj-stage="3"]').click();
+  await expect(page.locator('[data-dj-stage="3"]')).toHaveAttribute('aria-pressed','true');
+  await expect(page.locator('.dj-detail')).toContainText('Balanced journal and trial balance');
+  await expect(page.locator('.dj-detail')).toContainText('journal_balance_max_gap');
+  await page.locator('[data-dj-evidence="close-journey"]').click();
+  await expect(page.locator('#viewTitle')).toHaveText('Close Journey');
+  await page.goto('/#view=data-journey');
+  await page.locator('[data-dj-action="controls"]').click();
+  await expect(page.locator('#content')).toContainText('Release controls');
+  await page.goto('/#view=data-journey');
+  await page.locator('[data-dj-action="sources"]').click();
+  await expect(page.locator('#viewTitle')).toHaveText('Macro & Sensitivities');
+  await page.setViewportSize({width:390,height:844});
+  await page.goto('/#view=data-journey');
+  await expect(page.locator('.dj-stage')).toHaveCount(10);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
+
 test('P&L contribution explains actual vs prior year and shows truthful statement lineage',async({page})=>{
   await page.setViewportSize({width:1366,height:768});
   await page.goto('/#view=pnl&page=5&section=P%26L+contribution');
