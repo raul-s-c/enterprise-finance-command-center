@@ -138,6 +138,7 @@ The current system includes:
 - functional-currency journals and local trial balances for all six entities
 - a visual factory absorption bridge tied to the posted variance, beside a separately labelled source-factory sales mix
 - a CAPEX project flow that separates cash SPEND from noncash GO_LIVE transfers to PPE
+- a selectable 12-month portfolio-decision timeline connecting product lifecycle events to their published reasons
 - document-level transaction FX exposure, ageing and realized/unrealized remeasurement
 - EUR group translation with historical equity rates and explicit CTA / OCI
 - reported versus constant-currency Revenue and EBIT
