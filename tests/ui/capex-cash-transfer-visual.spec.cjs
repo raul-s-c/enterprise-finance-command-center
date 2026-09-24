@@ -33,6 +33,8 @@ test('CAPEX portfolio separates cash spend, noncash go-live and remaining CIP',a
   await expect(page.locator('.ct-factory')).toBeVisible();
   await regions.getByRole('button').nth(1).click();
   await expect(page.locator('.ct-visual').last()).toBeVisible();
+  const sourceBounds=await page.locator('.ct-source').last().locator('summary').boundingBox();
+  expect(sourceBounds.y+sourceBounds.height).toBeLessThan(805);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
   await page.screenshot({path:'test-results/capex-cash-transfer-mobile.png',fullPage:true});
 });

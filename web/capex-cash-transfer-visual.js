@@ -25,7 +25,7 @@
       <div class="ct-projects">${rows.map(row=>`<div class="ct-project"><header><strong title="${escape(row.name)}">${escape(row.name)}</strong><span>${escape(row.entity)} · ${escape(row.status)}</span></header><div class="ct-bar"><i style="width:${(row.spend/maximum*100).toFixed(2)}%"></i></div><div class="ct-project-foot"><span>Cash ${money(row.spend)}</span><span>${row.transfer>0?`PPE transfer ${money(row.transfer)}`:`CIP ${money(row.cip)} · planned ${escape(row.goLive)}`}</span></div></div>`).join('')}</div>
       <p class="ct-control ${control?'ct-pass':'ct-fail'}">Project-event roll-forward: SPEND − GO_LIVE − remaining CIP = ${money(Math.abs(spend-transfer-cip))} · ${control?'reconciled':'review difference'}</p>
       <p class="ct-bs-control ${hasBalance&&Math.abs(balanceGap)<.01?'ct-pass':'ct-fail'}">Project CIP − balance-sheet CIP: ${hasBalance?`${money(Math.abs(balanceGap))} · ${Math.abs(balanceGap)<.01?'reconciled':'review difference'}`:'source unavailable'}</p>
-      <p class="ct-note">GO_LIVE is not another cash outflow. The ledger control is enforced by the close; this visual reconciles published project events.</p>
+      <p class="ct-note">GO_LIVE is noncash; GL controls run in the close.</p>
     </div>`;
   }
   function factories(rows){
