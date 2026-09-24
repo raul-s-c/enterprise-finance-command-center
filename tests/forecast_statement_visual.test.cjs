@@ -11,9 +11,9 @@ test('scenario comparison uses the three published cases and the actual balance 
   assert.equal((html.match(/class="fs-scenario /g)||[]).length,3);
   assert.match(html,/Free cash flow/);
   assert.match(html,/Balance check €0.0m · reconciled/);
-  assert.match(html,/€78.0m/);
-  assert.doesNotMatch(html,/NaN|undefined/);
   const base=rows.find(row=>row.scenario==='Base');
+  assert.ok(html.includes(`€${(base.free_cash_flow_12m/1e6).toFixed(1)}m`));
+  assert.doesNotMatch(html,/NaN|undefined/);
   assert.ok(Math.abs(base.ending_assets_12m-base.ending_liabilities_12m-base.ending_equity_12m)<.01);
 });
 

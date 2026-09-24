@@ -12,9 +12,13 @@ test('scenario and group workforce forecast remain legible and source-tied at la
   await expect(page.locator('.fs-scenario')).toHaveCount(3);
   await expect(page.locator('.fs-source')).toHaveCount(2);
   await expect(page.locator('#reportContext')).toContainText('Group');
-  await expect(page.locator('.fs-scenario.base b')).toContainText('€89.6m');
+  const expected=await page.evaluate(()=>{
+    const base=data.three_statement_forecast_summary.find(row=>row.scenario==='Base');
+    return {ebit:`€${(base.ebit_12m/1e6).toFixed(1)}m`,fcf:`€${(base.free_cash_flow_12m/1e6).toFixed(1)}m`};
+  });
+  await expect(page.locator('.fs-scenario.base b')).toContainText(expected.ebit);
   await page.getByRole('button',{name:'Free cash flow',exact:true}).click();
-  await expect(page.locator('.fs-scenario.base b')).toContainText('€78.0m');
+  await expect(page.locator('.fs-scenario.base b')).toContainText(expected.fcf);
   await expect(page.getByRole('button',{name:'Free cash flow',exact:true})).toHaveAttribute('aria-pressed','true');
   await page.locator('.fs-source').first().locator('summary').click();
   await expect(page.locator('.fs-source').first().locator('table')).toBeVisible();
