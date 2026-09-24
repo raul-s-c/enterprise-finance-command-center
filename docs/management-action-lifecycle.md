@@ -64,3 +64,7 @@ The build fails when:
 - summary status counts do not reconcile to the register.
 
 All v0.16 source tie-outs and every earlier accounting, consolidation, Working Capital, Treasury, workforce, FX, liquidity and three-statement control remain active.
+
+## Lifecycle reporting cockpit
+
+Performance Review now shows the actual status composition and nearest due actions beside the published monthly lifecycle history. At the 2026-08 close the group has one controlled snapshot, so the report explicitly says that a trend requires a second close; it does not extrapolate or invent earlier action history. When later snapshots exist, the same component plots active and closed counts from each snapshot. The adjacent overdue panel separates genuinely overdue actions from open actions with upcoming due dates, and retains direct access to the complete overdue source table and action register. Both panels share the same available entity/division filter policy, so their figures and labels refer to one scope.

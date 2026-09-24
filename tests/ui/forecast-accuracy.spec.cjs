@@ -1,15 +1,22 @@
 const {test,expect}=require('@playwright/test');
+const published=require('../../web/data/dashboard.json');
+const money=value=>`€${(Number(value)/1e6).toFixed(1)}M`;
 
 test('forecast accuracy shows its full horizon evidence on a laptop',async({page})=>{
   await page.setViewportSize({width:1280,height:720});
   await page.goto('/#view=forecast&page=4');
   await expect(page.getByText('Forecast accuracy',{exact:true})).toBeVisible();
-  await expect(page.locator('.fv-error-point')).toHaveCount(18);
-  await expect(page.locator('.fv-bias-chart rect')).toHaveCount(18);
-  await expect(page.locator('.fv-scenario')).toHaveCount(3);
-  await expect(page.locator('.fv-scenario').first()).toContainText('€78.8M');
-  await expect(page.locator('.fv-scenario').nth(1)).toContainText('€72.0M');
-  await expect(page.locator('.fv-scenario').last()).toContainText('€83.4M');
+  await expect(page.locator('.fv-error-point')).toHaveCount(published.forecast_accuracy.length);
+  await expect(page.locator('.fv-bias-chart rect')).toHaveCount(published.forecast_accuracy.length);
+  const scenarios=[...published.liquidity_forecast_summary].sort((a,b)=>({Base:0,Downside:1,Upside:2}[a.scenario]??9)-({Base:0,Downside:1,Upside:2}[b.scenario]??9));
+  await expect(page.locator('.fv-scenario')).toHaveCount(scenarios.length);
+  for(const [index,row] of scenarios.entries()){
+    const visual=page.locator('.fv-scenario').nth(index);
+    await expect(visual).toContainText(row.scenario);
+    await expect(visual).toContainText(money(row.forecast_operating_cash_flow_12m));
+    await expect(visual).toContainText(money(row.forecast_capex_12m));
+    await expect(visual).toContainText(money(row.ending_cash_12m));
+  }
   const fit=await page.locator('#content').evaluate(node=>{const insight=node.querySelector('.forecast-accuracy-visual .fv-insight').getBoundingClientRect(),bias=node.querySelector('.fv-bias-chart').getBoundingClientRect(),records=node.querySelector('.forecast-source-records').getBoundingClientRect();return {horizontal:document.documentElement.scrollWidth>innerWidth,panes:[...node.querySelectorAll('.story-composite')].map(pane=>Math.max(0,pane.scrollHeight-pane.clientHeight)),biasClear:bias.bottom<=insight.top+1,recordsClear:insight.bottom<=records.top+1};});
   expect(fit.horizontal).toBe(false);
   expect(fit.panes.every(overflow=>overflow<25)).toBe(true);
