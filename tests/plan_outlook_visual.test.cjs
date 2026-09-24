@@ -25,7 +25,9 @@ test('EBIT view preserves negative source values and the latest-versus-budget ca
 
 test('scope is applied to source rows before charting',()=>{
   const all=published.fy_plan_bridge;
-  const one=all.filter(row=>row.entity==='CN01'&&row.division==='Hardware');
+  const {entity,division}=all[0];
+  const one=all.filter(row=>row.entity===entity&&row.division===division);
   const html=visual.outlook(one,'ebit');
-  assert.ok(html.includes(`−€${(Math.abs(sum(one,'latest_fy_ebit'))/1e6).toFixed(1)}m`));
+  const value=sum(one,'latest_fy_ebit');
+  assert.ok(html.includes(`${value<0?'−':''}€${(Math.abs(value)/1e6).toFixed(1)}m`));
 });
