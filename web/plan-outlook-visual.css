@@ -5,3 +5,4 @@
 .report-mode .po-ytd-chart{height:65px}.report-mode .po-ytd-months button{min-height:18px;height:18px;padding:1px 0}.report-mode .po-ytd .po-note{display:none}.report-mode .po-ytd .po-head{padding-top:1px;padding-bottom:3px}.report-mode .po-ytd .po-head strong{font-size:17px}.report-mode .po-ytd-legend{margin:3px 0 1px}.report-mode .po-ytd-selected{padding-top:3px}
 @media(max-width:600px){.report-mode .po-ytd-chart{height:70px}.report-mode .po-ytd .po-note{display:none}}
 @media(min-width:601px) and (max-width:900px){.report-mode .po-ytd-chart{height:42px}.report-mode .po-panel>.panel-head{margin-bottom:8px}}
+.report-mode .po-switch button:disabled{cursor:not-allowed;opacity:.45}

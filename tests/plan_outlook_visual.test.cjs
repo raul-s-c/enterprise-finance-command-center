@@ -44,3 +44,16 @@ test('scope is applied to source rows before charting',()=>{
   const value=sum(one,'latest_fy_ebit');
   assert.ok(html.includes(`${value<0?'−':''}€${(Math.abs(value)/1e6).toFixed(1)}m`));
 });
+
+test('a revenue-free cost center opens EBIT instead of a zero-only visual',()=>{
+  const center=published.fy_plan_bridge.find(row=>['fy_budget_revenue','fc_6_fy_revenue','fc_3_fy_revenue','fc_1_fy_revenue','latest_fy_revenue'].every(key=>Number(row[key])===0)&&Number(row.latest_fy_ebit)!==0);
+  assert.ok(center);
+  const match=row=>row.entity===center.entity&&row.division===center.division;
+  const outlook=visual.outlook(published.fy_plan_bridge.filter(match),'revenue');
+  const ytd=visual.performance(published.budget_performance.filter(match),'revenue');
+  for(const html of [outlook,ytd]){
+    assert.match(html,/cost center: no revenue/);
+    assert.match(html,/data-po-(?:ytd-)?metric="revenue" aria-pressed="false" disabled/);
+    assert.match(html,/data-po-(?:ytd-)?metric="ebit" aria-pressed="true"/);
+  }
+});

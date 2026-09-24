@@ -57,3 +57,20 @@ test('planning vintages remain readable and interactive on desktop and mobile',a
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
   await page.screenshot({path:'test-results/plan-outlook-mobile.png',fullPage:true});
 });
+
+test('revenue-free cost center shows EBIT rather than a blank planning chart',async({page})=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=forecast&page=0');
+  await expect.poll(()=>page.evaluate(()=>reportState.pages.some(item=>item.title.includes('FY outlook evolution')))).toBe(true);
+  const center=await page.evaluate(()=>{
+    const row=data.fy_plan_bridge.find(item=>['fy_budget_revenue','fc_6_fy_revenue','fc_3_fy_revenue','fc_1_fy_revenue','latest_fy_revenue'].every(key=>Number(item[key])===0)&&Number(item.latest_fy_ebit)!==0);
+    return {entity:row.entity,division:row.division};
+  });
+  const target=await page.evaluate(()=>reportState.pages.findIndex(item=>item.title.includes('FY outlook evolution')));
+  await page.goto(`/#view=forecast&page=${target}&entity=${encodeURIComponent(center.entity)}&division=${encodeURIComponent(center.division)}`);
+  await expect(page.locator('.po-ytd')).toContainText('cost center: no revenue');
+  await expect(page.locator('.po-visual')).toContainText('cost center: no revenue');
+  await expect(page.locator('[data-po-metric="revenue"]')).toBeDisabled();
+  await expect(page.locator('[data-po-ytd-metric="revenue"]')).toBeDisabled();
+  await expect(page.locator('[data-po-metric="ebit"]')).toHaveAttribute('aria-pressed','true');
+});
