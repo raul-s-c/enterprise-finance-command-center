@@ -34,6 +34,7 @@ test('supplier spend and AP rank from the same selected source without fake over
   await expect(regions.getByRole('button')).toHaveCount(2);
   await regions.getByRole('button').nth(1).click();
   await expect(page.locator('.sr-visual').last()).toBeVisible();
+  await expect(page.locator('.sr-visual').first()).toBeHidden();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
   await page.screenshot({path:'test-results/supplier-risk-mobile.png',fullPage:true});
 });
