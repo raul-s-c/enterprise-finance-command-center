@@ -1,6 +1,5 @@
 function hardwareBlock(){
   let rows=data.hardware_factory_economics||[];
-  if(state.entity!=='all' && ['CZ01','CN01'].includes(state.entity)) rows=rows.filter(r=>r.factory===state.entity);
   const current=lastMonthRows(rows), mix=data.hardware_mix||[];
   const totals=current.reduce((a,r)=>{
     a.produced+=Number(r.produced_units)||0;

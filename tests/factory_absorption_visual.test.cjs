@@ -1,0 +1,33 @@
+const {test}=require('node:test');
+const assert=require('node:assert/strict');
+const published=require('../web/data/dashboard.json');
+const context=require('../web/report-context.js');
+require('../web/factory-absorption-visual.js');
+const visual=globalThis.FinanceFactoryVisual;
+
+test('factory actual less absorbed cost reconciles to posted gross-profit variance',()=>{
+  const current=published.hardware_factory_economics.filter(row=>row.month===published.meta.end_month);
+  const factoryIds=new Set(published.factory.filter(row=>row.month===published.meta.end_month).map(row=>row.factory));
+  assert.equal(current.length,factoryIds.size);
+  for(const row of current)assert.ok(Math.abs(row.actual_fixed_factory_cost-row.absorbed_fixed_cost-row.absorption_variance)<.01);
+  const html=visual.factory(current);
+  assert.match(html,/reconciled/);
+  assert.match(html,/Under-absorption/);
+  for(const row of current)assert.ok(html.includes(row.factory_name));
+  assert.doesNotMatch(html,/NaN|undefined/);
+});
+
+test('mix is source-factory sales units, not monthly production units',()=>{
+  const mix=published.hardware_mix.filter(row=>row.month===published.meta.end_month);
+  const sales=mix.reduce((sum,row)=>sum+row.units,0);
+  assert.ok(mix.every(row=>row.source_factory&&Number.isFinite(Number(row.units))));
+  const html=visual.mix(mix);
+  assert.match(html,/Sales mix is not current-month factory output/);
+  assert.ok(html.includes(sales.toLocaleString('en-US')));
+  assert.doesNotMatch(html,/NaN|undefined/);
+});
+
+test('factory pair is fixed Group scope to match both source visuals',()=>{
+  assert.equal(context.panel('business-drivers','Factory absorption accounting').key,'group');
+  assert.equal(context.panel('business-drivers','Production mix').key,'group');
+});
