@@ -266,10 +266,12 @@ function reportStoryBoards(){
   if(window.innerWidth>900)return;
   for(const board of document.querySelectorAll('.story-board')){
     const regions=[...board.querySelectorAll(':scope > .story-composite')];if(regions.length<2)continue;
+    const key=`${state.view}|${reportState.pages[reportState.page]?.title||''}`;
+    const selected=reportState.mobileRegion?.key===key?Math.min(reportState.mobileRegion.index,regions.length-1):0;
     const controls=document.createElement('nav');controls.className='story-panel-switch';controls.setAttribute('aria-label','Dashboard regions');
-    controls.innerHTML=regions.map((region,index)=>`<button aria-pressed="${index===0}">${index+1}. ${RM.escape(region.dataset.sourceSection||`Region ${index+1}`)}</button>`).join('');
-    board.before(controls);regions.forEach((region,index)=>region.hidden=index!==0);
-    [...controls.children].forEach((button,index)=>button.onclick=()=>{regions.forEach((region,i)=>region.hidden=i!==index);[...controls.children].forEach((item,i)=>item.setAttribute('aria-pressed',i===index));regions[index].querySelector('button,select,input,[tabindex]')?.focus({preventScroll:true});reportEnhancePage();});
+    controls.innerHTML=regions.map((region,index)=>`<button aria-pressed="${index===selected}">${index+1}. ${RM.escape(region.dataset.sourceSection||`Region ${index+1}`)}</button>`).join('');
+    board.before(controls);regions.forEach((region,index)=>region.hidden=index!==selected);
+    [...controls.children].forEach((button,index)=>button.onclick=()=>{reportState.mobileRegion={key,index};regions.forEach((region,i)=>region.hidden=i!==index);[...controls.children].forEach((item,i)=>item.setAttribute('aria-pressed',i===index));regions[index].querySelector('button,select,input,[tabindex]')?.focus({preventScroll:true});reportEnhancePage();});
   }
 }
 function reportKpiHelp(){

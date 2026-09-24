@@ -40,7 +40,8 @@
   register({...transactions,open:true},['Exposure by transaction currency','Largest open transaction exposures']);
   register(domain('cash-entity','Entity cash',['treasury_entity_cash'],['entity']),['Cash by legal entity']);
   register(domain('sensitivity','Sensitivity detail',['financial_sensitivity_detail']),['CFO sensitivity matrix']);
-  for(const [title,dataset] of Object.entries({'Expected credit loss exposure':'credit_loss_detail','Inventory provision exposure':'inventory_provision_detail','Customer aging watchlist':'ar_customer_aging','SKU aging watchlist':'inventory_sku_aging','Supplier concentration':'supplier_concentration','Supplier aging watchlist':'ap_supplier_aging','Open customer advances':'contract_liability_detail','Customer profitability':'customer_profitability'}))register(domain(dataset,'Selected detail',[dataset]),[title]);
+  for(const [title,dataset] of Object.entries({'Customer aging watchlist':'ar_customer_aging','SKU aging watchlist':'inventory_sku_aging','Supplier concentration':'supplier_concentration','Supplier aging watchlist':'ap_supplier_aging','Open customer advances':'contract_liability_detail','Customer profitability':'customer_profitability'}))register(domain(dataset,'Selected detail',[dataset]),[title]);
+  register(domain('asset-quality','Selected asset-quality detail',['inventory_provision_detail'],undefined,{current:true,positive:'inventory_provision'}),['Expected credit loss exposure','Inventory provision exposure']);
   // These renderers are group-only even if the source itself has dimensions.
   const groupPanels=['Group management commentary','Financial position','Close priorities','Management commitments','Benefits realization','Base forecast P&L','OPEX composition','Price / Volume / Mix','Asset-quality trend','Provision impact','AR aging','Inventory aging','AP aging','Contract-liability trend','Free cash flow','Latest cash bridge','Treasury overlay','Base forecast Cash Flow','Receivables carrying value','Inventory carrying value','Funding structure','Total assets trend','Customer prepayment funding','Contract liability trend','Base forecast Balance Sheet','Rolling forecast scenarios','Forecast accuracy','Liquidity by forecast scenario','Integrated three-statement scenarios','Family economics','Quality-tier economics','SKU profitability','Catalog structure','Intercompany flow','Consolidation logic','Factory utilization','CAPEX portfolio','Portfolio decisions','Backlog trend','Bookings vs revenue','Production mix','Group prepayment trend','FTE trend','Liquidity trend','Current liquidity bridge','Debt maturity ladder','Latest cash-pool movements','Base liquidity outlook','Scenario liquidity summary','Base liquidity bridge','Translation reserve trend','Close-month macro observations','Source coverage','Group covenant sensitivity'];
   register(group,groupPanels);
@@ -66,6 +67,8 @@
   function rows(data,policy){
     return policy.datasets.flatMap(key=>data[key]||[]).filter(r=>{
       if(policy.activity && (r.month!==data.meta.end_month||!['revenue','gross_profit','opex','ebit','depreciation','marginal_contribution'].some(k=>typeof r[k]==='number'&&Number.isFinite(r[k])&&r[k]!==0)))return false;
+      if(policy.current&&r.month!==data.meta.end_month)return false;
+      if(policy.positive&&!(Number(r[policy.positive])>0))return false;
       if(policy.foreign&&r.functional_currency==='EUR')return false;
       if(policy.open&&r.status!=='Open')return false;
       if(policy.overdue&&(!['Open','In Progress'].includes(r.status)||![true,'True'].includes(r.overdue)))return false;

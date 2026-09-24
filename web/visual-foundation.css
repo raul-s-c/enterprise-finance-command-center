@@ -136,6 +136,7 @@
 .report-mode .sw-formula small,.report-mode .sw-flow span,.report-mode .sw-driver-chain small,.report-mode .sw-dual-path span,.report-mode .sw-dual-path em,.report-mode .sw-factories small,.report-mode .sw-factories dt,.report-mode .sw-factories dd{font-size:12px;line-height:1.4}
 .report-mode .sw-formula strong,.report-mode .sw-flow strong,.report-mode .sw-driver-chain strong,.report-mode .sw-dual-path strong{font-size:15px}
 .report-mode .story-composite{overflow:auto;display:flex;flex-direction:column;gap:12px}
+.report-mode .story-composite[hidden]{display:none}
 .report-mode .story-composite>.panel{height:auto;flex:1;min-height:240px}
 .report-definitions{flex:none;border-top:1px solid #d9e2ef;padding-top:12px;font-size:13px;line-height:1.5}
 .report-definitions summary{cursor:pointer;color:#075bd6;padding:6px 0;font-weight:600}
