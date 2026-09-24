@@ -25,6 +25,16 @@ test('planning vintages remain readable and interactive on desktop and mobile',a
   await expect(page.locator('[data-po-metric="ebit"]')).toHaveAttribute('aria-pressed','true');
   await page.locator('.po-visual + .po-source summary').click();
   await expect(page.locator('.po-visual + .po-source')).toHaveAttribute('open','');
+  await expect(page.locator('.po-visual + .po-source summary')).toHaveText('View original report values');
+  const sourceViewport=page.locator('.story-composite:has(.po-visual)');
+  const originalRow=page.locator('.po-visual + .po-source .metric-row').first();
+  await expect(originalRow).toBeVisible();
+  await originalRow.scrollIntoViewIfNeeded();
+  await sourceViewport.evaluate(element=>{element.scrollTop=element.scrollHeight;});
+  const headerBounds=await originalRow.boundingBox();
+  const viewportBounds=await sourceViewport.boundingBox();
+  expect(headerBounds.y).toBeGreaterThanOrEqual(viewportBounds.y);
+  expect(headerBounds.y+headerBounds.height).toBeLessThanOrEqual(viewportBounds.y+viewportBounds.height);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
   await page.screenshot({path:'test-results/plan-outlook-desktop.png',fullPage:true});
 

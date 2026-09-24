@@ -52,7 +52,8 @@
       if(!['FY outlook evolution','YTD performance'].includes(title))continue;
       const head=panel.querySelector('.panel-head');if(!head)continue;
       const original=[...panel.children].filter(child=>child!==head).map(child=>child.outerHTML).join('');
-      panel.innerHTML=head.outerHTML+(title==='FY outlook evolution'?outlook(rows):performance(ytdRows))+`<details class="po-source"><summary>View published source table</summary>${original}</details>`;
+      const isOutlook=title==='FY outlook evolution';
+      panel.innerHTML=head.outerHTML+(isOutlook?outlook(rows):performance(ytdRows))+`<details class="po-source"><summary>${isOutlook?'View original report values':'View published source table'}</summary>${original}</details>`;
       panel.classList.add('po-panel');
     }
     return host.innerHTML;
