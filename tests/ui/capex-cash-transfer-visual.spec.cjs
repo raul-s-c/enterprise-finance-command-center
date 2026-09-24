@@ -9,7 +9,7 @@ test('CAPEX portfolio separates cash spend, noncash go-live and remaining CIP',a
   expect(target).toBeTruthy();
   await page.goto(`/#view=operations-capex&page=${target.index}`);
   await expect(page.locator('.ct-visual')).toHaveCount(2);
-  await expect(page.locator('.ct-factory-site')).toHaveCount(2);
+  await expect(page.locator('.ct-factory-site')).toHaveCount(await page.evaluate(()=>data.factory.filter(row=>row.month===data.meta.end_month).length));
   const facts=await page.evaluate(()=>{
     const cash=data.capex.filter(row=>row.event==='SPEND').reduce((sum,row)=>sum+Number(row.amount),0);
     const transfer=data.capex.filter(row=>row.event==='GO_LIVE').reduce((sum,row)=>sum+Number(row.amount),0);

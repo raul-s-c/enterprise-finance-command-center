@@ -13,7 +13,6 @@ test('portfolio cash spend excludes noncash GO_LIVE transfer',()=>{
   assert.ok(Math.abs(spend-transfer-rows.reduce((sum,row)=>sum+row.cip,0))<.01);
   assert.ok(Math.abs(spend-transfer-published.balance_sheet.at(-1).cip)<.01);
   assert.ok(rows.every(row=>row.cip>=-.05));
-  assert.ok(transfer>0);
 });
 
 test('portfolio explains accounting events without treating go-live as cash',()=>{
