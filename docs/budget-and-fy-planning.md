@@ -177,3 +177,12 @@ data/processed/fy_plan_bridge.csv
 ```
 
 The GitHub Pages application exposes these outputs in the `Plan & Forecast` view together with the rolling forecast scenarios and historical forecast-accuracy analysis.
+
+## Reading forecast accuracy and liquidity
+
+The Forecast accuracy subpage plots all published realized horizons from `forecast_accuracy.csv`.
+MAPE is the mean absolute percentage error at each forecast horizon; lower values mean a smaller historical revenue forecast error. Signed bias is the mean of `(forecast revenue - actual revenue) / actual revenue`. Negative bias therefore means the forecast was below actuals, not automatically an adverse business result. The underlying table retains the observation count for every horizon.
+
+The adjacent liquidity comparison uses `liquidity_forecast_summary.csv` for Base, Downside and Upside. Bar length encodes 12-month forecast operating cash flow; each row separately shows forecast CAPEX and projected ending cash. These three numbers must not be read as a three-line cash reconciliation: ending cash also incorporates opening cash, working-capital timing, debt, tax, interest and other modeled movements. The full scenario records remain available from the subpage.
+
+Both visuals are consolidated, fixed-scope analytical summaries. Entity and division operating selections are retained for other pages, not applied artificially to these group metrics.

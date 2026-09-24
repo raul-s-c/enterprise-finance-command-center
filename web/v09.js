@@ -106,12 +106,12 @@ function renderPlanForecastV09(){
     ${panel('Rolling forecast scenarios','Next 12 months remain dynamic; Budget remains frozen',metricRows([
       ['Base',eur.format(sum12(base))],['Upside',eur.format(sum12(up))],['Downside',eur.format(sum12(down))]
     ]),'span-4')}
-    ${panel('Forecast accuracy','Historical realized vintages',table(acc,[
+    ${panel('Forecast accuracy','Historical realized vintages',`${FinanceForecastVisual.accuracy(acc)}<details class="forecast-source-records"><summary>Explore ${acc.length} horizon records</summary>${table(acc,[
       {key:'horizon_month',label:'Horizon',format:v=>`${v}M`},
       {key:'mape',label:'MAPE',num:true,format:v=>pct(v)},
       {key:'bias',label:'Bias',num:true,format:v=>pct(v)},
       {key:'observations',label:'Observations',num:true}
-    ]),'span-8')}
+    ])}</details>`,'span-8')}
   </div>`;
 }
 
