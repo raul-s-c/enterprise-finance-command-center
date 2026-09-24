@@ -66,12 +66,16 @@ for(const report of cases)test(`${report.view} keeps financial indicators outsid
   if(report.view==='pnl'){
     const fit=await page.locator('.statement-story-pnl').evaluate(node=>{
       const strip=node.querySelector('.statement-story-indicators'),last=node.querySelector('.horizontal-bridge g:last-child'),panel=last.closest('.story-composite');
-      return {stripHeight:strip.getBoundingClientRect().height,scrollable:strip.scrollWidth>strip.clientWidth,ebitVisible:last.getBoundingClientRect().bottom<=panel.getBoundingClientRect().bottom+1};
+      return {stripHeight:strip.getBoundingClientRect().height,scrollable:strip.scrollWidth>strip.clientWidth,visibleCards:[...strip.querySelectorAll(':scope>.kpi')].filter(card=>getComputedStyle(card).display!=='none').length,ebitVisible:last.getBoundingClientRect().bottom<=panel.getBoundingClientRect().bottom+1};
     });
-    expect(fit.stripHeight).toBeLessThan(90);
-    expect(fit.scrollable).toBe(true);
+    expect(fit.stripHeight).toBeLessThan(100);
+    expect(fit.scrollable).toBe(false);
+    expect(fit.visibleCards).toBe(3);
     expect(fit.ebitVisible).toBe(true);
   }
+  await overview.locator('.statement-story-all summary').click();
+  await expect(overview.locator('.statement-story-all .kpi').first()).toBeVisible();
+  await overview.locator('.statement-story-all summary').click();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
   await page.screenshot({path:`test-results/story-${report.view}-mobile.png`,fullPage:true});
   await expect(panes.last().getByText(report.right,{exact:false})).toBeInViewport();
