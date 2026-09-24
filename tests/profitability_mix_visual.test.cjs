@@ -12,7 +12,8 @@ test('family and tier cuts reconcile for revenue and operating contribution',()=
     assert.ok(Math.abs(families-tiers)<.01,`${measure} difference ${families-tiers}`);
   }
   assert.match(visual.tiers(published.quality_tier_profitability,published.product_family_profitability),/reconciled/);
-  assert.match(visual.family(published.product_family_profitability),/Other 13 families/);
+  const remaining=published.product_family_profitability.length-6;
+  if(remaining>0)assert.ok(visual.family(published.product_family_profitability).includes(`Other ${remaining} families`));
 });
 
 test('profitability panels offer only supported division filters',()=>{
