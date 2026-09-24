@@ -15,6 +15,7 @@
   const translation=domain('translation','Translation indicators',['fx_translation'],['entity']);
   const transactions=domain('transactions','Transaction FX indicators',['transaction_fx_close_documents']);
   const plan=domain('plan','Plan indicators',['fy_plan_bridge']);
+  const workforcePlan=domain('workforce-plan','Workforce plan indicators',['workforce_forecast']);
   const actionPlan=domain('action-plan','Execution indicators',['management_action_plans'],undefined,{levels:true,allLevels:true});
   const actionBridge=domain('action-bridge','Action forecast indicators',['management_action_forecast_bridge']);
   const panels=Object.create(null);
