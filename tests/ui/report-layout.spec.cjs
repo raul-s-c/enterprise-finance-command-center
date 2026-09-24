@@ -297,6 +297,13 @@ test('Executive keeps every overview region reachable on tablet and mobile',asyn
       await expect(region).toBeVisible();
       expect(await region.evaluate(element=>element.scrollWidth<=element.clientWidth+1),`${label} overflows at ${viewport.width}px`).toBe(true);
     }
+    if(viewport.width===390){
+      await page.setViewportSize({width:430,height:844});
+      await expect(page.locator('#executive-region-3')).toBeVisible();
+      await page.waitForTimeout(250);
+      await expect(page.locator('#executive-region-3')).toBeVisible();
+      await expect(switcher.getByRole('button',{name:'Company story'})).toHaveAttribute('aria-pressed','true');
+    }
   }
 });
 

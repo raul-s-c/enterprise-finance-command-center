@@ -3,6 +3,7 @@
   const M=()=>root.FinanceReport,C=()=>root.ReportCharts;
   const esc=v=>M().escape(String(v??'')),money=v=>C().money(v),pct=v=>M().finite(v)?`${(v*100).toFixed(1)}%`:'—';
   const tone=v=>v?.favorable===true?'favorable':v?.favorable===false?'unfavorable':'neutral';
+  let executiveRegionIndex=0;
   function kpi(key,label,value,delta,route,note){
     const comparison=note||(delta?.relative===null?'No comparable':`${C().percent(delta?.relative)} vs PY`);
     return `<button class="story-kpi" data-story-focus="${key}" data-story-view-route="${route}" aria-pressed="false"><span>${esc(label)}</span><strong>${esc(value)}</strong><small class="${tone(delta)}">${esc(comparison)}</small><i aria-hidden="true">↗</i></button>`;
@@ -158,9 +159,10 @@
     if(analytics&&regions.length>1&&window.innerWidth<=1100){
       const switcher=document.createElement('nav');switcher.className='tower-region-switch';switcher.setAttribute('aria-label','Executive overview regions');
       const labels=['Performance trend','EBIT contribution','Cash drivers','Company story'];
-      switcher.innerHTML=regions.map((region,index)=>`<button type="button" aria-pressed="${index===0}" aria-controls="executive-region-${index}">${labels[index]}</button>`).join('');
-      regions.forEach((region,index)=>{region.id=`executive-region-${index}`;region.hidden=index!==0;});analytics.before(switcher);
-      [...switcher.children].forEach((button,index)=>button.onclick=()=>{regions.forEach((region,i)=>region.hidden=i!==index);[...switcher.children].forEach((item,i)=>item.setAttribute('aria-pressed',String(i===index)));regions[index].querySelector('button,select,input,[tabindex]')?.focus({preventScroll:true});});
+      const selected=Math.min(executiveRegionIndex,regions.length-1);
+      switcher.innerHTML=regions.map((region,index)=>`<button type="button" aria-pressed="${index===selected}" aria-controls="executive-region-${index}">${labels[index]}</button>`).join('');
+      regions.forEach((region,index)=>{region.id=`executive-region-${index}`;region.hidden=index!==selected;});analytics.before(switcher);
+      [...switcher.children].forEach((button,index)=>button.onclick=()=>{executiveRegionIndex=index;regions.forEach((region,i)=>region.hidden=i!==index);[...switcher.children].forEach((item,i)=>item.setAttribute('aria-pressed',String(i===index)));regions[index].querySelector('button,select,input,[tabindex]')?.focus({preventScroll:true});});
     }
     tower.addEventListener('click',event=>{
       if(!event.target.closest('[data-story-focus]')||!window.matchMedia('(max-width:1700px)').matches)return;
