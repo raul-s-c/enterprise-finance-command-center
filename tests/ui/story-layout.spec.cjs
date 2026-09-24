@@ -57,6 +57,7 @@ for(const report of cases)test(`${report.view} keeps financial indicators outsid
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
   await expect(overview.locator('.statement-story-indicators > .kpi')).toHaveCount(4);
   await page.setViewportSize({width:390,height:844});
+  expect((await page.locator('.report-page-select select').boundingBox()).width).toBeGreaterThan(250);
   const regions=page.getByRole('navigation',{name:'Dashboard regions'});
   await expect(regions).toBeVisible();
   await expect(panes.first()).toBeVisible();

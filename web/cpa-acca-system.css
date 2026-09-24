@@ -127,6 +127,7 @@
 @media(max-width:900px){
   .report-mode .app-shell{grid-template-columns:minmax(0,1fr)}
   .report-mode .sidebar{display:none}
+  .report-mode .report-page-select select{min-width:0;max-width:none}
   .report-mode .topbar{min-height:68px}
   .report-mode .mobile-module{background:#f7f8fa;border-bottom-color:var(--acca-rule)}
   .report-mode .mobile-module select{border-color:#cbd4df;color:var(--acca-ink)}
