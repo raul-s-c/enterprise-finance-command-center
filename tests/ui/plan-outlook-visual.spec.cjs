@@ -28,8 +28,21 @@ test('planning vintages remain readable and interactive on desktop and mobile',a
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
   await page.screenshot({path:'test-results/plan-outlook-desktop.png',fullPage:true});
 
+  await page.setViewportSize({width:768,height:720});
+  await page.goto(`/#view=forecast&page=${target.index}`);
+  await page.reload();
+  await expect(page.locator('.po-ytd')).toBeVisible();
+  const laptopSource=await page.locator('.po-source summary').first().boundingBox();
+  expect(laptopSource.y+laptopSource.height).toBeLessThan(680);
+  await page.getByRole('navigation',{name:'Dashboard regions'}).getByRole('button',{name:/FY outlook evolution/}).click();
+  await expect(page.locator('.po-visual')).toBeVisible();
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
+  await page.screenshot({path:'test-results/plan-outlook-laptop.png',fullPage:true});
+
   await page.setViewportSize({width:390,height:844});
   await page.goto('/#view=forecast&page=0');
+  await page.reload();
+  await expect.poll(()=>page.evaluate(()=>reportState.pages.some(item=>item.title.includes('FY outlook evolution')))).toBe(true);
   const mobileTarget=await page.evaluate(()=>reportState.pages.findIndex(item=>item.title.includes('FY outlook evolution')));
   expect(mobileTarget).toBeGreaterThan(0);
   await page.goto(`/#view=forecast&page=${mobileTarget}`);
