@@ -181,6 +181,8 @@ data/processed/three_statement_forecast_summary.csv
 
 The CFO application exposes the Base three-statement detail inside the existing P&L, Balance Sheet and Cash Flow views, while Plan & Forecast compares Base, Upside and Downside at scenario level.
 
+The paired forecast report now compares published Revenue, EBIT, free cash flow and ending cash across the three scenarios, then displays the Base P&L-to-cash-flow link and the balance-sheet identity. The balance check is computed from published assets, liabilities and equity; the original scenario table remains available in an expandable source view. The adjacent workforce outlook is a fixed Group view, not an entity-filtered value beside Group scenarios.
+
 ## Why this matters
 
 The project can now answer a connected forward-looking question rather than three separate analytical questions:

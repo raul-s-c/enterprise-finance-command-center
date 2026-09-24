@@ -86,3 +86,5 @@ data/processed/workforce_forecast.csv
 ```
 
 The dashboard exposes current workforce economics in Business Drivers, personnel versus non-people OPEX in P&L and the 12-month workforce plan in Plan & Forecast.
+
+The forecast report plots published Group Base ending FTE against target FTE by month and separates 12-month personnel from non-people OPEX. Its source table remains accessible. The paired scenario report is Group scope, so entity and division selections are retained for other reports but do not change this workforce total.
