@@ -31,6 +31,7 @@ test('asset-quality exposures and group aging have honest scope, visual evidence
   await expect(page.locator('.wq-ranked').first()).toBeVisible();
   await regions.getByRole('button').nth(1).click();
   await expect(page.locator('.wq-ranked').last()).toBeVisible();
+  await expect(page.locator('.wq-ranked').first()).toBeHidden();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
   await page.screenshot({path:'test-results/wc-asset-exposure-mobile.png',fullPage:true});
 
@@ -52,6 +53,7 @@ test('asset-quality exposures and group aging have honest scope, visual evidence
   await expect(page.locator('.wq-aging').first()).toBeVisible();
   await regions.getByRole('button').nth(1).click();
   await expect(page.locator('.wq-aging').last()).toBeVisible();
+  await expect(page.locator('.wq-aging').first()).toBeHidden();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
   await page.screenshot({path:'test-results/wc-asset-aging-mobile.png',fullPage:true});
 });
