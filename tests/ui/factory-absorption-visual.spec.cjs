@@ -9,7 +9,7 @@ test('factory cost bridge and sales mix stay reconciled and responsive',async({p
   expect(target?.title).toContain('Production mix');
   await page.goto(`/#view=business-drivers&page=${target.index}&entity=CZ01&division=Hardware`);
   await expect(page.locator('.fa-visual')).toHaveCount(2);
-  await expect(page.locator('.fa-site')).toHaveCount(2);
+  await expect(page.locator('.fa-site')).toHaveCount(await page.evaluate(()=>data.hardware_factory_economics.filter(row=>row.month===data.meta.end_month).length));
   await expect(page.locator('.fa-reconcile')).toContainText('reconciled');
   await expect(page.locator('.fa-note')).toContainText('not current-month factory output');
   await expect(page.locator('#reportContext')).toContainText('Group');

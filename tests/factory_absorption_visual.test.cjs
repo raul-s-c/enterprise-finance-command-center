@@ -7,13 +7,13 @@ const visual=globalThis.FinanceFactoryVisual;
 
 test('factory actual less absorbed cost reconciles to posted gross-profit variance',()=>{
   const current=published.hardware_factory_economics.filter(row=>row.month===published.meta.end_month);
-  assert.equal(current.length,2);
+  const factoryIds=new Set(published.factory.filter(row=>row.month===published.meta.end_month).map(row=>row.factory));
+  assert.equal(current.length,factoryIds.size);
   for(const row of current)assert.ok(Math.abs(row.actual_fixed_factory_cost-row.absorbed_fixed_cost-row.absorption_variance)<.01);
   const html=visual.factory(current);
   assert.match(html,/reconciled/);
   assert.match(html,/Under-absorption/);
-  assert.match(html,/Brno Smart Manufacturing/);
-  assert.match(html,/Suzhou Manufacturing Hub/);
+  for(const row of current)assert.ok(html.includes(row.factory_name));
   assert.doesNotMatch(html,/NaN|undefined/);
 });
 
