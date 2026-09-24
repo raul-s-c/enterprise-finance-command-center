@@ -26,10 +26,15 @@ test('asset-quality exposures and group aging have honest scope, visual evidence
   await expect(page.locator('.wq-ranked').first().locator('.wq-rank-caption span').first()).toContainText('US01 · Hardware');
   await page.setViewportSize({width:390,height:844});
   await page.goto(`/#view=working-capital&page=${exposure.index}`);
+  await expect(page.locator('#entityFilter')).toHaveValue('all');
   let regions=page.getByRole('navigation',{name:'Dashboard regions'});
   await expect(regions.getByRole('button')).toHaveCount(2);
   await expect(page.locator('.wq-ranked').first()).toBeVisible();
   await regions.getByRole('button').nth(1).click();
+  await expect(page.locator('.wq-ranked').last()).toBeVisible();
+  await expect(page.locator('.wq-ranked').first()).toBeHidden();
+  await page.setViewportSize({width:430,height:844});
+  await page.waitForTimeout(250);
   await expect(page.locator('.wq-ranked').last()).toBeVisible();
   await expect(page.locator('.wq-ranked').first()).toBeHidden();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
