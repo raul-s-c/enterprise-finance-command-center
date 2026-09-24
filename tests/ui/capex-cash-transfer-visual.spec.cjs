@@ -1,0 +1,45 @@
+const {test,expect}=require('@playwright/test');
+
+test('CAPEX portfolio separates cash spend, noncash go-live and remaining CIP',async({page})=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=operations-capex&page=0');
+  await expect.poll(()=>page.evaluate(()=>reportState.pages.length)).toBeGreaterThan(3);
+  const sections=await page.evaluate(()=>reportState.pages.map((item,index)=>({title:item.title,index})));
+  const target=sections.find(item=>item.title.includes('CAPEX portfolio'));
+  expect(target).toBeTruthy();
+  await page.goto(`/#view=operations-capex&page=${target.index}`);
+  await expect(page.locator('.ct-visual')).toHaveCount(2);
+  await expect(page.locator('.ct-factory-site')).toHaveCount(await page.evaluate(()=>data.factory.filter(row=>row.month===data.meta.end_month).length));
+  const facts=await page.evaluate(()=>{
+    const cash=data.capex.filter(row=>row.event==='SPEND').reduce((sum,row)=>sum+Number(row.amount),0);
+    const transfer=data.capex.filter(row=>row.event==='GO_LIVE').reduce((sum,row)=>sum+Number(row.amount),0);
+    const table=capexSummary();
+    return {cash,transfer,tableSpend:table.reduce((sum,row)=>sum+row.spend,0),tableTransfer:table.reduce((sum,row)=>sum+row.transfer,0)};
+  });
+  expect(Math.abs(facts.cash-facts.tableSpend)).toBeLessThan(.01);
+  expect(Math.abs(facts.transfer-facts.tableTransfer)).toBeLessThan(.01);
+  await expect(page.locator('.ct-equation')).toContainText(`€${(facts.cash/1e6).toFixed(2)}m`);
+  await expect(page.locator('.ct-equation')).toContainText(`€${(facts.transfer/1e6).toFixed(2)}m`);
+  await expect(page.locator('.ct-control')).toContainText('reconciled');
+  await expect(page.locator('.ct-bs-control')).toContainText('reconciled');
+  const projectSource=page.locator('.ct-source').filter({hasText:'View published project table'});
+  await projectSource.locator('summary').click();
+  await expect(projectSource.locator('table')).toBeVisible();
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
+  await page.screenshot({path:'test-results/capex-cash-transfer-desktop.png',fullPage:true});
+  await page.setViewportSize({width:390,height:844});
+  await page.goto(`/#view=operations-capex&page=${target.index}`);
+  await page.reload();
+  await expect.poll(()=>page.evaluate(()=>reportState.pages.some(item=>item.title.includes('CAPEX portfolio')))).toBe(true);
+  const regions=page.getByRole('navigation',{name:'Dashboard regions'});
+  await expect(regions.getByRole('button')).toHaveCount(2);
+  await expect(page.locator('.ct-factory')).toBeVisible();
+  await regions.getByRole('button').nth(1).click();
+  await expect(page.locator('.ct-visual').last()).toBeVisible();
+  const mobileProjectSource=page.locator('.ct-source summary').filter({hasText:'View published project table'});
+  await expect(mobileProjectSource).toBeVisible();
+  const sourceBounds=await mobileProjectSource.boundingBox();
+  expect(sourceBounds.y+sourceBounds.height).toBeLessThan(805);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
+  await page.screenshot({path:'test-results/capex-cash-transfer-mobile.png',fullPage:true});
+});

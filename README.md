@@ -121,6 +121,7 @@ See:
 - `docs/workforce-cost-planning.md`
 - `docs/multicurrency-fx.md`
 - `docs/integrated-three-statement-forecast.md`
+- `docs/capex-cash-transfer.md`
 
 ## Finance scope
 
@@ -136,6 +137,7 @@ The current system includes:
 - driver-based FTE, attrition, hiring, payroll and recruitment-cost forecast
 - functional-currency journals and local trial balances for all six entities
 - a visual factory absorption bridge tied to the posted variance, beside a separately labelled source-factory sales mix
+- a CAPEX project flow that separates cash SPEND from noncash GO_LIVE transfers to PPE
 - document-level transaction FX exposure, ageing and realized/unrealized remeasurement
 - EUR group translation with historical equity rates and explicit CTA / OCI
 - reported versus constant-currency Revenue and EBIT
