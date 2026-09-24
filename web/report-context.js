@@ -30,7 +30,7 @@
   register(workforcePlan,['Base workforce plan']);
   register(contracts,['Prepayment funding by business']);
   register(review,['CFO performance narrative','Review coverage','Driver scorecard']);
-  register(action,['Management action register','Persistent action register','Action lifecycle','Lifecycle trend','Overdue and escalated actions']);
+  register(action,['Management action register','Persistent action register','Action lifecycle','Overdue and escalated actions']);
   register(actionPlan,['Execution portfolio']);
   register(actionBridge,['Base forecast action bridge']);
   register(domain('benefits','Action benefits',['management_action_benefits'],undefined,{levels:true,allLevels:true}),['Directional benefit tracking']);
