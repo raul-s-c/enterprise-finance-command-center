@@ -157,4 +157,25 @@
   .report-mode button.pnl-row{min-height:40px;font-size:12px}
   .report-mode .pnl-note{font-size:10px}
 }
+/* Keep the complete ten-line statement visible on a standard laptop screen. */
+@media(min-width:1101px) and (min-height:740px) and (max-height:820px){
+  .report-mode button.pnl-row,
+  .report-mode button.pnl-row.subtotal{min-height:38px;padding-top:2px;padding-bottom:2px}
+  .report-mode .pnl-track,
+  .report-mode .pnl-delta,
+  .report-mode .pnl-percent{height:28px}
+  .report-mode .pnl-track i,
+  .report-mode .pnl-delta i{height:24px}
+}
+@media(min-width:1101px) and (min-height:680px) and (max-height:739px){
+  .report-mode button.pnl-row,
+  .report-mode button.pnl-row.subtotal{min-height:34px;padding-top:1px;padding-bottom:1px}
+  .report-mode .pnl-track,
+  .report-mode .pnl-delta,
+  .report-mode .pnl-percent{height:24px}
+  .report-mode .pnl-track i,
+  .report-mode .pnl-delta i{height:21px}
+  .report-mode .pnl-heading{min-height:34px;padding-top:5px;padding-bottom:5px}
+  .report-mode .pnl-note{font-size:10px;padding-top:5px}
+}
 @media(prefers-reduced-motion:reduce){.report-mode *{scroll-behavior:auto!important;transition:none!important}}

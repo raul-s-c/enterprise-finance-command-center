@@ -147,6 +147,30 @@ test('factory cards show source-tied 12-month utilization without clipping',asyn
   await expect(page.locator('#reportDialogBody')).toContainText('Produced units / capacity units');
 });
 
+test('the complete income statement fits standard laptop heights',async({page})=>{
+  for(const [width,height] of [[1366,768],[1280,720]]){
+    await page.setViewportSize({width,height});
+    await page.goto('/#view=pnl');
+    await expect(page.locator('.pnl-row')).toHaveCount(10);
+    const fit=await page.locator('.pnl-scroll').evaluate(region=>{
+      const last=region.querySelector('[data-pnl-key="net_income"]').getBoundingClientRect(),visible=region.getBoundingClientRect();
+      return {noVerticalScroll:region.scrollHeight<=region.clientHeight+1,lastVisible:last.bottom<=visible.bottom+1};
+    });
+    expect(fit.noVerticalScroll,`P&L requires scrolling at ${width}×${height}`).toBe(true);
+    expect(fit.lastVisible).toBe(true);
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+  }
+  await page.locator('[data-pnl-key="net_income"]').click();
+  await expect(page.locator('#reportDialog')).toBeVisible();
+  await expect(page.locator('#reportDialogBody')).toContainText('EBIT − net finance costs and tax');
+  await page.locator('#reportDialogClose').click();
+  await page.setViewportSize({width:1024,height:600});
+  await page.goto('/#view=pnl');
+  await page.locator('.pnl-scroll').evaluate(region=>region.scrollTo({top:region.scrollHeight,behavior:'instant'}));
+  await expect(page.locator('[data-pnl-key="net_income"]')).toBeInViewport();
+  expect(await page.locator('.pnl-heading').evaluate(header=>getComputedStyle(header).position)).toBe('sticky');
+});
+
 test('P&L contribution explains actual vs prior year and shows truthful statement lineage',async({page})=>{
   await page.setViewportSize({width:1366,height:768});
   await page.goto('/#view=pnl&page=5&section=P%26L+contribution');
