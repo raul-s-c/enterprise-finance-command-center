@@ -125,3 +125,5 @@ Factory Schedule Absorption Variance
 ```
 
 These controls sit alongside the existing journal, balance-sheet, intercompany, cash-flow, Working Capital, forecast and divisional-schedule controls.
+
+The Business Drivers report now shows actual fixed cost less absorbed fixed cost equals the posted absorption variance, both in total and by factory. The adjacent ranking uses published source-factory units in external sales. It is a sell-through view, not monthly factory output, and is deliberately not reconciled to produced units. Both underlying source tables remain expandable; the paired report is fixed Group scope.

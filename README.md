@@ -135,6 +135,7 @@ The current system includes:
 - Month x Entity x Division x Function workforce roll-forward
 - driver-based FTE, attrition, hiring, payroll and recruitment-cost forecast
 - functional-currency journals and local trial balances for all six entities
+- a visual factory absorption bridge tied to the posted variance, beside a separately labelled source-factory sales mix
 - document-level transaction FX exposure, ageing and realized/unrealized remeasurement
 - EUR group translation with historical equity rates and explicit CTA / OCI
 - reported versus constant-currency Revenue and EBIT

@@ -1,0 +1,30 @@
+const {test,expect}=require('@playwright/test');
+
+test('factory cost bridge and sales mix stay reconciled and responsive',async({page})=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=business-drivers&page=0');
+  await expect.poll(()=>page.evaluate(()=>reportState.pages.length)).toBeGreaterThan(3);
+  const sections=await page.evaluate(()=>reportState.pages.map((item,index)=>({title:item.title,index})));
+  const target=sections.find(item=>item.title.includes('Factory absorption accounting'));
+  expect(target?.title).toContain('Production mix');
+  await page.goto(`/#view=business-drivers&page=${target.index}&entity=CZ01&division=Hardware`);
+  await expect(page.locator('.fa-visual')).toHaveCount(2);
+  await expect(page.locator('.fa-site')).toHaveCount(2);
+  await expect(page.locator('.fa-reconcile')).toContainText('reconciled');
+  await expect(page.locator('.fa-note')).toContainText('not current-month factory output');
+  await expect(page.locator('#reportContext')).toContainText('Group');
+  await expect(page.locator('.fa-source')).toHaveCount(2);
+  const sourceBounds=await page.locator('.fa-source').first().boundingBox();
+  expect(sourceBounds.y+sourceBounds.height).toBeLessThan(680);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
+  await page.screenshot({path:'test-results/factory-absorption-desktop.png',fullPage:true});
+  await page.setViewportSize({width:390,height:844});
+  await page.goto(`/#view=business-drivers&page=${target.index}`);
+  const regions=page.getByRole('navigation',{name:'Dashboard regions'});
+  await expect(regions.getByRole('button')).toHaveCount(2);
+  await regions.getByRole('button').nth(1).click();
+  await expect(page.locator('.fa-visual').last()).toBeVisible();
+  await expect(page.locator('.fa-visual').first()).toBeHidden();
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
+  await page.screenshot({path:'test-results/factory-absorption-mobile.png',fullPage:true});
+});
