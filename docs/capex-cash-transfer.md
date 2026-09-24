@@ -11,4 +11,6 @@ The project portfolio's Spend column sums only `SPEND` events. Previously it add
 
 The report shows cumulative cash spend, noncash transfers to PPE, and remaining construction in progress. Its visible project-event roll-forward checks `SPEND - GO_LIVE - remaining CIP = 0`; this is an event-level explanation, not a substitute for the engine's GL and cash-flow controls. Original project rows remain available in the report.
 
+The calculated remaining CIP also reconciles to the published Group Balance Sheet `cip` line at the close. This separate cross-statement check is shown beside the project-event roll-forward.
+
 The paired factory panel replaces a sparse capacity table with the capacity-weighted utilization formula, site-level production/capacity bars and published capacity additions. It does not equate factory output with sales.

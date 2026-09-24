@@ -11,16 +11,18 @@ test('portfolio cash spend excludes noncash GO_LIVE transfer',()=>{
   assert.ok(Math.abs(rows.reduce((sum,row)=>sum+row.spend,0)-spend)<.01);
   assert.ok(Math.abs(rows.reduce((sum,row)=>sum+row.transfer,0)-transfer)<.01);
   assert.ok(Math.abs(spend-transfer-rows.reduce((sum,row)=>sum+row.cip,0))<.01);
+  assert.ok(Math.abs(spend-transfer-published.balance_sheet.at(-1).cip)<.01);
   assert.ok(rows.every(row=>row.cip>=-.05));
   assert.ok(transfer>0);
 });
 
 test('portfolio explains accounting events without treating go-live as cash',()=>{
-  const html=visual.visual(visual.projects(published.capex));
+  const html=visual.visual(visual.projects(published.capex),published.balance_sheet.at(-1).cip);
   assert.match(html,/SPEND: Dr 1510 CIP · Cr 1000 Cash/);
   assert.match(html,/GO_LIVE: Dr 1500 PPE · Cr 1510 CIP/);
   assert.match(html,/GO_LIVE is not another cash outflow/);
   assert.match(html,/reconciled/);
+  assert.match(html,/Project CIP − balance-sheet CIP: €0.00m · reconciled/);
   assert.doesNotMatch(html,/NaN|undefined/);
 });
 

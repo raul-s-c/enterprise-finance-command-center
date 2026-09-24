@@ -21,6 +21,7 @@ test('CAPEX portfolio separates cash spend, noncash go-live and remaining CIP',a
   await expect(page.locator('.ct-equation')).toContainText(`€${(facts.cash/1e6).toFixed(2)}m`);
   await expect(page.locator('.ct-equation')).toContainText(`€${(facts.transfer/1e6).toFixed(2)}m`);
   await expect(page.locator('.ct-control')).toContainText('reconciled');
+  await expect(page.locator('.ct-bs-control')).toContainText('reconciled');
   await page.locator('.ct-source').last().locator('summary').click();
   await expect(page.locator('.ct-source').last().locator('table')).toBeVisible();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
