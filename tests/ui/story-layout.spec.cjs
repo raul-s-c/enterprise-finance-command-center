@@ -80,4 +80,7 @@ for(const report of cases)test(`${report.view} keeps financial indicators outsid
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
   await page.screenshot({path:`test-results/story-${report.view}-mobile.png`,fullPage:true});
   await expect(panes.last().getByText(report.right,{exact:false})).toBeInViewport();
+  await page.setViewportSize({width:320,height:700});
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
+  await expect(overview.locator('.statement-story-indicators > .kpi').first()).toBeVisible();
 });
