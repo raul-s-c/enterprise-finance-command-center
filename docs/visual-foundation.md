@@ -7,6 +7,7 @@
 - At widths up to 1500 CSS pixels, statement and contribution workspaces provide explicit analysis-focus controls. The selected focus survives resize and filter rerenders.
 - A statement KPI opens calculation and source evidence in the existing accessible modal on compact screens. It does not place a permanent inspector over the charts.
 - Compact mobile screens retain every KPI in a horizontal band and allow natural report scrolling. Desktop overflow is contained within the report, not hidden by a fixed-height panel.
+- On the paired P&L performance page, the bridge uses a compact horizontal layout so all eight published steps and the closing EBIT remain readable on laptop and mobile widths. Mobile statement KPIs stay in one horizontally accessible row, leaving the selected financial region visible without truncating its last line.
 - Mobile charts preserve every observation on a readable horizontal canvas. Time series initially show the latest months; waterfalls start at the opening step. The focusable region supports keyboard scrolling; it is not a reduced-data thumbnail.
 - Definitions accompany evidence in a disclosure rather than a sparse standalone page.
 - Gross-to-net carrying values show signed deductions and published closing balances. Review coverage uses actual observation counts, never synthetic display metrics.

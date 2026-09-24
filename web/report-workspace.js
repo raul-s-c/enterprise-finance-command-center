@@ -89,7 +89,7 @@ function reportPages(){
   if(statementPages.length)pages=statementPages.concat(pages);
   if(state.view==='pnl')pages.splice(statementPages.length,0,
     {title:'Performance',html:`<article class="financial-report"><h2 class="report-message">Understand the path from revenue to EBIT</h2>${RC.matrix(s.current,s.prior)}</article>`,custom:true},
-    {title:'P&L bridge',html:`<article class="financial-report"><h2 class="report-message">Revenue to EBIT · EUR million</h2>${RC.waterfall(s.current,window.innerWidth<700)}</article>`,custom:true}
+    {title:'P&L bridge',html:`<article class="financial-report"><h2 class="report-message">Revenue to EBIT · EUR million</h2>${RC.waterfall(s.current,true,true)}</article>`,custom:true}
   );
   const contributionPages=ContributionExplorer.pages(state.view);
   if(state.view==='working-capital')pages.unshift(...contributionPages);
