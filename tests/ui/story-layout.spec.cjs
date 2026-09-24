@@ -49,6 +49,9 @@ for(const report of cases)test(`${report.view} keeps financial indicators outsid
   await expect(page.locator('#reportDialog')).toBeVisible();
   await page.locator('#reportDialog').getByRole('button',{name:'Close'}).click();
   await overview.locator('.statement-story-all summary').click();
+  await page.setViewportSize({width:1024,height:768});
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
+  await expect(overview.locator('.statement-story-indicators > .kpi')).toHaveCount(4);
   await page.setViewportSize({width:390,height:844});
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
   await page.screenshot({path:`test-results/story-${report.view}-mobile.png`,fullPage:true});
