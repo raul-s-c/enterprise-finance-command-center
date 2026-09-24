@@ -4,5 +4,10 @@
 @media(max-width:600px){.po-ytd-legend{gap:6px}.po-ytd-chart{height:125px}.po-ytd-selected{gap:6px;font-size:9px}.po-ytd-months button{font-size:9px}}
 .report-mode .po-ytd-chart{height:65px}.report-mode .po-ytd-months button{min-height:18px;height:18px;padding:1px 0}.report-mode .po-ytd .po-note{display:none}.report-mode .po-ytd .po-head{padding-top:1px;padding-bottom:3px}.report-mode .po-ytd .po-head strong{font-size:17px}.report-mode .po-ytd-legend{margin:3px 0 1px}.report-mode .po-ytd-selected{padding-top:3px}
 @media(max-width:600px){.report-mode .po-ytd-chart{height:70px}.report-mode .po-ytd .po-note{display:none}}
-@media(min-width:601px) and (max-width:900px){.report-mode .po-ytd-chart{height:42px}.report-mode .po-panel>.panel-head{margin-bottom:8px}}
+@media(min-width:601px) and (max-width:900px){.report-mode .po-ytd-chart{height:42px}.report-mode .po-panel>.panel-head{margin-bottom:3px}}
 .report-mode .po-switch button:disabled{cursor:not-allowed;opacity:.45}
+.po-visual,.po-ytd{font-size:12px}
+.po-head span,.po-head small,.po-switch button,.po-name b,.po-value,.po-source summary{font-size:11px}
+.po-name small,.po-axis,.po-note,.po-ytd-legend,.po-ytd-months button{font-size:10px}
+.po-ytd-selected{font-size:11px}
+@media(max-width:600px){.po-value,.po-ytd-selected{font-size:10px}}
