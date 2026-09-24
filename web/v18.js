@@ -1,5 +1,6 @@
 function executionScope(rows){
   const all=rows||[];
+  if(state.view==='action-execution')return all; // This report's declared policy is group / fixed scope.
   if(state.entity==='all' && state.division==='all') return all;
   if(state.entity!=='all' && state.division==='all') return all.filter(r=>r.scope_level==='Entity' && r.entity===state.entity);
   if(state.entity==='all' && state.division!=='all') return all.filter(r=>r.scope_level==='Division' && r.division===state.division);
@@ -13,8 +14,8 @@ function executionStatus(value){
 
 function scopedActionBridge(){
   let rows=(data.management_action_forecast_bridge||[]).filter(r=>r.scenario==='Base' && Number(r.horizon_month)<=12);
-  if(state.entity!=='all') rows=rows.filter(r=>r.entity===state.entity);
-  if(state.division!=='all') rows=rows.filter(r=>r.division===state.division);
+  if(state.view!=='action-execution' && state.entity!=='all') rows=rows.filter(r=>r.entity===state.entity);
+  if(state.view!=='action-execution' && state.division!=='all') rows=rows.filter(r=>r.division===state.division);
   const map=new Map();
   for(const r of rows){
     const x=map.get(r.month)||{month:r.month,horizon_month:r.horizon_month,scenario:r.scenario,action_revenue_impact:0,action_gross_profit_impact:0,action_opex_impact:0,action_ebit_impact:0,active_action_count:0};
@@ -26,8 +27,8 @@ function scopedActionBridge(){
 
 function scopedActualImpact(){
   let rows=data.management_action_actual_impact||[];
-  if(state.entity!=='all') rows=rows.filter(r=>r.entity===state.entity);
-  if(state.division!=='all') rows=rows.filter(r=>r.division===state.division);
+  if(state.view!=='action-execution' && state.entity!=='all') rows=rows.filter(r=>r.entity===state.entity);
+  if(state.view!=='action-execution' && state.division!=='all') rows=rows.filter(r=>r.division===state.division);
   const map=new Map();
   for(const r of rows){
     const x=map.get(r.month)||{month:r.month,action_revenue_impact:0,action_gross_profit_impact:0,action_opex_impact:0,action_ebit_impact:0,active_action_count:0};
@@ -53,32 +54,32 @@ function renderActionExecution(){
     ${kpi('Current actual impact',eur.format(summary.latest_additive_actual_ebit_impact||0),'Zero before effective month')}
   </div>
   <div class="panel-grid">
-    ${panel('Execution portfolio','One controlled plan per action cycle',table(plans,[
+    ${panel('Execution portfolio','Approved plans by stage · select an action for evidence',FinanceActionVisual.portfolio(plans,table(plans,[
       {key:'priority',label:'Priority',format:v=>priorityBadge(v)},{key:'intervention_type',label:'Intervention'},
       {key:'primary_driver',label:'Driver'},{key:'owner_role',label:'Owner'},{key:'effective_month',label:'Effective'},
       {key:'target_month',label:'Target'},{key:'execution_status',label:'Execution',format:v=>executionStatus(v)},
       {key:'expected_benefit_eur',label:'Gross case',num:true,format:v=>eur.format(v)}
-    ]),'span-12')}
-    ${panel('Base forecast action bridge','Incremental impact after the current close',table(bridge,[
+    ])),'span-12')}
+    ${panel('Base forecast action bridge','Monthly additive impact after the current close',FinanceActionVisual.bridge(bridge,table(bridge,[
       {key:'month',label:'Month'},{key:'active_action_count',label:'Actions',num:true},
       {key:'action_revenue_impact',label:'Revenue',num:true,format:v=>signed(v)},
       {key:'action_gross_profit_impact',label:'Gross profit',num:true,format:v=>signed(v)},
       {key:'action_opex_impact',label:'OPEX benefit',num:true,format:v=>signed(v)},
       {key:'action_ebit_impact',label:'EBIT',num:true,format:v=>signed(v)}
-    ]),'span-7')}
-    ${panel('Directional benefit tracking','Trigger movement; deliberately not summed',table(benefits,[
+    ])),'span-7')}
+    ${panel('Directional benefit tracking','Trigger movement; deliberately not summed',FinanceActionVisual.benefits(benefits,table(benefits,[
       {key:'trigger_metric',label:'Trigger'},{key:'execution_status',label:'Execution',format:v=>executionStatus(v)},
       {key:'baseline_metric_value',label:'Baseline',num:true,format:(v,r)=>r.benefit_unit==='EUR'?eur.format(v):num(v,3)},
       {key:'current_metric_value',label:'Current',num:true,format:(v,r)=>r.benefit_unit==='EUR'?eur.format(v):num(v,3)},
       {key:'observed_metric_improvement',label:'Improvement',num:true,format:(v,r)=>r.benefit_unit==='EUR'?signed(v):num(v,3)}
-    ]),'span-5')}
-    ${panel('Actual additive impact','Recognized only after effective dates',table(actual,[
+    ])),'span-5')}
+    ${panel('Actual additive impact','Recognized only after effective dates',FinanceActionVisual.actual(actual,plans,data.meta.end_month,table(actual,[
       {key:'month',label:'Month'},{key:'active_action_count',label:'Actions',num:true},
       {key:'action_revenue_impact',label:'Revenue',num:true,format:v=>signed(v)},
       {key:'action_gross_profit_impact',label:'Gross profit',num:true,format:v=>signed(v)},
       {key:'action_opex_impact',label:'OPEX benefit',num:true,format:v=>signed(v)},
       {key:'action_ebit_impact',label:'EBIT',num:true,format:v=>signed(v)}
-    ]),'span-12')}
+    ])),'span-12')}
   </div>`;
 }
 
