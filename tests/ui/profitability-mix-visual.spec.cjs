@@ -9,8 +9,8 @@ test('family and tier mix stay source-reconciled and responsive',async({page})=>
   expect(target?.title).toContain('Quality-tier economics');
   await page.goto(`/#view=profitability&page=${target.index}`);
   await expect(page.locator('.pm-visual')).toHaveCount(2);
-  await expect(page.locator('.pm-row')).toHaveCount(7);
-  await expect(page.locator('.pm-tier')).toHaveCount(12);
+  await expect(page.locator('.pm-row')).toHaveCount(await page.evaluate(()=>Math.min(data.product_family_profitability.length,7)));
+  await expect(page.locator('.pm-tier')).toHaveCount(await page.evaluate(()=>data.quality_tier_profitability.length));
   await expect(page.locator('.pm-reconcile')).toContainText('reconciled');
   await expect(page.locator('.pm-source')).toHaveCount(2);
   await page.locator('.pm-visual').first().getByRole('button',{name:'Operating contribution'}).click();
@@ -18,7 +18,7 @@ test('family and tier mix stay source-reconciled and responsive',async({page})=>
   await expect(page.locator('.pm-reconcile')).toContainText('reconciled');
   await page.goto(`/#view=profitability&page=${target.index}&division=Hardware`);
   await expect(page.locator('#reportContext')).toContainText('Division: Hardware');
-  await expect(page.locator('.pm-tier')).toHaveCount(3);
+  await expect(page.locator('.pm-tier')).toHaveCount(await page.evaluate(()=>data.quality_tier_profitability.filter(row=>row.division==='Hardware').length));
   await expect(page.locator('.pm-reconcile')).toContainText('reconciled');
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
   await page.screenshot({path:'test-results/profitability-mix-desktop.png',fullPage:true});
