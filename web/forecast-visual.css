@@ -1,0 +1,50 @@
+/* Compact, source-tied forecast and liquidity analysis. */
+.report-mode .story-board:has(.forecast-visual){grid-template-columns:minmax(0,1.16fr) minmax(0,.84fr)}
+.report-mode .story-composite>.panel:has(.forecast-visual){min-height:0}
+.report-mode .forecast-visual{display:flex;flex-direction:column;flex:1;min-height:0;color:#172b4d}
+.report-mode .fv-chart-heading{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-top:5px;font-size:11px;line-height:1.25}
+.report-mode .fv-chart-heading strong{font-size:12px;font-weight:700}
+.report-mode .fv-chart-heading span,.report-mode .fv-liquidity-legend span:last-child{color:#54657a}
+.report-mode .fv-error-chart,.report-mode .fv-bias-chart{display:block;width:100%;height:auto;max-height:145px;flex:none;overflow:visible}
+.report-mode .fv-bias-chart{max-height:90px}
+.report-mode .forecast-visual svg text{font-family:inherit}
+.report-mode .forecast-visual .fv-grid{stroke:#d9e2ef;stroke-width:1}
+.report-mode .forecast-visual .fv-zero{stroke:#707d90;stroke-width:1.5}
+.report-mode .forecast-visual .fv-axis{fill:#52647c;font-size:16px}
+.report-mode .forecast-visual .fv-value{fill:#182e4c;font-size:19px;font-weight:700}
+.report-mode .forecast-visual .fv-positive-label{fill:#0754bd}
+.report-mode .forecast-visual .fv-negative-label{fill:#38475b}
+.report-mode .fv-error-line{fill:none;stroke:#0867f2;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.report-mode .fv-error-point{fill:#fff;stroke:#0867f2;stroke-width:2}
+.report-mode .fv-positive{fill:#0867f2}
+.report-mode .fv-negative{fill:#78869a}
+.report-mode .fv-insight{font-size:11px;line-height:1.4;color:#41536b;margin:5px 0 4px;padding-top:5px;border-top:1px solid #e0e7f0}
+.report-mode .fv-liquidity-legend{display:flex;justify-content:space-between;gap:10px;font-size:11px;line-height:1.3;margin:7px 0 10px}
+.report-mode .fv-scenarios{display:grid;gap:4px;flex:1;align-content:space-around}
+.report-mode .fv-scenario{display:grid;grid-template-columns:72px minmax(0,1fr);column-gap:10px;align-items:center;border-bottom:1px solid #e0e7f0;padding:8px 0;font-size:12px}
+.report-mode .fv-scenario>strong{font-size:13px;grid-row:1/3}
+.report-mode .fv-scenario-main{display:grid;grid-template-columns:minmax(0,1fr) 65px;gap:8px;align-items:center}
+.report-mode .fv-scenario-main>b{font-size:16px;text-align:right}
+.report-mode .fv-scenario-track{height:20px;background:#edf2f8}
+.report-mode .fv-scenario-track i{display:block;height:100%;background:#39485a}
+.report-mode .fv-scenario:nth-child(2) .fv-scenario-track i{background:#9ba6b5}
+.report-mode .fv-scenario:nth-child(3) .fv-scenario-track i{background:#0867f2}
+.report-mode .fv-scenario-support{display:flex;justify-content:space-between;gap:7px;color:#52647c;font-size:11px;line-height:1.25}
+.report-mode .fv-scenario-support b{color:#172b4d}
+.report-mode .forecast-source-records{flex:none;border-top:1px solid #d9e2ef;font-size:11px}
+.report-mode .forecast-source-records summary{color:#075bd6;cursor:pointer;font-weight:700;padding:8px 0}
+.report-mode .forecast-source-records[open]{max-height:245px;overflow:auto}
+.report-mode .forecast-source-records .table-toolbar{margin-top:5px}
+.report-mode .forecast-visual-empty{font-size:12px;color:#52647c}
+@media(max-width:1100px){.report-mode .story-board:has(.forecast-visual){grid-template-columns:minmax(0,1fr)}}
+@media(max-width:900px){
+  .report-mode .story-board:has(.forecast-visual){height:auto;grid-template-columns:minmax(0,1fr);grid-auto-rows:max-content;align-content:start;overflow:auto}
+  .report-mode .story-composite:has(.forecast-visual){height:auto;min-height:0;overflow:visible}
+  .report-mode .story-composite:has(.forecast-visual)>.panel{height:auto;min-height:0}
+  .report-mode .forecast-visual{flex:none;min-height:auto}
+  .report-mode .forecast-visual .fv-error-chart,.report-mode .forecast-visual .fv-bias-chart{max-height:none;height:auto}
+  .report-mode .forecast-visual .fv-insight{margin:10px 0 5px}
+  .report-mode .fv-scenario{grid-template-columns:65px minmax(0,1fr)}
+  .report-mode .fv-chart-heading{flex-wrap:wrap}
+  .report-mode .fv-scenarios{gap:10px}
+}

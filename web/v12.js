@@ -46,14 +46,14 @@ const renderForecastBeforeLiquidity=renderers.forecast;
 renderers.forecast=function(){
   const base=renderForecastBeforeLiquidity();
   const summaries=data.liquidity_forecast_summary||[];
-  return base+`<div class="panel-grid">${panel('Liquidity by forecast scenario','Revenue scenarios flow through Working Capital, CAPEX, debt and RCF',table(summaries,[
+  return base+`<div class="panel-grid">${panel('Liquidity by forecast scenario','Revenue scenarios flow through Working Capital, CAPEX, debt and RCF',`${FinanceForecastVisual.liquidity(summaries)}<details class="forecast-source-records"><summary>Explore ${summaries.length} scenario records</summary>${table(summaries,[
     {key:'scenario',label:'Scenario'},
     {key:'forecast_operating_cash_flow_12m',label:'12M OCF',num:true,format:v=>signed(v)},
     {key:'forecast_capex_12m',label:'12M CAPEX',num:true,format:v=>eur.format(v)},
     {key:'ending_cash_12m',label:'12M cash',num:true,format:v=>eur.format(v)},
     {key:'maximum_rcf_drawn',label:'Max RCF',num:true,format:v=>eur.format(v)},
     {key:'minimum_liquidity_headroom',label:'Min headroom',num:true,format:v=>eur.format(v)}
-  ]),'span-12')}</div>`;
+  ])}</details>`,'span-12')}</div>`;
 };
 
 const renderJourneyBeforeLiquidityForecast=renderers['data-journey'];
