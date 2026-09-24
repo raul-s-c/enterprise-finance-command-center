@@ -32,6 +32,16 @@
 .report-mode .sw-factories .sw-gauge{width:86px;height:86px}
 .report-mode .sw-factories>button>div{min-width:0}.report-mode .sw-factories span,.report-mode .sw-factories dd{overflow-wrap:anywhere}
 .report-mode .sw-factories dl{grid-template-columns:repeat(2,minmax(0,1fr))}
+.report-mode .sw-factories dl{margin-top:10px}
+.report-mode .sw-factories>button:has(.sw-factory-trend){min-height:235px}
+.sw-factory-trend{margin-top:7px;padding-top:6px;border-top:1px solid #dfe5ed}
+.sw-factory-trend>div{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:2px 8px}
+.report-mode .sw-factory-trend span{font-size:10px;font-weight:700}
+.report-mode .sw-factory-trend small{font-size:9px;margin:0;color:#52647c}
+.sw-factory-trend svg{display:block;width:100%;height:38px;margin-top:4px;overflow:visible}
+.sw-factory-trend svg line{stroke:#aeb9c8;stroke-width:1}
+.sw-factory-trend svg polyline{fill:none;stroke:#0869e1;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.sw-factory-trend svg circle{fill:#0869e1}
 .report-mode .cx-region-title h3{font-size:15px}
 .report-mode .contribution-explorer h2{font-size:22px}
 .report-mode .cx-bridge>div strong{font-size:13px}
