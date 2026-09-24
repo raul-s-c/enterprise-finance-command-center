@@ -10,6 +10,7 @@ test('action execution shows source-tied stages and monthly impact',async({page}
   const expected=await page.evaluate(()=>{const row=scopedActionBridge()[0];return new Intl.NumberFormat('en-GB',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(row.action_ebit_impact)});
   await expect(page.locator('[data-aev-ebit]')).toHaveText(expected);
   await expect(page.locator('.action-story-indicators>.kpi')).toHaveCount(4);
+  for(const summary of await page.locator('.aev-records>summary').all())await expect(summary).toBeInViewport();
   await page.screenshot({path:'test-results/action-execution-desktop.png',fullPage:true});
   await expect(page.locator('[data-aev-selected-month]')).toContainText('2026-09');
   await page.locator('.aev-bar').last().click();
@@ -35,5 +36,6 @@ test('benefit tracking explains why actual recognition is zero at this close',as
   await expect(page.locator('.aev-recognition')).toContainText('2026-09');
   await expect(page.locator('.aev-actual-zero')).toBeVisible();
   await expect(page.locator('.aev-actual-history')).toContainText('No action impact has entered actuals yet');
+  for(const summary of await page.locator('.aev-records>summary').all())await expect(summary).toBeInViewport();
   await page.screenshot({path:'test-results/action-execution-recognition.png',fullPage:true});
 });
