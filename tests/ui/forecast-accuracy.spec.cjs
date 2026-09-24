@@ -30,7 +30,8 @@ test('forecast accuracy shows its full horizon evidence on a laptop',async({page
   expect(mobileFit.firstOverflow).toBeLessThan(2);
   expect(mobileFit.secondOverflow).toBeLessThan(2);
   await page.screenshot({path:'test-results/forecast-accuracy-mobile-first.png',fullPage:true});
-  await page.locator('.story-composite').last().scrollIntoViewIfNeeded();
-  await expect(page.getByText('Liquidity by forecast scenario',{exact:true})).toBeInViewport();
+  const scenarioHeading=page.getByText('Liquidity by forecast scenario',{exact:true});
+  await scenarioHeading.scrollIntoViewIfNeeded();
+  await expect(scenarioHeading).toBeInViewport();
   await page.screenshot({path:'test-results/forecast-accuracy-mobile.png',fullPage:true});
 });
