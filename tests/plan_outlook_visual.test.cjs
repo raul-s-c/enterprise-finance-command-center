@@ -5,6 +5,19 @@ require('../web/plan-outlook-visual.js');
 const visual=globalThis.FinancePlanOutlook;
 const sum=(rows,key)=>rows.reduce((total,row)=>total+(Number(row[key])||0),0);
 
+test('monthly Actual and frozen Budget chart reconciles to published YTD performance',()=>{
+  const source=published.budget_performance,rows=visual.months(source);
+  assert.equal(rows.length,new Set(source.map(row=>row.month)).size);
+  for(const key of ['revenue','revenue_budget','ebit','ebit_budget'])assert.ok(Math.abs(sum(rows,key)-sum(source,key))<.01);
+  for(const metric of ['revenue','ebit']){
+    const html=visual.performance(source,metric);
+    const delta=sum(source,metric)-sum(source,`${metric}_budget`);
+    assert.equal((html.match(/data-po-ytd-month=/g)||[]).length,rows.length);
+    assert.ok(html.includes(`${delta<0?'−':'+'}€${(Math.abs(delta)/1e6).toFixed(1)}m`));
+    assert.doesNotMatch(html,/NaN|undefined/);
+  }
+});
+
 test('outlook shows all five published full-year revenue vintages without additive allocations',()=>{
   const rows=published.fy_plan_bridge;
   const html=visual.outlook(rows,'revenue');

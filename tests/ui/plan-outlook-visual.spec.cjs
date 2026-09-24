@@ -8,12 +8,23 @@ test('planning vintages remain readable and interactive on desktop and mobile',a
   const target=sections.find(item=>item.title.includes('FY outlook evolution'));
   expect(target).toBeTruthy();
   await page.goto(`/#view=forecast&page=${target.index}`);
+  await expect(page.locator('.po-ytd')).toBeVisible();
+  await expect(page.locator('[data-po-ytd-month]')).toHaveCount(await page.evaluate(()=>new Set(data.budget_performance.map(row=>row.month)).size));
+  const firstMonth=await page.locator('[data-po-ytd-month]').first().getAttribute('data-po-ytd-month');
+  await page.locator('[data-po-ytd-month]').first().click();
+  await expect(page.locator('.po-ytd-selected')).toContainText(firstMonth);
+  const ytdSource=page.locator('.po-ytd + .po-source summary');
+  await expect(ytdSource).toBeVisible();
+  const ytdSourceBounds=await ytdSource.boundingBox();
+  expect(ytdSourceBounds.y+ytdSourceBounds.height).toBeLessThan(680);
+  await page.locator('[data-po-ytd-metric="ebit"]').click();
+  await expect(page.locator('[data-po-ytd-metric="ebit"]')).toHaveAttribute('aria-pressed','true');
   await expect(page.locator('.po-visual')).toBeVisible();
   await expect(page.locator('.po-row')).toHaveCount(5);
   await page.locator('[data-po-metric="ebit"]').click();
   await expect(page.locator('[data-po-metric="ebit"]')).toHaveAttribute('aria-pressed','true');
-  await page.locator('.po-source summary').click();
-  await expect(page.locator('.po-source')).toHaveAttribute('open','');
+  await page.locator('.po-visual + .po-source summary').click();
+  await expect(page.locator('.po-visual + .po-source')).toHaveAttribute('open','');
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
   await page.screenshot({path:'test-results/plan-outlook-desktop.png',fullPage:true});
 
@@ -22,6 +33,11 @@ test('planning vintages remain readable and interactive on desktop and mobile',a
   const mobileTarget=await page.evaluate(()=>reportState.pages.findIndex(item=>item.title.includes('FY outlook evolution')));
   expect(mobileTarget).toBeGreaterThan(0);
   await page.goto(`/#view=forecast&page=${mobileTarget}`);
+  await expect(page.locator('.po-ytd')).toBeVisible();
+  await expect(page.locator('[data-po-ytd-month]')).toHaveCount(await page.evaluate(()=>new Set(data.budget_performance.map(row=>row.month)).size));
+  const mobileSource=await page.locator('.po-ytd + .po-source summary').boundingBox();
+  expect(mobileSource.y+mobileSource.height).toBeLessThan(805);
+  await page.screenshot({path:'test-results/plan-ytd-mobile.png',fullPage:true});
   await page.getByRole('navigation',{name:'Dashboard regions'}).getByRole('button',{name:/FY outlook evolution/}).click();
   await expect(page.locator('.po-visual')).toBeVisible();
   await expect(page.locator('.po-row')).toHaveCount(5);
