@@ -23,6 +23,12 @@ test('portfolio story explains dated decisions and offers only months with event
   await expect(page.locator('.pd-card')).toHaveCount(await page.evaluate(month=>data.portfolio_events.filter(row=>row.month===month).length,other));
   await page.locator('.pd-source summary').click();
   await expect(page.locator('.pd-source table')).toBeVisible();
+  const sourceViewport=page.locator('.story-composite:has(.pd-visual)');
+  await page.locator('.pd-source table thead').scrollIntoViewIfNeeded();
+  const headerBounds=await page.locator('.pd-source table thead').boundingBox();
+  const viewportBounds=await sourceViewport.boundingBox();
+  expect(headerBounds.y).toBeGreaterThanOrEqual(viewportBounds.y);
+  expect(headerBounds.y+headerBounds.height).toBeLessThanOrEqual(viewportBounds.y+viewportBounds.height);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
   await page.screenshot({path:'test-results/portfolio-decision-desktop.png',fullPage:true});
 
