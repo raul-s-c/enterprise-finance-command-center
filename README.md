@@ -189,6 +189,8 @@ See `docs/product-hierarchy.md`.
 
 The Working Capital asset-quality pages pair ranked ECL/SKU provision exposure with five-bucket AR/inventory aging and 12-month risk-share trends; the original schedules remain one click away.
 
+Supplier pages pair source-ranked trailing spend with open-AP exposure for the same selected entity/division, then show group AP aging and its 12-month weighted-age trend. Source tables remain available below each visual; no overdue exposure or group spend denominator is inferred from incomplete detail.
+
 Three trade schedules reconcile to the legal GL:
 
 ```text

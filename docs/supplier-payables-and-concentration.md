@@ -143,3 +143,11 @@ data/processed/suppliers.csv
 ```
 
 The CFO application exposes these outputs inside the Working Capital view rather than creating a disconnected procurement application.
+
+## Reporting workspace
+
+The supplier decision page places two selected-scope views side by side: the five largest suppliers in the published trailing-spend detail and the five largest positive open-AP balances. Entity and division selectors are restricted to current combinations with positive open AP. Both panels retain their original source schedules in an expandable section.
+
+The adjacent maturity page uses the published group AP aging summary: current, 1–30, 31–60, 61–90 and over-90-day buckets sum to total trade AP. A 12-month weighted-age line provides context without changing the closing balance. Group maturity remains explicitly separate from selected supplier detail; it is not presented as a filtered legal subledger.
+
+The supplier-spend file represents selected source records, not a complete group external-spend denominator. Its supplier share field is therefore shown as a source attribute, while the top-five percentage is calculated only over the records actually present in that panel. With no overdue AP in the published close, the visual reports zero rather than manufacturing an exception. Unit and browser tests verify reconciliation, scope, responsive layout, evidence access and safe labels.
