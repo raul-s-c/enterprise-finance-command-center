@@ -38,4 +38,9 @@ test('benefit tracking explains why actual recognition is zero at this close',as
   await expect(page.locator('.aev-actual-history')).toContainText('No action impact has entered actuals yet');
   for(const summary of await page.locator('.aev-records>summary').all())await expect(summary).toBeInViewport();
   await page.screenshot({path:'test-results/action-execution-recognition.png',fullPage:true});
+  await page.setViewportSize({width:390,height:844});
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
+  await expect(page.locator('.aev-benefit-summary')).toBeVisible();
+  await expect(page.locator('.aev-recognition')).toBeVisible();
+  await page.screenshot({path:'test-results/action-execution-recognition-mobile.png',fullPage:true});
 });
