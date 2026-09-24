@@ -556,3 +556,6 @@ python -m enterprise_finance.cli build --end-month 2026-08 --offline-macro
 ## Synthetic data notice
 
 Aureon Systems Group is fictional. Company names, customers, suppliers, products, transactions and financial results are synthetic. Real public macroeconomic data may be used as external drivers but does not represent the financial performance of any real company.
+# Planning outlook visual
+
+The FY outlook evolution page compares the frozen Annual Budget, FC-6, FC-3, FC-1 and latest full-year outlook as published totals for the selected entity/division. The Revenue/EBIT switch is visual only: it reuses `fy_plan_bridge` and preserves the source values behind an expandable disclosure. Historical vintages are not additive bridge steps.
