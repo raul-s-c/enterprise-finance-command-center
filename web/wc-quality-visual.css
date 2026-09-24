@@ -1,0 +1,31 @@
+.wq-panel{min-width:0}
+.wq-ranked,.wq-aging{min-width:0;color:#17304e}
+.wq-portfolio-strip{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:4px 0 8px;padding:8px 10px;background:#f3f7fc;border:1px solid #dce8f6;border-radius:4px}
+.wq-portfolio-strip>div{display:flex;justify-content:space-between;gap:5px;align-items:baseline}.wq-portfolio-strip span{font-size:9px;color:#63758a}.wq-portfolio-strip strong{font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.wq-rank{display:grid;grid-template-columns:18px minmax(0,1fr) 116px;gap:9px;align-items:center;padding:5px 0;border-bottom:1px solid #e8edf4;font-size:11px}
+.wq-rank>b{color:#6b7b8d;font-size:10px}
+.wq-rank-main{min-width:0}
+.wq-rank-caption{display:flex;justify-content:space-between;gap:5px;white-space:nowrap;overflow:hidden}
+.wq-rank-caption strong{overflow:hidden;text-overflow:ellipsis}
+.wq-rank-caption span{color:#698099;font-size:9px;flex-shrink:0}
+.wq-track{height:8px;margin-top:5px;background:#eaf1fb;border-radius:2px;overflow:hidden}
+.wq-track i{display:block;height:100%;background:#1464cb;border-radius:2px}
+.wq-rank-values{text-align:right;white-space:nowrap}
+.wq-rank-values strong{display:block;font-size:12px;font-variant-numeric:tabular-nums}
+.wq-rank-values span{display:block;color:#5e7083;font-size:9px}
+.wq-explain{font-size:10px;line-height:1.35;color:#63758a;margin:8px 0 4px}
+.wq-aging-total{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:4px 0 12px;font-size:11px;color:#5e7083}
+.wq-aging-total strong{font-size:24px;color:#132b49;font-variant-numeric:tabular-nums}
+.wq-aging-stack{display:flex;width:100%;height:30px;overflow:hidden;background:#eaf1fb;border-radius:3px}
+.wq-aging-stack i{min-width:0;min-height:100%;flex-shrink:0}
+.wq-bucket-0,.wq-key-0{background:#1b67cd}.wq-bucket-1,.wq-key-1{background:#70a5e7}.wq-bucket-2,.wq-key-2{background:#f2b4bb}.wq-bucket-3,.wq-key-3{background:#e97480}.wq-bucket-4,.wq-key-4{background:#c9334b}
+.wq-aging-legend{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;margin-top:14px}
+.wq-aging-legend>div{display:grid;grid-template-columns:7px minmax(0,1fr);gap:2px 4px;align-items:center;min-width:0;font-size:9px}
+.wq-aging-legend i{width:7px;height:7px;border-radius:50%}.wq-aging-legend span{white-space:nowrap}.wq-aging-legend strong,.wq-aging-legend small{grid-column:2;white-space:nowrap;font-variant-numeric:tabular-nums}.wq-aging-legend small{color:#6a7a8c}
+.wq-aging-foot{display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:baseline;padding:9px 10px;margin-top:13px;background:#f3f7fc;border:1px solid #dce8f6;border-radius:4px;font-size:10px}
+.wq-aging-foot strong{font-size:15px;color:#b83044;font-variant-numeric:tabular-nums}.wq-aging-foot small{grid-column:1/-1;color:#5f7287}
+.wq-trend{margin-top:13px;padding-top:8px;border-top:1px solid #e1e8f2}.wq-trend>div{display:flex;justify-content:space-between;align-items:baseline;gap:6px;font-size:10px}.wq-trend>div span{color:#5e7083;font-size:9px}.wq-trend svg{display:block;width:100%;height:56px;margin-top:5px;overflow:visible}.wq-trend polyline{fill:none;stroke:#1765c9;stroke-width:2.2;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-linejoin:round}
+.wq-source{border-top:1px solid #e1e8f2;margin-top:9px;padding-top:7px;min-width:0}.wq-source>summary{font-size:10px;color:#0759bd;cursor:pointer;font-weight:600}.wq-source[open]{overflow:auto}.wq-source .table-wrap{max-height:300px;overflow:auto}
+.wq-empty{font-size:11px;color:#5d7188;margin:15px 0}
+@media(max-width:1100px){.wq-rank{grid-template-columns:16px minmax(0,1fr) 101px}.wq-rank-caption span{display:none}}
+@media(max-width:560px){.wq-portfolio-strip{gap:5px;padding:7px}.wq-portfolio-strip>div{display:block}.wq-portfolio-strip strong{display:block;margin-top:3px}.wq-rank{grid-template-columns:14px minmax(0,1fr) 94px;gap:5px}.wq-rank-values span{font-size:8px}.wq-aging-total strong{font-size:20px}.wq-aging-legend{grid-template-columns:repeat(5,minmax(0,1fr));gap:2px}.wq-aging-legend>div{font-size:8px;grid-template-columns:5px minmax(0,1fr);column-gap:2px}.wq-aging-legend i{width:5px;height:5px}.wq-aging-legend strong{font-size:8px}.wq-trend>div{display:block}.wq-trend>div span{display:block;margin-top:3px}}

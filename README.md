@@ -187,6 +187,8 @@ See `docs/product-hierarchy.md`.
 
 ## Working Capital and customer funding
 
+The Working Capital asset-quality pages pair ranked ECL/SKU provision exposure with five-bucket AR/inventory aging and 12-month risk-share trends; the original schedules remain one click away.
+
 Three trade schedules reconcile to the legal GL:
 
 ```text

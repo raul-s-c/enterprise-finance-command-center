@@ -208,3 +208,5 @@ It also shows:
 - original operational aging watchlists
 
 The Balance Sheet presents the gross-to-net asset bridges, while the P&L identifies the current-month inventory-provision and credit-loss movements separately from factory absorption.
+
+The asset-quality subpages now place source-tied visuals ahead of the original schedules. The five largest positive customer allowances and SKU provisions are ranked on reserve amount; gross exposure and reserve rate remain separate labels. The preview also reports the sum of positive reserves in the selected source detail and the top-five share, not a fabricated group allocation. AR and inventory aging display their five published gross buckets, the current risk amount, and a 12-month history of the corresponding risk share. Both bucket sums and both detail-reserve totals are tested against the published group close. Original source tables remain available from each panel. Aging remains explicitly group-scoped when an operating filter is retained elsewhere in the report.
