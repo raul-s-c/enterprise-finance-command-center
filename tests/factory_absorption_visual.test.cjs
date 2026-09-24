@@ -24,7 +24,7 @@ test('mix is source-factory sales units, not monthly production units',()=>{
   assert.notEqual(sales,produced);
   const html=visual.mix(mix);
   assert.match(html,/Sales mix is not current-month factory output/);
-  assert.match(html,/704/);
+  assert.ok(html.includes(sales.toLocaleString('en-US')));
   assert.doesNotMatch(html,/NaN|undefined/);
 });
 

@@ -18,9 +18,10 @@
       byFamily.set(key,(byFamily.get(key)||0)+number(row.units));
     }
     const ordered=[...byFamily].sort((a,b)=>b[1]-a[1]);
-    const total=ordered.reduce((sum,[,units])=>sum+units,0),maximum=Math.max(...ordered.map(([,units])=>units),1);
+    const total=ordered.reduce((sum,[,units])=>sum+units,0);
     const top=ordered.slice(0,6);
     if(ordered.length>6)top.push([`Other ${ordered.length-6} factory/family combinations`,ordered.slice(6).reduce((sum,[,units])=>sum+units,0)]);
+    const maximum=Math.max(...top.map(([,units])=>units),1);
     return `<div class="fa-visual" aria-label="Published source-factory sales mix"><div class="fa-mix-total"><span>Units in external sales</span><strong>${total.toLocaleString('en-US')}</strong></div><div class="fa-mix-list">${top.map(([label,units])=>`<div class="fa-mix-row"><span title="${escape(label)}">${escape(label)}</span><div><i style="width:${(units/maximum*100).toFixed(2)}%"></i></div><b>${units.toLocaleString('en-US')}</b></div>`).join('')}</div><p class="fa-note">Sales mix is not current-month factory output. Published source rows remain below; do not reconcile these units to production.</p></div>`;
   }
   function decorate(html,source){
