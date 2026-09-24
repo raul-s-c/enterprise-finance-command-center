@@ -33,6 +33,10 @@ for(const report of cases)test(`${report.view} keeps financial indicators outsid
   expect(layout.horizontal).toBe(false);
   expect(layout.paneOverflow[0]).toBeLessThan(90);
   if(report.view==='pnl'){
+    const bridge=panes.last().locator('.horizontal-bridge');
+    await expect(bridge).toBeVisible();
+    expect(await bridge.locator('g').count()).toBeGreaterThanOrEqual(7);
+    expect((await bridge.boundingBox()).width).toBeGreaterThan(250);
     const lastRow=panes.first().locator('.statement-table tbody tr').last();
     expect(await lastRow.evaluate(row=>row.getBoundingClientRect().bottom<=row.closest('.story-composite').getBoundingClientRect().bottom+1)).toBe(true);
   }
@@ -59,6 +63,15 @@ for(const report of cases)test(`${report.view} keeps financial indicators outsid
   await regions.getByRole('button').nth(1).click();
   await expect(panes.last()).toBeVisible();
   await expect(panes.first()).toBeHidden();
+  if(report.view==='pnl'){
+    const fit=await page.locator('.statement-story-pnl').evaluate(node=>{
+      const strip=node.querySelector('.statement-story-indicators'),last=node.querySelector('.horizontal-bridge g:last-child'),panel=last.closest('.story-composite');
+      return {stripHeight:strip.getBoundingClientRect().height,scrollable:strip.scrollWidth>strip.clientWidth,ebitVisible:last.getBoundingClientRect().bottom<=panel.getBoundingClientRect().bottom+1};
+    });
+    expect(fit.stripHeight).toBeLessThan(90);
+    expect(fit.scrollable).toBe(true);
+    expect(fit.ebitVisible).toBe(true);
+  }
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
   await page.screenshot({path:`test-results/story-${report.view}-mobile.png`,fullPage:true});
   await expect(panes.last().getByText(report.right,{exact:false})).toBeInViewport();

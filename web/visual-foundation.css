@@ -367,3 +367,8 @@
     overflow-y:auto;
   }
 }
+@media(max-width:600px){
+  .report-mode .statement-story-indicators{display:flex;flex-wrap:nowrap;overflow-x:auto;overflow-y:visible;gap:5px;margin-bottom:6px;scroll-snap-type:x proximity}
+  .report-mode .statement-story-indicators>.kpi{flex:0 0 152px;min-height:62px;scroll-snap-align:start}
+  .report-mode .statement-story-indicators>.statement-story-all{flex:0 0 122px;scroll-snap-align:start}
+}
