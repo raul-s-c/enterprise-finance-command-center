@@ -13,18 +13,25 @@ test('all eight contribution explorers show complete details beside evidence on 
     await page.goto(`/#view=${view}&page=${index}`);
     const explorer=page.locator(`.contribution-explorer[data-contribution="${key}"]`);
     await expect(explorer).toBeVisible();
+    if(key==='nwc')await page.screenshot({path:testInfo.outputPath('nwc-inspector-1280x720.png')});
     const geometry=await explorer.evaluate(element=>{
       const inspector=element.querySelector('.cx-inspector'),details=inspector.querySelector('dl');
       const side=inspector.getBoundingClientRect(),evidence=element.querySelector('.cx-evidence').getBoundingClientRect();
       const flow=element.querySelector('.cx-flow-map');
       const flowNodes=[...flow.querySelectorAll('button')].map(node=>({label:node.textContent.trim(),height:node.clientHeight,content:node.scrollHeight,top:node.getBoundingClientRect().top,bottom:node.getBoundingClientRect().bottom}));
-      return {details:details.clientHeight,content:details.scrollHeight,inspectorLeft:side.left,inspectorBottom:side.bottom,evidenceRight:evidence.right,evidenceBottom:evidence.bottom,rows:element.querySelectorAll('.cx-evidence tbody tr').length,overflow:document.documentElement.scrollWidth-innerWidth,flowTop:flow.getBoundingClientRect().top,flowBottom:flow.getBoundingClientRect().bottom,flowNodes};
+      const ranking=element.querySelector('.cx-ranking'),pager=ranking.querySelector('.contribution-pager');
+      const contributors=[...ranking.querySelectorAll('.contribution-row')].map(row=>({label:row.textContent.trim(),bottom:row.getBoundingClientRect().bottom}));
+      const tableWrap=element.querySelector('.cx-table-wrap'),evidenceRows=[...tableWrap.querySelectorAll('tbody tr')];
+      return {details:details.clientHeight,content:details.scrollHeight,inspectorLeft:side.left,inspectorBottom:side.bottom,evidenceRight:evidence.right,evidenceBottom:evidence.bottom,rows:evidenceRows.length,lastEvidenceBottom:evidenceRows.at(-1)?.getBoundingClientRect().bottom||0,tableBottom:tableWrap.getBoundingClientRect().bottom,overflow:document.documentElement.scrollWidth-innerWidth,flowTop:flow.getBoundingClientRect().top,flowBottom:flow.getBoundingClientRect().bottom,flowNodes,pagerTop:pager.getBoundingClientRect().top,rankingBottom:ranking.getBoundingClientRect().bottom,contributors};
     });
     expect(geometry.content,`${view}/${key}: ${JSON.stringify(geometry)}`).toBeLessThanOrEqual(geometry.details+1);
     expect(geometry.evidenceRight,`${view}/${key}: ${JSON.stringify(geometry)}`).toBeLessThanOrEqual(geometry.inspectorLeft+1);
     expect(geometry.inspectorBottom,`${view}/${key}: ${JSON.stringify(geometry)}`).toBeGreaterThanOrEqual(geometry.evidenceBottom-1);
     expect(geometry.rows,`${view}/${key}: ${JSON.stringify(geometry)}`).toBeGreaterThan(0);
+    expect(geometry.lastEvidenceBottom,`${view}/${key}: last advertised evidence row is clipped`).toBeLessThanOrEqual(geometry.tableBottom+1);
     expect(geometry.overflow,`${view}/${key}: ${JSON.stringify(geometry)}`).toBeLessThanOrEqual(1);
+    for(const row of geometry.contributors)expect(row.bottom,`${view}/${key}: ${row.label} overlaps the pager`).toBeLessThanOrEqual(geometry.pagerTop+1);
+    expect(geometry.pagerTop,`${view}/${key}: ranking pager is clipped`).toBeLessThan(geometry.rankingBottom);
     if(!['pnl','nwc'].includes(key))for(const node of geometry.flowNodes){
       expect(node.content,`${view}/${key}: clipped ${node.label} (${JSON.stringify(geometry)})`).toBeLessThanOrEqual(node.height+1);
       expect(node.top,`${view}/${key}: ${node.label} is above the flow`).toBeGreaterThanOrEqual(geometry.flowTop-1);

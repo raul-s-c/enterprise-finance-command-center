@@ -74,7 +74,13 @@
 
 /* Preserve the full source-to-measure labels on laptop-sized contribution pages. */
 @media (min-width:1101px) and (max-height:820px){
+  .report-mode.contribution-active .contribution-explorer[data-contribution="nwc"] .cx-workspace{grid-template-rows:minmax(0,1fr) 136px}
+  .report-mode.contribution-active .contribution-explorer .contribution-row{min-height:32px!important;padding-top:2px!important;padding-bottom:2px!important}
+  .report-mode.contribution-active .contribution-explorer[data-contribution="nwc"] .contribution-row{min-height:28px!important}
   .report-mode.contribution-active .contribution-explorer .cx-flow-map:not(.nwc-flow-compact):not(.pnl-flow) button{height:auto;min-height:76px;max-height:100%;padding:5px 3px;gap:2px}
   .report-mode.contribution-active .contribution-explorer .cx-flow-map:not(.nwc-flow-compact):not(.pnl-flow) button span{font-size:9px;line-height:1.1}
   .report-mode.contribution-active .contribution-explorer .cx-flow-map:not(.nwc-flow-compact):not(.pnl-flow) button strong{font-size:11px;line-height:1.1;overflow-wrap:anywhere}
+}
+@media (min-width:1101px) and (min-height:761px) and (max-height:820px){
+  .report-mode.contribution-active .contribution-explorer[data-contribution="nwc"] .cx-workspace{grid-template-rows:minmax(0,1fr) 145px}
 }
