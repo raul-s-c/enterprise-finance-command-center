@@ -45,3 +45,7 @@
   .report-mode .cx-flow-map.pnl-flow button span{font-size:11px;line-height:1.15}
   .report-mode .cx-flow-map.pnl-flow button strong{font-size:13px;line-height:1.15;overflow-wrap:anywhere}
 }
+@media (min-width:1101px) and (max-height:820px){
+  .report-mode.contribution-active .contribution-explorer[data-contribution="pnl"] .cx-workspace{grid-template-rows:minmax(0,1fr) 145px}
+  .report-mode.contribution-active .contribution-explorer[data-contribution="pnl"] .cx-evidence .cx-table-wrap{height:calc(100% - 30px)}
+}

@@ -308,6 +308,21 @@ test('P&L lineage stages open evidence, calculation, period and drill actions',a
   await expect(page.locator('.cx-flow-map.pnl-flow button').nth(1).locator('span')).toHaveText('Division');
 });
 
+test('P&L contribution shows both paged evidence records on a laptop',async({page})=>{
+  for(const height of [720,768]){
+    await page.setViewportSize({width:1280,height});
+    await page.goto('/#view=pnl&page=5&section=P%26L+contribution');
+    const result=await page.locator('.cx-evidence').evaluate(panel=>{
+      const wrap=panel.querySelector('.cx-table-wrap'),rows=[...panel.querySelectorAll('tbody tr')],footer=document.querySelector('.report-footer');
+      return {rows:rows.length,lastRow:rows.at(-1)?.getBoundingClientRect().bottom,wrapBottom:wrap.getBoundingClientRect().bottom,panelBottom:panel.getBoundingClientRect().bottom,footerTop:footer.getBoundingClientRect().top};
+    });
+    expect(result.rows).toBe(2);
+    expect(result.lastRow).toBeLessThanOrEqual(result.wrapBottom+1);
+    expect(result.wrapBottom).toBeLessThanOrEqual(result.panelBottom+1);
+    expect(result.panelBottom).toBeLessThanOrEqual(result.footerTop);
+  }
+});
+
 test('Executive keeps every overview region reachable on tablet and mobile',async({page})=>{
   for(const viewport of [{width:1100,height:820},{width:900,height:820},{width:390,height:844}]){
     await page.setViewportSize(viewport);
