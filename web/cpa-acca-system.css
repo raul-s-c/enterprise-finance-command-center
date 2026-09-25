@@ -159,6 +159,20 @@
   .report-mode .pnl-note{font-size:10px}
 }
 /* Keep the complete ten-line statement visible on a standard laptop screen. */
+@media(min-width:901px) and (max-width:1100px){
+  .report-mode .pnl-grid{min-width:0;width:100%}
+  .report-mode .pnl-heading,.report-mode button.pnl-row{grid-template-columns:minmax(180px,1.15fr) 58px minmax(200px,1.35fr) minmax(100px,.8fr) minmax(100px,.75fr);gap:6px}
+}
+@media(min-width:901px) and (max-width:1100px) and (max-height:760px){
+  .report-mode button.pnl-row,
+  .report-mode button.pnl-row.subtotal{min-height:31px;padding-top:1px;padding-bottom:1px}
+  .report-mode .pnl-track,
+  .report-mode .pnl-delta,
+  .report-mode .pnl-percent{height:22px}
+  .report-mode .pnl-track i,
+  .report-mode .pnl-delta i{height:20px}
+  .report-mode .pnl-heading{min-height:31px;padding-top:4px;padding-bottom:4px}
+}
 @media(min-width:1101px) and (min-height:740px) and (max-height:820px){
   .report-mode button.pnl-row,
   .report-mode button.pnl-row.subtotal{min-height:38px;padding-top:2px;padding-bottom:2px}

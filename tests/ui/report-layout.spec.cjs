@@ -177,15 +177,16 @@ test('factory cards show source-tied 12-month utilization without clipping',asyn
 });
 
 test('the complete income statement fits standard laptop heights',async({page})=>{
-  for(const [width,height] of [[1366,768],[1280,720]]){
+  for(const [width,height] of [[1366,768],[1280,720],[1024,720]]){
     await page.setViewportSize({width,height});
     await page.goto('/#view=pnl');
     await expect(page.locator('.pnl-row')).toHaveCount(10);
     const fit=await page.locator('.pnl-scroll').evaluate(region=>{
       const last=region.querySelector('[data-pnl-key="net_income"]').getBoundingClientRect(),visible=region.getBoundingClientRect();
-      return {noVerticalScroll:region.scrollHeight<=region.clientHeight+1,lastVisible:last.bottom<=visible.bottom+1};
+      return {noVerticalScroll:region.scrollHeight<=region.clientHeight+1,noHorizontalScroll:region.scrollWidth<=region.clientWidth+1,lastVisible:last.bottom<=visible.bottom+1};
     });
     expect(fit.noVerticalScroll,`P&L requires scrolling at ${width}×${height}`).toBe(true);
+    expect(fit.noHorizontalScroll,`P&L is horizontally clipped at ${width}×${height}`).toBe(true);
     expect(fit.lastVisible).toBe(true);
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
   }
