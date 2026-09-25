@@ -34,3 +34,12 @@ test('source evidence rows remain keyboard-accessible on mobile',async({page})=>
   await expect(page.locator('#reportDialogTitle')).toHaveText('Published source record');
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
+
+test('the shared contribution record drill works for receivables',async({page})=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=working-capital&page=1');
+  await expect(page.locator('.cx-evidence tbody tr').first()).toBeVisible();
+  await page.locator('.cx-evidence tbody tr').first().click();
+  await expect(page.locator('#reportDialogTitle')).toHaveText('Published source record');
+  await expect(page.locator('#reportDialogBody .row-detail')).toBeVisible();
+});
