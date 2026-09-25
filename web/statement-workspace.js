@@ -327,7 +327,7 @@
     grid.before(nav);
     workspace.addEventListener('click',event=>{
       if(!event.target.closest('[data-sw-focus],[data-sw-row-focus],[data-sw-action="explain"]'))return;
-      if(!window.matchMedia('(max-width:1500px)').matches)return;
+      if(window.innerWidth>1500&&!(workspace.classList.contains('margin-cockpit')&&window.innerWidth<=1700&&window.innerHeight<880))return;
       const body=document.getElementById('swInspectorBody');
       reportDialog('Calculation & supporting evidence',`<div class="sw-evidence-dialog">${body.innerHTML}</div>`);
       document.querySelectorAll('#reportDialogBody [data-story-view]').forEach(button=>button.onclick=()=>{

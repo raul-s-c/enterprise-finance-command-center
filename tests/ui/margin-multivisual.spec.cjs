@@ -48,3 +48,17 @@ test('Margin exposes trend, bridge and division contribution together on a talle
   await expect(cockpit.locator('.sw-detail [data-sw-filter="division"]')).toHaveCount(4);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(1);
 });
+
+test('Margin breakpoint above 1500px keeps visuals and evidence reachable in short windows',async({page})=>{
+  await page.setViewportSize({width:1501,height:720});
+  await page.goto('/#view=margin&page=0');
+  await expect(page.locator('.margin-cockpit .sw-primary')).toBeVisible();
+  await expect(page.locator('.margin-cockpit .sw-secondary')).toBeVisible();
+  await expect(page.locator('.margin-cockpit .sw-inspector')).toBeHidden();
+  await page.locator('.margin-cockpit .sw-kpi').first().click();
+  await expect(page.locator('#reportDialog')).toContainText('Calculation');
+  await page.locator('#reportDialogClose').click();
+  await page.getByRole('button',{name:'Contribution & detail',exact:true}).click();
+  await expect(page.locator('.margin-cockpit .sw-detail')).toBeVisible();
+  expect(await page.locator('.margin-cockpit .sw-detail').evaluate(element=>element.scrollHeight-element.clientHeight)).toBeLessThanOrEqual(1);
+});

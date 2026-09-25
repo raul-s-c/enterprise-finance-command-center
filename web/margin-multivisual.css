@@ -1,9 +1,13 @@
 /* Keep the actual trend and its accounting bridge together on laptop screens. */
-@media(min-width:1150px) and (max-width:1500px) and (min-height:651px){
+@media(min-width:1150px) and (max-width:1500px) and (min-height:651px), (min-width:1501px) and (max-width:1700px) and (min-height:651px) and (max-height:879px){
+  .margin-cockpit .sw-analysis-nav{display:flex;gap:4px;padding:8px 0;flex:none}
+  .report-mode .margin-cockpit .sw-analysis-nav button{font-size:13px;padding:7px 14px;min-height:34px;background:white;border:1px solid #d9e2ef}
+  .report-mode .margin-cockpit .sw-analysis-nav button[aria-pressed=true]{color:#075bd6;background:#edf4ff;border-color:#0867f2}
   .report-mode .margin-cockpit .sw-grid{display:grid;grid-template-columns:minmax(0,1.32fr) minmax(0,.88fr);grid-template-rows:minmax(0,1fr);overflow:hidden}
   .report-mode .margin-cockpit .sw-grid>.sw-primary,
   .report-mode .margin-cockpit .sw-grid>.sw-secondary{display:flex;flex-direction:column;min-height:0;overflow:hidden}
   .report-mode .margin-cockpit .sw-grid>.sw-secondary{border-right:0}
+  .report-mode .margin-cockpit .sw-grid>.sw-inspector{display:none}
   .report-mode .margin-cockpit .sw-grid>.sw-detail{display:none}
   .report-mode .margin-cockpit .sw-grid.margin-detail-selected{grid-template-columns:minmax(0,1fr)}
   .report-mode .margin-cockpit .sw-grid.margin-detail-selected>.sw-primary,
