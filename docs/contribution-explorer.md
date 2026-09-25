@@ -28,6 +28,8 @@ The combined NWC page is the CFO entry point: it presents the closing balance, p
 
 On a laptop canvas up to 1020px high, the NWC flow uses a four-card signed component view (receivables, inventory, payables and selected net balance) instead of clipping the larger source-to-destination diagram. Each component still opens its published records. The evidence pager shows two rows at heights up to 820px and three above that threshold; every advertised row is visible on all eight contribution workspaces rather than hidden by the footer.
 
+At desktop widths, the selected-item inspector spans the analysis and evidence rows in all eight explorers. This keeps the full calculation, source and integrity details visible next to the evidence table at 1280 × 720 without a hidden internal scroll. Compact-height ranking pages show only the contributor rows that fit above their pager (two on the taller NWC bridge, three elsewhere), while retaining every contributor through pagination. The NWC evidence pane still shows both advertised rows. Source-to-measure nodes retain their complete labels at laptop heights; evidence rows remain keyboard-focusable entry points to the underlying published records.
+
 The dedicated AR and AP schedules reconcile to their respective external legal-ledger control accounts. The inventory schedule reconciles gross legal inventory and its obsolescence provision; the unrealized intercompany markup reserve remains a separate consolidation adjustment and is not allocated to products. Intercompany receivables and payables are also separate. Product operating contribution is not group EBIT.
 
 ## Remaining lineage work
@@ -36,4 +38,4 @@ Complete end-to-end attribution still requires document identifiers connecting c
 
 ## Verification
 
-`node --test tests/*.test.cjs` includes signed contribution arithmetic, zero denominators, missing data, explicit coverage limits, CAPEX event separation, the combined NWC consolidation reserve, and aggregation reconciliation across every published period, measure and supported dimension. Tests verify source data is unchanged. Browser checks cover contribution navigation, filters, drill-down/up/reset, source-record pagination, and desktop/mobile viewport fit.
+`node --test tests/*.test.cjs` includes signed contribution arithmetic, zero denominators, missing data, explicit coverage limits, CAPEX event separation, the combined NWC consolidation reserve, and aggregation reconciliation across every published period, measure and supported dimension. Tests verify source data is unchanged. Browser checks cover contribution navigation, filters, drill-down/up/reset, source-record pagination, and desktop/mobile viewport fit. A dedicated 1280 × 720 browser check verifies all eight inspectors, the last advertised evidence and contributor rows, and complete flow-node labels.
