@@ -281,7 +281,7 @@ test('P&L lineage labels fit from tablet through Full HD widths',async({page})=>
       const buttons=[...map.querySelectorAll('button')],bounds=map.getBoundingClientRect();
       return {count:buttons.length,labels:buttons.map(button=>{
         const rect=button.getBoundingClientRect();
-        return {text:button.innerText,within:rect.left>=bounds.left-1&&rect.right<=bounds.right+1&&rect.top>=bounds.top-1&&rect.bottom<=bounds.bottom+1,fits:button.scrollHeight<=button.clientHeight+1};
+        return {text:button.innerText,within:rect.left>=bounds.left-1&&rect.right<=bounds.right+1&&rect.top>=bounds.top-1&&rect.bottom<=bounds.bottom+1,fits:button.scrollHeight<=button.clientHeight+1&&button.scrollWidth<=button.clientWidth+1};
       }),horizontal:document.documentElement.scrollWidth>innerWidth};
     });
     expect(layout.count).toBe(4);
