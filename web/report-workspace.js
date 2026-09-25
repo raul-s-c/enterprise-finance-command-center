@@ -84,7 +84,7 @@ function reportPages(){
   let pages=reportLegacyPages(state.view),s=reportCurrent();
   if(state.view==='profitability')pages=pages.map(page=>page.title==='Customer profitability'?CustomerContributionVisual.page(data,state):page);
   if(state.view==='profitability')pages=pages.map(page=>page.title==='SKU profitability'?SkuProfitabilityWatch.page(data,state):page);
-  if(state.view==='profitability')pages=pages.filter(page=>page.title!=='Catalog structure');
+  if(state.view==='profitability')pages=pages.filter(page=>page.title!=='Catalog structure'&&!page.html?.includes('class="report-indicators"'));
   if(state.view==='close-journey')return globalThis.CloseJourney.pages(data);
   if(state.view==='data-journey')return [globalThis.DataJourneyCockpit.page(data),...ManagementBook.compose(pages.filter(page=>page.title!=='End-to-end finance pipeline'))];
   if(state.view==='executive')return ManagementBook.executivePages(data,state,reportExecutive());
