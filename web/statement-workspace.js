@@ -148,7 +148,7 @@
     const tertiary=`<div class="sw-panel-head"><div><h3>Funding structure</h3><small>Select a component to inspect its evidence</small></div><button data-story-view="treasury">Open funding</button></div>${rank(funding,'value','label',null,'liabilities')}`;
     const defs=[['assets','Total assets',ac.assets,py.assets,'Cash + net receivables + net inventory + PPE + CIP','balance_sheet'],['liabilities','Liabilities',ac.liabilities,py.liabilities,'Payables + tax + debt + contract liabilities','balance_sheet'],['equity','Equity',ac.equity,py.equity,'Share capital + retained earnings','balance_sheet'],['cash','Cash',ac.cash,py.cash,'Closing ledger cash after current-period movements','balance_sheet'],['balance','Balance check',ac.balance_check,py.balance_check,'Assets − liabilities − equity','validation']];
     const evidence=defs.map(row=>inspector(row[0],row[1],compact(row[2]),variance(row[2],row[3]),row[4],row[5],scope,'balance-sheet')).join('')+statementMonthEvidence(rows,'balance-sheet');
-    return {title:'Position cockpit',custom:true,fullScreen:true,policy:root.ReportContext.group,html:shell('Financial position cockpit',`Understand assets, funding and balance integrity for ${data.meta.end_month}`,cards,primary,secondary,tertiary,evidence)};
+    return {title:'Position cockpit',custom:true,fullScreen:true,policy:root.ReportContext.group,html:shell('Financial position cockpit',`Consolidated group · understand assets, funding and balance integrity for ${data.meta.end_month}`,cards,primary,secondary,tertiary,evidence).replace('class="statement-workspace"','class="statement-workspace balance-cockpit"')};
   }
   function forecast(data){
     const base=(data.forecast||[]).filter(row=>row.scenario==='Base').sort((a,b)=>a.horizon_month-b.horizon_month),summary=data.three_statement_forecast_summary||[],baseSummary=summary.find(row=>row.scenario==='Base')||{},downSummary=summary.find(row=>row.scenario==='Downside')||{},accuracy=(data.forecast_accuracy||[]).find(row=>row.horizon_month===1)||{},nextLiquidity=(data.liquidity_forecast||[]).find(row=>row.scenario==='Base'&&row.horizon_month===1)||{},scope='Consolidated group · Base scenario';
@@ -327,7 +327,7 @@
     grid.before(nav);
     workspace.addEventListener('click',event=>{
       if(!event.target.closest('[data-sw-focus],[data-sw-row-focus],[data-sw-action="explain"]'))return;
-      if(window.innerWidth>1500&&!((workspace.classList.contains('cash-cockpit')||workspace.classList.contains('margin-cockpit')||workspace.classList.contains('treasury-cockpit'))&&window.innerWidth<=1700&&window.innerHeight<880))return;
+      if(window.innerWidth>1500&&!((workspace.classList.contains('cash-cockpit')||workspace.classList.contains('margin-cockpit')||workspace.classList.contains('treasury-cockpit')||workspace.classList.contains('balance-cockpit'))&&window.innerWidth<=1700&&window.innerHeight<880))return;
       const body=document.getElementById('swInspectorBody');
       reportDialog('Calculation & supporting evidence',`<div class="sw-evidence-dialog">${body.innerHTML}</div>`);
       document.querySelectorAll('#reportDialogBody [data-story-view]').forEach(button=>button.onclick=()=>{
