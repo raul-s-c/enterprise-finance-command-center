@@ -103,7 +103,7 @@
       const evidenceRows=(selectedRows.length?selectedRows:rows).filter(row=>Object.values(row).some(value=>String(value).toLowerCase().includes(s.query)));
       const evidenceKey=JSON.stringify([s.filters,s.dimension,s.selected,s.month,s.metric,s.query]);
       if(s.evidenceKey!==evidenceKey){s.evidenceKey=evidenceKey;s.evidencePage=0;}
-      const evidenceSize=innerWidth>700&&innerHeight<820?2:6;
+      const evidenceSize=innerWidth>700?(innerHeight<=820?2:3):6;
       const evidencePages=Math.max(1,Math.ceil(evidenceRows.length/evidenceSize));
       s.evidencePage=Math.max(0,Math.min(s.evidencePage||0,evidencePages-1));
       const cols=fields(selectedRows.length?selectedRows:rows),evidence=evidenceRows.slice(s.evidencePage*evidenceSize,(s.evidencePage+1)*evidenceSize),flowTarget=selectedRows[0]?.contributor||selectedRows[0]?.customer_name||selectedRows[0]?.supplier_name||selectedRows[0]?.product||selectedRows[0]?.project_name||label(s.metric);
@@ -158,6 +158,14 @@
         flow.querySelectorAll('.cx-flow-column').forEach(column=>column.querySelectorAll('button').forEach((button,index)=>{button.onclick=()=>showRecords(selectedRows.filter(row=>row.component===selectedComponents[index].component));button.disabled=!selectedRows.some(row=>row.component===selectedComponents[index].component);button.title='Inspect published component records';}));
         flow.querySelector('.cx-flow-focus').onclick=()=>document.getElementById('cx-drill').click();
         flow.querySelector('.cx-flow-output').onclick=()=>showRecords(selectedRows);
+        if(innerWidth>=1101&&innerHeight<=1020){
+          flow.classList.replace('nwc-flow','nwc-flow-compact');
+          flow.closest('.cx-flow').querySelector('h3').textContent=`Flow · ${selected.name}`;
+          flow.closest('.cx-flow').querySelector('.cx-region-title>span').textContent='Signed components sum to NWC';
+          flow.innerHTML=`${selectedComponents.map(item=>`<button data-component="${e(item.component)}" ${selectedRows.some(row=>row.component===item.component)?'':'disabled'}><span>${e(item.component)} · ${item.component==='Receivables'?'Customers':item.component==='Inventory'?'Stock':'Suppliers'}</span><strong>${e(compactMoney(item.value))}</strong></button>`).join('')}<button class="cx-flow-output"><span>${e(selected.name)} · NWC</span><strong>${e(compactMoney(selected.value))}</strong></button>`;
+          flow.querySelectorAll('[data-component]').forEach(button=>{button.title='Inspect published component records';button.onclick=()=>showRecords(selectedRows.filter(row=>row.component===button.dataset.component));});
+          flow.querySelector('.cx-flow-output').onclick=()=>showRecords(selectedRows);
+        }
         const calculation=selectedComponents.map((item,index)=>`${index&&item.value>=0?'+':''} ${compactMoney(item.value)}`).join(' ');host.querySelector('.cx-inspector dl').insertAdjacentHTML('afterbegin',`<div><dt>Calculation</dt><dd>${e(calculation)} = ${e(compactMoney(selected.value))}</dd></div>`);
       }
       for(const field of ['metric','month','event']){const control=document.getElementById('cx-'+field);if(control)control.onchange=()=>{s[field]=control.value;s.page=0;s.selected=null;if(field!=='metric')s.filters={};paint();document.getElementById('cx-'+field)?.focus();};}

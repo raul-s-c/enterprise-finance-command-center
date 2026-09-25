@@ -26,6 +26,8 @@ Product lineage exposes revenue, variable production cost, variable selling cost
 
 The combined NWC page is the CFO entry point: it presents the closing balance, prior-year bridge, receivables-plus-inventory-less-payables formula, entity/division filters, signed contribution ranking, value flow, selection inspector, and source evidence on one screen. It reconciles external legal subledgers to provision-adjusted group NWC and shows the unrealized intercompany inventory-profit reserve as a named consolidation record rather than allocating or hiding it.
 
+On a laptop canvas up to 1020px high, the NWC flow uses a four-card signed component view (receivables, inventory, payables and selected net balance) instead of clipping the larger source-to-destination diagram. Each component still opens its published records. The evidence pager shows two rows at heights up to 820px and three above that threshold; every advertised row is visible on all eight contribution workspaces rather than hidden by the footer.
+
 The dedicated AR and AP schedules reconcile to their respective external legal-ledger control accounts. The inventory schedule reconciles gross legal inventory and its obsolescence provision; the unrealized intercompany markup reserve remains a separate consolidation adjustment and is not allocated to products. Intercompany receivables and payables are also separate. Product operating contribution is not group EBIT.
 
 ## Remaining lineage work
