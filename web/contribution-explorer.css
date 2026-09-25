@@ -45,7 +45,18 @@
   .report-mode .cx-flow-map.pnl-flow button span{font-size:11px;line-height:1.15}
   .report-mode .cx-flow-map.pnl-flow button strong{font-size:13px;line-height:1.15;overflow-wrap:anywhere}
 }
-@media (min-width:1101px) and (max-height:820px){
-  .report-mode.contribution-active .contribution-explorer[data-contribution="pnl"] .cx-workspace{grid-template-rows:minmax(0,1fr) 145px}
-  .report-mode.contribution-active .contribution-explorer[data-contribution="pnl"] .cx-evidence .cx-table-wrap{height:calc(100% - 30px)}
+@media (min-width:1101px) and (max-height:1020px){
+  .report-mode.contribution-active .contribution-explorer[data-contribution="nwc"] .cx-scopebar{align-items:center;padding:3px 0}
+  .report-mode.contribution-active .contribution-explorer[data-contribution="nwc"] .cx-scopebar label{display:flex;align-items:center;gap:5px}
+  .report-mode.contribution-active .contribution-explorer[data-contribution="nwc"] .cx-summary.nwc-summary{min-height:0}
+  .report-mode.contribution-active .contribution-explorer[data-contribution="nwc"] .cx-bridge{padding:4px 8px}
+  .report-mode.contribution-active .contribution-explorer[data-contribution="nwc"] .cx-bridge svg{height:62px}
+  .report-mode.contribution-active .contribution-explorer[data-contribution="nwc"] .cx-toolbar{min-height:34px;padding:3px 0}
+  .report-mode.contribution-active .cx-flow-map.nwc-flow-compact{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;padding:0;align-items:stretch}
+  .report-mode.contribution-active .cx-flow-map.nwc-flow-compact:before{display:none}
+  .report-mode.contribution-active .cx-flow-map.nwc-flow-compact button{height:100%;min-height:0;padding:4px 5px}
+  .report-mode.contribution-active .cx-flow-map.nwc-flow-compact button span{font-size:9px;line-height:1.1}
+  .report-mode.contribution-active .cx-flow-map.nwc-flow-compact button strong{font-size:12px;line-height:1.1;overflow-wrap:anywhere}
+  .report-mode.contribution-active .cx-flow-map.nwc-flow-compact button small{font-size:10px}
+  .report-mode.contribution-active .cx-flow-map.nwc-flow-compact .cx-flow-output{background:#e6f1ff;border-color:#b9d5f7}
 }
