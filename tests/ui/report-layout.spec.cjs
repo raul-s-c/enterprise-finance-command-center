@@ -270,8 +270,8 @@ test('P&L contribution explains actual vs prior year and shows truthful statemen
   expect(mobileBounds.scrollWidth).toBeLessThanOrEqual(mobileBounds.clientWidth+1);
 });
 
-test('P&L lineage labels fit at laptop and tablet widths',async({page})=>{
-  for(const width of [1280,1024]){
+test('P&L lineage labels fit from tablet through Full HD widths',async({page})=>{
+  for(const width of [1024,1280,1440,1600,1800,1920]){
     await page.setViewportSize({width,height:720});
     await page.goto('/#view=pnl&page=5&section=P%26L+contribution');
     if(width<=1100)await page.locator('.cx-analysis-nav').getByRole('button',{name:'Value flow'}).click();
@@ -285,7 +285,7 @@ test('P&L lineage labels fit at laptop and tablet widths',async({page})=>{
       }),horizontal:document.documentElement.scrollWidth>innerWidth};
     });
     expect(layout.count).toBe(4);
-    expect(layout.labels.every(label=>label.within&&label.fits)).toBe(true);
+    expect(layout.labels.every(label=>label.within&&label.fits),JSON.stringify({width,layout})).toBe(true);
     expect(layout.horizontal).toBe(false);
   }
 });
