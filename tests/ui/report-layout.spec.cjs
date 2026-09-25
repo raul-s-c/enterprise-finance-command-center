@@ -360,6 +360,32 @@ test('Executive keeps every overview region reachable on tablet and mobile',asyn
   }
 });
 
+test('Executive laptop overview exposes its story and priorities without hidden report scroll',async({page})=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=executive');
+  const switcher=page.getByRole('navigation',{name:'Executive overview regions'});
+  await expect(switcher).toBeVisible();
+  await expect(page.locator('.executive-mini-month')).toHaveCount(12);
+  const fit=await page.locator('.tower-layout').evaluate(element=>({
+    content:element.scrollHeight,
+    viewport:element.clientHeight,
+    horizontal:element.scrollWidth-element.clientWidth
+  }));
+  expect(fit.content).toBeLessThanOrEqual(fit.viewport+1);
+  expect(fit.horizontal).toBeLessThanOrEqual(1);
+  for(const [label,index] of [['Company story',3],['Management priorities',4]]){
+    const button=switcher.getByRole('button',{name:label,exact:true});
+    await button.click();
+    await expect(button).toHaveAttribute('aria-pressed','true');
+    const region=page.locator(`#executive-region-${index}`);
+    await expect(region).toBeVisible();
+    const bounds=await region.evaluate(element=>({bottom:element.getBoundingClientRect().bottom,viewport:innerHeight,content:element.scrollHeight,height:element.clientHeight}));
+    expect(bounds.bottom).toBeLessThanOrEqual(bounds.viewport);
+    expect(bounds.content).toBeLessThanOrEqual(bounds.height+1);
+  }
+  await expect(page.locator('#executive-region-4')).toContainText('Management priorities');
+});
+
 test('all report destinations retain evidence instead of standalone KPI pages',async({page})=>{
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
   const reports=['executive','pnl','margin','working-capital','cash-flow','treasury','balance-sheet','forecast','macro-sensitivities','business-drivers','profitability','intercompany','operations-capex','fx','performance-review','action-execution','data-journey','close-journey'];
