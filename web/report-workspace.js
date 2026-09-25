@@ -155,8 +155,9 @@ function setupNav(){
   document.getElementById('reportPageSelect').onchange=event=>reportNavigate(Number(event.target.value));
   document.getElementById('reportPrevious').onclick=()=>reportNavigate(reportState.page-1);
   document.getElementById('reportNext').onclick=()=>reportNavigate(reportState.page+1);
-  window.addEventListener('popstate',()=>{if(data){reportReadRoute();render(true);}});
-  window.addEventListener('hashchange',()=>{if(data){reportReadRoute();render(true);}});
+   const restoreRoute=()=>{if(!data)return;const dialog=document.getElementById('reportDialog');if(dialog.open)dialog.close();reportReadRoute();render(true);};
+   window.addEventListener('popstate',restoreRoute);
+   window.addEventListener('hashchange',restoreRoute);
   let resizeTimer;
   window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{if(data){reportState.section=reportState.pages[reportState.page]?.title;render(true);}},120);});
 }
