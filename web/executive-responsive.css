@@ -1,5 +1,18 @@
 /* Keep every Executive overview region reachable on tablet and mobile. */
 .tower-region-switch{display:none}
+@media(min-width:1101px) and (max-width:1700px){
+  .report-mode .control-tower .tower-layout{overflow:hidden}
+  .report-mode .control-tower .tower-canvas{min-height:0}
+  .report-mode .control-tower .tower-analytics,
+  .report-mode .control-tower .tower-bottom{display:contents}
+  .report-mode .control-tower .tower-analytics>section,
+  .report-mode .control-tower .tower-bottom>section{flex:1;min-height:0;height:auto;border-right:0}
+  .report-mode .control-tower .tower-analytics>section[hidden],
+  .report-mode .control-tower .tower-bottom>section[hidden]{display:none!important}
+  .tower-region-switch{display:flex;flex:none;gap:4px;padding:6px 8px;border-bottom:1px solid #d8dee8}
+  .report-mode .tower-region-switch button{min-height:28px;padding:4px 9px;font-size:11px}
+  .report-mode .tower-region-switch button[aria-pressed=true]{color:#075fc6;background:#e9f3ff;border-color:#9bbce1}
+}
 @media(max-width:1100px){
   .tower-region-switch{display:flex;flex-wrap:wrap;gap:4px;padding:6px 8px;border-bottom:1px solid #d8dee8}
   .report-mode .tower-region-switch button{min-height:32px;padding:5px 9px;font-size:11px}
