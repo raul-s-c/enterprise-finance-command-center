@@ -431,6 +431,37 @@ test('Balance Sheet laptop trend fills the panel with source-tied assets',async(
   await expect(page.locator('#reportDialog')).toContainText(latest.month);
 });
 
+test('Forecast months fill the panel and open linked three-statement evidence',async({page})=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=forecast&page=0');
+  const chart=page.locator('.sw-forecast-trend');
+  await expect(chart.locator('.sw-forecast-month')).toHaveCount(12);
+  const fit=await chart.evaluate(element=>{
+    const panel=element.closest('.sw-primary');
+    return {width:element.getBoundingClientRect().width,panel:panel.getBoundingClientRect().width,content:element.scrollHeight,height:element.clientHeight};
+  });
+  expect(fit.width).toBeGreaterThan(fit.panel-30);
+  expect(fit.content).toBeLessThanOrEqual(fit.height+1);
+  const source=await page.evaluate(async()=>{
+    const data=await(await fetch('/data/dashboard.json')).json();
+    const row=data.forecast.find(item=>item.scenario==='Base'&&item.horizon_month===1);
+    return {row,flow:data.forecast_cash_flow.find(item=>item.scenario==='Base'&&item.month===row.month),balance:data.forecast_balance_sheet.find(item=>item.scenario==='Base'&&item.month===row.month)};
+  });
+  await expect(chart.locator('.sw-forecast-month').first()).toContainText((source.row.revenue_forecast/1e6).toFixed(1));
+  await chart.locator('.sw-forecast-month').first().click();
+  const dialog=page.locator('#reportDialog');
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toContainText(source.row.month);
+  await expect(dialog).toContainText((Math.abs(source.flow.free_cash_flow)/1e6).toFixed(1));
+  await expect(dialog).toContainText((source.balance.cash/1e6).toFixed(1));
+  await expect(dialog).toContainText('Cash flow identity gap');
+  await expect(dialog).toContainText('Balance check');
+  await dialog.evaluate(element=>element.close());
+  await page.setViewportSize({width:390,height:844});
+  await expect(page.locator('.sw-primary .series-svg')).toBeVisible();
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
+
 test('all report destinations retain evidence instead of standalone KPI pages',async({page})=>{
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
   const reports=['executive','pnl','margin','working-capital','cash-flow','treasury','balance-sheet','forecast','macro-sensitivities','business-drivers','profitability','intercompany','operations-capex','fx','performance-review','action-execution','data-journey','close-journey'];
@@ -588,20 +619,17 @@ test('short laptop cockpits keep charts legible and use one reachable report scr
   expect(Math.min(...trendSizes)).toBeGreaterThanOrEqual(10);
 
   await page.goto('/#view=forecast');
-  await expect(page.locator('.sw-primary .report-svg')).toBeVisible();
+  await expect(page.locator('.sw-primary .sw-forecast-trend')).toBeVisible();
   const forecast=await page.locator('#content').evaluate(element=>({
     overflow:getComputedStyle(element).overflowY,
     scrollHeight:element.scrollHeight,
     clientHeight:element.clientHeight,
-    chartHeight:element.querySelector('.sw-primary .report-svg').getBoundingClientRect().height
+    chartHeight:element.querySelector('.sw-primary .sw-forecast-trend').getBoundingClientRect().height
   }));
   expect(forecast.overflow).toBe('auto');
   expect(forecast.scrollHeight).toBeGreaterThan(forecast.clientHeight);
-  expect(forecast.chartHeight).toBeGreaterThanOrEqual(280);
-  const forecastSizes=await page.locator('.sw-primary .report-svg text:not(.axis-text)').evaluateAll(nodes=>nodes.map(node=>{
-    const matrix=node.getScreenCTM();
-    return parseFloat(getComputedStyle(node).fontSize)*Math.hypot(matrix.a,matrix.b);
-  }));
+  expect(forecast.chartHeight).toBeGreaterThanOrEqual(180);
+  const forecastSizes=await page.locator('.sw-forecast-month strong,.sw-forecast-month small').evaluateAll(nodes=>nodes.map(node=>parseFloat(getComputedStyle(node).fontSize)));
   expect(forecastSizes.length).toBeGreaterThan(0);
   expect(Math.min(...forecastSizes)).toBeGreaterThanOrEqual(10);
   await page.locator('#content').evaluate(element=>element.scrollTo({top:element.scrollHeight,behavior:'instant'}));

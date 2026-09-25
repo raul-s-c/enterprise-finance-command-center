@@ -26,6 +26,27 @@
       return `<button type="button" class="sw-positive-month" data-month="${esc(point.month)}" aria-label="${esc(point.month)} ${esc(metricLabel)} actual ${actual}, prior year ${prior}, change ${esc(C().signed(change.delta))} EUR million. Show detail." title="${esc(point.month)} · AC ${actual} · PY ${prior} · Δ ${esc(C().signed(change.delta))} EUR m"><strong>${actual}</strong><span class="sw-positive-bars" aria-hidden="true"><i class="prior" style="height:${priorHeight}%"></i><i class="actual" style="height:${actualHeight}%"></i></span><small>${esc(point.month.slice(2))}</small><em class="${tone(change)}">${esc(C().signed(change.delta))}</em></button>`;
     }).join('')}</div>`;
   }
+  function forecastRevenueTrend(rows,endMonth){
+    const values=rows.map(row=>row.revenue_forecast).filter(M().finite);
+    if(!values.length)return '<div class="empty">No forecast observations for this selection.</div>';
+    if(values.some(value=>value<0))return C().series(rows,'revenue_forecast','month',endMonth,760);
+    const max=Math.max(...values,1);
+    return `<div class="sw-forecast-trend" role="group" aria-label="Base revenue forecast for the next twelve months, EUR million; select a month for linked statements">${rows.map(row=>{
+      const value=M().finite(row.revenue_forecast)?C().money(row.revenue_forecast):'—';
+      const height=M().finite(row.revenue_forecast)?row.revenue_forecast/max*100:0;
+      return `<button type="button" class="sw-forecast-month" data-sw-forecast-month="${esc(row.month)}" aria-label="${esc(row.month)} Base revenue forecast ${value} EUR million. Open linked forecast statements." title="${esc(row.month)} · FC ${value} EUR m"><strong>${value}</strong><span class="sw-forecast-bars" aria-hidden="true"><i style="height:${height}%"></i></span><small>${esc(row.month.slice(2))}</small></button>`;
+    }).join('')}</div>`;
+  }
+  function forecastMonthEvidence(rows,data){
+    const cash=new Map((data.forecast_cash_flow||[]).filter(row=>row.scenario==='Base').map(row=>[row.month,row]));
+    const balance=new Map((data.forecast_balance_sheet||[]).filter(row=>row.scenario==='Base').map(row=>[row.month,row]));
+    const amount=value=>M().finite(value)?`${value<0?'−':''}€${C().money(Math.abs(value))}m`:'—';
+    const control=value=>!M().finite(value)?'—':value===0?'€0.00':`${value<0?'−':''}€${Math.abs(value).toPrecision(6)}`;
+    return rows.map(row=>{
+      const cf=cash.get(row.month)||{},bs=balance.get(row.month)||{};
+      return `<template data-sw-forecast-detail="${esc(row.month)}"><p class="report-note">Base scenario · ${esc(row.month)} · source-linked three-statement forecast</p><dl class="row-detail sw-forecast-detail"><div><dt>Revenue · forecast</dt><dd>${amount(row.revenue_forecast)}</dd></div><div><dt>EBIT · forecast</dt><dd>${amount(row.ebit_forecast)}</dd></div><div><dt>Free cash flow · forecast_cash_flow</dt><dd>${amount(cf.free_cash_flow)}</dd></div><div><dt>Ending cash · forecast_balance_sheet</dt><dd>${amount(bs.cash)}</dd></div><div><dt>Cash flow identity gap · EUR</dt><dd>${control(cf.cash_flow_identity_gap)}</dd></div><div><dt>Balance check · EUR</dt><dd>${control(bs.balance_check)}</dd></div></dl></template>`;
+    }).join('');
+  }
   function pnl(data,state){
     const rows=M().aggregate(data.management_detail,state),ac=rows.find(row=>row.month===data.meta.end_month)||{},py=rows.find(row=>row.month===M().priorMonth(data.meta.end_month))||{};
     const divisions=(data.management_detail||[]).filter(row=>row.month===data.meta.end_month&&(state.entity==='all'||row.entity===state.entity)&&(state.division==='all'||row.division===state.division)).reduce((map,row)=>{const item=map.get(row.division)||{division:row.division,revenue:0,ebit:0};item.revenue+=row.revenue||0;item.ebit+=row.ebit||0;map.set(row.division,item);return map;},new Map());
@@ -79,12 +100,15 @@
     const base=(data.forecast||[]).filter(row=>row.scenario==='Base').sort((a,b)=>a.horizon_month-b.horizon_month),summary=data.three_statement_forecast_summary||[],baseSummary=summary.find(row=>row.scenario==='Base')||{},downSummary=summary.find(row=>row.scenario==='Downside')||{},accuracy=(data.forecast_accuracy||[]).find(row=>row.horizon_month===1)||{},nextLiquidity=(data.liquidity_forecast||[]).find(row=>row.scenario==='Base'&&row.horizon_month===1)||{},scope='Consolidated group · Base scenario';
     const revenueDelta=variance(baseSummary.revenue_12m,downSummary.revenue_12m),ebitMargin=baseSummary.ebit_12m/baseSummary.revenue_12m,fcfConversion=baseSummary.free_cash_flow_12m/baseSummary.ebit_12m;
     const cards=kpi('fc-revenue','12M revenue',compact(baseSummary.revenue_12m),revenueDelta,'Integrated Base scenario','Base · '+C().percent(revenueDelta.relative)+' vs Downside')+kpi('fc-ebit','12M EBIT',compact(baseSummary.ebit_12m),variance(baseSummary.ebit_12m,downSummary.ebit_12m),'Linked P&L','Base · '+percent(ebitMargin)+' margin')+kpi('fc-fcf','12M free cash flow',compact(baseSummary.free_cash_flow_12m),variance(baseSummary.free_cash_flow_12m,downSummary.free_cash_flow_12m),'Linked cash flow','Base · '+percent(fcfConversion)+' of EBIT')+kpi('fc-cash','Ending cash',compact(baseSummary.ending_cash_12m),variance(baseSummary.ending_cash_12m,downSummary.ending_cash_12m),'Linked balance sheet','Base · month 12')+kpi('fc-accuracy','1M forecast MAPE',percent(accuracy.mape),{relative:null,favorable:accuracy.mape<.1},'Historical vintage accuracy',`${accuracy.observations||0} observations`);
-    const primary=`<div class="sw-panel-head"><div><h3>Base revenue outlook</h3><small>FC · next 12 months · EUR million</small></div><button data-story-view="macro-sensitivities">Test sensitivities</button></div>${C().series(base.slice(0,12),'revenue_forecast','month',data.meta.end_month,760)}`;
+    const horizon=base.slice(0,12);
+    const outlook=typeof innerWidth!=='undefined'&&innerWidth>900?forecastRevenueTrend(horizon,data.meta.end_month):C().series(horizon,'revenue_forecast','month',data.meta.end_month,760);
+    const primary=`<div class="sw-panel-head"><div><h3>Base revenue outlook</h3><small>FC patterned · next 12 months · EUR million · select a month</small></div><button data-story-view="macro-sensitivities">Test sensitivities</button></div>${outlook}`;
     const secondary=`<div class="sw-panel-head"><div><h3>Integrated forecast equation</h3><small>One forecast · three linked statements</small></div></div><div class="sw-formula"><span><small>Revenue</small><strong>${compact(baseSummary.revenue_12m)}</strong></span><b>→</b><span><small>EBIT</small><strong>${compact(baseSummary.ebit_12m)}</strong></span><b>→</b><span class="result"><small>Free cash flow</small><strong>${compact(baseSummary.free_cash_flow_12m)}</strong></span></div><div class="sw-flow"><span>Next-month receivables<strong>${compact(nextLiquidity.ending_ar)}</strong></span><i>→</i><span>Ending cash<strong>${compact(baseSummary.ending_cash_12m)}</strong></span><i>→</i><span>Balance check<strong>${compact(baseSummary.ending_balance_check)}</strong></span></div>`;
     const scenarios=summary.map(row=>({scenario:row.scenario,ebit_12m:row.ebit_12m})).sort((a,b)=>b.ebit_12m-a.ebit_12m);
     const tertiary=`<div class="sw-panel-head"><div><h3>Scenario EBIT range</h3><small>Base / Upside / Downside · click to inspect</small></div><button data-story-view="performance-review">Open performance review</button></div>${rank(scenarios,'ebit_12m','scenario',null,'fc-ebit')}`;
     const defs=[['fc-revenue','12M revenue',baseSummary.revenue_12m,'Sum of monthly forecast revenue','forecast + forecast_pnl'],['fc-ebit','12M EBIT',baseSummary.ebit_12m,'Revenue less linked production cost, OPEX and depreciation','forecast_pnl'],['fc-fcf','12M free cash flow',baseSummary.free_cash_flow_12m,'Operating cash flow + investing cash flow','forecast_cash_flow'],['fc-cash','Ending cash',baseSummary.ending_cash_12m,'Opening cash + forecast net cash movements','forecast_balance_sheet + forecast_cash_flow'],['fc-accuracy','1M forecast MAPE',accuracy.mape,'Mean absolute percentage error across historical vintages','forecast_accuracy']];
-    return {title:'Planning cockpit',custom:true,fullScreen:true,policy:root.ReportContext.group,html:shell('Planning & forecast cockpit',`Connect forecast performance, cash and balance-sheet consequences for ${data.meta.end_month}`,cards,primary,secondary,tertiary,defs.map(row=>inspector(row[0],row[1],row[0]==='fc-accuracy'?percent(row[2]):compact(row[2]),{relative:null,favorable:true},row[3],row[4],scope,'forecast',row[0]==='fc-accuracy'?`${accuracy.observations||0} historical observations`:'Base scenario · 12-month horizon')).join(''))};
+    const details=defs.map(row=>inspector(row[0],row[1],row[0]==='fc-accuracy'?percent(row[2]):compact(row[2]),{relative:null,favorable:true},row[3],row[4],scope,'forecast',row[0]==='fc-accuracy'?`${accuracy.observations||0} historical observations`:'Base scenario · 12-month horizon')).join('')+forecastMonthEvidence(horizon,data);
+    return {title:'Planning cockpit',custom:true,fullScreen:true,policy:root.ReportContext.group,html:shell('Planning & forecast cockpit',`Connect forecast performance, cash and balance-sheet consequences for ${data.meta.end_month}`,cards,primary,secondary,tertiary,details)};
   }
   function treasury(data){
     const rows=data.treasury_liquidity||[],ac=rows.at(-1)||{},py=rows.at(-13)||{},entities=(data.treasury_entity_cash||[]).slice().sort((a,b)=>b.cash-a.cash),fc=(data.liquidity_forecast_summary||[]).find(row=>row.scenario==='Downside')||{},scope='Consolidated group · post cash-pooling';
@@ -185,6 +209,10 @@
     mount();
     const workspace=document.querySelector('.statement-workspace');
     if(!workspace)return;
+    workspace.querySelectorAll('[data-sw-forecast-month]').forEach(button=>button.onclick=()=>{
+      const template=[...workspace.querySelectorAll('template[data-sw-forecast-detail]')].find(item=>item.dataset.swForecastDetail===button.dataset.swForecastMonth);
+      if(template)reportDialog(`Base forecast · ${button.dataset.swForecastMonth}`,`<div class="sw-forecast-evidence">${template.innerHTML}</div>`);
+    });
     const grid=workspace.querySelector('.sw-grid');
     const nav=document.createElement('nav');
     nav.className='sw-analysis-nav';nav.setAttribute('aria-label','Analysis focus');
