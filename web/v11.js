@@ -4,6 +4,13 @@ function scopedTreasury(rows){
   return out;
 }
 
+function treasuryContribution(value,scale,minimum=null){
+  const amount=Math.max(0,Number(value)||0),max=Math.max(1,Number(scale)||0),floor=Number(minimum),hasMinimum=minimum!==null&&Number.isFinite(floor);
+  const width=Math.min(100,amount/max*100),marker=hasMinimum?Math.min(100,Math.max(0,floor/max*100)):0;
+  const label=hasMinimum?`Cash ${eur.format(amount)}; minimum ${eur.format(floor)}; ${amount>=floor?'above':'below'} minimum by ${eur.format(Math.abs(amount-floor))}`:`Maturing debt ${eur.format(amount)}`;
+  return `<span class="treasury-contribution" role="img" aria-label="${safe(label)}"><span class="treasury-contribution-track" aria-hidden="true"><i class="${hasMinimum&&amount<floor?'shortfall':''}" style="width:${width}%"></i>${hasMinimum?`<b style="left:${marker}%"></b>`:''}</span><strong aria-hidden="true">${eur.format(amount)}</strong></span>`;
+}
+
 function renderTreasury(){
   const liq=data.treasury_liquidity||[];
   const l=latest(liq);
@@ -11,6 +18,7 @@ function renderTreasury(){
   const pool=data.treasury_cash_pool||[];
   const debt=scopedTreasury(data.debt_schedule||[]);
   const maturity=data.debt_maturity_ladder||[];
+  const cashScale=Math.max(1,...entities.map(row=>Number(row.cash)||0)),debtScale=Math.max(1,...maturity.map(row=>Number(row.maturing_debt)||0));
   const groupCash=Number(l.cash)||entities.reduce((s,r)=>s+(Number(r.cash)||0),0);
   const grossDebt=Number(l.gross_debt)||debt.reduce((s,r)=>s+(Number(r.gross_debt)||0),0);
   const netDebt=Number(l.net_debt)||grossDebt-groupCash;
@@ -42,9 +50,9 @@ function renderTreasury(){
       ['Liquidity headroom',eur.format(Number(l.liquidity_headroom)||0)],
       ['Latest cash-pool transfers',eur.format(poolTotal)]
     ]),'span-4')}
-    ${panel('Cash by legal entity','Post-pooling legal cash and funding position',table(entities,[
+    ${panel('Cash by legal entity','Post-pooling cash by entity · bar = cash, marker = operating minimum',table(entities,[
       {key:'entity',label:'Entity'},
-      {key:'cash',label:'Cash',num:true,format:v=>eur.format(v)},
+      {key:'cash',label:'Cash / minimum',num:true,format:(v,row)=>treasuryContribution(v,cashScale,row.minimum_cash)},
       {key:'minimum_cash',label:'Minimum cash',num:true,format:v=>eur.format(v)},
       {key:'cash_above_minimum',label:'Above / (below) minimum',num:true,format:v=>signed(v)},
       {key:'gross_debt',label:'Debt',num:true,format:v=>eur.format(v)},
@@ -52,10 +60,10 @@ function renderTreasury(){
       {key:'implied_annual_interest_rate',label:'Implied rate',num:true,format:v=>pct(v)},
       {key:'contractual_maturity',label:'Maturity'}
     ]),'span-8')}
-    ${panel('Debt maturity ladder','Contractual debt outstanding at latest close',table(maturity,[
+    ${panel('Debt maturity ladder','Contractual debt outstanding · bars share one linear scale',table(maturity,[
       {key:'contractual_maturity',label:'Maturity'},
       {key:'maturity_year',label:'Year',num:true},
-      {key:'maturing_debt',label:'Maturing debt',num:true,format:v=>eur.format(v)}
+      {key:'maturing_debt',label:'Maturing debt',num:true,format:v=>treasuryContribution(v,debtScale)}
     ]),'span-4')}
     ${panel('Latest cash-pool movements','Internal liquidity concentration; group cash impact is zero',table(pool,[
       {key:'source_entity',label:'Source'},

@@ -422,6 +422,30 @@ test('Treasury laptop trend fills the panel and preserves month evidence',async(
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
 
+test('Treasury entity cash and debt maturity tables retain source-scaled contribution bars',async({page})=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=treasury&page=2');
+  const cash=page.locator('[data-source-section="Cash by legal entity"]'),debt=page.locator('[data-source-section="Debt maturity ladder"]');
+  await expect(cash.locator('.treasury-contribution')).toHaveCount(6);
+  await expect(debt.locator('.treasury-contribution')).toHaveCount(6);
+  const source=await page.evaluate(async()=>{
+    const data=await(await fetch('/data/dashboard.json')).json();
+    return {cash:data.treasury_entity_cash.find(row=>row.entity==='CN01'),cashMax:Math.max(...data.treasury_entity_cash.map(row=>row.cash)),debtMax:Math.max(...data.debt_maturity_ladder.map(row=>row.maturing_debt))};
+  });
+  const firstCash=cash.locator('tbody tr').filter({hasText:'CN01'}).locator('.treasury-contribution');
+  await expect(firstCash).toHaveAttribute('aria-label',/Cash .*minimum .*above minimum/);
+  const cashWidth=await firstCash.locator('i').evaluate(node=>parseFloat(node.style.width));
+  expect(cashWidth).toBeCloseTo(source.cash.cash/source.cashMax*100,5);
+  const largestDebt=debt.locator('tbody tr').filter({hasText:'2031-12'}).locator('.treasury-contribution');
+  expect(await largestDebt.locator('i').evaluate(node=>parseFloat(node.style.width))).toBeCloseTo(100,5);
+  await firstCash.click();
+  await expect(page.locator('#reportDialog')).toContainText('CN01');
+  await expect(page.locator('#reportDialog')).toContainText('Above / (below) minimum');
+  await page.locator('#reportDialog').evaluate(element=>element.close());
+  await page.setViewportSize({width:390,height:844});
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
+
 test('Balance Sheet laptop trend fills the panel with source-tied assets',async({page})=>{
   await page.setViewportSize({width:1280,height:720});
   await page.goto('/#view=balance-sheet&page=0');
