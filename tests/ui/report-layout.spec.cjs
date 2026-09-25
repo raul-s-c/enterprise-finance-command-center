@@ -350,6 +350,16 @@ test('Executive keeps every overview region reachable on tablet and mobile',asyn
       expect(cards.items.every(item=>item.left>=0&&item.right<=cards.viewport+1)).toBe(true);
     }
     const switcher=page.getByRole('navigation',{name:'Executive overview regions'});
+    if(viewport.width>900){
+      await expect(switcher).toHaveCount(0);
+      for(const selector of ['.tower-analytics .story-trend','.tower-contribution','.tower-drivers']){
+        const region=page.locator(selector);
+        await expect(region).toBeVisible();
+        expect(await region.evaluate(element=>element.scrollHeight<=element.clientHeight+1),`${selector} clips at ${viewport.width}px`).toBe(true);
+      }
+      await expect(page.locator('.tower-drivers')).toContainText('Consolidated group · not filtered');
+      continue;
+    }
     await expect(switcher).toBeVisible();
     for(const [label,index] of [['Performance trend',0],['EBIT contribution',1],['Cash drivers',2],['Company story',3]]){
       const control=switcher.getByRole('button',{name:label,exact:true});
@@ -369,11 +379,11 @@ test('Executive keeps every overview region reachable on tablet and mobile',asyn
   }
 });
 
-test('Executive laptop overview exposes its story and priorities without hidden report scroll',async({page})=>{
+test('Executive laptop overview shows trend, contribution and cash together without hidden report scroll',async({page})=>{
   await page.setViewportSize({width:1280,height:720});
   await page.goto('/#view=executive');
   const switcher=page.getByRole('navigation',{name:'Executive overview regions'});
-  await expect(switcher).toBeVisible();
+  await expect(switcher).toHaveCount(0);
   await expect(page.locator('.executive-mini-month')).toHaveCount(12);
   const fit=await page.locator('.tower-layout').evaluate(element=>({
     content:element.scrollHeight,
@@ -382,17 +392,60 @@ test('Executive laptop overview exposes its story and priorities without hidden 
   }));
   expect(fit.content).toBeLessThanOrEqual(fit.viewport+1);
   expect(fit.horizontal).toBeLessThanOrEqual(1);
-  for(const [label,index] of [['Company story',3],['Management priorities',4]]){
-    const button=switcher.getByRole('button',{name:label,exact:true});
-    await button.click();
-    await expect(button).toHaveAttribute('aria-pressed','true');
-    const region=page.locator(`#executive-region-${index}`);
+  for(const selector of ['.tower-analytics .story-trend','.tower-contribution','.tower-drivers']){
+    const region=page.locator(selector);
     await expect(region).toBeVisible();
     const bounds=await region.evaluate(element=>({bottom:element.getBoundingClientRect().bottom,viewport:innerHeight,content:element.scrollHeight,height:element.clientHeight}));
     expect(bounds.bottom).toBeLessThanOrEqual(bounds.viewport);
     expect(bounds.content).toBeLessThanOrEqual(bounds.height+1);
   }
-  await expect(page.locator('#executive-region-4')).toContainText('Management priorities');
+  await expect(page.locator('.story-narrative')).toContainText('Open action register');
+  const cashBefore=await page.locator('.tower-drivers .driver-tree > button strong').textContent();
+  await page.locator('[data-story-division="Hardware"]').click();
+  await expect(page.locator('#viewTitle')).toHaveText('Executive');
+  await expect(page.locator('#divisionFilter')).toHaveValue('Hardware');
+  await expect(page.locator('.tower-contribution .story-contribution')).toHaveCount(1);
+  await expect(page.locator('.tower-drivers .driver-tree > button strong')).toHaveText(cashBefore);
+  await expect(page.locator('.tower-drivers')).toContainText('Consolidated group · not filtered');
+});
+
+test('Executive full desktop keeps all five visuals, inspector and source evidence in one screen',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await page.goto('/#view=executive&page=0&entity=all&division=all');
+  await expect(page.getByRole('navigation',{name:'Executive overview regions'})).toHaveCount(0);
+  for(const selector of ['.tower-analytics .story-trend','.tower-contribution','.tower-drivers','.tower-actions','.story-timeline']){
+    const region=page.locator(selector);
+    await expect(region).toBeVisible();
+    expect(await region.evaluate(element=>element.scrollHeight<=element.clientHeight+1),`${selector} is clipped`).toBe(true);
+  }
+  const inspector=page.locator('.story-inspector:not([hidden])');
+  await expect(inspector).toBeVisible();
+  expect(await inspector.evaluate(element=>element.querySelector(':scope > div').scrollHeight<=element.querySelector(':scope > div').clientHeight+1)).toBe(true);
+  await page.locator('.executive-mini-month').last().click();
+  await expect(page.locator('#reportDialog .month-detail')).toBeVisible();
+  await page.locator('#reportDialogClose').click();
+  await page.locator('.story-kpi[data-story-focus="ebit"]').click();
+  await expect(inspector).toContainText('management_detail');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+});
+
+test('Executive overview remains legible across intermediate laptop and desktop sizes',async({page})=>{
+  for(const [width,height] of [[1024,720],[1150,720],[1200,820],[1280,820],[1401,820],[1440,900],[1920,820]]){
+    await page.setViewportSize({width,height});
+    await page.goto('/#view=executive&page=0&entity=all&division=all');
+    const fit=await page.locator('.tower-layout').evaluate(element=>({
+      horizontal:document.documentElement.scrollWidth-innerWidth,
+      regions:[...element.querySelectorAll('.story-trend,.tower-contribution,.tower-drivers,.tower-actions,.story-timeline,.story-inspector:not([hidden])')]
+        .filter(region=>getComputedStyle(region).display!=='none'&&region.getBoundingClientRect().height>0)
+        .map(region=>({name:region.className,clipped:region.scrollHeight-region.clientHeight,bottom:region.getBoundingClientRect().bottom}))
+    }));
+    expect(fit.horizontal,`${width}x${height} has horizontal page overflow`).toBeLessThanOrEqual(1);
+    expect(fit.regions.length,`${width}x${height} has too few visible visuals`).toBeGreaterThanOrEqual(3);
+    for(const region of fit.regions){
+      expect(region.clipped,`${width}x${height} clips ${region.name}`).toBeLessThanOrEqual(2);
+      expect(region.bottom,`${width}x${height} places ${region.name} outside the viewport`).toBeLessThanOrEqual(height);
+    }
+  }
 });
 
 test('Treasury laptop trend fills the panel and preserves month evidence',async({page})=>{

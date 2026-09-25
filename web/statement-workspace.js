@@ -119,10 +119,10 @@
     const grossPoints=M().comparisons(rows,'gross_profit',data.meta.end_month,12);
     const grossTrend=typeof innerWidth!=='undefined'&&innerWidth>900?positiveStatementTrend(grossPoints,'Gross profit','data-month'):C().trend(grossPoints,'Gross profit',760,300);
     const primary=`<div class="sw-panel-head"><div><h3>Gross profit trend</h3><small>AC / PY · EUR million · selected operating scope · select a month</small></div><button data-story-view="pnl">Open P&amp;L</button></div>${grossTrend}`;
-    const secondary=`<div class="sw-panel-head"><div><h3>Revenue to operating result</h3><small>Variable costs → fixed production → OPEX → depreciation</small></div></div>${C().waterfall(ac,false)}`;
+    const secondary=`<div class="sw-panel-head"><div><h3>Revenue to operating result</h3><small>Variable costs → fixed production → OPEX → depreciation</small></div></div>${C().waterfall(ac,typeof innerWidth!=='undefined'&&innerWidth>900&&innerWidth<=1700,false,205)}`;
     const tertiary=`<div class="sw-panel-head"><div><h3>Marginal contribution by division</h3><small>Click a division to update the complete cockpit</small></div><button data-story-view="profitability">Explore products</button></div>${rank(divisions,'marginal_contribution','division','division')}`;
     const details=definitions.map(([id,title,key,formula])=>inspector(id,title,compact(ac[key]),variance(ac[key],py[key]),formula,'management_detail',scope,'profitability')).join('')+inspector('mg-rate','Gross margin',percent(rate),variance(rate,priorRate),'Gross profit / revenue; annual change expressed in percentage points','management_detail',scope,'profitability',pp);
-    return {title:'Margin cockpit',custom:true,fullScreen:true,policy:root.ReportContext.card('Revenue'),html:shell('Margin conversion cockpit',`Explain cost conversion and where contribution is earned · ${data.meta.end_month}`,cards,primary,secondary,tertiary,details)};
+    return {title:'Margin cockpit',custom:true,fullScreen:true,policy:root.ReportContext.card('Revenue'),html:shell('Margin conversion cockpit',`Explain cost conversion and where contribution is earned · ${data.meta.end_month}`,cards,primary,secondary,tertiary,details).replace('class="statement-workspace"','class="statement-workspace margin-cockpit"')};
   }
   function cash(data){
     const rows=data.cash_flow||[],ac=rows.at(-1)||{},py=rows.at(-13)||{},details=(data.cash_flow_detail||[]).filter(row=>row.month===data.meta.end_month),scope='Consolidated group';
@@ -307,6 +307,7 @@
     const panels=['primary','secondary','detail'].map(key=>workspace.querySelector(`.sw-${key}`));
     const reportKey=workspace.querySelector('h2').textContent;
     const selected=analysisFocus.get(reportKey)||0;
+    if(workspace.classList.contains('margin-cockpit'))grid.classList.toggle('margin-detail-selected',selected===2);
     const labels=['Trend & drivers','Bridge & composition','Contribution & detail'];
     panels.forEach((panel,index)=>{
       panel.id=`sw-analysis-${index}`;
@@ -317,6 +318,7 @@
       button.onclick=()=>{
         analysisFocus.set(reportKey,index);
         panels.forEach(p=>p.classList.toggle('analysis-selected',p===panel));
+        if(workspace.classList.contains('margin-cockpit'))grid.classList.toggle('margin-detail-selected',index===2);
         nav.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
         root.VisualLayout?.positionCharts();
       };
@@ -325,7 +327,7 @@
     grid.before(nav);
     workspace.addEventListener('click',event=>{
       if(!event.target.closest('[data-sw-focus],[data-sw-row-focus],[data-sw-action="explain"]'))return;
-      if(window.innerWidth>1500&&!(workspace.classList.contains('cash-cockpit')&&window.innerWidth<=1700&&window.innerHeight<880))return;
+      if(window.innerWidth>1500&&!((workspace.classList.contains('cash-cockpit')||workspace.classList.contains('margin-cockpit'))&&window.innerWidth<=1700&&window.innerHeight<880))return;
       const body=document.getElementById('swInspectorBody');
       reportDialog('Calculation & supporting evidence',`<div class="sw-evidence-dialog">${body.innerHTML}</div>`);
       document.querySelectorAll('#reportDialogBody [data-story-view]').forEach(button=>button.onclick=()=>{

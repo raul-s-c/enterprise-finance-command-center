@@ -64,13 +64,13 @@
       return `<tr class="${row.total?'subtotal':''}"><th>${row.label}</th><td class="py-number">${money(previous[i]?.value)}</td><td>${money(row.value)}</td><td class="${tone(v)}">${signed(v.delta)}</td><td class="variance-col">${varianceBar(v,max)}</td><td class="${tone(v)}">${percent(v.relative)}</td></tr>`;
     }).join('')}</tbody></table><p class="report-note">Costs are shown as positive expenses; lower is favorable. Δ = AC − PY; Δ % = Δ / |PY|. Zero or missing PY: percentage unavailable.</p>`;
   }
-  function waterfall(row,narrow=false,mobileCompact=false){
+  function waterfall(row,narrow=false,mobileCompact=false,labelSpace=130){
     if(root.innerWidth<600&&!mobileCompact)narrow=false;
     const items=M.bridge(row);if(!items.length)return '<div class="empty">No statement.</div>';
     const finite=items.flatMap(r=>[r.start,r.end]).filter(M.finite),min=Math.min(0,...finite),max=Math.max(0,...finite),span=max-min||1;
     if(narrow){
-      const x=v=>130+(v-min)/span*115;
-      return `<svg class="report-svg horizontal-bridge" viewBox="0 0 320 280" role="img" aria-label="Revenue to EBIT bridge, EUR million"><line x1="${x(0)}" x2="${x(0)}" y1="10" y2="264" class="axis"/>${items.map((r,i)=>{const y=14+i*32;return `<g><title>${r.label}: ${money(r.value)} EUR m</title><text x="0" y="${y+12}" class="axis-text">${esc(r.label)}</text>${M.finite(r.start)&&M.finite(r.end)?`<rect x="${Math.min(x(r.start),x(r.end))}" y="${y}" width="${Math.abs(x(r.end)-x(r.start))}" height="17" class="${r.total?'actual':'expense'}"/>`:''}<text x="316" y="${y+13}" text-anchor="end">${money(r.value)}</text></g>`;}).join('')}</svg><p class="report-note">EUR m · Subtotals start at zero. Expense steps reduce the preceding balance.</p>`;
+      const chartWidth=labelSpace+190,x=v=>labelSpace+(v-min)/span*115;
+      return `<svg class="report-svg horizontal-bridge" viewBox="0 0 ${chartWidth} 280" role="img" aria-label="Revenue to EBIT bridge, EUR million"><line x1="${x(0)}" x2="${x(0)}" y1="10" y2="264" class="axis"/>${items.map((r,i)=>{const y=14+i*32;return `<g><title>${r.label}: ${money(r.value)} EUR m</title><text x="0" y="${y+12}" class="axis-text">${esc(r.label)}</text>${M.finite(r.start)&&M.finite(r.end)?`<rect x="${Math.min(x(r.start),x(r.end))}" y="${y}" width="${Math.abs(x(r.end)-x(r.start))}" height="17" class="${r.total?'actual':'expense'}"/>`:''}<text x="${chartWidth-4}" y="${y+13}" text-anchor="end">${money(r.value)}</text></g>`;}).join('')}</svg><p class="report-note">EUR m · Subtotals start at zero. Expense steps reduce the preceding balance.</p>`;
     }
     const y=v=>300-(v-min)/span*250,zero=y(0),step=105;
     const chart=`<svg class="report-svg bridge-svg" viewBox="0 0 900 390" role="img" aria-label="Revenue to EBIT bridge, EUR million"><line x1="30" x2="895" y1="${zero}" y2="${zero}" class="axis"/>${items.map((r,i)=>{
