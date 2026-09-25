@@ -174,7 +174,7 @@
     const tertiary=`<div class="sw-panel-head"><div><h3>Cash by legal entity</h3><small>Post-pooling position · click to filter</small></div><button data-story-view="intercompany">Trace cash pool</button></div>${rank(entities,'cash','entity','entity')}`;
     const defs=[['tr-cash','Group cash',ac.cash,py.cash,'Sum of post-pooling legal-entity cash','treasury_entity_cash'],['tr-debt','Gross debt',ac.gross_debt,py.gross_debt,'Sum of contractual debt outstanding','debt_schedule'],['tr-headroom','Liquidity headroom',ac.liquidity_headroom,py.liquidity_headroom,'Cash − minimum operating cash + undrawn RCF','treasury_liquidity'],['tr-leverage','Net leverage',ac.net_leverage,py.net_leverage,'Net debt / trailing-12-month EBITDA','treasury_liquidity'],['tr-covenant','Covenant status',ac.covenant_status,null,'Net leverage and interest coverage against configured limits','treasury_liquidity']];
     const evidence=defs.map(row=>inspector(row[0],row[1],typeof row[2]==='number'?(row[0]==='tr-leverage'?`${row[2].toFixed(2)}x`:compact(row[2])):row[2],variance(row[2],row[3],row[0]==='tr-debt'||row[0]==='tr-leverage'?-1:1),row[4],row[5],scope,'treasury',row[0]==='tr-covenant'?`Downside 12M · ${fc.covenant_status_12m||'—'}`:undefined)).join('')+statementMonthEvidence(rows,'treasury');
-    return {title:'Liquidity cockpit',custom:true,fullScreen:true,policy:root.ReportContext.group,html:shell('Treasury & liquidity cockpit',`Control cash, funding, headroom and covenants for ${data.meta.end_month}`,cards,primary,secondary,tertiary,evidence)};
+    return {title:'Liquidity cockpit',custom:true,fullScreen:true,policy:root.ReportContext.group,html:shell('Treasury & liquidity cockpit',`Consolidated group · control cash, funding, headroom and covenants for ${data.meta.end_month}`,cards,primary,secondary,tertiary,evidence).replace('class="statement-workspace"','class="statement-workspace treasury-cockpit"')};
   }
   function profitability(data,state){
     let products=(data.entity_product_profitability||data.product_profitability||[]).filter(row=>(state.entity==='all'||!row.entity||row.entity===state.entity)&&(state.division==='all'||row.division===state.division)),customers=(data.customer_profitability||[]).filter(row=>(state.entity==='all'||row.entity===state.entity)&&(state.division==='all'||row.division===state.division));
@@ -327,7 +327,7 @@
     grid.before(nav);
     workspace.addEventListener('click',event=>{
       if(!event.target.closest('[data-sw-focus],[data-sw-row-focus],[data-sw-action="explain"]'))return;
-      if(window.innerWidth>1500&&!((workspace.classList.contains('cash-cockpit')||workspace.classList.contains('margin-cockpit'))&&window.innerWidth<=1700&&window.innerHeight<880))return;
+      if(window.innerWidth>1500&&!((workspace.classList.contains('cash-cockpit')||workspace.classList.contains('margin-cockpit')||workspace.classList.contains('treasury-cockpit'))&&window.innerWidth<=1700&&window.innerHeight<880))return;
       const body=document.getElementById('swInspectorBody');
       reportDialog('Calculation & supporting evidence',`<div class="sw-evidence-dialog">${body.innerHTML}</div>`);
       document.querySelectorAll('#reportDialogBody [data-story-view]').forEach(button=>button.onclick=()=>{
