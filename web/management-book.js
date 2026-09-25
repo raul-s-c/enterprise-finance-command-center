@@ -10,7 +10,7 @@
   }
   function actionRail(data){
     const active=(data.management_actions||[]).filter(a=>['Open','In Progress'].includes(a.status)).sort((a,b)=>a.priority.localeCompare(b.priority)||a.due_month.localeCompare(b.due_month)).slice(0,3);
-    return `<section class="tower-actions"><div class="story-region-head"><div><h3>Management priorities</h3><small>Owner, due date and current lifecycle</small></div><button data-story-view="action-execution">View all</button></div>${active.map((a,i)=>`<button class="story-action" data-action-id="${esc(a.action_id)}"><b>${i+1}</b><span><strong>${esc(a.trigger_metric)}</strong><small>${esc(a.action)}</small><em>${esc(a.owner_role)} · due ${esc(a.due_month)}</em></span><i class="${a.overdue?'unfavorable':a.status==='In Progress'?'favorable':''}">${esc(a.status)}</i></button>`).join('')}</section>`;
+    return `<section class="tower-actions"><div class="story-region-head"><div><h3>Management priorities</h3><small>Published scopes · owner, due date and lifecycle</small></div><button data-story-view="action-execution">View all</button></div>${active.map((a,i)=>`<button class="story-action" data-action-id="${esc(a.action_id)}"><b>${i+1}</b><span><strong>${esc(a.trigger_metric)}</strong><small>${esc(a.action)}</small><em>${esc(a.owner_role)} · due ${esc(a.due_month)}</em></span><i class="${a.overdue?'unfavorable':a.status==='In Progress'?'favorable':''}">${esc(a.status)}</i></button>`).join('')}</section>`;
   }
   function storyLine(data){
     const actual=(data.actual||[]).slice(-36),w=1000,vals=actual.map(r=>r.revenue),min=Math.min(...vals),max=Math.max(...vals),span=max-min||1;
@@ -18,7 +18,7 @@
     const cap=(data.capex||[]).find(r=>r.event==='GO_LIVE');if(cap)milestones.push([cap.month,cap.project_name,'Factory go-live']);
     const phase=(data.portfolio_events||[]).find(r=>r.event==='PHASE_OUT_APPROVED');if(phase)milestones.push([phase.month,phase.product,'Portfolio decision']);
     const act=(data.management_actions||[]).find(a=>['Open','In Progress'].includes(a.status));if(act)milestones.push([act.opened_month,act.trigger_metric,'Recovery action']);
-    return `<section class="story-timeline"><div class="story-region-head"><div><h3>36-month company story</h3><small>Close history and management events</small></div><button data-story-view="data-journey">Trace data</button></div><svg viewBox="0 0 ${w} 40" preserveAspectRatio="none" role="img" aria-label="36 month revenue history"><polyline points="${points}" fill="none" stroke="#25282c" stroke-width="2"/></svg><div class="story-milestones">${milestones.map(m=>`<span><b>${esc(m[0])}</b>${esc(m[2])} · ${esc(m[1])}</span>`).join('')}</div></section>`;
+    return `<section class="story-timeline"><div class="story-region-head"><div><h3>36-month company story</h3><small>Consolidated close history and events</small></div><button data-story-view="data-journey">Trace data</button></div><svg viewBox="0 0 ${w} 40" preserveAspectRatio="none" role="img" aria-label="36 month revenue history"><polyline points="${points}" fill="none" stroke="#25282c" stroke-width="2"/></svg><div class="story-milestones">${milestones.map(m=>`<span><b>${esc(m[0])}</b>${esc(m[2])} · ${esc(m[1])}</span>`).join('')}</div></section>`;
   }
   function miniScale(values){
     const finite=values.filter(M().finite),min=Math.min(0,...finite),max=Math.max(0,...finite),span=max-min||1,zero=-min/span*100;
@@ -60,7 +60,7 @@
   }
   function cashTree(data){
     const cf=(data.cash_flow||[]).at(-1)||{},wc=(data.working_capital||[]).at(-1)||{};
-    return `<section class="tower-drivers"><div class="story-region-head"><div><h3>Free cash flow driver tree</h3><small>Current close · source-tied values</small></div><button data-story-focus="free-cash-flow">Explain</button></div><div class="driver-tree"><button data-story-focus="free-cash-flow"><span>Free cash flow</span><strong>€${money(cf.free_cash_flow)}m</strong></button><div><button data-story-view="cash-flow"><span>Operating cash flow</span><strong>€${money(cf.operating_cash_flow)}m</strong></button><b>+</b><button data-story-view="operations-capex"><span>Investing cash flow</span><strong>€${money(cf.investing_cash_flow)}m</strong></button></div><aside><span>Cash conversion watch</span><strong>NWC €${money(wc.net_working_capital)}m</strong></aside></div></section>`;
+    return `<section class="tower-drivers"><div class="story-region-head"><div><h3>Free cash flow driver tree</h3><small>Consolidated group · not filtered</small></div><button data-story-focus="free-cash-flow">Explain</button></div><div class="driver-tree"><button data-story-focus="free-cash-flow"><span>Free cash flow</span><strong>€${money(cf.free_cash_flow)}m</strong></button><div><button data-story-view="cash-flow"><span>Operating cash flow</span><strong>€${money(cf.operating_cash_flow)}m</strong></button><b>+</b><button data-story-view="operations-capex"><span>Investing cash flow</span><strong>€${money(cf.investing_cash_flow)}m</strong></button></div><aside><span>Cash conversion watch</span><strong>NWC €${money(wc.net_working_capital)}m</strong></aside></div></section>`;
   }
   function inspectorTemplates(data,state,ac,py,cf,wc){
     const items={
@@ -84,7 +84,7 @@
     const grossMargin=M().variance(ac?.gross_profit/ac?.revenue,py?.gross_profit/py?.revenue),marginNote=grossMargin.delta===null?'No comparable':`${grossMargin.delta>=0?'+':''}${(grossMargin.delta*100).toFixed(1)} pp vs PY`;
     const kpis=`<div class="story-kpis">${kpi('revenue','Revenue',`€${money(ac?.revenue)}m`,rv,'pnl')}${kpi('gross-margin','Gross margin',pct(ac?.gross_profit/ac?.revenue),grossMargin,'margin',marginNote)}${kpi('ebit','EBIT',`€${money(ac?.ebit)}m`,ev,'pnl')}${kpi('free-cash-flow','Free cash flow',`€${money(cf?.free_cash_flow)}m`,M().variance(cf?.free_cash_flow,(data.cash_flow||[]).at(-13)?.free_cash_flow),'cash-flow')}${kpi('net-working-capital','Net working capital',`€${money(wc?.net_working_capital)}m`,M().variance(wc?.net_working_capital,(data.working_capital||[]).at(-13)?.net_working_capital,-1),'working-capital')}</div>`;
     const trend=C().trend(M().comparisons(rows,'revenue',data.meta.end_month,12),'Revenue',760,255);
-    const trendPanel=typeof innerWidth!=='undefined'&&innerWidth>1100&&innerWidth<=1700?executiveMiniTrend(rows,data.meta.end_month,true):`<section class="story-region story-trend"><div class="story-region-head"><div><h3>Revenue · Actual vs prior year</h3><small>EUR million · select a month for evidence</small></div><button data-story-view="pnl">View P&amp;L</button></div>${trend}</section>`;
+    const trendPanel=typeof innerWidth!=='undefined'&&innerWidth>900&&innerHeight>650&&innerWidth<=1700?executiveMiniTrend(rows,data.meta.end_month,true):`<section class="story-region story-trend"><div class="story-region-head"><div><h3>Revenue · Actual vs prior year</h3><small>EUR million · select a month for evidence</small></div><button data-story-view="pnl">View P&amp;L</button></div>${trend}</section>`;
     const overviewPage=`<article class="management-book control-tower">${narrative}${kpis}<div class="tower-layout"><div class="tower-canvas"><div class="tower-analytics">${trendPanel}${contribution(data,state)}${cashTree(data)}</div><div class="tower-bottom">${actionRail(data)}${storyLine(data)}</div></div><aside class="story-inspector" id="storyInspector" hidden><header><div><span>Selected KPI</span><h3>Evidence inspector</h3></div><button data-inspector-close aria-label="Close evidence inspector">×</button></header><div id="storyInspectorBody"></div></aside></div>${inspectorTemplates(data,state,ac,py,cf,wc)}</article>`;
     return [
       {title:'Overview',custom:true,policy:root.ReportContext.card('Revenue'),html:overviewPage},
@@ -95,10 +95,10 @@
   }
   function mount(){
     const inspector=document.getElementById('storyInspector'),body=document.getElementById('storyInspectorBody');if(!inspector||!body)return;
-    const open=key=>{const template=document.querySelector(`template[data-story-detail="${key}"]`);if(!template)return;body.replaceChildren(template.content.cloneNode(true));inspector.hidden=false;document.querySelectorAll('[data-story-focus]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.storyFocus===key));body.querySelectorAll('[data-story-view]').forEach(button=>button.onclick=()=>{if(!button.dataset.storyView)return;state.view=button.dataset.storyView;reportState.page=0;render();});};
+    const open=key=>{const template=document.querySelector(`template[data-story-detail="${key}"]`);if(!template)return;body.replaceChildren(template.content.cloneNode(true));inspector.hidden=innerWidth<1440||innerHeight<900;document.querySelectorAll('[data-story-focus]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.storyFocus===key));body.querySelectorAll('[data-story-view]').forEach(button=>button.onclick=()=>{if(!button.dataset.storyView)return;state.view=button.dataset.storyView;reportState.page=0;render();});};
     document.querySelectorAll('[data-story-focus]').forEach(button=>button.onclick=()=>open(button.dataset.storyFocus));
     inspector.querySelector('[data-inspector-close]').onclick=()=>{inspector.hidden=true;document.querySelectorAll('[data-story-focus]').forEach(b=>b.setAttribute('aria-pressed','false'));};
-    if(!window.matchMedia('(max-width: 900px)').matches)open('free-cash-flow');
+    if(innerWidth>=1440&&innerHeight>=900)open('free-cash-flow');
   }
   function outlook(data){
     const base=(data.forecast||[]).filter(r=>r.scenario==='Base').slice(0,12),scenarios=(data.three_statement_forecast_summary||[]);
@@ -173,7 +173,7 @@
     const analytics=tower.querySelector('.tower-analytics');
     const compact=window.innerWidth<=1100;
     const regions=[analytics?.querySelector('.story-trend'),analytics?.querySelector('.tower-contribution'),analytics?.querySelector('.tower-drivers'),tower.querySelector('.story-timeline'),...(!compact?[tower.querySelector('.tower-actions')]:[])].filter(Boolean);
-    if(analytics&&regions.length>1&&window.innerWidth<=1700){
+    if(analytics&&regions.length>1&&(window.innerWidth<=900||window.innerHeight<=650)){
       const switcher=document.createElement('nav');switcher.className='tower-region-switch';switcher.setAttribute('aria-label','Executive overview regions');
       const labels=['Performance trend','EBIT contribution','Cash drivers','Company story','Management priorities'];
       const selected=Math.min(executiveRegionIndex,regions.length-1);
@@ -182,7 +182,7 @@
       [...switcher.children].forEach((button,index)=>button.onclick=()=>{executiveRegionIndex=index;regions.forEach((region,i)=>region.hidden=i!==index);[...switcher.children].forEach((item,i)=>item.setAttribute('aria-pressed',String(i===index)));regions[index].querySelector('button,select,input,[tabindex]')?.focus({preventScroll:true});});
     }
     tower.addEventListener('click',event=>{
-      if(!event.target.closest('[data-story-focus]')||!window.matchMedia('(max-width:1700px)').matches)return;
+      if(!event.target.closest('[data-story-focus]')||(window.innerWidth>=1440&&window.innerHeight>=900))return;
       const body=document.getElementById('storyInspectorBody');
       reportDialog('Calculation & supporting evidence',`<div class="sw-evidence-dialog">${body.innerHTML}</div>`);
       document.querySelectorAll('#reportDialogBody [data-story-view]').forEach(button=>button.onclick=()=>{

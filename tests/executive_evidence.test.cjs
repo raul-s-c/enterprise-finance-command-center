@@ -15,6 +15,8 @@ test('filtered Executive keeps consolidated evidence distinct from operating evi
     assert.match(detail(html,key),/Consolidated group · all entities and divisions/);
     assert.doesNotMatch(detail(html,key),/US01 · Hardware/);
   }
+  assert.match(html,/Consolidated group · not filtered/);
+  assert.match(html,/Published scopes · owner, due date and lifecycle/);
   assert.match(detail(html,'gross-margin'),/pp vs PY/);
   assert.doesNotMatch(html,/data-story-view=""/);
   const rows=[...html.matchAll(/data-story-division="([^"]+)"[\s\S]*?<strong>([^<]+)<\/strong>/g)];
