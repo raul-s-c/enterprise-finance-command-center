@@ -82,6 +82,7 @@ function reportLegacyPages(view){
 }
 function reportPages(){
   let pages=reportLegacyPages(state.view),s=reportCurrent();
+  if(state.view==='profitability')pages=pages.map(page=>page.title==='Customer profitability'?CustomerContributionVisual.page(data,state):page);
   if(state.view==='close-journey')return globalThis.CloseJourney.pages(data);
   if(state.view==='data-journey')return [globalThis.DataJourneyCockpit.page(data),...ManagementBook.compose(pages.filter(page=>page.title!=='End-to-end finance pipeline'))];
   if(state.view==='executive')return ManagementBook.executivePages(data,state,reportExecutive());
@@ -315,6 +316,7 @@ function reportRestorePagerFocus(container,key){
 }
 function reportEnhancePage(){
   const content=document.getElementById('content');
+  globalThis.CustomerContributionVisual?.bind();
   for(const wrap of content.querySelectorAll('.table-wrap'))reportTable(wrap);
   for(const list of content.querySelectorAll('.commentary,.review-list,.status-grid,.report-text-pages,.flow')){
     const available=content.getBoundingClientRect().bottom-list.getBoundingClientRect().top-65;
