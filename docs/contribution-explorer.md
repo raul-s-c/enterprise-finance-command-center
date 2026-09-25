@@ -4,6 +4,8 @@ Eight source-tied contribution pages are available in P&L, Profitability, Workin
 
 The header formula reconciles the active source before any grouping. The ranking, source-to-contributor flow, inspector and evidence table all react to the same selection. This makes the route from total to entity, division, customer, supplier, product or project explicit without inferring an unpublished allocation.
 
+On the P&L page, the four lineage stages are active controls: Published source opens selected source records, Entity/Division drills to the next published dimension where available, P&L line explains the calculation and Close period focuses the period selector. The path uses two rows on tablet and laptop canvases so labels stay readable; no accounting grain beyond monthly management allocations is implied.
+
 Bars use a signed zero baseline and neutral actual-value notation. Amounts are EUR, not EUR millions. Shares are contributor divided by the selected signed total, not absolute magnitude shares. Offsetting balances can produce negative or greater-than-100% shares; a zero denominator is unavailable. Contributors are ranked by absolute amount and paginated without dropping the remaining rows. Missing measures are counted and disclosed, not replaced by zero.
 
 ## Source contract and limits
