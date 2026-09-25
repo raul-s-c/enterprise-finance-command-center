@@ -449,6 +449,32 @@ test('Balance Sheet laptop trend fills the panel with source-tied assets',async(
   await expect(page.locator('#reportDialog')).toContainText('Total assets');
 });
 
+test('Margin gross-profit months fill the panel and follow the operating selection',async({page})=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=margin&page=0');
+  const chart=page.locator('.sw-positive-trend');
+  await expect(chart.locator('.sw-positive-month')).toHaveCount(12);
+  const fit=await chart.evaluate(element=>{
+    const panel=element.closest('.sw-primary');
+    return {width:element.getBoundingClientRect().width,panel:panel.getBoundingClientRect().width,content:element.scrollHeight,height:element.clientHeight};
+  });
+  expect(fit.width).toBeGreaterThan(fit.panel-30);
+  expect(fit.content).toBeLessThanOrEqual(fit.height+1);
+  const source=await page.evaluate(async()=>{
+    const data=await(await fetch('/data/dashboard.json')).json();
+    return {month:data.meta.end_month,gross:data.management_detail.filter(row=>row.month===data.meta.end_month&&row.entity==='US01').reduce((total,row)=>total+row.gross_profit,0)};
+  });
+  await page.locator('#entityFilter').selectOption('US01');
+  await expect(chart.locator('.sw-positive-month').last()).toContainText((source.gross/1e6).toFixed(1));
+  await chart.locator('.sw-positive-month').last().click();
+  await expect(page.locator('#reportDialog')).toContainText(source.month);
+  await expect(page.locator('#reportDialog')).toContainText('gross profit');
+  await page.locator('#reportDialog').evaluate(element=>element.close());
+  await page.setViewportSize({width:390,height:844});
+  await expect(page.locator('.sw-primary .report-svg')).toBeVisible();
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
+
 test('Forecast months fill the panel and open linked three-statement evidence',async({page})=>{
   await page.setViewportSize({width:1280,height:720});
   await page.goto('/#view=forecast&page=0');
