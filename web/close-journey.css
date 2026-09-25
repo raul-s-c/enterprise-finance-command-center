@@ -19,9 +19,9 @@
 .cj-evidence-row strong{font-size:11px}
 .cj-evidence-row small{font-size:10px;line-height:1.35}
 @media(min-width:901px) and (max-height:760px){
-  .cj-evidence p{margin:3px 0 4px}
-  .report-mode .cj-evidence-row{min-height:38px;margin-top:3px;padding:4px 6px}
-  .report-mode .cj-evidence #cj-open-evidence{min-height:27px}
+  .cj-evidence p{margin:2px 0 3px}
+  .report-mode .cj-evidence-row{min-height:36px;margin-top:2px;padding:3px 6px}
+  .report-mode .cj-evidence #cj-open-evidence{min-height:26px}
 }
 .cj-matrix header span{font-size:10px}
 .cj-guide{font-size:10px}
