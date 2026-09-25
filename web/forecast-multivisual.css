@@ -1,0 +1,26 @@
+/* Keep the rolling horizon and integrated three-statement flow visible together. */
+@media(min-width:1150px) and (max-width:1500px) and (min-height:651px), (min-width:1501px) and (max-width:1700px) and (min-height:651px) and (max-height:879px){
+  .forecast-cockpit .sw-analysis-nav{display:flex;gap:4px;padding:8px 0;flex:none}
+  .report-mode .forecast-cockpit .sw-analysis-nav button{font-size:13px;padding:7px 14px;min-height:34px;background:white;border:1px solid #d9e2ef}
+  .report-mode .forecast-cockpit .sw-analysis-nav button[aria-pressed=true]{color:#075bd6;background:#edf4ff;border-color:#0867f2}
+  .report-mode .forecast-cockpit .sw-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr);overflow:hidden}
+  .report-mode .forecast-cockpit .sw-grid>.sw-primary,
+  .report-mode .forecast-cockpit .sw-grid>.sw-secondary{display:flex;flex-direction:column;min-height:0;overflow:hidden}
+  .report-mode .forecast-cockpit .sw-grid>.sw-secondary{border-right:0}
+  .report-mode .forecast-cockpit .sw-grid>.sw-inspector,
+  .report-mode .forecast-cockpit .sw-grid>.sw-detail{display:none}
+  .report-mode .forecast-cockpit .sw-grid:has(>.sw-detail.analysis-selected){grid-template-columns:minmax(0,1fr)}
+  .report-mode .forecast-cockpit .sw-grid:has(>.sw-detail.analysis-selected)>.sw-primary,
+  .report-mode .forecast-cockpit .sw-grid:has(>.sw-detail.analysis-selected)>.sw-secondary{display:none}
+  .report-mode .forecast-cockpit .sw-grid>.sw-detail.analysis-selected{display:flex;flex-direction:column;grid-column:1;border-top:0;min-height:0}
+  .report-mode .forecast-cockpit .sw-secondary .sw-formula{margin:9px 0}
+  .report-mode .forecast-cockpit .sw-secondary .sw-formula span{padding:8px 4px}
+  .report-mode .forecast-cockpit .sw-secondary .sw-flow{margin-top:9px}
+  .report-mode .forecast-cockpit .sw-detail .sw-ranking{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:9px;gap:0 18px}
+  .report-mode .forecast-cockpit .sw-detail .sw-ranking button{grid-template-columns:minmax(55px,1fr) 66px minmax(20px,1fr) 13px;min-height:38px;font-size:11px}
+}
+@media(min-width:1280px) and (max-width:1500px) and (min-height:880px){
+  .report-mode:has(.forecast-cockpit) .report-context{display:none}
+  .report-mode .forecast-cockpit .sw-grid:not(:has(>.sw-detail.analysis-selected)){grid-template-rows:minmax(0,1fr) 154px}
+  .report-mode .forecast-cockpit .sw-grid:not(:has(>.sw-detail.analysis-selected))>.sw-detail{display:flex;flex-direction:column;grid-column:1/-1;grid-row:2;min-height:0;border-top:1px solid #d8e0eb}
+}
