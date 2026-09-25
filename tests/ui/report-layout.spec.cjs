@@ -410,6 +410,10 @@ test('Treasury laptop trend fills the panel and preserves month evidence',async(
   await expect(page.locator('#reportDialog')).toContainText((latest.liquidity_headroom/1e6).toFixed(1));
   await expect(page.locator('#reportDialog')).not.toContainText('Gross profit');
   await page.locator('#reportDialog').evaluate(dialog=>dialog.close());
+  await chart.locator('.sw-positive-month').last().focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#reportDialog')).toContainText('Liquidity headroom');
+  await page.locator('#reportDialog').evaluate(dialog=>dialog.close());
   await page.setViewportSize({width:390,height:844});
   await expect(page.locator('.sw-primary .report-svg')).toBeVisible();
   await page.locator('.sw-primary .report-svg [data-sw-statement-month]').last().click();
