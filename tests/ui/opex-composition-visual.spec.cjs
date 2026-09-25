@@ -31,8 +31,12 @@ test('OPEX detail becomes a source-tied mix, trend and division visual',async({p
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
   expect(await panel.evaluate(node=>getComputedStyle(node).overflowY)).toBe('auto');
   expect(await panel.evaluate(node=>node.scrollHeight>node.clientHeight)).toBe(true);
-  await panel.evaluate(node=>node.scrollTo({top:node.scrollHeight,behavior:'instant'}));
-  await expect.poll(()=>panel.evaluate(node=>node.scrollHeight-node.clientHeight-node.scrollTop)).toBeLessThan(2);
+  // A late resize render may replace the panel after the first scroll command.
+  // Retry the scroll, then still require the source disclosure to be reachable.
+  await expect.poll(()=>panel.evaluate(node=>{
+    node.scrollTop=node.scrollHeight;
+    return node.scrollHeight-node.clientHeight-node.scrollTop;
+  })).toBeLessThan(2);
   const reach=await panel.evaluate(node=>({source:node.querySelector('.ox-source summary').getBoundingClientRect().bottom,panel:node.getBoundingClientRect().bottom}));
   expect(reach.source).toBeLessThanOrEqual(reach.panel+2);
   await page.screenshot({path:'test-results/opex-mobile.png',fullPage:true});
