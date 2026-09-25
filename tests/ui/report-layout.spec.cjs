@@ -476,6 +476,50 @@ test('Margin gross-profit months fill the panel and follow the operating selecti
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
 
+test('Intercompany sales fill the panel and reveal published cost-plus evidence',async({page})=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=intercompany&page=0');
+  const chart=page.locator('.sw-positive-trend');
+  await expect(chart.locator('[data-sw-intercompany-month]')).toHaveCount(12);
+  expect(await chart.evaluate(element=>element.getBoundingClientRect().width>element.closest('.sw-primary').getBoundingClientRect().width-30)).toBe(true);
+  await chart.locator('[data-sw-intercompany-month]').last().click();
+  await expect(page.locator('#reportDialog')).toContainText('Published intercompany');
+  await expect(page.locator('#reportDialog')).toContainText('Cost + markup − sales');
+  await page.locator('#reportDialog').evaluate(element=>element.close());
+  await page.setViewportSize({width:390,height:844});
+  await expect(page.locator('.sw-primary .report-svg [data-sw-intercompany-month]')).toHaveCount(12);
+  await page.locator('.sw-primary .report-svg [data-sw-intercompany-month]').last().click();
+  await expect(page.locator('#reportDialog')).toContainText('Transfer-pricing markup');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
+
+test('FX trend is signed, entity-scoped and opens CTA rather than P&L evidence',async({page})=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=fx&page=0');
+  const chart=page.locator('.sw-cash-trend');
+  await expect(chart.locator('[data-sw-fx-month]')).toHaveCount(12);
+  expect(await chart.evaluate(element=>element.getBoundingClientRect().width>element.closest('.sw-primary').getBoundingClientRect().width-30)).toBe(true);
+  await chart.locator('[data-sw-fx-month]').last().click();
+  await expect(page.locator('#reportDialog')).toContainText('fx_translation_summary');
+  await expect(page.locator('#reportDialog')).toContainText('Assets − liabilities − equity before CTA − CTA');
+  await page.locator('#reportDialog').evaluate(element=>element.close());
+  const expected=await page.evaluate(async()=>{
+    const data=await(await fetch('/data/dashboard.json')).json(),row=data.fx_translation.find(item=>item.month===data.meta.end_month&&item.entity==='US01');
+    return {month:row.month,value:ReportCharts.signed(row.fx_translation_reserve)};
+  });
+  await page.locator('#entityFilter').selectOption('US01');
+  await expect(chart.locator('[data-sw-fx-month]').last()).toHaveAttribute('data-sw-fx-month',expected.month);
+  await expect(chart.locator('[data-sw-fx-month]').last().locator('strong')).toHaveText(expected.value);
+  await chart.locator('[data-sw-fx-month]').last().click();
+  await expect(page.locator('#reportDialog')).toContainText('fx_translation ·');
+  await page.locator('#reportDialog').evaluate(element=>element.close());
+  await page.setViewportSize({width:390,height:844});
+  await expect(page.locator('.sw-primary .report-svg [data-sw-fx-month]')).toHaveCount(12);
+  await page.locator('.sw-primary .report-svg [data-sw-fx-month]').last().click();
+  await expect(page.locator('#reportDialog')).toContainText('Translation reserve');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
+
 test('Forecast months fill the panel and open linked three-statement evidence',async({page})=>{
   await page.setViewportSize({width:1280,height:720});
   await page.goto('/#view=forecast&page=0');
