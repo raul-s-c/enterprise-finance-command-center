@@ -609,6 +609,22 @@ test('short laptop cockpits keep charts legible and use one reachable report scr
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
 
+test('Operations factory cards fit the short laptop cockpit without hidden scrolling',async({page})=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=operations-capex&page=0');
+  const panel=page.locator('.sw-primary');
+  await expect(panel.locator('.sw-factories>button')).toHaveCount(2);
+  const fit=await panel.evaluate(element=>({
+    content:element.scrollHeight,
+    viewport:element.clientHeight,
+    panelBottom:element.getBoundingClientRect().bottom,
+    cardBottom:Math.max(...[...element.querySelectorAll('.sw-factories>button')].map(card=>card.getBoundingClientRect().bottom))
+  }));
+  expect(fit.content).toBeLessThanOrEqual(fit.viewport+1);
+  expect(fit.cardBottom).toBeLessThanOrEqual(fit.panelBottom-4);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
+
 test('statement analysis survives live resize without an overlapping inspector',async({page},testInfo)=>{
   await page.setViewportSize({width:1280,height:720});
   await page.goto('/#view=margin');
