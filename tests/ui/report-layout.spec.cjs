@@ -389,8 +389,8 @@ test('Executive laptop overview exposes its story and priorities without hidden 
 test('Treasury laptop trend fills the panel and preserves month evidence',async({page})=>{
   await page.setViewportSize({width:1280,height:720});
   await page.goto('/#view=treasury&page=0');
-  const chart=page.locator('.sw-liquidity-trend');
-  await expect(chart.locator('.sw-liquidity-month')).toHaveCount(12);
+  const chart=page.locator('.sw-positive-trend');
+  await expect(chart.locator('.sw-positive-month')).toHaveCount(12);
   const fit=await chart.evaluate(element=>{
     const panel=element.closest('.sw-primary');
     return {width:element.getBoundingClientRect().width,panel:panel.getBoundingClientRect().width,content:element.scrollHeight,height:element.clientHeight};
@@ -401,14 +401,34 @@ test('Treasury laptop trend fills the panel and preserves month evidence',async(
     const data=await(await fetch('/data/dashboard.json')).json();
     return data.treasury_liquidity.at(-1);
   });
-  await expect(chart.locator('.sw-liquidity-month').last()).toContainText((latest.liquidity_headroom/1e6).toFixed(1));
-  await chart.locator('.sw-liquidity-month').last().click();
+  await expect(chart.locator('.sw-positive-month').last()).toContainText((latest.liquidity_headroom/1e6).toFixed(1));
+  await chart.locator('.sw-positive-month').last().click();
   await expect(page.locator('#reportDialog')).toBeVisible();
   await expect(page.locator('#reportDialog')).toContainText(latest.month);
   await page.locator('#reportDialog').evaluate(dialog=>dialog.close());
   await page.setViewportSize({width:390,height:844});
   await expect(page.locator('.sw-primary .report-svg')).toBeVisible();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
+
+test('Balance Sheet laptop trend fills the panel with source-tied assets',async({page})=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=balance-sheet&page=0');
+  const chart=page.locator('.sw-positive-trend');
+  await expect(chart.locator('.sw-positive-month')).toHaveCount(12);
+  const fit=await chart.evaluate(element=>{
+    const panel=element.closest('.sw-primary');
+    return {width:element.getBoundingClientRect().width,panel:panel.getBoundingClientRect().width,content:element.scrollHeight,height:element.clientHeight};
+  });
+  expect(fit.width).toBeGreaterThan(fit.panel-30);
+  expect(fit.content).toBeLessThanOrEqual(fit.height+1);
+  const latest=await page.evaluate(async()=>{
+    const data=await(await fetch('/data/dashboard.json')).json();
+    return data.balance_sheet.at(-1);
+  });
+  await expect(chart.locator('.sw-positive-month').last()).toContainText((latest.assets/1e6).toFixed(1));
+  await chart.locator('.sw-positive-month').last().click();
+  await expect(page.locator('#reportDialog')).toContainText(latest.month);
 });
 
 test('all report destinations retain evidence instead of standalone KPI pages',async({page})=>{
