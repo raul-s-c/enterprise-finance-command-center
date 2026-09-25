@@ -56,6 +56,16 @@ for(const report of cases)test(`${report.view} keeps financial indicators outsid
   await page.setViewportSize({width:1024,height:768});
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
   await expect(overview.locator('.statement-story-indicators > .kpi')).toHaveCount(4);
+  if(report.view==='balance-sheet'){
+    await page.setViewportSize({width:1024,height:720});
+    const laptop=await overview.evaluate(node=>{
+      const panes=[...node.querySelectorAll('.story-board > .story-composite')];
+      return {sideBySide:panes[0].getBoundingClientRect().right<panes[1].getBoundingClientRect().left,
+        notesInside:panes.every(pane=>pane.querySelector('.report-note').getBoundingClientRect().bottom<=pane.getBoundingClientRect().bottom),
+        noInternalScroll:panes.every(pane=>pane.scrollHeight<=pane.clientHeight+1)};
+    });
+    expect(laptop).toEqual({sideBySide:true,notesInside:true,noInternalScroll:true});
+  }
   await page.setViewportSize({width:390,height:844});
   expect((await page.locator('.report-page-select select').boundingBox()).width).toBeGreaterThan(250);
   const regions=page.getByRole('navigation',{name:'Dashboard regions'});

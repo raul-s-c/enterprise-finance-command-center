@@ -24,6 +24,14 @@ test('performance review keeps every KPI and source visible on a laptop canvas',
   await overview.getByRole('button',{name:'How Revenue vs budget is calculated'}).click();
   await expect(page.locator('#reportDialog')).toBeVisible();
   await page.locator('#reportDialog').getByRole('button',{name:'Close'}).click();
+  await page.setViewportSize({width:1024,height:720});
+  const laptop=await overview.evaluate(node=>{
+    const panes=[...node.querySelectorAll('.story-board > .story-composite')];
+    return {bothVisible:panes.length===2 && panes[0].getBoundingClientRect().right<panes[1].getBoundingClientRect().left,
+      coverageFits:panes[1].querySelector('.review-control-note').getBoundingClientRect().bottom<=panes[1].getBoundingClientRect().bottom,
+      horizontal:document.documentElement.scrollWidth>innerWidth};
+  });
+  expect(laptop).toEqual({bothVisible:true,coverageFits:true,horizontal:false});
   await page.setViewportSize({width:390,height:844});
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
   await expect(overview.locator('.kpi')).toHaveCount(10);
