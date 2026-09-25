@@ -47,3 +47,9 @@ This change does not certify universal pixel-perfect fidelity or exhaustive enti
 - The frontend suite contains 48 passing tests, including preservation of all twelve observations in a compact trend chart.
 - The resize regression also checks the effective on-screen size of waterfall values (SVG font size multiplied by its rendered transform), with a 10 CSS-pixel floor. This catches charts that fit geometrically but shrink their figures into unreadable thumbnails.
 - These checks are not an exhaustive cross-product of every viewport, filter and record selection. Some technical appendix pages deliberately remain text or tables.
+
+### Executive and close-journey panel fit
+
+The Executive Drivers and Outlook desktop panels now use compact, source-tied twelve-month charts rather than embedding full-height report charts inside shorter book panels. AC is solid charcoal, PY is gray, and the forecast uses a hatched pattern with a signed zero baseline. The monthly AC/PY bars retain their detail drill; the original responsive chart remains available on narrow screens and the full chart in its dedicated report. The Actions summary and Close Journey evidence controls are sized to remain visible at 1280×720.
+
+`tests/ui/executive-panel-fit.spec.cjs` verifies every Executive subpage panel's content fit, the twelve source months, the monthly drill, the scenario range, and the Close Journey evidence CTA at laptop height. Inspect the attached browser screenshots as well: scroll-height assertions cannot establish visual quality on their own.
