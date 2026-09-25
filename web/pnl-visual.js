@@ -1,5 +1,6 @@
 /* Source-tied graphical income statement. No invented account allocations. */
 (function(root){
+  let mobileView='values';
   function rows(ac,py,M){
     ac=ac||{};py=py||{};
     const extend=row=>[...M.statement(row),{key:'below_ebit',label:'Net finance costs and tax',cost:true,value:M.finite(row.ebit)&&M.finite(row.net_income)?row.ebit-row.net_income:null},{key:'net_income',label:'Net income',total:true,value:row.net_income}];
@@ -13,14 +14,14 @@
     const body=items.map(r=>{
       const tone=r.change.favorable===true?'good':r.change.favorable===false?'bad':'neutral';
       const relative=r.change.relative,sign=relative<0?'negative':'positive';
-      return `<button class="pnl-row ${r.total?'subtotal':''}" data-pnl-key="${r.key}" data-line-type="${r.total?'total':r.cost?'cost':'income'}" aria-label="${esc(r.label)}: actual ${amount(r.value)}, prior year ${amount(r.prior)}">
+      return `<button class="pnl-row ${r.total?'subtotal':''}" data-pnl-key="${r.key}" data-line-type="${r.total?'total':r.cost?'cost':'income'}" aria-label="${esc(r.label)}: actual ${amount(r.value)}, prior year ${amount(r.prior)}, variance ${signed(r.change.delta)}${M.finite(relative)?`, variance percent ${(relative*100).toFixed(1)}%`:''}">
         <span>${r.total?'= ':'− '}${esc(r.label)}</span><span>${amount(r.prior)}</span>
         <span class="pnl-track">${bar(r.start,r.end,max,42)}<b>${amount(r.value)}</b></span>
         <span class="pnl-delta ${tone}">${bar(0,r.change.delta,deltaMax,45)}<b>${signed(r.change.delta)}</b></span>
         <span class="pnl-percent ${tone} ${sign}">${bar(0,relative,pctMax,45)}<b>${M.finite(relative)?`${relative>0?'+':''}${(relative*100).toFixed(1)}%`:'—'}</b></span>
       </button>`;
     }).join('');
-    return `<article class="pnl-visual"><header><h2>Income statement · Actual vs prior year</h2><p>${esc(month)} · EUR million · ${esc(scope)} · Select a line to inspect calculation and source</p></header><div class="pnl-scroll" tabindex="0" role="region" aria-label="Graphical income statement; scroll to explore all columns"><div class="pnl-grid"><div class="pnl-heading"><span>Income statement</span><span>PY</span><span>Actual · cumulative bridge</span><span>Δ PY</span><span>Δ PY %</span></div>${body}</div></div><p class="pnl-note">Variance colour reflects earnings impact; cost lines use lower-is-favourable logic. Net finance costs and tax are shown together because the published operating dataset does not support a separate allocation.</p></article>`;
+    return `<article class="pnl-visual" data-mobile-view="${mobileView}"><header><h2><span class="pnl-title-full">Income statement · Actual vs prior year</span><span class="pnl-title-compact">P&amp;L · Actual vs PY</span></h2><div class="pnl-mobile-switch" role="group" aria-label="Compact P&L columns"><button type="button" data-pnl-mobile-view="values" aria-pressed="${mobileView==='values'}">Values</button><button type="button" data-pnl-mobile-view="variance" aria-pressed="${mobileView==='variance'}">Δ PY</button></div><p><span class="pnl-values-context">${esc(month)} · EUR million · ${esc(scope)} · Select a line to inspect calculation and source</span><span class="pnl-variance-context">${esc(month)} · ${esc(scope)} · Δ vs PY; green = favorable, red = adverse</span></p></header><div class="pnl-scroll" tabindex="0" role="region" aria-label="Graphical income statement; compact columns can be changed with the Values and variance buttons"><div class="pnl-grid"><div class="pnl-heading"><span>Income statement</span><span>PY</span><span><span class="pnl-title-full">Actual · cumulative bridge</span><span class="pnl-title-compact">AC</span></span><span>Δ PY</span><span>Δ PY %</span></div>${body}</div></div><p class="pnl-note">Variance colour reflects earnings impact; cost lines use lower-is-favourable logic. Net finance costs and tax are shown together because the published operating dataset does not support a separate allocation.</p></article>`;
   }
   function contributions(data,scope,key,M){
     const groups=new Map();
@@ -55,4 +56,11 @@
     return [header,...contributions(data,scope,key,M).map(r=>[data.meta.end_month,M.priorMonth(data.meta.end_month),key,r.entity,r.division,r.actual,r.prior,r.change?.delta,r.change?.relative,r.records,'management_detail'])].map(row=>row.map(cell).join(',')).join('\r\n');
   }
   const api={rows,render,contributions,detail,csv};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.PnlVisual=api;
+  if(root.document)document.addEventListener('click',event=>{
+    const button=event.target.closest('[data-pnl-mobile-view]');if(!button)return;
+    const article=button.closest('.pnl-visual');if(!article)return;
+    mobileView=button.dataset.pnlMobileView==='variance'?'variance':'values';
+    article.dataset.mobileView=mobileView;
+    for(const choice of article.querySelectorAll('[data-pnl-mobile-view]'))choice.setAttribute('aria-pressed',String(choice.dataset.pnlMobileView===mobileView));
+  });
 })(globalThis);
