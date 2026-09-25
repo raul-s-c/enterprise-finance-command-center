@@ -41,3 +41,16 @@ test('Business Drivers keeps KPI evidence reachable at short desktop heights',as
   await expect(page.locator('#reportDialog')).toContainText('Calculation');
   await page.locator('#reportDialogClose').click();
 });
+
+test('Business Drivers never compares unlike units with shared bars on mobile',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.goto('/#view=business-drivers&page=0');
+  const cockpit=page.locator('.drivers-cockpit');
+  await expect(cockpit.locator('.sw-primary .sw-ranking button')).toHaveCount(5);
+  await expect(cockpit.locator('.sw-primary')).toContainText('ARR (annualised)');
+  await expect(cockpit.locator('.sw-primary')).toContainText('revenue (month)');
+  const bars=await cockpit.locator('.sw-primary .sw-ranking i,.sw-detail .sw-ranking i').evaluateAll(nodes=>nodes.map(node=>getComputedStyle(node).display));
+  expect(bars).toHaveLength(10);
+  expect(bars.every(display=>display==='none')).toBe(true);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(1);
+});
