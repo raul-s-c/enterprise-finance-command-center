@@ -270,6 +270,26 @@ test('P&L contribution explains actual vs prior year and shows truthful statemen
   expect(mobileBounds.scrollWidth).toBeLessThanOrEqual(mobileBounds.clientWidth+1);
 });
 
+test('P&L lineage labels fit at laptop and tablet widths',async({page})=>{
+  for(const width of [1280,1024]){
+    await page.setViewportSize({width,height:720});
+    await page.goto('/#view=pnl&page=5&section=P%26L+contribution');
+    if(width<=1100)await page.locator('.cx-analysis-nav').getByRole('button',{name:'Value flow'}).click();
+    const flow=page.locator('.cx-flow-map.pnl-flow');
+    await expect(flow).toBeVisible();
+    const layout=await flow.evaluate(map=>{
+      const buttons=[...map.querySelectorAll('button')],bounds=map.getBoundingClientRect();
+      return {count:buttons.length,labels:buttons.map(button=>{
+        const rect=button.getBoundingClientRect();
+        return {text:button.innerText,within:rect.left>=bounds.left-1&&rect.right<=bounds.right+1&&rect.top>=bounds.top-1&&rect.bottom<=bounds.bottom+1,fits:button.scrollHeight<=button.clientHeight+1};
+      }),horizontal:document.documentElement.scrollWidth>innerWidth};
+    });
+    expect(layout.count).toBe(4);
+    expect(layout.labels.every(label=>label.within&&label.fits)).toBe(true);
+    expect(layout.horizontal).toBe(false);
+  }
+});
+
 test('Executive keeps every overview region reachable on tablet and mobile',async({page})=>{
   for(const viewport of [{width:1100,height:820},{width:900,height:820},{width:390,height:844}]){
     await page.setViewportSize(viewport);

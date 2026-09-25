@@ -23,3 +23,19 @@
 @media(max-height:820px) and (min-width:901px){.cx-summary.nwc-summary{min-height:99px}.cx-summary.nwc-summary>div:first-child strong{font-size:30px}.cx-bridge svg{height:66px}.cx-workspace{grid-template-rows:minmax(150px,1fr) 116px}.cx-head{margin-bottom:4px}.contribution-explorer h2{font-size:18px}.cx-region-title{margin-bottom:3px}.cx-evidence th,.cx-evidence td{height:17px;padding:2px 4px}.contribution-note{margin-top:2px}}
 .cx-scopebar{display:flex;align-items:end;gap:10px;padding:7px 0;border-top:1px solid #d8dee8;flex:none}.cx-scopebar label{display:grid;gap:2px;min-width:150px;font-size:9px;color:#687487}.cx-scopebar select{min-height:29px!important;font-size:10px!important;background:#fff}.cx-scopebar label:last-child{margin-left:auto}.contribution-explorer[data-contribution="nwc"] .cx-toolbar>label{display:none}
 .cx-flow-map.nwc-flow{grid-template-columns:1fr .9fr 1fr 1fr;gap:22px;padding:10px 2px}.cx-flow-map.nwc-flow:before{height:128px;left:9%;right:8%;opacity:.9}.cx-flow-column{display:grid;align-content:center;gap:8px;height:100%}.report-mode .cx-flow-map.nwc-flow button{width:100%;height:auto;min-height:48px;padding:7px 9px}.report-mode .cx-flow-map.nwc-flow .cx-flow-focus{align-self:center;min-height:88px;background:#0867f2;color:#fff;border-color:#0867f2;box-shadow:0 5px 12px rgba(8,103,242,.16)}.report-mode .cx-flow-map.nwc-flow .cx-flow-output{align-self:center;min-height:76px;background:#e6f1ff;border-color:#b9d5f7}.cx-flow-map.nwc-flow small{font-size:8px;font-weight:700}.cx-flow-column.destinations button:nth-child(3){background:#fff0f1;border-color:#f5ccd0}
+
+/* Keep all four P&L lineage stages legible on a laptop-sized canvas. */
+@media (min-width:701px) and (max-width:1400px){
+  .cx-flow-map.pnl-flow{grid-template-columns:minmax(0,1fr) 18px minmax(0,1fr);grid-template-rows:minmax(64px,1fr) 12px minmax(64px,1fr);gap:2px 4px}
+  .cx-flow-map.pnl-flow:before{display:none}
+  .cx-flow-map.pnl-flow>:nth-child(1){grid-column:1;grid-row:1}
+  .cx-flow-map.pnl-flow>:nth-child(2){grid-column:2;grid-row:1}
+  .cx-flow-map.pnl-flow>:nth-child(3){grid-column:3;grid-row:1}
+  .cx-flow-map.pnl-flow>:nth-child(4){grid-column:3;grid-row:2;transform:rotate(90deg)}
+  .cx-flow-map.pnl-flow>:nth-child(5){grid-column:3;grid-row:3}
+  .cx-flow-map.pnl-flow>:nth-child(6){grid-column:2;grid-row:3;transform:rotate(180deg)}
+  .cx-flow-map.pnl-flow>:nth-child(7){grid-column:1;grid-row:3}
+  .report-mode .cx-flow-map.pnl-flow button{height:100%;min-height:0;padding:6px 8px}
+  .report-mode .cx-flow-map.pnl-flow button span{font-size:10px;line-height:1.15}
+  .report-mode .cx-flow-map.pnl-flow button strong{font-size:12px;line-height:1.15;overflow-wrap:anywhere}
+}
