@@ -3,7 +3,7 @@
   const M=()=>root.FinanceReport,C=()=>root.ReportCharts;
   const esc=value=>M().escape(String(value??''));
   const sum=(rows,key)=>rows.reduce((total,row)=>total+(Number(row[key])||0),0);
-  const compact=value=>M().finite(value)?`€${C().money(value)}m`:'—';
+  const compact=value=>M().finite(value)?`${value<0?'−':''}€${C().money(Math.abs(value))}m`:'—';
   const percent=value=>M().finite(value)?`${(value*100).toFixed(1)}%`:'—';
   const variance=(actual,prior,polarity=1)=>M().variance(actual,prior,polarity);
   const tone=value=>value?.favorable===true?'favorable':value?.favorable===false?'unfavorable':'neutral';

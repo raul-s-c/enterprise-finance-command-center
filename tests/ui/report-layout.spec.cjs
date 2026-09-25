@@ -462,6 +462,18 @@ test('Forecast months fill the panel and open linked three-statement evidence',a
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
 
+test('Statement cockpits place negative cash signs before the euro symbol',async({page})=>{
+  await page.goto('/#view=cash-flow&page=0');
+  const investing=page.locator('[data-sw-focus="investing"] strong');
+  const source=await page.evaluate(async()=>{
+    const data=await(await fetch('/data/dashboard.json')).json();
+    return data.cash_flow.at(-1).investing_cash_flow;
+  });
+  expect(source).toBeLessThan(0);
+  await expect(investing).toHaveText(`−€${(Math.abs(source)/1e6).toFixed(1)}m`);
+  await expect(investing).not.toContainText('€-');
+});
+
 test('all report destinations retain evidence instead of standalone KPI pages',async({page})=>{
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
   const reports=['executive','pnl','margin','working-capital','cash-flow','treasury','balance-sheet','forecast','macro-sensitivities','business-drivers','profitability','intercompany','operations-capex','fx','performance-review','action-execution','data-journey','close-journey'];
