@@ -17,13 +17,13 @@
   function positiveStatementTrend(points,metricLabel){
     const values=points.flatMap(point=>[point.actual,point.prior]).filter(M().finite);
     if(!values.length)return '<div class="empty">No observations for this selection.</div>';
-    if(values.some(value=>value<0))return C().trend(points,metricLabel,760,300);
+    if(values.some(value=>value<0))return C().trend(points,metricLabel,760,300).replaceAll('data-month=','data-sw-statement-month=');
     const max=Math.max(...values,1);
     return `<div class="sw-positive-trend" role="group" aria-label="${esc(metricLabel)} actual versus prior year, EUR million; select a month for evidence">${points.map(point=>{
       const change=variance(point.actual,point.prior);
       const actual=M().finite(point.actual)?C().money(point.actual):'—',prior=M().finite(point.prior)?C().money(point.prior):'—';
       const actualHeight=M().finite(point.actual)?point.actual/max*100:0,priorHeight=M().finite(point.prior)?point.prior/max*100:0;
-      return `<button type="button" class="sw-positive-month" data-month="${esc(point.month)}" aria-label="${esc(point.month)} ${esc(metricLabel)} actual ${actual}, prior year ${prior}, change ${esc(C().signed(change.delta))} EUR million. Show detail." title="${esc(point.month)} · AC ${actual} · PY ${prior} · Δ ${esc(C().signed(change.delta))} EUR m"><strong>${actual}</strong><span class="sw-positive-bars" aria-hidden="true"><i class="prior" style="height:${priorHeight}%"></i><i class="actual" style="height:${actualHeight}%"></i></span><small>${esc(point.month.slice(2))}</small><em class="${tone(change)}">${esc(C().signed(change.delta))}</em></button>`;
+      return `<button type="button" class="sw-positive-month" data-sw-statement-month="${esc(point.month)}" aria-label="${esc(point.month)} ${esc(metricLabel)} actual ${actual}, prior year ${prior}, change ${esc(C().signed(change.delta))} EUR million. Show detail." title="${esc(point.month)} · AC ${actual} · PY ${prior} · Δ ${esc(C().signed(change.delta))} EUR m"><strong>${actual}</strong><span class="sw-positive-bars" aria-hidden="true"><i class="prior" style="height:${priorHeight}%"></i><i class="actual" style="height:${actualHeight}%"></i></span><small>${esc(point.month.slice(2))}</small><em class="${tone(change)}">${esc(C().signed(change.delta))}</em></button>`;
     }).join('')}</div>`;
   }
   function forecastRevenueTrend(rows,endMonth){
@@ -67,6 +67,19 @@
     return rows.slice(-12).map(row=>{
       const identity=(row.operating_cash_flow||0)+(row.investing_cash_flow||0)-(row.free_cash_flow||0);
       return `<template data-sw-cash-detail="${esc(row.month)}"><p class="report-note">Published cash_flow · ${esc(row.month)} · consolidated group</p><dl class="row-detail sw-cash-detail"><div><dt>Operating cash flow</dt><dd>${amount(row.operating_cash_flow)}</dd></div><div><dt>Investing cash flow</dt><dd>${amount(row.investing_cash_flow)}</dd></div><div><dt>Free cash flow</dt><dd>${amount(row.free_cash_flow)}</dd></div><div><dt>Financing cash flow</dt><dd>${amount(row.financing_cash_flow)}</dd></div><div><dt>Net cash movement</dt><dd>${amount(row.net_cash_movement)}</dd></div><div><dt>OCF + investing − FCF · EUR</dt><dd>${control(identity)}</dd></div></dl></template>`;
+    }).join('');
+  }
+  function statementMonthEvidence(rows,kind){
+    const amount=value=>M().finite(value)?`${value<0?'−':''}€${C().money(Math.abs(value))}m`:'—';
+    const control=value=>!M().finite(value)?'—':value===0?'€0.00':`${value<0?'−':''}€${Math.abs(value).toPrecision(6)}`;
+    return rows.slice(-12).map(row=>{
+      const treasury=kind==='treasury';
+      const fields=treasury
+        ?[['Group cash',row.cash],['Undrawn RCF',row.undrawn_rcf],['Operating minimum',row.minimum_operating_cash],['Liquidity headroom',row.liquidity_headroom],['Gross debt',row.gross_debt]]
+        :[['Total assets',row.assets],['Liabilities',row.liabilities],['Equity',row.equity],['Cash',row.cash]];
+      const check=treasury?row.cash+row.undrawn_rcf-row.minimum_operating_cash-row.liquidity_headroom:row.balance_check;
+      const label=treasury?'Cash + undrawn RCF − minimum − headroom · EUR':'Assets − liabilities − equity · EUR';
+      return `<template data-sw-statement-detail="${esc(row.month)}"><p class="report-note">Published ${treasury?'treasury_liquidity':'balance_sheet'} · ${esc(row.month)} · consolidated group</p><dl class="row-detail sw-statement-detail">${fields.map(([name,value])=>`<div><dt>${esc(name)}</dt><dd>${amount(value)}</dd></div>`).join('')}<div><dt>${label}</dt><dd>${control(check)}</dd></div></dl></template>`;
     }).join('');
   }
   function pnl(data,state){
@@ -113,13 +126,14 @@
     const rows=data.balance_sheet||[],ac=rows.at(-1)||{},py=rows.at(-13)||{},scope='Consolidated group';
     const cards=kpi('assets','Total assets',compact(ac.assets),variance(ac.assets,py.assets),'Resources controlled')+kpi('liabilities','Liabilities',compact(ac.liabilities),variance(ac.liabilities,py.liabilities,-1),'External obligations')+kpi('equity','Equity',compact(ac.equity),variance(ac.equity,py.equity),'Residual interest')+kpi('cash','Cash',compact(ac.cash),variance(ac.cash,py.cash),'Closing liquidity')+kpi('balance','Balance check',compact(ac.balance_check),{relative:null,favorable:Math.abs(ac.balance_check||0)<.1},'Assets − liabilities − equity');
     const assetsPoints=M().comparisons(rows,'assets',data.meta.end_month,12);
-    const assetsChart=typeof innerWidth!=='undefined'&&innerWidth>900?positiveStatementTrend(assetsPoints,'Total assets'):C().trend(assetsPoints,'Total assets',760,300);
+    const assetsChart=typeof innerWidth!=='undefined'&&innerWidth>900?positiveStatementTrend(assetsPoints,'Total assets'):C().trend(assetsPoints,'Total assets',760,300).replaceAll('data-month=','data-sw-statement-month=');
     const primary=`<div class="sw-panel-head"><div><h3>Total assets trend</h3><small>AC dark · PY gray · EUR million · select a month</small></div><button data-story-view="data-journey">Trace ledger</button></div>${assetsChart}`;
     const secondary=`<div class="sw-panel-head"><div><h3>Balance-sheet equation</h3><small>${data.meta.end_month} · reconciled group view</small></div></div><div class="sw-formula"><span><small>Liabilities</small><strong>${compact(ac.liabilities)}</strong></span><b>+</b><span><small>Equity</small><strong>${compact(ac.equity)}</strong></span><b>=</b><span class="result"><small>Total assets</small><strong>${compact(ac.assets)}</strong></span></div><div class="sw-structure"><span>Cash<b style="width:${ac.cash/ac.assets*100}%"></b><strong>${compact(ac.cash)}</strong></span><span>Receivables<b style="width:${ac.trade_receivables/ac.assets*100}%"></b><strong>${compact(ac.trade_receivables)}</strong></span><span>Inventory<b style="width:${ac.inventory/ac.assets*100}%"></b><strong>${compact(ac.inventory)}</strong></span><span>PPE & CIP<b style="width:${(ac.ppe_gross+ac.cip+ac.accumulated_depreciation)/ac.assets*100}%"></b><strong>${compact(ac.ppe_gross+ac.cip+ac.accumulated_depreciation)}</strong></span></div>`;
     const funding=[{label:'Equity',value:ac.equity},{label:'Debt',value:ac.debt},{label:'Trade payables',value:ac.trade_payables},{label:'Contract liabilities',value:ac.contract_liabilities},{label:'Tax payable',value:ac.tax_payable}];
     const tertiary=`<div class="sw-panel-head"><div><h3>Funding structure</h3><small>Select a component to inspect its evidence</small></div><button data-story-view="treasury">Open funding</button></div>${rank(funding,'value','label',null,'liabilities')}`;
     const defs=[['assets','Total assets',ac.assets,py.assets,'Cash + net receivables + net inventory + PPE + CIP','balance_sheet'],['liabilities','Liabilities',ac.liabilities,py.liabilities,'Payables + tax + debt + contract liabilities','balance_sheet'],['equity','Equity',ac.equity,py.equity,'Share capital + retained earnings','balance_sheet'],['cash','Cash',ac.cash,py.cash,'Closing ledger cash after current-period movements','balance_sheet'],['balance','Balance check',ac.balance_check,py.balance_check,'Assets − liabilities − equity','validation']];
-    return {title:'Position cockpit',custom:true,fullScreen:true,policy:root.ReportContext.group,html:shell('Financial position cockpit',`Understand assets, funding and balance integrity for ${data.meta.end_month}`,cards,primary,secondary,tertiary,defs.map(row=>inspector(row[0],row[1],compact(row[2]),variance(row[2],row[3]),row[4],row[5],scope,'balance-sheet')).join(''))};
+    const evidence=defs.map(row=>inspector(row[0],row[1],compact(row[2]),variance(row[2],row[3]),row[4],row[5],scope,'balance-sheet')).join('')+statementMonthEvidence(rows,'balance-sheet');
+    return {title:'Position cockpit',custom:true,fullScreen:true,policy:root.ReportContext.group,html:shell('Financial position cockpit',`Understand assets, funding and balance integrity for ${data.meta.end_month}`,cards,primary,secondary,tertiary,evidence)};
   }
   function forecast(data){
     const base=(data.forecast||[]).filter(row=>row.scenario==='Base').sort((a,b)=>a.horizon_month-b.horizon_month),summary=data.three_statement_forecast_summary||[],baseSummary=summary.find(row=>row.scenario==='Base')||{},downSummary=summary.find(row=>row.scenario==='Downside')||{},accuracy=(data.forecast_accuracy||[]).find(row=>row.horizon_month===1)||{},nextLiquidity=(data.liquidity_forecast||[]).find(row=>row.scenario==='Base'&&row.horizon_month===1)||{},scope='Consolidated group · Base scenario';
@@ -139,12 +153,13 @@
     const rows=data.treasury_liquidity||[],ac=rows.at(-1)||{},py=rows.at(-13)||{},entities=(data.treasury_entity_cash||[]).slice().sort((a,b)=>b.cash-a.cash),fc=(data.liquidity_forecast_summary||[]).find(row=>row.scenario==='Downside')||{},scope='Consolidated group · post cash-pooling';
     const cards=kpi('tr-cash','Group cash',compact(ac.cash),variance(ac.cash,py.cash),'Post cash-pooling liquidity')+kpi('tr-debt','Gross debt',compact(ac.gross_debt),variance(ac.gross_debt,py.gross_debt,-1),'Contractual funding')+kpi('tr-headroom','Liquidity headroom',compact(ac.liquidity_headroom),variance(ac.liquidity_headroom,py.liquidity_headroom),'Cash above minimum + undrawn RCF')+kpi('tr-leverage','Net leverage',`${Number(ac.net_leverage||0).toFixed(2)}x`,variance(ac.net_leverage,py.net_leverage,-1),'Net debt / TTM EBITDA')+kpi('tr-covenant','Covenant status',ac.covenant_status,{relative:null,favorable:ac.covenant_status==='PASS'},'Leverage and interest cover',`Downside 12M · ${fc.covenant_status_12m||'—'}`);
     const points=M().comparisons(rows,'liquidity_headroom',data.meta.end_month,12);
-    const chart=typeof innerWidth!=='undefined'&&innerWidth>900?positiveStatementTrend(points,'Liquidity headroom'):C().trend(points,'Liquidity headroom',760,300);
+    const chart=typeof innerWidth!=='undefined'&&innerWidth>900?positiveStatementTrend(points,'Liquidity headroom'):C().trend(points,'Liquidity headroom',760,300).replaceAll('data-month=','data-sw-statement-month=');
     const primary=`<div class="sw-panel-head"><div><h3>Liquidity headroom trend</h3><small>AC dark · PY gray · EUR million · select a month</small></div><button data-story-view="cash-flow">Open cash flow</button></div>${chart}`;
     const secondary=`<div class="sw-panel-head"><div><h3>Available liquidity formula</h3><small>Current close · no double counting</small></div></div><div class="sw-formula sw-formula-long"><span><small>Group cash</small><strong>${compact(ac.cash)}</strong></span><b>+</b><span><small>Undrawn RCF</small><strong>${compact(ac.undrawn_rcf)}</strong></span><b>−</b><span><small>Operating minimum</small><strong>${compact(ac.minimum_operating_cash)}</strong></span><b>=</b><span class="result"><small>Liquidity headroom</small><strong>${compact(ac.liquidity_headroom)}</strong></span></div><div class="sw-flow"><span>Gross debt<strong>${compact(ac.gross_debt)}</strong></span><i>→</i><span>${ac.net_debt<0?'Net cash':'Net debt'}<strong>${compact(Math.abs(ac.net_debt||0))}</strong></span><i>→</i><span>Downside minimum headroom<strong>${compact(fc.minimum_liquidity_headroom)}</strong></span></div>`;
     const tertiary=`<div class="sw-panel-head"><div><h3>Cash by legal entity</h3><small>Post-pooling position · click to filter</small></div><button data-story-view="intercompany">Trace cash pool</button></div>${rank(entities,'cash','entity','entity')}`;
     const defs=[['tr-cash','Group cash',ac.cash,py.cash,'Sum of post-pooling legal-entity cash','treasury_entity_cash'],['tr-debt','Gross debt',ac.gross_debt,py.gross_debt,'Sum of contractual debt outstanding','debt_schedule'],['tr-headroom','Liquidity headroom',ac.liquidity_headroom,py.liquidity_headroom,'Cash − minimum operating cash + undrawn RCF','treasury_liquidity'],['tr-leverage','Net leverage',ac.net_leverage,py.net_leverage,'Net debt / trailing-12-month EBITDA','treasury_liquidity'],['tr-covenant','Covenant status',ac.covenant_status,null,'Net leverage and interest coverage against configured limits','treasury_liquidity']];
-    return {title:'Liquidity cockpit',custom:true,fullScreen:true,policy:root.ReportContext.group,html:shell('Treasury & liquidity cockpit',`Control cash, funding, headroom and covenants for ${data.meta.end_month}`,cards,primary,secondary,tertiary,defs.map(row=>inspector(row[0],row[1],typeof row[2]==='number'?(row[0]==='tr-leverage'?`${row[2].toFixed(2)}x`:compact(row[2])):row[2],variance(row[2],row[3],row[0]==='tr-debt'||row[0]==='tr-leverage'?-1:1),row[4],row[5],scope,'treasury',row[0]==='tr-covenant'?`Downside 12M · ${fc.covenant_status_12m||'—'}`:undefined)).join(''))};
+    const evidence=defs.map(row=>inspector(row[0],row[1],typeof row[2]==='number'?(row[0]==='tr-leverage'?`${row[2].toFixed(2)}x`:compact(row[2])):row[2],variance(row[2],row[3],row[0]==='tr-debt'||row[0]==='tr-leverage'?-1:1),row[4],row[5],scope,'treasury',row[0]==='tr-covenant'?`Downside 12M · ${fc.covenant_status_12m||'—'}`:undefined)).join('')+statementMonthEvidence(rows,'treasury');
+    return {title:'Liquidity cockpit',custom:true,fullScreen:true,policy:root.ReportContext.group,html:shell('Treasury & liquidity cockpit',`Control cash, funding, headroom and covenants for ${data.meta.end_month}`,cards,primary,secondary,tertiary,evidence)};
   }
   function profitability(data,state){
     let products=(data.entity_product_profitability||data.product_profitability||[]).filter(row=>(state.entity==='all'||!row.entity||row.entity===state.entity)&&(state.division==='all'||row.division===state.division)),customers=(data.customer_profitability||[]).filter(row=>(state.entity==='all'||row.entity===state.entity)&&(state.division==='all'||row.division===state.division));
@@ -234,6 +249,14 @@
     mount();
     const workspace=document.querySelector('.statement-workspace');
     if(!workspace)return;
+    workspace.querySelectorAll('[data-sw-statement-month]').forEach(point=>{
+      const show=()=>{
+        const template=[...workspace.querySelectorAll('template[data-sw-statement-detail]')].find(item=>item.dataset.swStatementDetail===point.dataset.swStatementMonth);
+        if(template)reportDialog(`${workspace.querySelector('h2')?.textContent||'Statement'} · ${point.dataset.swStatementMonth}`,`<div class="sw-statement-evidence">${template.innerHTML}</div>`);
+      };
+      point.addEventListener('click',show);
+      if(point.tagName.toLowerCase()!=='button')point.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();show();}});
+    });
     workspace.querySelectorAll('[data-sw-cash-month]').forEach(point=>{
       const show=()=>{
         const template=[...workspace.querySelectorAll('template[data-sw-cash-detail]')].find(item=>item.dataset.swCashDetail===point.dataset.swCashMonth);
