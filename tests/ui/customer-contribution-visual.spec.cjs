@@ -13,6 +13,7 @@ test('customer contribution is source-tied, selectable, and laptop-fit',async({p
   await expect(page.locator('.ccv-row')).toHaveCount(Math.min(8,source.length));
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   expect(await page.evaluate(()=>document.querySelector('.ccv-board').getBoundingClientRect().bottom<=document.querySelector('#content').getBoundingClientRect().bottom+1)).toBe(true);
+  expect(await page.evaluate(()=>document.querySelector('.ccv-source').getBoundingClientRect().bottom<=document.querySelector('.ccv-board').getBoundingClientRect().bottom-2)).toBe(true);
   const expected=source.reduce((sum,row)=>sum+Number(row.operating_contribution),0);
   for(const row of source)expect(Math.abs(row.gross_profit-row.opex-row.operating_contribution)).toBeLessThan(.01);
   await expect(page.locator('.ccv-summary strong').first()).toHaveText(`€${(expected/1e6).toFixed(2)}m`);
