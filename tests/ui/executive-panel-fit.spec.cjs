@@ -1,17 +1,22 @@
 const {test,expect}=require('@playwright/test');
 
 test('Executive Drivers, Outlook and Actions fit their laptop panels',async({page},testInfo)=>{
-  await page.setViewportSize({width:1280,height:720});
-  for(const index of [1,2,3]){
-    await page.goto(`/#view=executive&page=${index}`);
-    await expect(page.locator('.story-board')).toBeVisible();
-    const geometry=await page.locator('.story-board > *').evaluateAll(nodes=>nodes.map(node=>({name:node.className,client:node.clientHeight,scroll:node.scrollHeight})));
-    expect(geometry.every(item=>item.scroll<=item.client+1),`Executive ${index}: ${JSON.stringify(geometry)}`).toBe(true);
-    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
-    const screenshot=testInfo.outputPath(`executive-${index}-1280x720.png`);
-    await page.screenshot({path:screenshot});
-    await testInfo.attach(`executive-${index}-1280x720`,{path:screenshot,contentType:'image/png'});
+  for(const viewport of [{width:1024,height:768},{width:1280,height:720},{width:1366,height:768}]){
+    await page.setViewportSize(viewport);
+    for(const index of [1,2,3]){
+      await page.goto(`/#view=executive&page=${index}`);
+      await expect(page.locator('.story-board')).toBeVisible();
+      const geometry=await page.locator('.story-board > *').evaluateAll(nodes=>nodes.map(node=>({name:node.className,client:node.clientHeight,scroll:node.scrollHeight})));
+      expect(geometry.every(item=>item.scroll<=item.client+1),`Executive ${index} at ${viewport.width}x${viewport.height}: ${JSON.stringify(geometry)}`).toBe(true);
+      expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+      if(viewport.width===1280){
+        const screenshot=testInfo.outputPath(`executive-${index}-1280x720.png`);
+        await page.screenshot({path:screenshot});
+        await testInfo.attach(`executive-${index}-1280x720`,{path:screenshot,contentType:'image/png'});
+      }
+    }
   }
+  await page.setViewportSize({width:1280,height:720});
   await page.goto('/#view=executive&page=1');
   await expect(page.locator('.executive-mini-month')).toHaveCount(12);
   await page.locator('.executive-mini-trend [data-metric="ebit"]').click();
