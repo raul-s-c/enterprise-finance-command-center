@@ -405,9 +405,15 @@ test('Treasury laptop trend fills the panel and preserves month evidence',async(
   await chart.locator('.sw-positive-month').last().click();
   await expect(page.locator('#reportDialog')).toBeVisible();
   await expect(page.locator('#reportDialog')).toContainText(latest.month);
+  await expect(page.locator('#reportDialog')).toContainText('treasury_liquidity');
+  await expect(page.locator('#reportDialog')).toContainText((latest.cash/1e6).toFixed(1));
+  await expect(page.locator('#reportDialog')).toContainText((latest.liquidity_headroom/1e6).toFixed(1));
+  await expect(page.locator('#reportDialog')).not.toContainText('Gross profit');
   await page.locator('#reportDialog').evaluate(dialog=>dialog.close());
   await page.setViewportSize({width:390,height:844});
   await expect(page.locator('.sw-primary .report-svg')).toBeVisible();
+  await page.locator('.sw-primary .report-svg [data-sw-statement-month]').last().click();
+  await expect(page.locator('#reportDialog')).toContainText('Liquidity headroom');
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
 
@@ -429,6 +435,14 @@ test('Balance Sheet laptop trend fills the panel with source-tied assets',async(
   await expect(chart.locator('.sw-positive-month').last()).toContainText((latest.assets/1e6).toFixed(1));
   await chart.locator('.sw-positive-month').last().click();
   await expect(page.locator('#reportDialog')).toContainText(latest.month);
+  await expect(page.locator('#reportDialog')).toContainText('balance_sheet');
+  await expect(page.locator('#reportDialog')).toContainText((latest.assets/1e6).toFixed(1));
+  await expect(page.locator('#reportDialog')).toContainText('Assets − liabilities − equity');
+  await expect(page.locator('#reportDialog')).not.toContainText('Gross profit');
+  await page.locator('#reportDialog').evaluate(dialog=>dialog.close());
+  await page.setViewportSize({width:390,height:844});
+  await page.locator('.sw-primary .report-svg [data-sw-statement-month]').last().click();
+  await expect(page.locator('#reportDialog')).toContainText('Total assets');
 });
 
 test('Forecast months fill the panel and open linked three-statement evidence',async({page})=>{
