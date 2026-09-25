@@ -76,7 +76,7 @@ renderers.pnl=function(){
   const actual=(data.actual||[]).find(r=>r.month===data.meta.end_month)||{};
   const personnel=Number(workforce.personnel_cost)||0;
   const totalOpex=Number(actual.opex)||0;
-  return base+`<div class="panel-grid">${panel('OPEX composition','Latest close',metricRows([['Personnel cost',eur.format(personnel)],['Non-people OPEX',eur.format(Math.max(totalOpex-personnel,0))],['Total OPEX',eur.format(totalOpex)],['Personnel share of OPEX',pct(totalOpex?personnel/totalOpex:0)]]),'span-12')}</div>`;
+  return base+`<div class="panel-grid">${panel('OPEX composition','Latest close',metricRows([['Personnel cost',eur.format(personnel)],['Non-people OPEX',eur.format(totalOpex-personnel)],['Total OPEX',eur.format(totalOpex)],['Personnel share of OPEX',pct(totalOpex?personnel/totalOpex:0)]]),'span-12')}</div>`;
 };
 
 const journeyBeforeWorkforce=renderers['data-journey'];
