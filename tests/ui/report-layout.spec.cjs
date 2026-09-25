@@ -410,6 +410,10 @@ test('Treasury laptop trend fills the panel and preserves month evidence',async(
   await expect(page.locator('#reportDialog')).toContainText((latest.liquidity_headroom/1e6).toFixed(1));
   await expect(page.locator('#reportDialog')).not.toContainText('Gross profit');
   await page.locator('#reportDialog').evaluate(dialog=>dialog.close());
+  await chart.locator('.sw-positive-month').last().focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#reportDialog')).toContainText('Liquidity headroom');
+  await page.locator('#reportDialog').evaluate(dialog=>dialog.close());
   await page.setViewportSize({width:390,height:844});
   await expect(page.locator('.sw-primary .report-svg')).toBeVisible();
   await page.locator('.sw-primary .report-svg [data-sw-statement-month]').last().click();
@@ -500,6 +504,18 @@ test('Forecast months fill the panel and open linked three-statement evidence',a
   await page.setViewportSize({width:390,height:844});
   await expect(page.locator('.sw-primary .series-svg')).toBeVisible();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
+
+test('Statement cockpits place negative cash signs before the euro symbol',async({page})=>{
+  await page.goto('/#view=cash-flow&page=0');
+  const investing=page.locator('[data-sw-focus="investing"] strong');
+  const source=await page.evaluate(async()=>{
+    const data=await(await fetch('/data/dashboard.json')).json();
+    return data.cash_flow.at(-1).investing_cash_flow;
+  });
+  expect(source).toBeLessThan(0);
+  await expect(investing).toHaveText(`−€${(Math.abs(source)/1e6).toFixed(1)}m`);
+  await expect(investing).not.toContainText('€-');
 });
 
 test('Cash Flow uses a full-width signed trend with source-tied monthly evidence',async({page})=>{
@@ -713,6 +729,22 @@ test('short laptop cockpits keep charts legible and use one reachable report scr
   expect(Math.min(...forecastSizes)).toBeGreaterThanOrEqual(10);
   await page.locator('#content').evaluate(element=>element.scrollTo({top:element.scrollHeight,behavior:'instant'}));
   await expect(page.locator('.sw-primary')).toBeInViewport();
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
+
+test('Operations factory cards fit the short laptop cockpit without hidden scrolling',async({page})=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=operations-capex&page=0');
+  const panel=page.locator('.sw-primary');
+  await expect(panel.locator('.sw-factories>button')).toHaveCount(2);
+  const fit=await panel.evaluate(element=>({
+    content:element.scrollHeight,
+    viewport:element.clientHeight,
+    panelBottom:element.getBoundingClientRect().bottom,
+    cardBottom:Math.max(...[...element.querySelectorAll('.sw-factories>button')].map(card=>card.getBoundingClientRect().bottom))
+  }));
+  expect(fit.content).toBeLessThanOrEqual(fit.viewport+1);
+  expect(fit.cardBottom).toBeLessThanOrEqual(fit.panelBottom-4);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
 
