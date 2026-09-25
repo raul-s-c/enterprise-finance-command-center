@@ -135,7 +135,7 @@
     const tertiary=`<div class="sw-panel-head"><div><h3>Free cash flow by entity</h3><small>Legal entity contribution · click a row to filter</small></div><button data-story-view="cash-flow">Open detail</button></div>${rank(entityRows,'free_cash_flow','entity','entity')}`;
     const defs=[['ocf','Operating cash flow',ac.operating_cash_flow,py.operating_cash_flow,'Customer collections + supplier payments + interest + tax','cash_flow_detail'],['investing','Investing cash flow',ac.investing_cash_flow,py.investing_cash_flow,'Cash CAPEX and investing movements','cash_flow_detail'],['fcf','Free cash flow',ac.free_cash_flow,py.free_cash_flow,'Operating cash flow + investing cash flow','cash_flow'],['financing','Financing cash flow',ac.financing_cash_flow,py.financing_cash_flow,'Debt repayment + intercompany treasury','cash_flow_detail'],['net-cash','Net cash movement',ac.net_cash_movement,py.net_cash_movement,'OCF + investing + financing cash flow','cash_flow']];
     const evidence=defs.map(row=>inspector(row[0],row[1],compact(row[2]),variance(row[2],row[3]),row[4],row[5],scope,'cash-flow')).join('')+cashMonthEvidence(rows);
-    return {title:'Cash cockpit',custom:true,fullScreen:true,policy:root.ReportContext.group,html:shell('Cash conversion cockpit',`Trace operating performance into liquidity for ${data.meta.end_month}`,cards,primary,secondary,tertiary,evidence)};
+    return {title:'Cash cockpit',custom:true,fullScreen:true,policy:root.ReportContext.group,html:shell('Cash conversion cockpit',`Trace operating performance into liquidity for ${data.meta.end_month}`,cards,primary,secondary,tertiary,evidence).replace('class="statement-workspace"','class="statement-workspace cash-cockpit"')};
   }
   function balance(data){
     const rows=data.balance_sheet||[],ac=rows.at(-1)||{},py=rows.at(-13)||{},scope='Consolidated group';
@@ -325,7 +325,7 @@
     grid.before(nav);
     workspace.addEventListener('click',event=>{
       if(!event.target.closest('[data-sw-focus],[data-sw-row-focus],[data-sw-action="explain"]'))return;
-      if(!window.matchMedia('(max-width:1500px)').matches)return;
+      if(window.innerWidth>1500&&!(workspace.classList.contains('cash-cockpit')&&window.innerWidth<=1700&&window.innerHeight<880))return;
       const body=document.getElementById('swInspectorBody');
       reportDialog('Calculation & supporting evidence',`<div class="sw-evidence-dialog">${body.innerHTML}</div>`);
       document.querySelectorAll('#reportDialogBody [data-story-view]').forEach(button=>button.onclick=()=>{
