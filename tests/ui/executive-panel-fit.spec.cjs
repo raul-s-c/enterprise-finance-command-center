@@ -9,10 +9,10 @@ test('Executive Drivers, Outlook and Actions fit their laptop panels',async({pag
       const geometry=await page.locator('.story-board > *').evaluateAll(nodes=>nodes.map(node=>({name:node.className,client:node.clientHeight,scroll:node.scrollHeight})));
       expect(geometry.every(item=>item.scroll<=item.client+1),`Executive ${index} at ${viewport.width}x${viewport.height}: ${JSON.stringify(geometry)}`).toBe(true);
       expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
-      if(viewport.width===1280){
-        const screenshot=testInfo.outputPath(`executive-${index}-1280x720.png`);
+      if(viewport.width<=1280){
+        const screenshot=testInfo.outputPath(`executive-${index}-${viewport.width}x${viewport.height}.png`);
         await page.screenshot({path:screenshot});
-        await testInfo.attach(`executive-${index}-1280x720`,{path:screenshot,contentType:'image/png'});
+        await testInfo.attach(`executive-${index}-${viewport.width}x${viewport.height}`,{path:screenshot,contentType:'image/png'});
       }
     }
   }
