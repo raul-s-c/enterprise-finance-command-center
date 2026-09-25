@@ -115,6 +115,15 @@
         flow.querySelector('.cx-region-title>span').textContent='Source → entity / division → P&L line → close';
         map.classList.add('pnl-flow');
         nodes.forEach((node,index)=>{node.querySelector('span').textContent=steps[index][0];node.querySelector('strong').textContent=steps[index][1];node.setAttribute('aria-label',`${steps[index][0]}: ${steps[index][1]}`);node.classList.toggle('selected',index===2);});
+        nodes[0].title='Inspect published source records';
+        nodes[0].onclick=()=>document.getElementById('cx-trace').click();
+        nodes[1].title=next?`Drill to ${label(next)}`:'Lowest published dimension';
+        nodes[1].disabled=!next;
+        nodes[1].onclick=()=>document.getElementById('cx-drill').click();
+        nodes[2].title='Explain the P&L calculation';
+        nodes[2].onclick=()=>document.getElementById('cx-method').click();
+        nodes[3].title='Change the close period';
+        nodes[3].onclick=()=>document.getElementById('cx-month')?.focus();
       }
       const evidencePanel=host.querySelector('#cx-search').closest('header');
       const evidencePager=document.createElement('span');

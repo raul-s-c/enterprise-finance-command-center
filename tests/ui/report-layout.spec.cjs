@@ -290,6 +290,24 @@ test('P&L lineage labels fit from tablet through Full HD widths',async({page})=>
   }
 });
 
+test('P&L lineage stages open evidence, calculation, period and drill actions',async({page})=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=pnl&page=5&section=P%26L+contribution');
+  const nodes=page.locator('.cx-flow-map.pnl-flow button');
+  await expect(nodes).toHaveCount(4);
+  await nodes.nth(0).click();
+  await expect(page.locator('#reportDialog')).toBeVisible();
+  await expect(page.locator('#reportDialog')).toContainText('Published source record');
+  await page.locator('#reportDialogClose').click();
+  await nodes.nth(2).click();
+  await expect(page.locator('#reportDialog')).toContainText('Calculation, source & coverage');
+  await page.locator('#reportDialogClose').click();
+  await nodes.nth(3).click();
+  await expect(page.locator('#cx-month')).toBeFocused();
+  await nodes.nth(1).click();
+  await expect(page.locator('.cx-flow-map.pnl-flow button').nth(1).locator('span')).toHaveText('Division');
+});
+
 test('Executive keeps every overview region reachable on tablet and mobile',async({page})=>{
   for(const viewport of [{width:1100,height:820},{width:900,height:820},{width:390,height:844}]){
     await page.setViewportSize(viewport);
