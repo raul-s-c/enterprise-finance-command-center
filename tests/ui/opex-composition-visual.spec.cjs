@@ -31,10 +31,9 @@ test('OPEX detail becomes a source-tied mix, trend and division visual',async({p
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
   expect(await panel.evaluate(node=>getComputedStyle(node).overflowY)).toBe('auto');
   expect(await panel.evaluate(node=>node.scrollHeight>node.clientHeight)).toBe(true);
-  await panel.evaluate(node=>{node.scrollTop=node.scrollHeight;});
-  await expect.poll(()=>panel.evaluate(node=>node.scrollTop)).toBeGreaterThan(0);
-  const mobileSource=await panel.locator('.ox-source summary').boundingBox();
-  const mobilePanel=await panel.boundingBox();
-  expect(mobileSource.y+mobileSource.height).toBeLessThanOrEqual(mobilePanel.y+mobilePanel.height+1);
+  await panel.evaluate(node=>node.scrollTo({top:node.scrollHeight,behavior:'instant'}));
+  await expect.poll(()=>panel.evaluate(node=>node.scrollHeight-node.clientHeight-node.scrollTop)).toBeLessThan(2);
+  const reach=await panel.evaluate(node=>({source:node.querySelector('.ox-source summary').getBoundingClientRect().bottom,panel:node.getBoundingClientRect().bottom}));
+  expect(reach.source).toBeLessThanOrEqual(reach.panel+2);
   await page.screenshot({path:'test-results/opex-mobile.png',fullPage:true});
 });
