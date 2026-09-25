@@ -462,6 +462,45 @@ test('Forecast months fill the panel and open linked three-statement evidence',a
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
 
+test('Cash Flow uses a full-width signed trend with source-tied monthly evidence',async({page})=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=cash-flow&page=0');
+  const chart=page.locator('.sw-cash-trend');
+  await expect(chart.locator('.sw-cash-month')).toHaveCount(12);
+  const fit=await chart.evaluate(element=>{
+    const panel=element.closest('.sw-primary');
+    return {width:element.getBoundingClientRect().width,panel:panel.getBoundingClientRect().width,content:element.scrollHeight,height:element.clientHeight};
+  });
+  expect(fit.width).toBeGreaterThan(fit.panel-30);
+  expect(fit.content).toBeLessThanOrEqual(fit.height+1);
+  const source=await page.evaluate(async()=>{
+    const data=await(await fetch('/data/dashboard.json')).json();
+    return {latest:data.cash_flow.at(-1),negative:data.cash_flow.slice(-12).find(row=>row.free_cash_flow<0)};
+  });
+  await expect(chart.locator('.sw-cash-month').last()).toContainText((source.latest.free_cash_flow/1e6).toFixed(1));
+  if(source.negative){
+    await expect(chart.locator(`[data-sw-cash-month="${source.negative.month}"] .actual`)).toHaveAttribute('style',/top:/);
+  }
+  await chart.locator('.sw-cash-month').last().click();
+  const dialog=page.locator('#reportDialog');
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toContainText(source.latest.month);
+  await expect(dialog).toContainText((source.latest.operating_cash_flow/1e6).toFixed(1));
+  await expect(dialog).toContainText((Math.abs(source.latest.investing_cash_flow)/1e6).toFixed(1));
+  await expect(dialog).toContainText('OCF + investing − FCF');
+  await dialog.evaluate(element=>element.close());
+  await chart.locator('.sw-cash-month').last().focus();
+  await page.keyboard.press('Enter');
+  await expect(dialog).toContainText(source.latest.month);
+  await dialog.evaluate(element=>element.close());
+  await page.setViewportSize({width:390,height:844});
+  await expect(page.locator('.sw-primary .report-svg [data-sw-cash-month]').first()).toBeVisible();
+  await page.locator('.sw-primary .report-svg [data-sw-cash-month]').last().click();
+  await expect(dialog).toContainText('Operating cash flow');
+  await expect(dialog).toContainText(source.latest.month);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
+
 test('all report destinations retain evidence instead of standalone KPI pages',async({page})=>{
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
   const reports=['executive','pnl','margin','working-capital','cash-flow','treasury','balance-sheet','forecast','macro-sensitivities','business-drivers','profitability','intercompany','operations-capex','fx','performance-review','action-execution','data-journey','close-journey'];
