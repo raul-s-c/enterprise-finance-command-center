@@ -405,6 +405,10 @@ test('Treasury laptop trend fills the panel and preserves month evidence',async(
   await chart.locator('.sw-liquidity-month').last().click();
   await expect(page.locator('#reportDialog')).toBeVisible();
   await expect(page.locator('#reportDialog')).toContainText(latest.month);
+  await page.locator('#reportDialog').evaluate(dialog=>dialog.close());
+  await page.setViewportSize({width:390,height:844});
+  await expect(page.locator('.sw-primary .report-svg')).toBeVisible();
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
 });
 
 test('all report destinations retain evidence instead of standalone KPI pages',async({page})=>{
