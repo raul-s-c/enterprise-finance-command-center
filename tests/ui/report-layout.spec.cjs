@@ -386,6 +386,27 @@ test('Executive laptop overview exposes its story and priorities without hidden 
   await expect(page.locator('#executive-region-4')).toContainText('Management priorities');
 });
 
+test('Treasury laptop trend fills the panel and preserves month evidence',async({page})=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=treasury&page=0');
+  const chart=page.locator('.sw-liquidity-trend');
+  await expect(chart.locator('.sw-liquidity-month')).toHaveCount(12);
+  const fit=await chart.evaluate(element=>{
+    const panel=element.closest('.sw-primary');
+    return {width:element.getBoundingClientRect().width,panel:panel.getBoundingClientRect().width,content:element.scrollHeight,height:element.clientHeight};
+  });
+  expect(fit.width).toBeGreaterThan(fit.panel-30);
+  expect(fit.content).toBeLessThanOrEqual(fit.height+1);
+  const latest=await page.evaluate(async()=>{
+    const data=await(await fetch('/data/dashboard.json')).json();
+    return data.treasury_liquidity.at(-1);
+  });
+  await expect(chart.locator('.sw-liquidity-month').last()).toContainText((latest.liquidity_headroom/1e6).toFixed(1));
+  await chart.locator('.sw-liquidity-month').last().click();
+  await expect(page.locator('#reportDialog')).toBeVisible();
+  await expect(page.locator('#reportDialog')).toContainText(latest.month);
+});
+
 test('all report destinations retain evidence instead of standalone KPI pages',async({page})=>{
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
   const reports=['executive','pnl','margin','working-capital','cash-flow','treasury','balance-sheet','forecast','macro-sensitivities','business-drivers','profitability','intercompany','operations-capex','fx','performance-review','action-execution','data-journey','close-journey'];
