@@ -20,3 +20,16 @@ test('P&L lineage nodes remain fully inside the visible flow panel',async({page}
   await page.locator('.cx-flow-map.pnl-flow button').first().click();
   await expect(page.locator('#reportDialog')).toBeVisible();
 });
+
+test('P&L lineage remains visible at 1024px without a desktop inspector',async({page})=>{
+  await page.setViewportSize({width:1024,height:768});
+  await page.goto('/#view=pnl&page=5');
+  await expect(page.locator('.cx-flow-map.pnl-flow button')).toHaveCount(4);
+  const geometry=await page.evaluate(()=>{
+    const panel=document.querySelector('.cx-flow').getBoundingClientRect();
+    const nodes=[...document.querySelectorAll('.cx-flow-map.pnl-flow button')].map(button=>button.getBoundingClientRect());
+    return {bottom:panel.bottom,nodes:nodes.map(node=>node.bottom),overflow:document.documentElement.scrollWidth-innerWidth};
+  });
+  expect(Math.max(...geometry.nodes),JSON.stringify(geometry)).toBeLessThanOrEqual(geometry.bottom+1);
+  expect(geometry.overflow).toBeLessThanOrEqual(1);
+});
