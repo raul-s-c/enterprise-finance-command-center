@@ -489,6 +489,10 @@ test('Cash Flow uses a full-width signed trend with source-tied monthly evidence
   await expect(dialog).toContainText((Math.abs(source.latest.investing_cash_flow)/1e6).toFixed(1));
   await expect(dialog).toContainText('OCF + investing − FCF');
   await dialog.evaluate(element=>element.close());
+  await chart.locator('.sw-cash-month').last().focus();
+  await page.keyboard.press('Enter');
+  await expect(dialog).toContainText(source.latest.month);
+  await dialog.evaluate(element=>element.close());
   await page.setViewportSize({width:390,height:844});
   await expect(page.locator('.sw-primary .report-svg [data-sw-cash-month]').first()).toBeVisible();
   await page.locator('.sw-primary .report-svg [data-sw-cash-month]').last().click();
