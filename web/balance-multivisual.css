@@ -1,0 +1,32 @@
+/* Read the movement, accounting identity and asset mix on one financial-position screen. */
+@media(min-width:1150px) and (max-width:1500px) and (min-height:651px), (min-width:1501px) and (max-width:1700px) and (min-height:651px) and (max-height:879px){
+  .balance-cockpit .sw-analysis-nav{display:flex;gap:4px;padding:8px 0;flex:none}
+  .report-mode .balance-cockpit .sw-analysis-nav button{font-size:13px;padding:7px 14px;min-height:34px;background:white;border:1px solid #d9e2ef}
+  .report-mode .balance-cockpit .sw-analysis-nav button[aria-pressed=true]{color:#075bd6;background:#edf4ff;border-color:#0867f2}
+  .report-mode .balance-cockpit .sw-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr);overflow:hidden}
+  .report-mode .balance-cockpit .sw-grid>.sw-primary,
+  .report-mode .balance-cockpit .sw-grid>.sw-secondary{display:flex;flex-direction:column;min-height:0;overflow:hidden}
+  .report-mode .balance-cockpit .sw-grid>.sw-secondary{border-right:0}
+  .report-mode .balance-cockpit .sw-grid>.sw-inspector,
+  .report-mode .balance-cockpit .sw-grid>.sw-detail{display:none}
+  .report-mode .balance-cockpit .sw-grid:has(>.sw-detail.analysis-selected){grid-template-columns:minmax(0,1fr)}
+  .report-mode .balance-cockpit .sw-grid:has(>.sw-detail.analysis-selected)>.sw-primary,
+  .report-mode .balance-cockpit .sw-grid:has(>.sw-detail.analysis-selected)>.sw-secondary{display:none}
+  .report-mode .balance-cockpit .sw-grid>.sw-detail.analysis-selected{display:flex;flex-direction:column;grid-column:1;border-top:0;min-height:0}
+  .report-mode .balance-cockpit .sw-secondary .sw-formula{margin:5px 0}
+  .report-mode .balance-cockpit .sw-secondary .sw-formula span{padding:6px 4px}
+  .report-mode .balance-cockpit .sw-structure{gap:4px 10px}
+  .report-mode .balance-cockpit .sw-structure span{padding:4px 7px;gap:3px 6px}
+  .report-mode .balance-cockpit .sw-detail .sw-ranking{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:8px;gap:0 18px}
+  .report-mode .balance-cockpit .sw-detail .sw-ranking button{min-height:35px;font-size:11px}
+}
+.balance-cockpit .sw-structure{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 14px;margin-top:6px}
+.balance-cockpit .sw-structure span{display:grid;grid-template-columns:1fr auto;gap:5px 8px;min-width:0;padding:7px 9px;background:#f7f9fc;border:1px solid #e3eaf4;font-size:10px;color:#34455e}
+.balance-cockpit .sw-structure strong{font-size:12px;color:#101d38;font-variant-numeric:tabular-nums}
+.balance-cockpit .sw-structure b{grid-column:1/-1;display:block;max-width:100%;height:7px;min-width:1px;background:#1268d8}
+@media(min-width:1280px) and (max-width:1500px) and (min-height:880px){
+  .report-mode:has(.balance-cockpit) .report-context{display:none}
+  .report-mode .balance-cockpit .sw-grid:not(:has(>.sw-detail.analysis-selected)){grid-template-rows:minmax(0,1fr) 182px}
+  .report-mode .balance-cockpit .sw-grid:not(:has(>.sw-detail.analysis-selected))>.sw-detail{display:flex;flex-direction:column;grid-column:1/-1;grid-row:2;min-height:0;border-top:1px solid #d8e0eb}
+}
+@media(max-width:600px){.balance-cockpit .sw-structure{grid-template-columns:minmax(0,1fr)}}
