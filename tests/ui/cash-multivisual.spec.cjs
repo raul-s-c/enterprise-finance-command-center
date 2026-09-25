@@ -6,6 +6,7 @@ test('Cash Flow shows signed trend and reconciled cash identity together on a la
   const cockpit=page.locator('.cash-cockpit');
   await expect(cockpit.locator('.sw-cash-month')).toHaveCount(12);
   await expect(cockpit.locator('.sw-secondary .sw-formula')).toBeVisible();
+  await expect(cockpit.locator('.sw-secondary')).toContainText('Consolidated group · source-tied close');
   const close=await page.evaluate(async()=>{
     const data=await(await fetch('/data/dashboard.json')).json();
     return data.cash_flow.at(-1);
