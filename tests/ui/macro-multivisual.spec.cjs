@@ -10,7 +10,9 @@ test('Macro keeps eight independent shock impacts beside the EBIT identity on a 
   for(const selector of ['.sw-primary','.sw-secondary']){
     expect(await cockpit.locator(selector).evaluate(element=>element.scrollHeight-element.clientHeight),`${selector} is clipped`).toBeLessThanOrEqual(1);
   }
-  await cockpit.locator('.sw-primary .sw-ranking button').first().click();
+  await cockpit.locator('.sw-primary [data-sw-row="Price +1%"]').click();
+  await expect(cockpit.locator('.sw-secondary')).toContainText('Price +1%');
+  await expect(cockpit.locator('.sw-secondary .sw-formula')).toContainText('€4.3m');
   await expect(page.locator('#reportDialog')).toContainText('financial_sensitivity_detail');
   await page.locator('#reportDialogClose').click();
   await page.getByRole('button',{name:'Contribution & detail',exact:true}).click();
