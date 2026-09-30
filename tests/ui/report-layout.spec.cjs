@@ -1,40 +1,52 @@
 const {test,expect}=require('@playwright/test');
 
-test('performance review keeps every KPI and source visible on a laptop canvas',async({page})=>{
-  await page.setViewportSize({width:1280,height:720});
+test('performance review tells a source-tied result, cause, response and control story',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
   await page.goto('/#view=performance-review&page=0&entity=all&division=all');
-  const overview=page.locator('.performance-review-overview');
+  const overview=page.locator('.prv-overview');
   await expect(overview).toBeVisible();
   await expect(overview.locator('.kpi')).toHaveCount(10);
-  await expect(overview.getByText('CFO performance narrative')).toBeVisible();
+  await expect(overview.getByText('What changed and why it matters')).toBeVisible();
   await expect(overview.getByText('Review coverage')).toBeVisible();
-  const layout=await overview.evaluate(node=>{
-    const strip=node.querySelector('.performance-review-indicators').getBoundingClientRect();
-    const cards=[...node.querySelectorAll('.performance-review-indicators .kpi')];
-    const coverage=node.querySelector('.review-coverage');
-    const pane=coverage.closest('.story-composite').getBoundingClientRect();
-    const coveragePane=coverage.closest('.story-composite');
-    return {cardsVisible:cards.every(card=>{const rect=card.getBoundingClientRect();return rect.left>=strip.left-1&&rect.right<=strip.right+1}),coverageCount:coverage.children.length,lastSourceVisible:coverage.lastElementChild.getBoundingClientRect().bottom<=pane.bottom+1,coverageFits:coveragePane.scrollHeight<=coveragePane.clientHeight+1,horizontal:document.documentElement.scrollWidth>innerWidth};
+  await expect(overview.locator('.prv-source-row')).toHaveCount(8);
+  await expect(overview.locator('.prv-bridge-column')).toHaveCount(5);
+  const published=await page.evaluate(async()=>{
+    const data=await(await fetch('/data/dashboard.json')).json(),rows=data.performance_review.filter(row=>row.scope_level==='Group');
+    const effects=['Price effect','Volume effect','Mix effect'].map(metric=>rows.find(row=>row.metric===metric).actual_value);
+    const month=data.meta.end_month,prior=`${Number(month.slice(0,4))-1}${month.slice(4)}`;
+    const revenue=m=>data.management_detail.filter(row=>row.month===m).reduce((sum,row)=>sum+row.revenue,0);
+    return {reconciles:Math.abs(revenue(prior)+effects.reduce((sum,value)=>sum+value,0)-revenue(month))<0.01,actual:revenue(month)};
   });
-  expect(layout.cardsVisible).toBe(true);
-  expect(layout.coverageCount).toBe(8);
-  expect(layout.lastSourceVisible).toBe(true);
-  expect(layout.coverageFits).toBe(true);
-  expect(layout.horizontal).toBe(false);
+  expect(published.reconciles).toBe(true);
+  await expect(overview.locator('.prv-bridge-column').last()).toHaveAttribute('aria-label',new RegExp(published.actual.toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2})));
+  const fit=await overview.evaluate(node=>({horizontal:document.documentElement.scrollWidth>innerWidth,clipped:node.scrollHeight>node.clientHeight+1,panels:[...node.querySelectorAll('.prv-panel')].some(panel=>panel.scrollHeight>panel.clientHeight+1),status:[...node.querySelectorAll('.prv-status')].some(cell=>cell.scrollHeight>cell.clientHeight+1)}));
+  expect(fit).toEqual({horizontal:false,clipped:false,panels:false,status:false});
   await overview.getByRole('button',{name:'How Revenue vs budget is calculated'}).click();
-  await expect(page.locator('#reportDialog')).toBeVisible();
+  await expect(page.locator('#reportDialog')).toContainText('Calculation');
   await page.locator('#reportDialog').getByRole('button',{name:'Close'}).click();
+  await overview.locator('.prv-source-row[data-prv-source="price_volume_mix.csv"]').click();
+  await expect(page.locator('#reportDialog')).toContainText('3 reviewed observations');
+  await page.locator('#reportDialog').getByRole('button',{name:'Close'}).click();
+  await overview.locator('[data-prv-route="register"]').click();
+  await expect(page.locator('#content')).toContainText('Management action register');
+  await page.goto('/#view=performance-review&page=0&entity=all&division=all');
+  await page.setViewportSize({width:1280,height:720});
+  await expect(overview.locator('[data-prv-statuses]')).toBeVisible();
+  await overview.locator('[data-prv-statuses]').click();
+  await expect(page.locator('#reportDialog')).toContainText('Cancelled');
+  await page.locator('#reportDialog').getByRole('button',{name:'Close'}).click();
+  const laptop=await overview.evaluate(node=>({horizontal:document.documentElement.scrollWidth>innerWidth,clipped:node.scrollHeight>node.clientHeight+1,panels:[...node.querySelectorAll('.prv-panel')].some(panel=>panel.scrollHeight>panel.clientHeight+1),status:[...node.querySelectorAll('.prv-status')].filter(cell=>getComputedStyle(cell).display!=='none').some(cell=>cell.scrollHeight>cell.clientHeight+1)}));
+  expect(laptop).toEqual({horizontal:false,clipped:false,panels:false,status:false});
   await page.setViewportSize({width:1024,height:720});
-  const laptop=await overview.evaluate(node=>{
-    const panes=[...node.querySelectorAll('.story-board > .story-composite')];
-    return {bothVisible:panes.length===2 && panes[0].getBoundingClientRect().right<panes[1].getBoundingClientRect().left,
-      coverageFits:panes[1].querySelector('.review-control-note').getBoundingClientRect().bottom<=panes[1].getBoundingClientRect().bottom,
-      horizontal:document.documentElement.scrollWidth>innerWidth};
-  });
-  expect(laptop).toEqual({bothVisible:true,coverageFits:true,horizontal:false});
+  const tablet=await overview.evaluate(node=>({horizontal:document.documentElement.scrollWidth>innerWidth,lastSourceVisible:node.querySelector('.prv-source-row:last-child').getBoundingClientRect().bottom<=node.querySelector('.prv-coverage').getBoundingClientRect().bottom,visibleStatus:[...node.querySelectorAll('.prv-status')].filter(cell=>getComputedStyle(cell).display!=='none').length}));
+  expect(tablet).toEqual({horizontal:false,lastSourceVisible:true,visibleStatus:4});
+  await page.goto('/#view=performance-review&page=0&entity=US01&division=Hardware');
+  await expect(overview.locator('.prv-score-card')).toHaveCount(2);
+  await expect(overview.locator('.prv-bridge')).toHaveCount(0);
+  await expect(overview.locator('.prv-source-row')).toHaveCount(2);
   await page.setViewportSize({width:390,height:844});
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
-  await expect(overview.locator('.kpi')).toHaveCount(10);
+  await expect(overview.locator('.prv-score-card')).toHaveCount(2);
 });
 
 test('global search navigates reports and financial scope with keyboard and mouse',async({page})=>{
@@ -712,7 +724,7 @@ test('all report destinations retain evidence instead of standalone KPI pages',a
       }
       const evidence=await page.locator('#content').evaluate(content=>({
         cards:content.querySelectorAll('.kpi,.report-kpi,.sw-kpi,.story-kpi').length,
-        supporting:content.querySelectorAll('.panel,.financial-report,.sw-panel,.cx-workspace,.story-region,.tower-analytics,.carrying-value-chart').length,
+        supporting:content.querySelectorAll('.panel,.financial-report,.sw-panel,.cx-workspace,.story-region,.tower-analytics,.carrying-value-chart,.prv-story,.prv-coverage').length,
         text:content.innerText.trim().length,
         horizontalOverflow:document.documentElement.scrollWidth>innerWidth+1
       }));

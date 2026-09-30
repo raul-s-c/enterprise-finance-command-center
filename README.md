@@ -371,6 +371,8 @@ The GitHub Pages application contains six decision areas and eighteen contextual
 - **Operations:** Business Drivers, Intercompany, Operations & CAPEX and FX & Translation
 - **Close & Controls:** Close Journey, Performance Review, Action Execution and Data Journey
 
+Performance Review now reads as a connected close narrative: source-tied Actual/Budget scorecards, the highest-materiality explanations, a Group-only price/volume/mix bridge that reconciles to revenue, owned action states, and drillable source coverage. Its responsive layout keeps the decision-critical status visible on short laptops while retaining the complete state and evidence on demand. See [the Performance Review cockpit guide](docs/performance-review-cockpit.md).
+
 The P&L, Balance Sheet and Cash Flow pages combine actual reporting with the Base forward statement. Plan & Forecast compares Base, Upside and Downside three-statement consequences; Treasury connects liquidity and covenant headroom; Profitability traces published product and customer economics; Operations & CAPEX separates cash investment from non-cash asset commissioning.
 
 On phones and narrow tablets, the P&L keeps all ten statement lines on one screen. Its **Values** and **Δ PY** controls switch between PY/Actual amounts and signed absolute/percentage variances without sideways scrolling. Green and red reflect earnings impact, so lower cost is favorable; the wide-screen cumulative bridge and source-inspection behavior are unchanged.
