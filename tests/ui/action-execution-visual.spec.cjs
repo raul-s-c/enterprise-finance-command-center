@@ -1,6 +1,29 @@
 const {test,expect}=require('@playwright/test');
 const published=require('../../web/data/dashboard.json');
 
+test('tall execution cockpit explains intervention mix and the timing of additive EBIT',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await page.goto('/#view=action-execution&page=0');
+  const plans=published.management_action_plans;
+  const types=[...new Set(plans.map(row=>row.intervention_type||'Unspecified'))];
+  await expect(page.locator('.aev-type')).toHaveCount(types.length);
+  for(const type of types){
+    const records=plans.filter(row=>(row.intervention_type||'Unspecified')===type);
+    const item=page.locator('.aev-type').filter({hasText:type});
+    await expect(item).toHaveAttribute('aria-label',`${type}: ${records.length} plans, ${records.filter(row=>row.priority==='P1').length} P1`);
+  }
+  const periods=await page.evaluate(()=>{const rows=scopedActionBridge();return Array.from({length:4},(_,index)=>rows.slice(index*3,index*3+3).reduce((sum,row)=>sum+Number(row.action_ebit_impact||0),0))});
+  const formatter=new Intl.NumberFormat('en-GB',{style:'currency',currency:'EUR',maximumFractionDigits:0});
+  await expect(page.locator('.aev-period')).toHaveCount(4);
+  for(let index=0;index<4;index++)await expect(page.locator('.aev-period').nth(index)).toContainText(formatter.format(periods[index]));
+  expect(Math.abs(periods.reduce((sum,value)=>sum+value,0)-published.management_action_forecast_bridge.filter(row=>row.scenario==='Base'&&Number(row.horizon_month)<=12).reduce((sum,row)=>sum+Number(row.action_ebit_impact||0),0))).toBeLessThan(.01);
+  for(const panel of await page.locator('.story-composite>.panel').all())expect(await panel.evaluate(el=>el.scrollHeight<=el.clientHeight+1)).toBe(true);
+  await page.screenshot({path:'test-results/action-execution-tall.png',fullPage:true});
+  await page.setViewportSize({width:1280,height:720});
+  await expect(page.locator('.aev-type-mix')).toBeHidden();
+  await expect(page.locator('.aev-periods')).toBeHidden();
+});
+
 test('action execution shows source-tied stages and monthly impact',async({page})=>{
   await page.setViewportSize({width:1280,height:720});
   await page.goto('/#view=action-execution&page=0');
