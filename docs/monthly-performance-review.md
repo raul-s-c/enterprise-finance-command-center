@@ -78,3 +78,7 @@ The v0.16 build fails when:
 - the current-month review summary is missing
 
 These controls extend all accounting, consolidation, Working Capital, Treasury, workforce, FX, liquidity and three-statement controls from earlier releases.
+
+## Evidence-page reading order
+
+The Driver scorecard first shows **Metric → Actual → Benchmark → Variance**; comparison, category, assessment, severity and source remain available through the table's column pager and row detail. Variance color follows the published economic `favorable` assessment, not the arithmetic sign: a positive OPEX cost variance is adverse. The adjacent action register first shows **Trigger and priority → Owner → Due → Status**, so accountability and timing are visible without changing columns. Scope, action text and evidence remain in the subsequent columns and row detail.

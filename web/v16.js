@@ -14,10 +14,11 @@ function reviewValue(value,unit){
   return eur.format(v);
 }
 
-function reviewSigned(value,unit){
+function reviewSigned(value,unit,favorable){
   const v=Number(value)||0;
   const rendered=unit==='Percent'?`${v>=0?'+':''}${pct(v)}`:unit==='FTE'?`${v>=0?'+':''}${num(v,1)}`:eur.format(v);
-  return `<span class="${v>=0?'value-pos':'value-neg'}">${rendered}</span>`;
+  const good=favorable===undefined?v>=0:favorable===true;
+  return `<span class="review-variance ${good?'is-favorable':'is-adverse'}" title="${good?'Favorable':'Adverse'} financial variance">${rendered}</span>`;
 }
 
 function reviewScopeLabel(row){
@@ -51,9 +52,9 @@ function renderPerformanceReview(){
   const sourceCounts=[...new Set(review.map(r=>r.source_dataset))].map(source=>({source,count:review.filter(r=>r.source_dataset===source).length}));
   return `<div class="section-note"><strong>Monthly performance review</strong> — deterministic explanations and actions generated only from reconciled close datasets. Severity reflects variance materiality; every P1/P2 action retains its source metric, scope, owner and due month.</div>
   <div class="kpi-grid">
-    ${kpi('Revenue vs budget',revenue?reviewSigned(revenue.variance,revenue.unit):'-',revenue?`${pct(Number(revenue.materiality_pct))} materiality`:'Not available')}
-    ${kpi('EBIT vs budget',ebit?reviewSigned(ebit.variance,ebit.unit):'-',ebit?`${pct(Number(ebit.materiality_pct))} materiality`:'Not available')}
-    ${kpi('FY EBIT vs budget',outlook?reviewSigned(outlook.variance,outlook.unit):'-',outlook?'Latest full-year outlook':'Group scope only')}
+    ${kpi('Revenue vs budget',revenue?reviewSigned(revenue.variance,revenue.unit,revenue.favorable):'-',revenue?`${pct(Number(revenue.materiality_pct))} materiality`:'Not available')}
+    ${kpi('EBIT vs budget',ebit?reviewSigned(ebit.variance,ebit.unit,ebit.favorable):'-',ebit?`${pct(Number(ebit.materiality_pct))} materiality`:'Not available')}
+    ${kpi('FY EBIT vs budget',outlook?reviewSigned(outlook.variance,outlook.unit,outlook.favorable):'-',outlook?'Latest full-year outlook':'Group scope only')}
     ${kpi('Adverse signals',String(adverse.length),`${review.length} reviewed drivers`)}
     ${kpi('Active actions',String(actions.filter(r=>['Open','In Progress','In progress'].includes(r.status)).length),`${actions.filter(r=>r.priority==='P1' && ['Open','In Progress','In progress'].includes(r.status)).length} P1`)}
   </div>
@@ -61,18 +62,19 @@ function renderPerformanceReview(){
     ${panel('CFO performance narrative',top?`Top adverse signal: ${top.metric}`:'No material adverse signal',`<div class="review-list">${narrative.map(r=>`<div class="review-item ${r.favorable?'favorable':'adverse'}"><div class="review-item-head"><span>${severityBadge(r.severity)} <strong>${safe(r.headline)}</strong></span><span>${reviewScopeLabel(r)}</span></div><div class="review-item-detail">${safe(r.explanation)}</div><div class="review-source">${safe(r.source_dataset)} · ${safe(r.comparison)}</div></div>`).join('')||'<div class="empty">No review observations for this selection.</div>'}</div>`,'span-7')}
     ${panel('Review coverage','Reviewed observations by source · selected scope',`<div class="review-coverage" role="list" aria-label="Review observations by source">${sourceCounts.map(r=>`<div role="listitem"><span>${safe(r.source.replaceAll('_',' '))}</span><i><b style="width:${r.count/Math.max(...sourceCounts.map(s=>s.count),1)*100}%"></b></i><strong>${r.count}</strong></div>`).join('')}</div><div class="section-note review-control-note">Review IDs, source values, variance arithmetic and required action coverage are enforced by release controls.</div>`,'span-5')}
     ${panel('Driver scorecard','Actual, benchmark and source-tied variance',table(review,[
-      {key:'category',label:'Category'},{key:'metric',label:'Metric'},{key:'comparison',label:'Comparison'},
+      {key:'metric',label:'Metric'},
       {key:'actual_value',label:'Actual',num:true,format:(v,r)=>reviewValue(v,r.unit)},
       {key:'benchmark_value',label:'Benchmark',num:true,format:(v,r)=>reviewValue(v,r.unit)},
-      {key:'variance',label:'Variance',num:true,format:(v,r)=>reviewSigned(v,r.unit)},
+      {key:'variance',label:'Variance',num:true,format:(v,r)=>reviewSigned(v,r.unit,r.favorable)},
+      {key:'comparison',label:'Comparison'},{key:'category',label:'Category'},
       {key:'favorable',label:'Assessment',format:v=>v?'<span class="value-pos">Favorable</span>':'<span class="value-neg">Adverse</span>'},
       {key:'severity',label:'Severity',format:v=>severityBadge(v)},{key:'source_dataset',label:'Source'}
     ]),'span-12')}
     ${panel('Management action register','Only material adverse signals become owned actions',table(actions,[
-      {key:'priority',label:'Priority',format:v=>priorityBadge(v)},{key:'trigger_metric',label:'Trigger'},
-      {key:'scope_level',label:'Scope',format:(v,r)=>reviewScopeLabel(r)},{key:'owner_role',label:'Owner'},
-      {key:'action',label:'Management action'},{key:'due_month',label:'Due'},{key:'status',label:'Status'},
-      {key:'source_dataset',label:'Evidence'}
+      {key:'trigger_metric',label:'Trigger / priority',format:(v,r)=>`${priorityBadge(r.priority)} ${safe(v)}`},
+      {key:'owner_role',label:'Owner'},{key:'due_month',label:'Due'},{key:'status',label:'Status'},
+      {key:'scope_level',label:'Scope',format:(v,r)=>reviewScopeLabel(r)},
+      {key:'action',label:'Management action'},{key:'source_dataset',label:'Evidence'}
     ]),'span-12')}
   </div>`;
 }
@@ -86,7 +88,7 @@ renderers.executive=function(){
   const groupReview=(data.performance_review||[]).filter(r=>r.scope_level==='Group' && !r.favorable).sort((a,b)=>Number(b.materiality_pct)-Number(a.materiality_pct)).slice(0,4);
   const groupActions=(data.management_actions||[]).filter(r=>r.scope_level==='Group' && ['Open','In Progress','In progress'].includes(r.status)).sort((a,b)=>a.priority.localeCompare(b.priority)).slice(0,4);
   return base+`<div class="panel-grid review-executive-extension">
-    ${panel('Close priorities','Highest-materiality adverse signals',table(groupReview,[{key:'metric',label:'Metric'},{key:'variance',label:'Variance',num:true,format:(v,r)=>reviewSigned(v,r.unit)},{key:'severity',label:'Severity',format:v=>severityBadge(v)},{key:'source_dataset',label:'Source'}]),'span-6')}
+    ${panel('Close priorities','Highest-materiality adverse signals',table(groupReview,[{key:'metric',label:'Metric'},{key:'variance',label:'Variance',num:true,format:(v,r)=>reviewSigned(v,r.unit,r.favorable)},{key:'severity',label:'Severity',format:v=>severityBadge(v)},{key:'source_dataset',label:'Source'}]),'span-6')}
     ${panel('Management commitments','Open group actions',table(groupActions,[{key:'priority',label:'Priority',format:v=>priorityBadge(v)},{key:'trigger_metric',label:'Trigger'},{key:'owner_role',label:'Owner'},{key:'due_month',label:'Due'}]),'span-6')}
   </div>`;
 };
