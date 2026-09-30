@@ -222,9 +222,15 @@ test('the complete income statement fits standard laptop heights',async({page})=
 });
 
 test('Data Journey shows the full controlled chain and routes to source evidence',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await page.goto('/#view=data-journey');
+  await expect(page.locator('.dj-stage-output')).toHaveCount(10);
+  await expect(page.locator('[data-dj-stage="3"] .dj-stage-output')).toHaveText('Balanced journal and trial balance');
+  await expect(page.locator('[data-dj-stage="3"] .dj-stage-output')).toBeVisible();
   await page.setViewportSize({width:1280,height:720});
   await page.goto('/#view=data-journey');
   await expect(page.locator('.dj-stage')).toHaveCount(10);
+  await expect(page.locator('.dj-stage-output').first()).toBeHidden();
   const expected=await page.evaluate(async()=>{
     const data=await(await fetch('/data/dashboard.json')).json();
     return {controls:Object.keys(data.validation).filter(key=>key!=='passed').length,macroOfficial:Object.values(data.sources.macro_drivers).reduce((sum,row)=>sum+row.official_rows,0),macroFallback:Object.values(data.sources.macro_drivers).reduce((sum,row)=>sum+row.fallback_rows,0)};
