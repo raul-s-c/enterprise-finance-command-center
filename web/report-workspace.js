@@ -97,7 +97,11 @@ function reportPages(){
   const contributionPages=ContributionExplorer.pages(state.view);
   if(state.view==='working-capital')pages.unshift(...contributionPages);
   else pages.push(...contributionPages);
-  return ManagementBook.compose(pages);
+  const composed=ManagementBook.compose(pages);
+  if(state.view==='performance-review'&&composed.length){
+    composed[0]={...composed[0],html:globalThis.PerformanceReviewVisual.page(data,state),custom:true};
+  }
+  return composed;
 }
 function reportReadRoute(){
   const params=new URLSearchParams(location.hash.slice(1));
@@ -253,6 +257,7 @@ function render(restoring=false){
     point.onclick=show;point.onkeydown=event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();show();}};
   });
   reportKpiHelp();
+  globalThis.PerformanceReviewVisual?.mount(data,state,reportState,render,reportDialog);
   for(const empty of document.querySelectorAll('#content .empty')){
     empty.innerHTML=`<strong>${pages[reportState.page].title==='Overdue and escalated actions'?'No overdue actions in this close':'No records in this published report'}</strong><p>This is not a loading error. The published snapshot contains no matching detail; financial zeros remain visible elsewhere.</p><button data-return-overview>Return to Executive</button>`;
     empty.querySelector('button').onclick=()=>{state.view='executive';render();};
