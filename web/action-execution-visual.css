@@ -100,6 +100,20 @@
 @media(max-width:900px){.report-mode .action-story-overview{height:auto}.report-mode .action-story-indicators{grid-template-columns:repeat(2,minmax(0,1fr))}.report-mode .action-story-all{grid-column:1/-1}.report-mode .action-story-overview>.story-board{height:auto}}
 @media(max-width:900px){.report-mode .story-composite:has(.action-execution-visual){height:max-content;min-height:0;overflow:visible}.report-mode .story-composite:has(.action-execution-visual)>.panel{height:max-content;min-height:0;flex:none}}
 @media(max-width:900px){.report-mode .story-board:has(.action-execution-visual){grid-auto-rows:max-content;align-content:start;overflow:auto}}
+@media(min-width:901px) and (max-width:1100px){
+  .report-mode .action-story-overview{grid-template-rows:auto auto minmax(0,1fr)}
+  .report-mode .action-story-overview>.story-panel-switch{display:flex;gap:6px;flex:none;margin-bottom:7px;border-bottom:1px solid #d7e0eb}
+  .report-mode .action-story-overview>.story-panel-switch button{min-height:30px;padding:4px 12px;border:0;border-bottom:2px solid transparent;background:#fff;color:#263a58;font-size:12px}
+  .report-mode .action-story-overview>.story-panel-switch button[aria-pressed="true"]{border-bottom-color:#0869e1;color:#075bd6;font-weight:700}
+  .report-mode .action-story-overview>.story-board{grid-template-columns:minmax(0,1fr);grid-auto-rows:minmax(0,1fr);overflow:hidden}
+  .report-mode .action-story-overview .story-composite{min-height:0}
+  .report-mode .action-story-overview .aev-chart{max-height:135px}
+  .report-mode .action-story-overview .aev-chart text{font-size:17px}
+  .report-mode .action-story-overview .aev-selected{display:grid;grid-template-columns:155px minmax(0,1fr);align-items:center;gap:8px;padding:4px 8px}
+  .report-mode .action-story-overview .aev-selected>strong{margin:0}
+  .report-mode .action-story-overview .aev-selected span{flex-direction:row;align-items:baseline;gap:4px}
+  .report-mode .action-story-overview .aev-selected b{font-size:12px}
+}
 @media(max-width:480px){.report-mode .aev-chart-caption{flex-wrap:wrap}.report-mode .aev-selected>div{gap:4px}.report-mode .aev-selected b{font-size:11px}}
 @media(max-height:760px) and (min-width:901px){.report-mode .aev-type-mix,.report-mode .aev-periods{display:none}}
 @media(max-width:480px){.report-mode .aev-period-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.report-mode .aev-type{grid-template-columns:minmax(0,130px) minmax(0,1fr) 20px}}

@@ -274,7 +274,7 @@ function render(restoring=false){
   reportEnhancePage();
 }
 function reportStoryBoards(){
-  if(window.innerWidth>900)return;
+  if(window.innerWidth>900&&(state.view!=='action-execution'||window.innerWidth>1100))return;
   for(const board of document.querySelectorAll('.story-board')){
     const regions=[...board.querySelectorAll(':scope > .story-composite')];if(regions.length<2)continue;
     const key=`${state.view}|${reportState.pages[reportState.page]?.title||''}`;
