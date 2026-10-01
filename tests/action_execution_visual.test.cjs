@@ -28,6 +28,22 @@ test('forecast bridge preserves signed month values and source table',()=>{
   assert.match(html,/id="source"/);
 });
 
+test('intervention mix counts plans and period cards sum signed monthly EBIT',()=>{
+  const plans=[
+    {intervention_type:'Margin recovery',priority:'P1',execution_status:'Approved'},
+    {intervention_type:'Margin recovery',priority:'P2',execution_status:'Approved'},
+    {intervention_type:'<unsafe>',priority:'P1',execution_status:'Approved'}
+  ];
+  const mix=visual.portfolio(plans,'<table></table>');
+  assert.match(mix,/Margin recovery: 2 plans, 1 P1/);
+  assert.match(mix,/&lt;unsafe&gt;: 1 plans, 1 P1/);
+  assert.doesNotMatch(mix,/<unsafe>/);
+  const months=[-100,200,300,-500].map((value,index)=>({month:`2027-0${index+1}`,action_ebit_impact:value,action_revenue_impact:0,active_action_count:1}));
+  const bridge=visual.bridge(months,'<table></table>');
+  assert.match(bridge,/Months 1–3[\s\S]*?€400/);
+  assert.match(bridge,/Months 4–4[\s\S]*?-€500/);
+});
+
 test('actual impact distinguishes pre-effective zero from later signed activity',()=>{
   const plan=[{effective_month:'2026-09'}],zero=visual.actual([{month:'2026-08',action_ebit_impact:0}],plan,'2026-08','<table></table>');
   assert.match(zero,/all zero before effective dates/);
