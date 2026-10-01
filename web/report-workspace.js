@@ -207,9 +207,11 @@ function render(restoring=false){
   document.getElementById('reportArea').value=activeArea.id;
   document.getElementById('reportModule').innerHTML=activeModules.map(module=>`<option value="${module[0]}">${RM.escape(module[1])}</option>`).join('');
   document.getElementById('reportModule').value=state.view;
-  const chapterLabels=pages.length<=4?pages.map(p=>p.title):['Overview','Performance','Detail','Context'];
+  const chapterLabels=state.view==='performance-review'&&pages.length===4
+    ?['Review story','Drivers & actions','Lifecycle','Action register']
+    :pages.length<=4?pages.map(p=>p.title):['Overview','Performance','Detail','Context'];
   const chapterIndexes=pages.length<=4?pages.map((_,i)=>i):chapterLabels.map((_,i)=>Math.round(i*(pages.length-1)/3));
-  document.getElementById('reportTabs').innerHTML=chapterLabels.map((title,i)=>`<button data-page="${chapterIndexes[i]}" aria-current="${i===chapterIndexes.findLastIndex(index=>index<=reportState.page)?'page':'false'}">${RM.escape(title)}</button>`).join('');
+  document.getElementById('reportTabs').innerHTML=chapterLabels.map((title,i)=>{const fullTitle=RM.escape(pages[chapterIndexes[i]].title),a11y=state.view==='performance-review'?` aria-label="${fullTitle}" title="${fullTitle}"`:'';return `<button data-page="${chapterIndexes[i]}"${a11y} aria-current="${i===chapterIndexes.findLastIndex(index=>index<=reportState.page)?'page':'false'}">${RM.escape(title)}</button>`;}).join('');
   document.getElementById('reportPageSelect').innerHTML=pages.map((p,i)=>`<option value="${i}" ${i===reportState.page?'selected':''}>${i+1}. ${RM.escape(p.title)}</option>`).join('');
   reportFilterControls(pages[reportState.page],resolved);
   document.getElementById('content').innerHTML=pages[reportState.page].html;

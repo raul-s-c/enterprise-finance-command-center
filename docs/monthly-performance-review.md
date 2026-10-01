@@ -82,3 +82,5 @@ These controls extend all accounting, consolidation, Working Capital, Treasury, 
 ## Evidence-page reading order
 
 The Driver scorecard first shows **Metric → Actual → Benchmark → Variance**; comparison, category, assessment, severity and source remain available through the table's column pager and row detail. Variance color follows the published economic `favorable` assessment, not the arithmetic sign: a positive OPEX cost variance is adverse. The adjacent action register first shows **Trigger and priority → Owner → Due → Status**, so accountability and timing are visible without changing columns. Scope, action text and evidence remain in the subsequent columns and row detail.
+
+At laptop width, the four visible report tabs use short decision labels (Review story, Drivers & actions, Lifecycle, Action register); their full titles remain in the accessible button names, tooltips and Subpage selector.
