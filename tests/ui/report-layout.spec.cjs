@@ -38,8 +38,17 @@ test('performance review tells a source-tied result, cause, response and control
   const laptop=await overview.evaluate(node=>({horizontal:document.documentElement.scrollWidth>innerWidth,clipped:node.scrollHeight>node.clientHeight+1,panels:[...node.querySelectorAll('.prv-panel')].some(panel=>panel.scrollHeight>panel.clientHeight+1),status:[...node.querySelectorAll('.prv-status')].filter(cell=>getComputedStyle(cell).display!=='none').some(cell=>cell.scrollHeight>cell.clientHeight+1)}));
   expect(laptop).toEqual({horizontal:false,clipped:false,panels:false,status:false});
   await page.setViewportSize({width:1024,height:720});
-  const tablet=await overview.evaluate(node=>({horizontal:document.documentElement.scrollWidth>innerWidth,lastSourceVisible:node.querySelector('.prv-source-row:last-child').getBoundingClientRect().bottom<=node.querySelector('.prv-coverage').getBoundingClientRect().bottom,visibleStatus:[...node.querySelectorAll('.prv-status')].filter(cell=>getComputedStyle(cell).display!=='none').length}));
-  expect(tablet).toEqual({horizontal:false,lastSourceVisible:true,visibleStatus:4});
+  const regions=overview.locator('.prv-region-switch');
+  await expect(regions).toBeVisible();
+  await expect(overview.locator('.prv-score')).toBeVisible();
+  await expect(overview.locator('.prv-story')).toBeHidden();
+  const tablet=await overview.evaluate(node=>({horizontal:document.documentElement.scrollWidth>innerWidth,clipped:node.scrollHeight>node.clientHeight+1,visibleStatus:[...node.querySelectorAll('.prv-status')].filter(cell=>getComputedStyle(cell).display!=='none').length,valueFont:parseFloat(getComputedStyle(node.querySelector('.prv-score-card .kpi-value')).fontSize)}));
+  expect(tablet).toEqual({horizontal:false,clipped:false,visibleStatus:7,valueFont:27});
+  await regions.getByRole('button',{name:'Causes & coverage'}).click();
+  await expect(overview.locator('.prv-score')).toBeHidden();
+  await expect(overview.locator('.prv-story')).toBeVisible();
+  const causes=await overview.evaluate(node=>({clipped:node.scrollHeight>node.clientHeight+1,lastSourceVisible:node.querySelector('.prv-source-row:last-child').getBoundingClientRect().bottom<=node.querySelector('.prv-coverage').getBoundingClientRect().bottom}));
+  expect(causes).toEqual({clipped:false,lastSourceVisible:true});
   await page.goto('/#view=performance-review&page=0&entity=US01&division=Hardware');
   await expect(overview.locator('.prv-score-card')).toHaveCount(2);
   await expect(overview.locator('.prv-bridge')).toHaveCount(0);
@@ -263,8 +272,10 @@ test('P&L contribution explains actual vs prior year and shows truthful statemen
   await page.setViewportSize({width:1366,height:768});
   await page.goto('/#view=pnl&page=5&section=P%26L+contribution');
   await expect(page.locator('.cx-summary')).toBeVisible();
-  await expect(page.locator('.cx-formula')).toContainText('Actual · 2026-08');
-  await expect(page.locator('.cx-formula')).toContainText('Prior year · 2025-08');
+  const close=await page.evaluate(()=>data.meta.end_month);
+  const priorClose=`${Number(close.slice(0,4))-1}${close.slice(4)}`;
+  await expect(page.locator('.cx-formula')).toContainText(`Actual · ${close}`);
+  await expect(page.locator('.cx-formula')).toContainText(`Prior year · ${priorClose}`);
   await expect(page.locator('.cx-formula')).toContainText('Δ vs PY');
   const expected=await page.evaluate(async()=>{
     const data=await(await fetch('/data/dashboard.json')).json(),sum=month=>data.management_detail.filter(row=>row.month===month).reduce((total,row)=>total+row.revenue,0),actual=sum(data.meta.end_month),prior=sum(`${Number(data.meta.end_month.slice(0,4))-1}${data.meta.end_month.slice(4)}`),format=value=>new Intl.NumberFormat('en-GB',{style:'currency',currency:'EUR',maximumFractionDigits:2}).format(value);
@@ -290,8 +301,8 @@ test('P&L contribution explains actual vs prior year and shows truthful statemen
   expect(summaryOverflow).toBeLessThanOrEqual(1);
   await page.setViewportSize({width:390,height:844});
   await expect(page.locator('.cx-formula')).toBeVisible();
-  await expect(page.locator('.cx-formula')).toContainText('Actual · 2026-08');
-  await expect(page.locator('.cx-formula')).toContainText('Prior year · 2025-08');
+  await expect(page.locator('.cx-formula')).toContainText(`Actual · ${close}`);
+  await expect(page.locator('.cx-formula')).toContainText(`Prior year · ${priorClose}`);
   await expect(page.locator('.cx-formula')).toContainText('Δ vs PY');
   const mobileBounds=await page.locator('body').evaluate(element=>({scrollWidth:element.scrollWidth,clientWidth:element.clientWidth}));
   expect(mobileBounds.scrollWidth).toBeLessThanOrEqual(mobileBounds.clientWidth+1);

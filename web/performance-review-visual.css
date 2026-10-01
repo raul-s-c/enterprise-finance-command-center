@@ -1,5 +1,6 @@
 /* Source-tied CPA/ACCA review front page: result, cause, response and control. */
 .report-mode .prv-overview{height:100%;min-height:0;display:grid;grid-template-columns:minmax(0,1.86fr) minmax(0,1fr);grid-template-rows:minmax(0,1.05fr) minmax(0,1.18fr);gap:10px;color:#101d38}
+.prv-region-switch{display:none}
 .prv-overview>*{min-width:0;min-height:0}
 .prv-panel{display:flex;flex-direction:column;overflow:hidden;min-width:0;min-height:0;padding:10px 12px;border:1px solid #d7e0eb;background:#fff}
 .prv-panel>header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex:none;margin-bottom:8px}
@@ -94,11 +95,32 @@
   .prv-control-note{font-size:10px;margin-top:4px}
 }
 @media(max-width:1100px) and (min-width:901px){
-  .report-mode .prv-status .kpi-note,.prv-control-note{display:none}
-  .report-mode .prv-status:nth-child(n+5) .kpi-note{display:none}
-  .prv-actions h2{font-size:13px}
-  .prv-register-long{display:none}
-  .report-mode button.prv-source-row{min-height:18px}
+  .report-mode .prv-overview{grid-template-rows:auto minmax(0,1fr);gap:8px}
+  .prv-region-switch{grid-column:1/-1;display:flex;gap:4px;min-height:32px;border-bottom:1px solid #d7e0eb}
+  .report-mode .prv-region-switch button{min-height:30px;padding:4px 12px;border:0;border-bottom:2px solid transparent;background:#fff;color:#263a58;font-size:12px}
+  .report-mode .prv-region-switch button[aria-pressed="true"]{border-bottom-color:#0869e1;color:#075bd6;font-weight:700}
+  .report-mode .prv-overview[data-prv-region="close"] .prv-story,.report-mode .prv-overview[data-prv-region="close"] .prv-coverage,.report-mode .prv-overview[data-prv-region="cause"] .prv-score,.report-mode .prv-overview[data-prv-region="cause"] .prv-actions{display:none}
+  .prv-panel{padding:10px 12px}
+  .prv-panel h2{font-size:17px}
+  .report-mode .prv-score-card{padding:10px}
+  .report-mode .prv-score-card .kpi-value{font-size:27px}
+  .prv-pair{gap:5px;margin:9px 0 7px}
+  .prv-pair>div{font-size:11px;grid-template-columns:49px minmax(0,1fr) auto}
+  .prv-pair strong{font-size:11px}
+  .prv-status-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(4,minmax(0,1fr))}
+  .report-mode .prv-status,.report-mode .prv-status:nth-child(n+5){grid-column:span 1}
+  .report-mode .prv-status:nth-child(3),.report-mode .prv-status:nth-child(5),.report-mode .prv-status:nth-child(7){display:block}
+  .report-mode .prv-status:last-child{grid-column:span 2}
+  .report-mode .prv-status .kpi-value{font-size:22px}
+  .report-mode .prv-status .kpi-note,.report-mode .prv-status:nth-child(n+5) .kpi-note{display:-webkit-box}
+  .prv-action-links [data-prv-statuses]{display:none}
+  .report-mode button.prv-signal{padding:8px 10px;gap:4px}
+  .prv-signal strong{font-size:14px}
+  .prv-signal>span:not(.prv-severity){font-size:12px;-webkit-line-clamp:3}
+  .prv-severity{font-size:10px}
+  .prv-bridge-column>span,.prv-bridge-column>strong,.prv-bridge-heading small{font-size:11px}
+  .report-mode button.prv-source-row{min-height:25px;font-size:12px}
+  .prv-control-note{display:block;font-size:11px;margin-top:7px}
 }
 @media(max-width:900px){
   .report-mode .prv-overview{height:auto;display:flex;flex-direction:column;gap:9px}

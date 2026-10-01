@@ -78,3 +78,11 @@ The v0.16 build fails when:
 - the current-month review summary is missing
 
 These controls extend all accounting, consolidation, Working Capital, Treasury, workforce, FX, liquidity and three-statement controls from earlier releases.
+
+## Evidence-page reading order
+
+The Driver scorecard first shows **Metric → Actual → Benchmark → Variance**; comparison, category, assessment, severity and source remain available through the table's column pager and row detail. Variance color follows the published economic `favorable` assessment, not the arithmetic sign: a positive OPEX cost variance is adverse. The adjacent action register first shows **Trigger and priority → Owner → Due → Status**, so accountability and timing are visible without changing columns. Scope, action text and evidence remain in the subsequent columns and row detail.
+
+At laptop width, the four visible report tabs use short decision labels (Review story, Drivers & actions, Lifecycle, Action register); their full titles remain in the accessible button names, tooltips and Subpage selector.
+
+On 901–1100 px screens, the review front page offers two named regions: **Results & actions** and **Causes & coverage**. This keeps source values, action statuses, narrative and control coverage readable without shrinking them to fit four panels in a short laptop viewport. Both regions use the same selected close and scope; desktop continues to show all four panels together, while narrow mobile screens stack the content in document order.

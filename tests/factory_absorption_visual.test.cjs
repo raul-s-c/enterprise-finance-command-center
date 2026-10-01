@@ -12,7 +12,8 @@ test('factory actual less absorbed cost reconciles to posted gross-profit varian
   for(const row of current)assert.ok(Math.abs(row.actual_fixed_factory_cost-row.absorbed_fixed_cost-row.absorption_variance)<.01);
   const html=visual.factory(current);
   assert.match(html,/reconciled/);
-  assert.match(html,/Under-absorption/);
+  const totalVariance=current.reduce((sum,row)=>sum+row.absorption_variance,0);
+  assert.match(html,totalVariance>=0?/Under-absorption/:/Over-absorption/);
   for(const row of current)assert.ok(html.includes(row.factory_name));
   assert.doesNotMatch(html,/NaN|undefined/);
 });
@@ -23,7 +24,8 @@ test('mix is source-factory sales units, not monthly production units',()=>{
   assert.ok(mix.every(row=>row.source_factory&&Number.isFinite(Number(row.units))));
   const html=visual.mix(mix);
   assert.match(html,/Sales mix is not current-month factory output/);
-  assert.ok(html.includes(sales.toLocaleString('en-US')));
+  const displayed=Number(html.match(/Units in external sales<\/span><strong>([\d,.]+)/)[1].replace(/,/g,''));
+  assert.ok(Math.abs(displayed-sales)<=.00051,'Displayed source units must agree at three-decimal precision');
   assert.doesNotMatch(html,/NaN|undefined/);
 });
 

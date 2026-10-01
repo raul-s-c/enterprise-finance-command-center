@@ -56,6 +56,24 @@ test('action execution shows source-tied stages and monthly impact',async({page}
   await page.screenshot({path:'test-results/action-execution-mobile.png',fullPage:true});
 });
 
+test('short laptop exposes the action bridge through an explicit region switch',async({page})=>{
+  await page.setViewportSize({width:1024,height:720});
+  await page.goto('/#view=action-execution&page=0');
+  const switcher=page.getByRole('navigation',{name:'Dashboard regions'});
+  await expect(switcher).toBeVisible();
+  await expect(switcher.getByRole('button',{name:'1. Execution portfolio'})).toHaveAttribute('aria-pressed','true');
+  await expect(page.locator('.aev-portfolio')).toBeVisible();
+  await expect(page.locator('.aev-bridge')).toBeHidden();
+  await switcher.getByRole('button',{name:'2. Base forecast action bridge'}).click();
+  await expect(page.locator('.aev-bridge')).toBeVisible();
+  await expect(page.locator('.aev-bar')).toHaveCount(12);
+  await expect(page.locator('.aev-portfolio')).toBeHidden();
+  const fit=await page.locator('.action-story-overview>.story-board').evaluate(el=>({horizontal:document.documentElement.scrollWidth>innerWidth,clipped:el.scrollHeight>el.clientHeight+1,bridgeBottom:el.querySelector('.aev-bridge').getBoundingClientRect().bottom,boardBottom:el.getBoundingClientRect().bottom}));
+  expect(fit.horizontal).toBe(false);
+  expect(fit.clipped).toBe(false);
+  expect(fit.bridgeBottom).toBeLessThanOrEqual(fit.boardBottom+1);
+});
+
 test('benefit tracking explains why actual recognition is zero at this close',async({page})=>{
   await page.setViewportSize({width:1280,height:720});
   await page.goto('/#view=action-execution&page=1');
