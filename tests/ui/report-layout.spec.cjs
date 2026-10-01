@@ -272,8 +272,10 @@ test('P&L contribution explains actual vs prior year and shows truthful statemen
   await page.setViewportSize({width:1366,height:768});
   await page.goto('/#view=pnl&page=5&section=P%26L+contribution');
   await expect(page.locator('.cx-summary')).toBeVisible();
-  await expect(page.locator('.cx-formula')).toContainText('Actual · 2026-08');
-  await expect(page.locator('.cx-formula')).toContainText('Prior year · 2025-08');
+  const close=await page.evaluate(()=>data.meta.end_month);
+  const priorClose=`${Number(close.slice(0,4))-1}${close.slice(4)}`;
+  await expect(page.locator('.cx-formula')).toContainText(`Actual · ${close}`);
+  await expect(page.locator('.cx-formula')).toContainText(`Prior year · ${priorClose}`);
   await expect(page.locator('.cx-formula')).toContainText('Δ vs PY');
   const expected=await page.evaluate(async()=>{
     const data=await(await fetch('/data/dashboard.json')).json(),sum=month=>data.management_detail.filter(row=>row.month===month).reduce((total,row)=>total+row.revenue,0),actual=sum(data.meta.end_month),prior=sum(`${Number(data.meta.end_month.slice(0,4))-1}${data.meta.end_month.slice(4)}`),format=value=>new Intl.NumberFormat('en-GB',{style:'currency',currency:'EUR',maximumFractionDigits:2}).format(value);
@@ -299,8 +301,8 @@ test('P&L contribution explains actual vs prior year and shows truthful statemen
   expect(summaryOverflow).toBeLessThanOrEqual(1);
   await page.setViewportSize({width:390,height:844});
   await expect(page.locator('.cx-formula')).toBeVisible();
-  await expect(page.locator('.cx-formula')).toContainText('Actual · 2026-08');
-  await expect(page.locator('.cx-formula')).toContainText('Prior year · 2025-08');
+  await expect(page.locator('.cx-formula')).toContainText(`Actual · ${close}`);
+  await expect(page.locator('.cx-formula')).toContainText(`Prior year · ${priorClose}`);
   await expect(page.locator('.cx-formula')).toContainText('Δ vs PY');
   const mobileBounds=await page.locator('body').evaluate(element=>({scrollWidth:element.scrollWidth,clientWidth:element.clientWidth}));
   expect(mobileBounds.scrollWidth).toBeLessThanOrEqual(mobileBounds.clientWidth+1);

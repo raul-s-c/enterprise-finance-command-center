@@ -8,7 +8,8 @@ test('OPEX detail becomes a source-tied mix, trend and division visual',async({p
   await expect(panel.locator('.ox-trend button')).toHaveCount(12);
   await expect(panel.locator('.ox-division')).toHaveCount(4);
   await expect(panel.locator('.ox-check')).toContainText('reconciled');
-  await expect(panel.locator('.ox-headline strong').first()).toContainText('€4.3m');
+  const currentOpex=await page.evaluate(()=>data.actual.at(-1).opex);
+  await expect(panel.locator('.ox-headline strong').first()).toContainText(`€${(currentOpex/1e6).toFixed(1)}m`);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth||document.documentElement.scrollHeight>innerHeight)).toBe(false);
   const selected=await panel.locator('.ox-selected').boundingBox();
   const source=await panel.locator('.ox-source summary').boundingBox();

@@ -70,8 +70,10 @@ test('operating cockpits expose linked calculations without inventing missing al
   assert.match(profitability,/entity_product_profitability \+ customer_profitability/);
   assert.match(operations,/GO_LIVE is excluded/);
   assert.match(operations,/PPE at go-live/);
-  assert.match(operations,/vs 2026-07/);
-  assert.doesNotMatch(operations,/— vs 2026-07/);
+  const [year,month]=data.meta.end_month.split('-').map(Number);
+  const priorMonth=`${month===1?year-1:year}-${String(month===1?12:month-1).padStart(2,'0')}`;
+  assert.ok(operations.includes(`vs ${priorMonth}`));
+  assert.ok(!operations.includes(`— vs ${priorMonth}`));
 });
 
 test('statement cockpits preserve reconciliation language and evidence routes',()=>{

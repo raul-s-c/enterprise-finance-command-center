@@ -54,10 +54,13 @@
 .report-mode .aev-grid{stroke:#dce4ef;stroke-width:1}
 .report-mode .aev-bar{cursor:pointer}
 .report-mode .aev-bar rect{fill:#367bd1}
+.report-mode .aev-bar rect.aev-hit{fill:transparent;pointer-events:all}
 .report-mode .aev-bar rect.aev-bar-negative{fill:#d44343}
 .report-mode .aev-bar.selected rect{fill:#0754bd;stroke:#122c54;stroke-width:1}
 .report-mode .aev-bar.selected rect.aev-bar-negative{fill:#bb2c2c}
-.report-mode .aev-bar:focus-visible{outline:2px solid #0754bd;outline-offset:3px}
+.report-mode .aev-bar.selected rect.aev-hit{fill:transparent;stroke:none}
+.report-mode .aev-bar:focus-visible{outline:none}
+.report-mode .aev-bar:focus-visible rect:not(.aev-hit){stroke:#0754bd;stroke-width:2}
 .report-mode .aev-periods{margin:10px 0 12px}
 .report-mode .aev-period-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:6px}
 .report-mode .aev-period{display:flex;flex-direction:column;gap:4px;min-width:0;padding:7px 8px;border:1px solid #d9e2ef;background:#f7faff}
