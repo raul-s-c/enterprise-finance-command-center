@@ -69,7 +69,8 @@
     const max=Math.max(1,...sources.map(row=>row.count));
     const coverage=sources.map(row=>`<button class="prv-source-row" data-prv-source="${esc(row.source)}" title="Inspect ${esc(row.source)} observations"><span>${esc(row.source)}</span><i aria-hidden="true"><b style="width:${(row.count/max*100).toFixed(2)}%"></b></i><strong>${row.count}</strong><span class="prv-arrow" aria-hidden="true">›</span></button>`).join('');
     const visual=bridge(review,data,selection);
-    return `<article class="prv-overview" aria-label="Monthly performance review">
+    return `<article class="prv-overview" aria-label="Monthly performance review" data-prv-region="close">
+      <nav class="prv-region-switch" aria-label="Performance review regions"><button type="button" data-prv-region-button="close" aria-pressed="true">Results &amp; actions</button><button type="button" data-prv-region-button="cause" aria-pressed="false">Causes &amp; coverage</button></nav>
       <section class="prv-panel prv-score"><header><h2>Financial scorecard <small>vs budget</small></h2><button class="prv-text-link" data-prv-guide>How to read this <span aria-hidden="true">ⓘ</span></button></header><div class="prv-score-grid">${metrics.join('')}</div></section>
       <section class="prv-panel prv-actions" aria-label="Close and actions"><header><h2>Close and actions</h2><div class="prv-action-links"><button class="prv-text-link" data-prv-statuses>All statuses</button><button class="prv-text-link" data-prv-route="register"><span class="prv-register-long">Open </span>register <span aria-hidden="true">↗</span></button></div></header><div class="prv-status-grid">${status}</div></section>
       <section class="prv-panel prv-story ${visual?'':'prv-story-only'}"><header><div><h2>What changed and why it matters</h2><p>${adverse[0]?`Top adverse signal: ${esc(adverse[0].metric)}`:'No material adverse signal'}</p></div><button class="prv-text-link" data-prv-route="drivers">View all drivers <span aria-hidden="true">↗</span></button></header><div class="prv-story-body"><div class="prv-signals">${narrative}</div>${visual}</div></section>
@@ -78,6 +79,10 @@
   }
   function mount(data,selection,reportState,render,dialog){
     const host=document.querySelector('.prv-overview');if(!host)return;
+    host.querySelectorAll('[data-prv-region-button]').forEach(button=>button.onclick=()=>{
+      host.dataset.prvRegion=button.dataset.prvRegionButton;
+      host.querySelectorAll('[data-prv-region-button]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
+    });
     const review=scope(data.performance_review||[],selection);
     host.querySelectorAll('[data-prv-observation]').forEach(button=>button.onclick=()=>{
       const row=review.find(item=>String(item.review_id)===button.dataset.prvObservation);if(!row)return;
