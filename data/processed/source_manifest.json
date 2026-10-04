@@ -2,7 +2,7 @@
   "fx": {
     "preferred_source": "ECB Data Portal EXR monthly reference rates",
     "fallback": "deterministic synthetic FX curves",
-    "live_rows": 72
+    "live_rows": 108
   },
   "economic_drivers": {
     "current": "official public observations by driver with deterministic month-level fallback",
@@ -41,9 +41,9 @@
       "preferred_source": "ECB main refinancing operations",
       "source_url": "https://data.ecb.europa.eu/data/datasets/FM",
       "fallback": "deterministic calibrated series",
-      "official_rows": 0,
-      "fallback_rows": 36,
-      "latest_official_month": null
+      "official_rows": 36,
+      "fallback_rows": 0,
+      "latest_official_month": "2026-09"
     },
     "USD": {
       "unit": "EUR per currency unit",
@@ -59,11 +59,20 @@
       "preferred_source": "ECB reference exchange rate",
       "source_url": "https://data.ecb.europa.eu/data/datasets/EXR",
       "fallback": "deterministic calibrated series",
+      "official_rows": 36,
+      "fallback_rows": 0,
+      "latest_official_month": "2026-09"
+    },
+    "CNY": {
+      "unit": "EUR per currency unit",
+      "preferred_source": "ECB reference exchange rate",
+      "source_url": "https://data.ecb.europa.eu/data/datasets/EXR",
+      "fallback": "deterministic calibrated series",
       "official_rows": 0,
       "fallback_rows": 36,
       "latest_official_month": null
     },
-    "CNY": {
+    "CZK": {
       "unit": "EUR per currency unit",
       "preferred_source": "ECB reference exchange rate",
       "source_url": "https://data.ecb.europa.eu/data/datasets/EXR",
@@ -71,15 +80,6 @@
       "official_rows": 36,
       "fallback_rows": 0,
       "latest_official_month": "2026-09"
-    },
-    "CZK": {
-      "unit": "EUR per currency unit",
-      "preferred_source": "ECB reference exchange rate",
-      "source_url": "https://data.ecb.europa.eu/data/datasets/EXR",
-      "fallback": "deterministic calibrated series",
-      "official_rows": 0,
-      "fallback_rows": 36,
-      "latest_official_month": null
     }
   }
 }
