@@ -4,6 +4,12 @@ const RM=FinanceReport,RC=ReportCharts;
 // Existing report modules share this renderer: no negative bars drawn above zero.
 bars=function(rows,key,labelKey='month'){return RC.series(rows||[],key,labelKey,data?.meta?.end_month||'',window.innerWidth<700?Math.max(300,window.innerWidth-28):900);};
 const RN=ReportNavigation;
+const compactModuleLabels={
+  'close-journey':'Journey',
+  'performance-review':'Review',
+  'action-execution':'Actions',
+  'data-journey':'Data'
+};
 const reportIcon=(name='next')=>`<svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5">${name==='prev'?'<path d="m12 4-6 6 6 6"/>':name==='next'?'<path d="m8 4 6 6-6 6"/>':name==='chart'?'<path d="M3 3v14h14M5 12l4-5 4 3 4-6"/>':'<circle cx="10" cy="10" r="7"/><path d="M8 7c0-3 6-2 4 1l-2 2v2M10 14v1"/>'}</svg>`;
 function reportNavIcon(id){
   const paths={
@@ -203,7 +209,10 @@ function render(restoring=false){
   const activeArea=RN.areaFor(state.view),activeModules=RN.modules(activeArea,views);
   document.getElementById('reportAreaLabel').textContent=activeArea.label;
   document.querySelectorAll('#nav [data-area]').forEach(b=>{b.classList.toggle('active',b.dataset.area===activeArea.id);b.setAttribute('aria-current',b.dataset.area===activeArea.id?'page':'false');});
-  document.getElementById('reportModules').innerHTML=activeModules.map(module=>`<button data-view="${module[0]}" aria-current="${module[0]===state.view?'page':'false'}">${RM.escape(module[1])}</button>`).join('');
+  document.getElementById('reportModules').innerHTML=activeModules.map(module=>{
+    const label=RM.escape(module[1]),shortLabel=compactModuleLabels[module[0]];
+    return `<button data-view="${module[0]}" aria-label="${label}" title="${label}" aria-current="${module[0]===state.view?'page':'false'}"><span class="module-label-full${shortLabel?' has-compact':''}">${label}</span>${shortLabel?`<span class="module-label-compact" aria-hidden="true">${RM.escape(shortLabel)}</span>`:''}</button>`;
+  }).join('');
   document.getElementById('reportArea').value=activeArea.id;
   document.getElementById('reportModule').innerHTML=activeModules.map(module=>`<option value="${module[0]}">${RM.escape(module[1])}</option>`).join('');
   document.getElementById('reportModule').value=state.view;

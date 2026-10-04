@@ -35,7 +35,10 @@ test('Executive narrative ties the result to scoped commercial drivers, source k
   assert.match(group,/Price [^<]+ · Volume [^<]+ · Mix [^<]+/);
   assert.ok(group.includes(`Review source · price_volume_mix.csv · ${data.meta.end_month}|All|price_effect`));
   assert.match(group,/OUTLOOK &amp; RESPONSE · GROUP OUTLOOK/);
-  assert.match(group,/FY EBIT outlook is .*below budget/);
+  const outlook=data.performance_review.find(row=>row.review_month===data.meta.end_month&&row.scope_level==='Group'&&row.category==='FY Outlook'&&row.metric==='FY EBIT outlook');
+  assert.ok(outlook);
+  assert.ok(group.includes(`<strong>${outlook.headline}</strong>`));
+  if(Math.abs(outlook.variance)>0.01)assert.match(outlook.headline,new RegExp(outlook.variance>0?'above budget':'below budget'));
   assert.match(group,/data-story-view="action-execution"/);
 
   const filtered=render({entity:'US01',division:'Hardware'});

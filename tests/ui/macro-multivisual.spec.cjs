@@ -1,4 +1,5 @@
 const {test,expect}=require('@playwright/test');
+const published=require('../../web/data/dashboard.json');
 
 test('Macro keeps eight independent shock impacts beside the EBIT identity on a laptop',async({page})=>{
   await page.setViewportSize({width:1280,height:720});
@@ -12,7 +13,10 @@ test('Macro keeps eight independent shock impacts beside the EBIT identity on a 
   }
   await cockpit.locator('.sw-primary [data-sw-row="Price +1%"]').click();
   await expect(cockpit.locator('.sw-secondary')).toContainText('Price +1%');
-  await expect(cockpit.locator('.sw-secondary .sw-formula')).toContainText('€4.3m');
+  const priceImpact=published.financial_sensitivity_detail.filter(row=>row.shock==='Price +1%').reduce((sum,row)=>sum+Number(row.gross_profit_impact||0),0);
+  expect(priceImpact).toBeGreaterThan(0);
+  const displayed=`€${(priceImpact/1e6).toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1})}m`;
+  await expect(cockpit.locator('.sw-secondary .sw-formula')).toContainText(displayed);
   await expect(page.locator('#reportDialog')).toContainText('financial_sensitivity_detail');
   await page.locator('#reportDialogClose').click();
   await page.getByRole('button',{name:'Contribution & detail',exact:true}).click();
