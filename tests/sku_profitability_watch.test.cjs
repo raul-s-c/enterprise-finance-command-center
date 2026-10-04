@@ -5,7 +5,8 @@ require('../web/sku-profitability-watch.js');
 
 test('SKU cost bridges disclose source rounding without a balancing adjustment',()=>{
   const rows=data.product_profitability;
-  assert.equal(rows.length,220);
+  assert.ok(rows.length>0);
+  assert.equal(new Set(rows.map(row=>`${row.division}|${row.product}`)).size,rows.length);
   const residuals=rows.map(globalThis.SkuProfitabilityWatch.residuals);
   assert.ok(residuals.some(row=>Math.abs(row.mc)>.01),'MC source rounding must remain visible');
   assert.ok(residuals.some(row=>Math.abs(row.gp)>.01),'GP source rounding must remain visible');

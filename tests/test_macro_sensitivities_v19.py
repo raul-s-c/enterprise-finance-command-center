@@ -59,8 +59,9 @@ def test_offline_macro_is_deterministic_and_has_complete_fallback_lineage():
 
 def test_sensitivities_are_non_additive_directional_and_do_not_mutate_forecast():
     forecasts, liquidity, debt, config = _inputs()
+    end_month = forecasts.vintage.max()
     original = forecasts.copy(deep=True)
-    detail, summary = build_financial_sensitivities(forecasts, liquidity, debt, config, "2026-08")
+    detail, summary = build_financial_sensitivities(forecasts, liquidity, debt, config, end_month)
     pd.testing.assert_frame_equal(forecasts, original)
     assert summary.shock.nunique() == len(SHOCKS)
     assert not summary.portfolio_additive.any()
@@ -88,9 +89,10 @@ def test_sensitivities_are_non_additive_directional_and_do_not_mutate_forecast()
 
 def test_macro_and_sensitivity_controls_reconcile_detail_to_summary():
     forecasts, liquidity, debt, config = _inputs()
-    macro = build_macro(pd.period_range("2025-09", "2026-08", freq="M"), 19, allow_live=False)
-    lineage = build_macro_lineage(macro, "2026-08")
-    detail, summary = build_financial_sensitivities(forecasts, liquidity, debt, config, "2026-08")
+    end_month = forecasts.vintage.max()
+    macro = build_macro(pd.period_range(end=end_month, periods=12, freq="M"), 19, allow_live=False)
+    lineage = build_macro_lineage(macro, end_month)
+    detail, summary = build_financial_sensitivities(forecasts, liquidity, debt, config, end_month)
     checks = validate_macro_and_sensitivities(macro, lineage, detail, summary)
     assert checks["passed"] is True
     assert checks["sensitivity_detail_summary_max_gap"] == 0

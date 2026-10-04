@@ -20,7 +20,7 @@ test('customer contribution is source-tied, selectable, and laptop-fit',async({p
   await page.screenshot({path:'test-results/customer-contribution-desktop.png',fullPage:true});
   await page.locator('.ccv-row').nth(1).click();
   await expect(page.locator('.ccv-row').nth(1)).toHaveAttribute('aria-pressed','true');
-  const selected=await page.evaluate(()=>{const option=document.querySelector('[data-cc-select]').selectedOptions[0];return data.customer_profitability.find(row=>option.textContent.includes(row.customer_name)&&option.textContent.includes(row.entity))});
+  const selected=await page.evaluate(()=>data.customer_profitability.slice().sort((a,b)=>b.operating_contribution-a.operating_contribution)[Number(document.querySelector('[data-cc-select]').value)]);
   await page.locator('[data-cc-evidence]').click();
   await expect(page.locator('#reportDialog')).toBeVisible();
   await expect(page.locator('#reportDialogBody')).toContainText(selected.customer);

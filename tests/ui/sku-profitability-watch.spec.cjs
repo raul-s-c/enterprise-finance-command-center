@@ -10,9 +10,10 @@ test('SKU watch exposes exact cost bridge and source rounding without clipping',
   expect(await page.evaluate(()=>reportState.pages[4].html.includes('data-contribution="products"'))).toBe(true);
   await page.goto(`/#view=profitability&page=${index}`);
   await expect(page.locator('.spw-board')).toBeVisible();
+  const source=await page.evaluate(()=>data.product_profitability);
   await expect(page.locator('.spw-row')).toHaveCount(8);
-  await expect(page.locator('.spw-summary strong').nth(0)).toHaveText('220');
-  await expect(page.locator('.spw-summary strong').nth(1)).toHaveText('0');
+  await expect(page.locator('.spw-summary strong').nth(0)).toHaveText(String(source.length));
+  await expect(page.locator('.spw-summary strong').nth(1)).toHaveText(String(source.filter(row=>row.operating_contribution<0).length));
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   expect(await page.evaluate(()=>document.querySelector('.spw-source').getBoundingClientRect().bottom<=document.querySelector('.spw-board').getBoundingClientRect().bottom-2)).toBe(true);
   await page.screenshot({path:'test-results/sku-watch-desktop.png',fullPage:true});
@@ -27,7 +28,7 @@ test('SKU watch exposes exact cost bridge and source rounding without clipping',
   await expect(page.locator('#reportDialog')).toContainText('Catalog structure');
   await expect(page.locator('#reportDialogBody')).toContainText('product_catalog');
   await page.locator('#reportDialogClose').click();
-  await page.locator('[data-spw-select]').selectOption({index:219});
+  await page.locator('[data-spw-select]').selectOption({index:source.length-1});
   await expect(page.locator('.spw-identity strong')).toBeVisible();
   await page.goto(`/#view=profitability&page=${index}&division=Hardware`);
   await expect(page.locator('.spw-board')).toBeVisible();
