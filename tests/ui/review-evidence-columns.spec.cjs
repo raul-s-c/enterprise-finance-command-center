@@ -28,3 +28,31 @@ test('review tabs fit a short laptop while retaining full accessible titles',asy
   await expect(page.locator('#reportPageNumber')).toContainText('2 / 4');
   await expect(page.locator('#reportPageSelect')).toHaveValue('1');
 });
+
+test('close-area navigation stays on one line at laptop width without losing report names',async({page})=>{
+  await page.setViewportSize({width:1024,height:720});
+  await page.goto('/#view=performance-review&page=0');
+  const modules=page.locator('#reportModules button');
+  await expect(modules).toHaveCount(4);
+  await expect(modules.locator('.module-label-compact:visible')).toHaveText(['Journey','Review','Actions','Data']);
+  const bounds=await modules.evaluateAll(buttons=>buttons.map(button=>({top:button.getBoundingClientRect().top,height:button.getBoundingClientRect().height,clipped:button.scrollWidth>button.clientWidth+1})));
+  expect(new Set(bounds.map(item=>item.top)).size).toBe(1);
+  expect(bounds.every(item=>item.height<=30&&!item.clipped)).toBe(true);
+  const score=await page.locator('.prv-score').evaluate(panel=>({
+    cards:[...panel.querySelectorAll('.prv-score-card')].map(card=>({top:card.getBoundingClientRect().top,clipped:card.scrollHeight>card.clientHeight+1,barWidth:card.querySelector('.prv-pair i')?.getBoundingClientRect().width||0})),
+    clipped:panel.scrollHeight>panel.clientHeight+1
+  }));
+  expect(score.clipped).toBe(false);
+  expect(score.cards).toHaveLength(3);
+  expect(score.cards.every(card=>!card.clipped&&card.barWidth>100)).toBe(true);
+  expect(score.cards[0].top).toBeLessThan(score.cards[1].top);
+  expect(score.cards[1].top).toBeLessThan(score.cards[2].top);
+  await page.getByRole('button',{name:'Action Execution',exact:true}).click();
+  await expect(page.locator('#viewTitle')).toHaveText('Action Execution');
+  await page.setViewportSize({width:1280,height:720});
+  await expect(page.locator('#reportModules .module-label-full:visible')).toHaveText(['Close Journey','Performance Review','Action Execution','Data Journey']);
+  await page.setViewportSize({width:390,height:844});
+  await expect(page.locator('#reportModules')).toBeHidden();
+  await expect(page.locator('#reportModule')).toHaveValue('action-execution');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});

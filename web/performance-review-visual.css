@@ -104,6 +104,14 @@
   .prv-panel h2{font-size:17px}
   .report-mode .prv-score-card{padding:10px}
   .report-mode .prv-score-card .kpi-value{font-size:27px}
+  .prv-score-grid,.prv-score-grid:has(>.prv-score-card:nth-child(2):last-child){grid-template-columns:minmax(0,1fr);grid-template-rows:repeat(3,minmax(0,1fr))}
+  .prv-score-grid:has(>.prv-score-card:nth-child(2):last-child){grid-template-rows:repeat(2,minmax(0,1fr))}
+  .report-mode .prv-score-card{display:grid;grid-template-columns:minmax(145px,.8fr) minmax(0,1.2fr);grid-template-rows:auto auto minmax(0,1fr) auto;column-gap:8px;align-items:start}
+  .prv-score-card .kpi-label{grid-column:1;grid-row:1}
+  .prv-score-card .kpi-value{grid-column:1;grid-row:2}
+  .prv-score-card .kpi-note{grid-column:1;grid-row:3}
+  .prv-score-card .prv-pair,.prv-score-card .prv-signed-pair{grid-column:2;grid-row:1/4;align-self:center;margin:0}
+  .prv-score-card>.prv-text-link{grid-column:1/-1;grid-row:4;margin-top:0}
   .prv-pair{gap:5px;margin:9px 0 7px}
   .prv-pair>div{font-size:11px;grid-template-columns:49px minmax(0,1fr) auto}
   .prv-pair strong{font-size:11px}

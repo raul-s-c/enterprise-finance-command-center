@@ -46,3 +46,9 @@
 .report-mode .review-variance{font-weight:650}
 .report-mode .review-variance.is-favorable{color:#087b48}
 .report-mode .review-variance.is-adverse{color:#b42318}
+.report-modules .module-label-compact{display:none}
+@media (min-width:901px) and (max-width:1100px){
+  .report-modules .module-label-full.has-compact{display:none}
+  .report-modules .module-label-compact{display:inline}
+  .report-mode .report-modules button{white-space:nowrap}
+}
