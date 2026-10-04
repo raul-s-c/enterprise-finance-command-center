@@ -31,6 +31,6 @@ month,division,product_family,product_subfamily,product_type,quality_tier,produc
 2026-03,Spare Parts,Control Modules,Power & Relay,Relay Module,Premium,SP-MOD-REL-X,PHASE_OUT_APPROVED,2026-05,,0.3025,Trailing gross margin below 34% portfolio threshold
 2026-05,Hardware,Control Systems,Resilient Control,Safety Controller,Premium,HW-CTL-SAF-X,PHASE_OUT_EFFECTIVE,2026-05,,,Portfolio decision executed
 2026-05,Spare Parts,Control Modules,Power & Relay,Relay Module,Premium,SP-MOD-REL-X,PHASE_OUT_EFFECTIVE,2026-05,,,Portfolio decision executed
-2026-09,Hardware,Terminals,Mobile Terminals,Mobile Terminal,Premium,HW-TRM-MOB-X,PHASE_OUT_APPROVED,2026-11,,0.1349,Trailing gross margin below 22% portfolio threshold
+2026-09,Hardware,Terminals,Mobile Terminals,Mobile Terminal,Premium,HW-TRM-MOB-X,PHASE_OUT_APPROVED,2026-11,,0.135,Trailing gross margin below 22% portfolio threshold
 2026-09,Events,Customer Experience,Customer Events,Demonstration Center,Premium,EV-EXP-DEM-X,PHASE_OUT_APPROVED,2026-11,,0.2418,Trailing gross margin below 25% portfolio threshold
-2026-09,Spare Parts,Security Components,Input Devices,Tamper Sensor,Premium,SP-SEC-SNR-X,PHASE_OUT_APPROVED,2026-11,,0.2938,Trailing gross margin below 34% portfolio threshold
+2026-09,Spare Parts,Security Components,Input Devices,Tamper Sensor,Premium,SP-SEC-SNR-X,PHASE_OUT_APPROVED,2026-11,,0.2947,Trailing gross margin below 34% portfolio threshold
