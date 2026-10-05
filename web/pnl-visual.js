@@ -1,6 +1,7 @@
 /* Source-tied graphical income statement. No invented account allocations. */
 (function(root){
   let mobileView='values';
+  const formulas={variable:'Revenue − marginal contribution',fixed:'Marginal contribution − gross profit',below_ebit:'EBIT − net income',revenue:'Sum of revenue',marginal_contribution:'Revenue − variable costs',gross_profit:'Marginal contribution − fixed production costs',opex:'Sum of OPEX',depreciation:'Sum of depreciation',ebit:'Gross profit − OPEX − depreciation',net_income:'EBIT − net finance costs and tax'};
   function rows(ac,py,M){
     ac=ac||{};py=py||{};
     const extend=row=>[...M.statement(row),{key:'below_ebit',label:'Net finance costs and tax',cost:true,value:M.finite(row.ebit)&&M.finite(row.net_income)?row.ebit-row.net_income:null},{key:'net_income',label:'Net income',total:true,value:row.net_income}];
@@ -45,6 +46,23 @@
     const C={money:precise,signed:v=>M.finite(v)?`${v>0?'+':''}${precise(v)}`:'—'};
     return `<section class="pnl-source-detail"><h3>Contribution by entity and division</h3><p>Published management summary records, not individual ledger postings. Select a scope to explore its full P&amp;L.</p><div class="pnl-source-scroll"><table><thead><tr><th>Entity / division</th><th>AC (€m)</th><th>PY (€m)</th><th>Δ (€m)</th><th>Contribution magnitude</th></tr></thead><tbody>${parts.map(r=>`<tr><th><button data-pnl-entity="${esc(r.entity)}" data-pnl-division="${esc(r.division)}">${esc(r.entity)} / ${esc(r.division)}</button></th><td>${C.money(r.actual)}</td><td>${C.money(r.prior)}</td><td>${C.signed(r.change?.delta)}</td><td><span class="pnl-source-bar" aria-label="${r.actual<0?'Negative':'Positive'} contribution"><i style="width:${Math.abs(r.actual||0)/max*100}%;background:${r.actual<0?'#c82028':'#0874ed'}"></i></span></td></tr>`).join('')}</tbody></table></div><p>${parts.reduce((n,r)=>n+r.records,0)} current-period source rows · Missing comparisons remain unavailable, not zero. Bar length shows magnitude; signs are retained in the values.</p></section>`;
   }
+  function inspector(data,scope,key){
+    const M=root.FinanceReport,esc=M.escape,period=data.meta.end_month;
+    const source=(data.management_detail||[]).filter(row=>(scope.entity==='all'||row.entity===scope.entity)&&(scope.division==='all'||row.division===scope.division));
+    const months=M.aggregate(source),actual=months.find(row=>row.month===period),prior=months.find(row=>row.month===M.priorMonth(period));
+    const line=rows(actual,prior,M).find(row=>row.key===key);
+    if(!line)return '<p>No source-backed P&amp;L line is available for this selection.</p>';
+    const format=value=>M.finite(value)?`${value<0?'-':''}€${Math.abs(value)>=1e6?(Math.abs(value)/1e6).toFixed(1)+'m':(Math.abs(value)/1e3).toFixed(1)+'k'}`:'—';
+    const signed=value=>M.finite(value)?`${value>0?'+':''}${format(value)}`:'—';
+    const parts=contributions(data,scope,key,M),largest=Math.max(1,...parts.map(part=>Math.abs(part.actual||0)));
+    const sourceTotal=parts.reduce((total,part)=>total+(part.actual||0),0),gap=M.finite(line.value)?line.value-sourceTotal:null;
+    const difference=M.finite(gap)&&Math.abs(gap)>0.02?`Source-to-scope difference ${signed(gap)}; no balancing adjustment is applied.`:'Entity/division source rows reconcile to the selected line.';
+    return `<div class="pnl-inspector-head"><div><small>SELECTED P&amp;L LINE</small><h3>${esc(line.label)}</h3></div><button type="button" data-pnl-open-evidence aria-label="Open full ${esc(line.label)} evidence">Full evidence ${'<span aria-hidden="true">↗</span>'}</button></div>
+      <div class="pnl-inspector-value"><strong>${format(line.value)}</strong><span class="${line.change.favorable===true?'good':line.change.favorable===false?'bad':'neutral'}">${signed(line.change.delta)} vs PY</span></div>
+      <dl class="pnl-inspector-math"><div><dt>Prior year</dt><dd>${format(line.prior)}</dd></div><div><dt>Calculation</dt><dd>${esc(formulas[key]||'Published P&L measure')}</dd></div><div><dt>Source</dt><dd>management_detail · management summary</dd></div></dl>
+      <div class="pnl-inspector-rank"><h4>Contribution by entity / division</h4>${parts.slice(0,5).map(part=>`<div class="pnl-inspector-part"><span>${esc(part.entity)} / ${esc(part.division)}</span><b>${format(part.actual)}</b><i><span style="width:${Math.abs(part.actual||0)/largest*100}%;background:${part.actual<0?'#c82028':'#0874ed'}"></span></i></div>`).join('')}${parts.length>5?`<p>+${parts.length-5} more in full evidence</p>`:''}</div>
+      <p class="pnl-inspector-control">${esc(difference)} These are management summary records, not individual ledger postings.</p>`;
+  }
   function csv(data,scope,key,M=root.FinanceReport){
     const cell=value=>{
       if(typeof value==='number')return Number.isFinite(value)?String(value):'';
@@ -55,7 +73,7 @@
     const header=['period','comparison_period','line','entity','division','actual_eur','prior_eur','variance_eur','variance_ratio','current_source_rows','source'];
     return [header,...contributions(data,scope,key,M).map(r=>[data.meta.end_month,M.priorMonth(data.meta.end_month),key,r.entity,r.division,r.actual,r.prior,r.change?.delta,r.change?.relative,r.records,'management_detail'])].map(row=>row.map(cell).join(',')).join('\r\n');
   }
-  const api={rows,render,contributions,detail,csv};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.PnlVisual=api;
+  const api={rows,render,contributions,detail,inspector,formulas,csv};if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.PnlVisual=api;
   if(root.document)document.addEventListener('click',event=>{
     const button=event.target.closest('[data-pnl-mobile-view]');if(!button)return;
     const article=button.closest('.pnl-visual');if(!article)return;
