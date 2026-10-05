@@ -27,3 +27,11 @@ test('negative percentage changes use the left endpoint independently of favorab
  assert.match(html,/pnl-percent good negative/);
  assert.match(html,/-16.7%/);
 });
+test('inline P&L inspector preserves negative signs and names its management-summary source',()=>{
+ const data={meta:{end_month:'2026-08'},management_detail:[{...record,ebit:-1250000}]};
+ const html=P.inspector(data,{entity:'all',division:'all'},'ebit');
+ assert.match(html,/-€1\.3m/);
+ assert.match(html,/management_detail · management summary/);
+ assert.match(html,/not individual ledger postings/);
+ assert.doesNotMatch(html,/NaN|undefined|Source-to-scope difference/);
+});
