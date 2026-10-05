@@ -281,7 +281,7 @@ function render(restoring=false){
       document.querySelectorAll('[data-pnl-key]').forEach(row=>row.setAttribute('aria-pressed',String(row===button)));
       const aside=document.getElementById('pnlInlineInspector');
       if(aside)aside.innerHTML=PnlVisual.inspector(data,state,reportState.pnlLine);
-      if(!matchMedia('(min-width:1400px)').matches)openPnlEvidence(reportState.pnlLine);
+      if(!matchMedia('(min-width:1440px)').matches)openPnlEvidence(reportState.pnlLine);
     };
   });
   document.getElementById('pnlInlineInspector')?.addEventListener('click',event=>{if(event.target.closest('[data-pnl-open-evidence]'))openPnlEvidence(reportState.pnlLine);});

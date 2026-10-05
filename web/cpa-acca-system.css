@@ -19,7 +19,7 @@
 .report-mode .pnl-analysis-layout>.pnl-visual{height:100%}
 .report-mode .pnl-inline-inspector{display:none}
 .report-mode button.pnl-row[aria-pressed=true]{box-shadow:inset 3px 0 #0869e1;background:#eaf3ff}
-@media(min-width:1400px){
+@media(min-width:1440px){
   .report-mode .pnl-analysis-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:12px}
   .report-mode .pnl-inline-inspector{display:flex;flex-direction:column;min-width:0;min-height:0;overflow:auto;padding:15px;border:1px solid #d4dce6;background:#f8fafc;color:#0b2345}
   .report-mode .pnl-grid{min-width:840px}

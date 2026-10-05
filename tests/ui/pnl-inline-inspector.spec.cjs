@@ -36,3 +36,13 @@ test('P&L retains full-width statement and evidence dialog on a laptop',async({p
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
   expect(overflow).toBeLessThanOrEqual(1);
 });
+
+test('P&L keeps the matrix intact at the inspector breakpoint',async({page})=>{
+  await page.setViewportSize({width:1400,height:900});
+  await page.goto('/#view=pnl&page=0&entity=all&division=all');
+  await expect(page.locator('#pnlInlineInspector')).toBeHidden();
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
+  expect(overflow).toBeLessThanOrEqual(1);
+  await page.locator('[data-pnl-key="gross_profit"]').click();
+  await expect(page.locator('#reportDialog')).toBeVisible();
+});
