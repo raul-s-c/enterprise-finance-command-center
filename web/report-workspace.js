@@ -1,5 +1,5 @@
 /* Paginated reporting workspace over the unchanged release renderers and datasets. */
-const reportState={page:0,view:null,metric:'revenue',initialized:false,pages:[],section:null};
+const reportState={page:0,view:null,metric:'revenue',pnlLine:'revenue',initialized:false,pages:[],section:null};
 const RM=FinanceReport,RC=ReportCharts;
 // Existing report modules share this renderer: no negative bars drawn above zero.
 bars=function(rows,key,labelKey='month'){return RC.series(rows||[],key,labelKey,data?.meta?.end_month||'',window.innerWidth<700?Math.max(300,window.innerWidth-28):900);};
@@ -231,6 +231,14 @@ function render(restoring=false){
   document.getElementById('reportPageSelect').innerHTML=pages.map((p,i)=>`<option value="${i}" ${i===reportState.page?'selected':''}>${i+1}. ${RM.escape(p.title)}</option>`).join('');
   reportFilterControls(pages[reportState.page],resolved);
   document.getElementById('content').innerHTML=pages[reportState.page].html;
+  const pnlArticle=document.querySelector('#content .pnl-visual');
+  if(pnlArticle){
+    const layout=document.createElement('div'),aside=document.createElement('aside');
+    layout.className='pnl-analysis-layout';aside.id='pnlInlineInspector';
+    aside.className='pnl-inline-inspector';aside.setAttribute('aria-live','polite');
+    aside.innerHTML=PnlVisual.inspector(data,state,reportState.pnlLine);
+    pnlArticle.parentNode.insertBefore(layout,pnlArticle);layout.append(pnlArticle,aside);
+  }
   globalThis.CloseJourney?.mount(data);
   globalThis.DataJourneyCockpit?.mount(data);
   globalThis.StatementWorkspace?.mount();
@@ -250,11 +258,10 @@ function render(restoring=false){
   const depth=history.state?.reportDepth||0;
   if(location.hash!==`#${hash}`)history[restoring?'replaceState':'pushState']({reportDepth:restoring?depth:depth+1},'',`#${hash}`);
   document.getElementById('reportBack').disabled=!(history.state?.reportDepth>0);
-  document.querySelectorAll('[data-pnl-key]').forEach(button=>button.onclick=()=>{
-    const s=reportCurrent(),row=PnlVisual.rows(s.current,s.prior||{},RM).find(r=>r.key===button.dataset.pnlKey);
+  const openPnlEvidence=key=>{
+    const s=reportCurrent(),row=PnlVisual.rows(s.current,s.prior||{},RM).find(r=>r.key===key);
     if(!row)return;
-    const formulas={variable:'Revenue − marginal contribution',fixed:'Marginal contribution − gross profit',below_ebit:'EBIT − net income',revenue:'Sum of revenue',marginal_contribution:'Revenue − variable costs',gross_profit:'Marginal contribution − fixed production costs',opex:'Sum of OPEX',depreciation:'Sum of depreciation',ebit:'Gross profit − OPEX − depreciation',net_income:'EBIT − net finance costs and tax'};
-    reportDialog(row.label,`<p>AC ${RC.money(row.value)} · PY ${RC.money(row.prior)} · EUR million</p><p><strong>Calculation:</strong> ${RM.escape(formulas[row.key])}</p><p>Source: management_detail · ${RM.escape(reportScope())}</p>${PnlVisual.detail(data,state,row.key)}`);
+    reportDialog(row.label,`<p>AC ${RC.money(row.value)} · PY ${RC.money(row.prior)} · EUR million</p><p><strong>Calculation:</strong> ${RM.escape(PnlVisual.formulas[row.key])}</p><p>Source: management_detail · ${RM.escape(reportScope())}</p>${PnlVisual.detail(data,state,row.key)}`);
     document.querySelector('.pnl-source-detail').insertAdjacentHTML('afterbegin','<button id="pnlExportEvidence">Export evidence CSV</button><span id="pnlExportStatus" role="status"></span>');
     document.getElementById('pnlExportEvidence').onclick=()=>{
       const blob=new Blob(['\ufeff',PnlVisual.csv(data,state,row.key)],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),link=document.createElement('a');
@@ -266,7 +273,18 @@ function render(restoring=false){
       state.entity=target.dataset.pnlEntity;state.division=target.dataset.pnlDivision;
       document.getElementById('reportDialog').close();render();
     });
+  };
+  document.querySelectorAll('[data-pnl-key]').forEach(button=>{
+    button.setAttribute('aria-pressed',String(button.dataset.pnlKey===reportState.pnlLine));
+    button.onclick=()=>{
+      reportState.pnlLine=button.dataset.pnlKey;
+      document.querySelectorAll('[data-pnl-key]').forEach(row=>row.setAttribute('aria-pressed',String(row===button)));
+      const aside=document.getElementById('pnlInlineInspector');
+      if(aside)aside.innerHTML=PnlVisual.inspector(data,state,reportState.pnlLine);
+      if(!matchMedia('(min-width:1440px)').matches)openPnlEvidence(reportState.pnlLine);
+    };
   });
+  document.getElementById('pnlInlineInspector')?.addEventListener('click',event=>{if(event.target.closest('[data-pnl-open-evidence]'))openPnlEvidence(reportState.pnlLine);});
   document.querySelectorAll('[data-metric]').forEach(b=>b.onclick=()=>{reportState.metric=b.dataset.metric;render();});
   document.querySelectorAll('[data-division]').forEach(b=>b.onclick=()=>{state.division=b.dataset.division;document.getElementById('divisionFilter').value=state.division;render();});
   document.querySelectorAll('[data-open-pnl]').forEach(b=>b.onclick=()=>{state.view='pnl';render();});
