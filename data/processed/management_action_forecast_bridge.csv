@@ -593,3 +593,201 @@ month,horizon_month,scenario,entity,division,action_revenue_impact,action_gross_
 2028-03,18,Upside,US01,Events,0.0,0.0,0.0,0.0,0
 2028-03,18,Upside,US01,Hardware,0.0,0.0,0.0,0.0,0
 2028-03,18,Upside,US01,Software,0.0,0.0,0.0,0.0,0
+2028-04,19,Base,DE01,Hardware,0.0,0.0,0.0,0.0,0
+2028-04,19,Base,DE01,Software,0.0,0.0,0.0,0.0,0
+2028-04,19,Base,ES01,Events,0.0,0.0,0.0,0.0,0
+2028-04,19,Base,ES01,Hardware,0.0,0.0,0.0,0.0,0
+2028-04,19,Base,ES01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-04,19,Base,JP01,Hardware,0.0,0.0,0.0,0.0,0
+2028-04,19,Base,JP01,Software,0.0,0.0,0.0,0.0,0
+2028-04,19,Base,JP01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-04,19,Base,US01,Events,0.0,0.0,0.0,0.0,0
+2028-04,19,Base,US01,Hardware,0.0,0.0,0.0,0.0,0
+2028-04,19,Base,US01,Software,0.0,0.0,0.0,0.0,0
+2028-04,19,Downside,DE01,Hardware,0.0,0.0,0.0,0.0,0
+2028-04,19,Downside,DE01,Software,0.0,0.0,0.0,0.0,0
+2028-04,19,Downside,ES01,Events,0.0,0.0,0.0,0.0,0
+2028-04,19,Downside,ES01,Hardware,0.0,0.0,0.0,0.0,0
+2028-04,19,Downside,ES01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-04,19,Downside,JP01,Hardware,0.0,0.0,0.0,0.0,0
+2028-04,19,Downside,JP01,Software,0.0,0.0,0.0,0.0,0
+2028-04,19,Downside,JP01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-04,19,Downside,US01,Events,0.0,0.0,0.0,0.0,0
+2028-04,19,Downside,US01,Hardware,0.0,0.0,0.0,0.0,0
+2028-04,19,Downside,US01,Software,0.0,0.0,0.0,0.0,0
+2028-04,19,Upside,DE01,Hardware,0.0,0.0,0.0,0.0,0
+2028-04,19,Upside,DE01,Software,0.0,0.0,0.0,0.0,0
+2028-04,19,Upside,ES01,Events,0.0,0.0,0.0,0.0,0
+2028-04,19,Upside,ES01,Hardware,0.0,0.0,0.0,0.0,0
+2028-04,19,Upside,ES01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-04,19,Upside,JP01,Hardware,0.0,0.0,0.0,0.0,0
+2028-04,19,Upside,JP01,Software,0.0,0.0,0.0,0.0,0
+2028-04,19,Upside,JP01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-04,19,Upside,US01,Events,0.0,0.0,0.0,0.0,0
+2028-04,19,Upside,US01,Hardware,0.0,0.0,0.0,0.0,0
+2028-04,19,Upside,US01,Software,0.0,0.0,0.0,0.0,0
+2028-05,20,Base,DE01,Hardware,0.0,0.0,0.0,0.0,0
+2028-05,20,Base,DE01,Software,0.0,0.0,0.0,0.0,0
+2028-05,20,Base,ES01,Events,0.0,0.0,0.0,0.0,0
+2028-05,20,Base,ES01,Hardware,0.0,0.0,0.0,0.0,0
+2028-05,20,Base,ES01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-05,20,Base,JP01,Hardware,0.0,0.0,0.0,0.0,0
+2028-05,20,Base,JP01,Software,0.0,0.0,0.0,0.0,0
+2028-05,20,Base,JP01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-05,20,Base,US01,Events,0.0,0.0,0.0,0.0,0
+2028-05,20,Base,US01,Hardware,0.0,0.0,0.0,0.0,0
+2028-05,20,Base,US01,Software,0.0,0.0,0.0,0.0,0
+2028-05,20,Downside,DE01,Hardware,0.0,0.0,0.0,0.0,0
+2028-05,20,Downside,DE01,Software,0.0,0.0,0.0,0.0,0
+2028-05,20,Downside,ES01,Events,0.0,0.0,0.0,0.0,0
+2028-05,20,Downside,ES01,Hardware,0.0,0.0,0.0,0.0,0
+2028-05,20,Downside,ES01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-05,20,Downside,JP01,Hardware,0.0,0.0,0.0,0.0,0
+2028-05,20,Downside,JP01,Software,0.0,0.0,0.0,0.0,0
+2028-05,20,Downside,JP01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-05,20,Downside,US01,Events,0.0,0.0,0.0,0.0,0
+2028-05,20,Downside,US01,Hardware,0.0,0.0,0.0,0.0,0
+2028-05,20,Downside,US01,Software,0.0,0.0,0.0,0.0,0
+2028-05,20,Upside,DE01,Hardware,0.0,0.0,0.0,0.0,0
+2028-05,20,Upside,DE01,Software,0.0,0.0,0.0,0.0,0
+2028-05,20,Upside,ES01,Events,0.0,0.0,0.0,0.0,0
+2028-05,20,Upside,ES01,Hardware,0.0,0.0,0.0,0.0,0
+2028-05,20,Upside,ES01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-05,20,Upside,JP01,Hardware,0.0,0.0,0.0,0.0,0
+2028-05,20,Upside,JP01,Software,0.0,0.0,0.0,0.0,0
+2028-05,20,Upside,JP01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-05,20,Upside,US01,Events,0.0,0.0,0.0,0.0,0
+2028-05,20,Upside,US01,Hardware,0.0,0.0,0.0,0.0,0
+2028-05,20,Upside,US01,Software,0.0,0.0,0.0,0.0,0
+2028-06,21,Base,DE01,Hardware,0.0,0.0,0.0,0.0,0
+2028-06,21,Base,DE01,Software,0.0,0.0,0.0,0.0,0
+2028-06,21,Base,ES01,Events,0.0,0.0,0.0,0.0,0
+2028-06,21,Base,ES01,Hardware,0.0,0.0,0.0,0.0,0
+2028-06,21,Base,ES01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-06,21,Base,JP01,Hardware,0.0,0.0,0.0,0.0,0
+2028-06,21,Base,JP01,Software,0.0,0.0,0.0,0.0,0
+2028-06,21,Base,JP01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-06,21,Base,US01,Events,0.0,0.0,0.0,0.0,0
+2028-06,21,Base,US01,Hardware,0.0,0.0,0.0,0.0,0
+2028-06,21,Base,US01,Software,0.0,0.0,0.0,0.0,0
+2028-06,21,Downside,DE01,Hardware,0.0,0.0,0.0,0.0,0
+2028-06,21,Downside,DE01,Software,0.0,0.0,0.0,0.0,0
+2028-06,21,Downside,ES01,Events,0.0,0.0,0.0,0.0,0
+2028-06,21,Downside,ES01,Hardware,0.0,0.0,0.0,0.0,0
+2028-06,21,Downside,ES01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-06,21,Downside,JP01,Hardware,0.0,0.0,0.0,0.0,0
+2028-06,21,Downside,JP01,Software,0.0,0.0,0.0,0.0,0
+2028-06,21,Downside,JP01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-06,21,Downside,US01,Events,0.0,0.0,0.0,0.0,0
+2028-06,21,Downside,US01,Hardware,0.0,0.0,0.0,0.0,0
+2028-06,21,Downside,US01,Software,0.0,0.0,0.0,0.0,0
+2028-06,21,Upside,DE01,Hardware,0.0,0.0,0.0,0.0,0
+2028-06,21,Upside,DE01,Software,0.0,0.0,0.0,0.0,0
+2028-06,21,Upside,ES01,Events,0.0,0.0,0.0,0.0,0
+2028-06,21,Upside,ES01,Hardware,0.0,0.0,0.0,0.0,0
+2028-06,21,Upside,ES01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-06,21,Upside,JP01,Hardware,0.0,0.0,0.0,0.0,0
+2028-06,21,Upside,JP01,Software,0.0,0.0,0.0,0.0,0
+2028-06,21,Upside,JP01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-06,21,Upside,US01,Events,0.0,0.0,0.0,0.0,0
+2028-06,21,Upside,US01,Hardware,0.0,0.0,0.0,0.0,0
+2028-06,21,Upside,US01,Software,0.0,0.0,0.0,0.0,0
+2028-07,22,Base,DE01,Hardware,0.0,0.0,0.0,0.0,0
+2028-07,22,Base,DE01,Software,0.0,0.0,0.0,0.0,0
+2028-07,22,Base,ES01,Events,0.0,0.0,0.0,0.0,0
+2028-07,22,Base,ES01,Hardware,0.0,0.0,0.0,0.0,0
+2028-07,22,Base,ES01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-07,22,Base,JP01,Hardware,0.0,0.0,0.0,0.0,0
+2028-07,22,Base,JP01,Software,0.0,0.0,0.0,0.0,0
+2028-07,22,Base,JP01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-07,22,Base,US01,Events,0.0,0.0,0.0,0.0,0
+2028-07,22,Base,US01,Hardware,0.0,0.0,0.0,0.0,0
+2028-07,22,Base,US01,Software,0.0,0.0,0.0,0.0,0
+2028-07,22,Downside,DE01,Hardware,0.0,0.0,0.0,0.0,0
+2028-07,22,Downside,DE01,Software,0.0,0.0,0.0,0.0,0
+2028-07,22,Downside,ES01,Events,0.0,0.0,0.0,0.0,0
+2028-07,22,Downside,ES01,Hardware,0.0,0.0,0.0,0.0,0
+2028-07,22,Downside,ES01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-07,22,Downside,JP01,Hardware,0.0,0.0,0.0,0.0,0
+2028-07,22,Downside,JP01,Software,0.0,0.0,0.0,0.0,0
+2028-07,22,Downside,JP01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-07,22,Downside,US01,Events,0.0,0.0,0.0,0.0,0
+2028-07,22,Downside,US01,Hardware,0.0,0.0,0.0,0.0,0
+2028-07,22,Downside,US01,Software,0.0,0.0,0.0,0.0,0
+2028-07,22,Upside,DE01,Hardware,0.0,0.0,0.0,0.0,0
+2028-07,22,Upside,DE01,Software,0.0,0.0,0.0,0.0,0
+2028-07,22,Upside,ES01,Events,0.0,0.0,0.0,0.0,0
+2028-07,22,Upside,ES01,Hardware,0.0,0.0,0.0,0.0,0
+2028-07,22,Upside,ES01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-07,22,Upside,JP01,Hardware,0.0,0.0,0.0,0.0,0
+2028-07,22,Upside,JP01,Software,0.0,0.0,0.0,0.0,0
+2028-07,22,Upside,JP01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-07,22,Upside,US01,Events,0.0,0.0,0.0,0.0,0
+2028-07,22,Upside,US01,Hardware,0.0,0.0,0.0,0.0,0
+2028-07,22,Upside,US01,Software,0.0,0.0,0.0,0.0,0
+2028-08,23,Base,DE01,Hardware,0.0,0.0,0.0,0.0,0
+2028-08,23,Base,DE01,Software,0.0,0.0,0.0,0.0,0
+2028-08,23,Base,ES01,Events,0.0,0.0,0.0,0.0,0
+2028-08,23,Base,ES01,Hardware,0.0,0.0,0.0,0.0,0
+2028-08,23,Base,ES01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-08,23,Base,JP01,Hardware,0.0,0.0,0.0,0.0,0
+2028-08,23,Base,JP01,Software,0.0,0.0,0.0,0.0,0
+2028-08,23,Base,JP01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-08,23,Base,US01,Events,0.0,0.0,0.0,0.0,0
+2028-08,23,Base,US01,Hardware,0.0,0.0,0.0,0.0,0
+2028-08,23,Base,US01,Software,0.0,0.0,0.0,0.0,0
+2028-08,23,Downside,DE01,Hardware,0.0,0.0,0.0,0.0,0
+2028-08,23,Downside,DE01,Software,0.0,0.0,0.0,0.0,0
+2028-08,23,Downside,ES01,Events,0.0,0.0,0.0,0.0,0
+2028-08,23,Downside,ES01,Hardware,0.0,0.0,0.0,0.0,0
+2028-08,23,Downside,ES01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-08,23,Downside,JP01,Hardware,0.0,0.0,0.0,0.0,0
+2028-08,23,Downside,JP01,Software,0.0,0.0,0.0,0.0,0
+2028-08,23,Downside,JP01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-08,23,Downside,US01,Events,0.0,0.0,0.0,0.0,0
+2028-08,23,Downside,US01,Hardware,0.0,0.0,0.0,0.0,0
+2028-08,23,Downside,US01,Software,0.0,0.0,0.0,0.0,0
+2028-08,23,Upside,DE01,Hardware,0.0,0.0,0.0,0.0,0
+2028-08,23,Upside,DE01,Software,0.0,0.0,0.0,0.0,0
+2028-08,23,Upside,ES01,Events,0.0,0.0,0.0,0.0,0
+2028-08,23,Upside,ES01,Hardware,0.0,0.0,0.0,0.0,0
+2028-08,23,Upside,ES01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-08,23,Upside,JP01,Hardware,0.0,0.0,0.0,0.0,0
+2028-08,23,Upside,JP01,Software,0.0,0.0,0.0,0.0,0
+2028-08,23,Upside,JP01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-08,23,Upside,US01,Events,0.0,0.0,0.0,0.0,0
+2028-08,23,Upside,US01,Hardware,0.0,0.0,0.0,0.0,0
+2028-08,23,Upside,US01,Software,0.0,0.0,0.0,0.0,0
+2028-09,24,Base,DE01,Hardware,0.0,0.0,0.0,0.0,0
+2028-09,24,Base,DE01,Software,0.0,0.0,0.0,0.0,0
+2028-09,24,Base,ES01,Events,0.0,0.0,0.0,0.0,0
+2028-09,24,Base,ES01,Hardware,0.0,0.0,0.0,0.0,0
+2028-09,24,Base,ES01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-09,24,Base,JP01,Hardware,0.0,0.0,0.0,0.0,0
+2028-09,24,Base,JP01,Software,0.0,0.0,0.0,0.0,0
+2028-09,24,Base,JP01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-09,24,Base,US01,Events,0.0,0.0,0.0,0.0,0
+2028-09,24,Base,US01,Hardware,0.0,0.0,0.0,0.0,0
+2028-09,24,Base,US01,Software,0.0,0.0,0.0,0.0,0
+2028-09,24,Downside,DE01,Hardware,0.0,0.0,0.0,0.0,0
+2028-09,24,Downside,DE01,Software,0.0,0.0,0.0,0.0,0
+2028-09,24,Downside,ES01,Events,0.0,0.0,0.0,0.0,0
+2028-09,24,Downside,ES01,Hardware,0.0,0.0,0.0,0.0,0
+2028-09,24,Downside,ES01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-09,24,Downside,JP01,Hardware,0.0,0.0,0.0,0.0,0
+2028-09,24,Downside,JP01,Software,0.0,0.0,0.0,0.0,0
+2028-09,24,Downside,JP01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-09,24,Downside,US01,Events,0.0,0.0,0.0,0.0,0
+2028-09,24,Downside,US01,Hardware,0.0,0.0,0.0,0.0,0
+2028-09,24,Downside,US01,Software,0.0,0.0,0.0,0.0,0
+2028-09,24,Upside,DE01,Hardware,0.0,0.0,0.0,0.0,0
+2028-09,24,Upside,DE01,Software,0.0,0.0,0.0,0.0,0
+2028-09,24,Upside,ES01,Events,0.0,0.0,0.0,0.0,0
+2028-09,24,Upside,ES01,Hardware,0.0,0.0,0.0,0.0,0
+2028-09,24,Upside,ES01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-09,24,Upside,JP01,Hardware,0.0,0.0,0.0,0.0,0
+2028-09,24,Upside,JP01,Software,0.0,0.0,0.0,0.0,0
+2028-09,24,Upside,JP01,Spare Parts,0.0,0.0,0.0,0.0,0
+2028-09,24,Upside,US01,Events,0.0,0.0,0.0,0.0,0
+2028-09,24,Upside,US01,Hardware,0.0,0.0,0.0,0.0,0
+2028-09,24,Upside,US01,Software,0.0,0.0,0.0,0.0,0
