@@ -9,7 +9,7 @@ renderers.treasury=function(){
   const b=summaries.find(r=>r.scenario==='Base')||{};
   const d=summaries.find(r=>r.scenario==='Downside')||{};
   const a=allocation.find(r=>r.scenario==='Downside')||allocation[0]||{};
-  const extra=`<div class="section-note"><strong>12-month liquidity forecast:</strong> cash is projected from forecast revenue, AR, Inventory, AP, Contract Liabilities, tax, interest, CAPEX and debt amortization. RCF is drawn only when forecast cash would fall below the configured operating minimum.</div>
+  const extra=`<div class="section-note"><strong>24-month liquidity forecast:</strong> cash is projected from forecast revenue, AR, Inventory, AP, Contract Liabilities, tax, interest, CAPEX and debt amortization. RCF is drawn only when forecast cash would fall below the configured operating minimum. Year-one and month-24 positions are reported separately; minimum liquidity is monitored across the whole horizon.</div>
   <div class="kpi-grid">
     ${kpi('Base cash in 12M',eur.format(Number(b.ending_cash_12m)||0))}
     ${kpi('Base liquidity headroom',eur.format(Number(b.liquidity_headroom_12m)||0))}
@@ -19,12 +19,14 @@ renderers.treasury=function(){
     ${kpi('Downside 12M covenant',safe(d.covenant_status_12m||'-'))}
   </div>
   <div class="panel-grid">
-    ${panel('Base liquidity outlook','12-month ending cash forecast',bars(baseFc,'ending_cash'),'span-7')}
+    ${panel('Base liquidity outlook','24-month ending cash path',bars(baseFc,'ending_cash'),'span-7')}
     ${panel('Scenario liquidity summary','12-month position',table(summaries,[
       {key:'scenario',label:'Scenario'},
-      {key:'ending_cash_12m',label:'Ending cash',num:true,format:v=>eur.format(v)},
+      {key:'ending_cash_12m',label:'12M ending cash',num:true,format:v=>eur.format(v)},
+      {key:'ending_cash_24m',label:'24M ending cash',num:true,format:v=>eur.format(v)},
       {key:'gross_debt_12m',label:'Gross debt',num:true,format:v=>eur.format(v)},
-      {key:'liquidity_headroom_12m',label:'Headroom',num:true,format:v=>eur.format(v)},
+      {key:'liquidity_headroom_12m',label:'12M headroom',num:true,format:v=>eur.format(v)},
+      {key:'minimum_liquidity_headroom',label:'24M minimum headroom',num:true,format:v=>eur.format(v)},
       {key:'net_leverage_12m',label:'Net leverage',num:true,format:v=>`${num(v,2)}x`},
       {key:'covenant_status_12m',label:'Covenant'}
     ]),'span-5')}

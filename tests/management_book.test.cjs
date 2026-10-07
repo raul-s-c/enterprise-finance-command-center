@@ -24,6 +24,26 @@ test('KPI bands are attached to evidence, never paired as a KPI-only destination
   assert.equal(result.filter(page=>page.html.includes('Cash</div>')).length,1);
 });
 
+test('cash detail keeps published-close KPIs but leaves forecast horizons in Plan & Outlook',()=>{
+  const previous=global.state;
+  global.state={view:'cash-flow'};
+  try{
+    const result=B.compose([
+      {title:'Cash indicators',html:'<div class="report-indicators"><div class="kpi"><div class="kpi-label">Operating cash flow</div><div class="kpi-note">Compare to the 12M forecast</div></div></div>',policy:{key:'group'}},
+      {title:'Forecast indicators',html:'<div class="report-indicators"><div class="kpi"><div class="kpi-label">24M forecast OCF</div></div></div>',policy:{key:'group'}},
+      {title:'Latest cash bridge',html:'<article>cash bridge</article>',policy:{key:'group'}},
+      {title:'Cash trend',html:'<article>cash trend</article>',policy:{key:'group'}}
+    ]);
+    assert.match(result[0].html,/cash-detail-board/);
+    assert.match(result[0].html,/Operating cash flow/);
+    assert.doesNotMatch(result[0].html,/24M forecast OCF/);
+    assert.equal((result[0].html.match(/class="kpi"/g)||[]).length,1);
+  }finally{
+    if(previous===undefined)delete global.state;
+    else global.state=previous;
+  }
+});
+
 test('a full-screen cockpit cannot be swallowed by a preceding legacy page',()=>{
   const cockpit={title:'Cockpit',fullScreen:true,html:'<svg></svg>'};
   const result=B.compose([{title:'Context',html:'context'},cockpit]);

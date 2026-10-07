@@ -71,11 +71,11 @@
     ['Interest coverage','Trailing-12-month EBITDA / trailing-12-month interest expense. The note shows the configured minimum coverage.'],
     ['Covenant status','PASS if net leverage ≤ its configured maximum AND interest coverage ≥ its configured minimum; otherwise WATCH.'],
   ]);
-  batch('liquidity_forecast_summary / capital_allocation_capacity',group,'Current forecast vintage; forward months 1–12.',[
+  batch('liquidity_forecast_summary / capital_allocation_capacity',group,'Current forecast vintage; first 12 months and full 24-month outlook; minimum liquidity across the full horizon.',[
     ['Base cash in 12M','Base scenario ending_cash_12m, the closing cash balance at horizon 12, not the sum of monthly cash.'],
     ['Base liquidity headroom','Base scenario liquidity_headroom_12m: cash above minimum plus undrawn RCF at horizon 12.'],
-    ['Downside minimum headroom','Minimum liquidity_headroom across all 12 forward months of the Downside scenario.'],
-    ['Downside protected allocation capacity','max(min(Downside deployable cash at month 12, minimum Downside liquidity headroom over 12 months), 0). Deployable cash is after the strategic liquidity buffer; this is not approved spending.'],
+    ['Downside minimum headroom','Minimum liquidity_headroom across all 24 forward months of the Downside scenario.'],
+    ['Downside protected allocation capacity','max(min(Downside deployable cash at month 12, minimum Downside liquidity headroom over 24 months), 0). Deployable cash is after the strategic liquidity buffer; this is not approved spending.'],
     ['Base 12M covenant','Base scenario covenant_status_12m at horizon 12. It is not a claim that every intermediate month passes.'],
     ['Downside 12M covenant','Downside scenario covenant_status_12m at horizon 12, evaluated against configured leverage and coverage limits.'],
   ]);
@@ -89,6 +89,10 @@
   for(const [label,field] of [['12M forecast revenue','revenue'],['12M forecast EBIT','ebit'],['12M forecast net income','net_income']])add(label,`Sum of ${field} in the Base integrated forecast P&L (12 monthly flows).`,'forecast_pnl',group,'Forward months 1–12 of the current vintage.');
   for(const [label,field] of [['12M forecast assets','assets'],['12M forecast liabilities','liabilities'],['12M forecast equity','equity'],['12M balance check','balance_check']])add(label,field==='balance_check'?'Forecast assets − liabilities − equity at the final Base month.':`Final Base month ${field}; closing stock, not a sum across the 12 months.`,'forecast_balance_sheet',group,'Horizon 12 of the current vintage.');
   for(const [label,field] of [['12M forecast OCF','operating_cash_flow'],['12M forecast investing CF','investing_cash_flow'],['12M forecast financing CF','financing_cash_flow'],['12M forecast FCF','free_cash_flow']])add(label,`Sum of ${field} across the Base integrated 12-month cash-flow forecast. FCF = operating + investing cash flow.`,'forecast_cash_flow',group,'Forward months 1–12 of the current vintage.');
+  for(const [label,field] of [['24M forecast revenue','revenue'],['24M forecast EBIT','ebit'],['24M forecast net income','net_income']])add(label,`Sum of ${field} in the Base integrated forecast P&L (24 monthly flows).`,'forecast_pnl',group,'Forward months 1–24 of the current vintage.');
+  for(const [label,field] of [['24M forecast assets','assets'],['24M forecast liabilities','liabilities'],['24M forecast equity','equity'],['24M balance check','balance_check']])add(label,field==='balance_check'?'Forecast assets − liabilities − equity at the Base month-24 close.':`Base month-24 ${field}; closing stock, not a sum across monthly balances.`,'forecast_balance_sheet',group,'Horizon 24 of the current vintage.');
+  for(const [label,field] of [['24M forecast OCF','operating_cash_flow'],['24M forecast investing CF','investing_cash_flow'],['24M forecast financing CF','financing_cash_flow'],['24M forecast FCF','free_cash_flow']])add(label,`Sum of ${field} across the Base integrated 24-month cash-flow forecast. FCF = operating + investing cash flow.`,'forecast_cash_flow',group,'Forward months 1–24 of the current vintage.');
+  add('24M ending FTE','Group Base workforce_fte_forecast at horizon month 24; this is a modeled capacity endpoint, not a realized employee count.','workforce_forecast',group,'Horizon 24 of the current vintage.');
   batch('software_summary / software_entity_summary', 'Software division; selected entity, or all Software entities.',close,[
     ['ARR','Ending monthly recurring revenue (MRR) × 12. Services revenue is excluded. It is an annualized run rate, not annual recognized revenue.'],
     ['NRR','(Opening MRR + expansion MRR − contraction MRR − churn MRR) / opening MRR × 100. New customers are excluded.'],

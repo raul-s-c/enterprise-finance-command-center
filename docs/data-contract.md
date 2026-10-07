@@ -98,4 +98,4 @@ The project separates source-like operating data, accounting data and analytical
 
 ## Retention
 
-The front-end and processed actual data retain a rolling 36-month history. The current forecast covers 18 months. Historical forecast vintages are stored at an analytical grain rather than duplicating full transaction-level forecast ledgers.
+The front-end and processed actual data retain a rolling 36-month history. The current forecast covers 24 months, with the same scenario, workforce, liquidity and integrated three-statement horizons. Historical forecast vintages are stored at an analytical grain rather than duplicating full transaction-level forecast ledgers.

@@ -16,7 +16,7 @@ from .workforce import allocation_checks, build_workforce_schedule, workforce_ro
 
 
 VERSION = "0.14.0"
-HORIZON = 12
+DEFAULT_HORIZON = 12
 
 
 def _read_csv(path: str) -> pd.DataFrame:
@@ -64,9 +64,10 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
 
     workforce = build_workforce_schedule(operations, config, macro)
     workforce_summary = _workforce_summary(workforce)
+    horizon = int(config["group"].get("forecast_months", DEFAULT_HORIZON))
     workforce_forecast = forecasts[
         forecasts.vintage.eq(end_month)
-        & forecasts.horizon_month.le(HORIZON)
+        & forecasts.horizon_month.le(horizon)
     ].copy()
 
     roll_checks = workforce_rollforward_checks(workforce)
@@ -83,9 +84,9 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
         advances=advances,
         config=config,
         end_month=end_month,
-        horizon=HORIZON,
+        horizon=horizon,
     )
-    liquidity_checks = validate_liquidity_forecast(liquidity, HORIZON)
+    liquidity_checks = validate_liquidity_forecast(liquidity, horizon)
     liquidity_summary = liquidity_scenario_summary(liquidity)
     capital_allocation = _capital_allocation(liquidity, config)
 
@@ -96,9 +97,9 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
         balance_sheet=balance_sheet,
         config=config,
         end_month=end_month,
-        horizon=HORIZON,
+        horizon=horizon,
     )
-    statement_checks = validate_three_statement_forecast(forecast_pnl, forecast_bs, forecast_cf, HORIZON)
+    statement_checks = validate_three_statement_forecast(forecast_pnl, forecast_bs, forecast_cf, horizon)
     statement_summary = statement_scenario_summary(forecast_pnl, forecast_bs, forecast_cf)
 
     with open("data/processed/validation.json", "r", encoding="utf-8") as handle:
@@ -168,13 +169,23 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
         manifest["latest_personnel_cost"] = round(float(r.personnel_cost), 2)
         manifest["latest_revenue_per_fte"] = round(float(r.revenue_per_fte), 2)
         manifest["latest_personnel_cost_pct_revenue"] = round(float(r.personnel_cost_pct_revenue), 4)
-    manifest["base_12m_personnel_cost"] = round(float(base_fc.personnel_cost_forecast.sum()), 2) if not base_fc.empty else 0.0
-    manifest["base_12m_workforce_hires"] = round(float(base_fc.workforce_hires_forecast.sum()), 2) if not base_fc.empty else 0.0
+    forecast_12m = base_fc[base_fc.horizon_month.le(12)]
+    manifest["base_12m_personnel_cost"] = round(float(forecast_12m.personnel_cost_forecast.sum()), 2) if not forecast_12m.empty else 0.0
+    manifest["base_12m_workforce_hires"] = round(float(forecast_12m.workforce_hires_forecast.sum()), 2) if not forecast_12m.empty else 0.0
+    manifest["base_24m_personnel_cost"] = round(float(base_fc.personnel_cost_forecast.sum()), 2) if not base_fc.empty else 0.0
+    manifest["base_24m_workforce_hires"] = round(float(base_fc.workforce_hires_forecast.sum()), 2) if not base_fc.empty else 0.0
     if not base_liq.empty:
         manifest["base_12m_ending_cash"] = round(float(base_liq.iloc[0].ending_cash_12m), 2)
+        manifest["base_24m_ending_cash"] = round(float(base_liq.iloc[0].ending_cash_24m), 2)
+        manifest["base_24m_forecast_capex"] = round(float(base_liq.iloc[0].forecast_capex_24m), 2)
+        manifest["base_24m_forecast_operating_cash_flow"] = round(float(base_liq.iloc[0].forecast_operating_cash_flow_24m), 2)
     if not base_stmt.empty:
         manifest["base_12m_forecast_ebit"] = round(float(base_stmt.iloc[0].ebit_12m), 2)
         manifest["base_12m_forecast_free_cash_flow"] = round(float(base_stmt.iloc[0].free_cash_flow_12m), 2)
+        manifest["base_24m_forecast_revenue"] = round(float(base_stmt.iloc[0].revenue_24m), 2)
+        manifest["base_24m_forecast_ebit"] = round(float(base_stmt.iloc[0].ebit_24m), 2)
+        manifest["base_24m_forecast_free_cash_flow"] = round(float(base_stmt.iloc[0].free_cash_flow_24m), 2)
+        manifest["base_24m_forecast_ending_cash"] = round(float(base_stmt.iloc[0].ending_cash_24m), 2)
     manifest["validation"] = checks
     with open("web/data/manifest.json", "w", encoding="utf-8") as handle:
         json.dump(manifest, handle, indent=2)

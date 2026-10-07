@@ -117,14 +117,23 @@
     // Indicator bands are supporting context, never a destination on their own.
     // Distribute them alongside evidence rather than pairing two KPI-only pages.
     const bands=pages.filter(p=>p.html?.includes('class="report-indicators"'));
+    // Cash-flow reporting is a published-close view. Keep its actual cash KPIs
+    // with the bridge, but leave forward-horizon KPIs in Plan & Outlook.
+    const contextualBands=typeof state!=='undefined'&&state.view==='cash-flow'
+      ?bands.filter(band=>{
+        const labels=[...band.html.matchAll(/class="kpi-label[^"]*"[^>]*>([\s\S]*?)<\/div>/g)]
+          .map(([,label])=>label.replace(/<[^>]+>/g,'').trim());
+        return !labels.length||!labels.every(label=>/\b(?:forecast|12M|24M|horizon|Base|Upside|Downside)\b/i.test(label));
+      })
+      :bands;
     const evidence=pages.filter(p=>!bands.includes(p));
     const reviewOverview=typeof state!=='undefined'&&state.view==='performance-review'&&bands.length&&evidence.length;
     const statementOverview=typeof state!=='undefined'&&['pnl','working-capital','treasury','balance-sheet'].includes(state.view)&&bands.length&&evidence.length;
     const executionOverview=typeof state!=='undefined'&&state.view==='action-execution'&&bands.length&&evidence.length;
-    if(bands.length&&evidence.length){
+    if(contextualBands.length&&evidence.length){
       const targets=evidence.filter(p=>!p.fullScreen&&!p.contribution);
       if(targets.length){
-        if(!reviewOverview&&!statementOverview&&!executionOverview)bands.forEach((band,index)=>{
+        if(!reviewOverview&&!statementOverview&&!executionOverview)contextualBands.forEach((band,index)=>{
           const target=targets.find(candidate=>(candidate.policy?.key||'group')===(band.policy?.key||'group'))||targets[index%targets.length];
           target.html=`<section class="report-context-band" aria-label="${esc(band.title)}">${band.html}</section>${target.html}`;
           if((target.policy?.key||'group')!==(band.policy?.key||'group'))target.policy=root.ReportContext.group;
