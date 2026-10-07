@@ -29,14 +29,15 @@ test('cash detail keeps published-close KPIs but leaves forecast horizons in Pla
   global.state={view:'cash-flow'};
   try{
     const result=B.compose([
-      {title:'Cash indicators',html:'<div class="report-indicators">Operating cash flow</div>',policy:{key:'group'}},
-      {title:'Forecast indicators',html:'<div class="report-indicators">24M forecast OCF</div>',policy:{key:'group'}},
+      {title:'Cash indicators',html:'<div class="report-indicators"><div class="kpi"><div class="kpi-label">Operating cash flow</div><div class="kpi-note">Compare to the 12M forecast</div></div></div>',policy:{key:'group'}},
+      {title:'Forecast indicators',html:'<div class="report-indicators"><div class="kpi"><div class="kpi-label">24M forecast OCF</div></div></div>',policy:{key:'group'}},
       {title:'Latest cash bridge',html:'<article>cash bridge</article>',policy:{key:'group'}},
       {title:'Cash trend',html:'<article>cash trend</article>',policy:{key:'group'}}
     ]);
     assert.match(result[0].html,/cash-detail-board/);
     assert.match(result[0].html,/Operating cash flow/);
     assert.doesNotMatch(result[0].html,/24M forecast OCF/);
+    assert.equal((result[0].html.match(/class="kpi"/g)||[]).length,1);
   }finally{
     if(previous===undefined)delete global.state;
     else global.state=previous;

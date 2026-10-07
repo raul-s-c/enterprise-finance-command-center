@@ -120,7 +120,11 @@
     // Cash-flow reporting is a published-close view. Keep its actual cash KPIs
     // with the bridge, but leave forward-horizon KPIs in Plan & Outlook.
     const contextualBands=typeof state!=='undefined'&&state.view==='cash-flow'
-      ?bands.filter(band=>!/(?:12M|24M) forecast/i.test(band.html))
+      ?bands.filter(band=>{
+        const labels=[...band.html.matchAll(/class="kpi-label[^"]*"[^>]*>([\s\S]*?)<\/div>/g)]
+          .map(([,label])=>label.replace(/<[^>]+>/g,'').trim());
+        return !labels.length||!labels.every(label=>/\b(?:forecast|12M|24M|horizon|Base|Upside|Downside)\b/i.test(label));
+      })
       :bands;
     const evidence=pages.filter(p=>!bands.includes(p));
     const reviewOverview=typeof state!=='undefined'&&state.view==='performance-review'&&bands.length&&evidence.length;
