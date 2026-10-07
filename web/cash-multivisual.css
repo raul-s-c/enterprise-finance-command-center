@@ -29,7 +29,6 @@
 @media(min-width:901px){
   .report-mode .cash-detail-board{display:grid;grid-template-columns:minmax(0,2fr) minmax(270px,1fr);grid-auto-rows:minmax(0,1fr);overflow:hidden}
   .report-mode .cash-detail-board>.story-composite{min-height:0;overflow:hidden}
-  .report-mode .cash-detail-board>.story-composite:first-child>.report-context-band:first-child{display:none}
   .report-mode .cash-detail-board .report-context-band{padding-bottom:7px}
   .report-mode .cash-detail-board .report-context-band .report-indicators{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;overflow:visible;padding:0}
   .report-mode .cash-detail-board .report-indicators>.kpi{min-width:0;padding:7px 8px}

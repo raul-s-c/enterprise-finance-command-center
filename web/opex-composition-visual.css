@@ -6,4 +6,4 @@
 .report-mode .ox-stack{height:84px}
 .report-mode .ox-selected{gap:1px 8px;margin-top:5px}
 @media(max-width:600px){.report-mode .ox-trend{height:105px}.report-mode .ox-stack{height:84px}}
-@media(max-width:900px){.report-mode .ox-panel{overflow-y:auto;overflow-x:hidden}}
+@media(max-width:900px){.report-mode .ox-panel{height:calc(100dvh - 320px);max-height:calc(100dvh - 320px);min-height:260px;flex:none;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain}}
