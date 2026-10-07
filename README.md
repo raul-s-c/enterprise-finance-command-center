@@ -55,15 +55,19 @@ CFO analytics
 
 P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.21
+## Current release: v0.22
+
+Version 0.22 extends the rolling forecast to 24 months across Base, Upside and Downside scenarios, workforce, liquidity and the integrated three statements. Existing 12-month summaries remain separately labelled; the release also exposes 24-month flow and ending-balance measures. Close controls cover the complete forecast horizon.
+
+Version 0.21 added **FX Integrity & Close Continuity**. Transaction FX summaries reconcile every measure and key to document snapshots; lifecycle snapshots reconcile to source documents and official/fallback rates; documents reconcile to the authoritative journal. Missing, duplicate, orphaned and non-finite data block release.
 
 Version 0.21 adds **FX Integrity & Close Continuity**. Transaction FX summaries now reconcile every measure and key to document snapshots; lifecycle snapshots reconcile to source documents and official/fallback rates; documents reconcile to the authoritative journal. Missing, duplicate, orphaned and non-finite data block release.
 
 Intercompany contracts now retain both reciprocal journal references with one seller-functional contract currency and one deterministic settlement month. The seller's domestic-currency leg stays in the contract register, not the foreign-currency exposure population. The v0.20 analytical population is rebuilt under this corrected policy; transaction FX totals are therefore not directly comparable across the policy change. Historical GL statements are unchanged.
 
-Executive explicitly distinguishes filtered operating measures from consolidated group measures. Mobile charts retain all observations with at most five visible date labels. CI runs frontend regression tests and two consecutive offline closes through the complete v0.21 wrapper in an isolated 36-month actual / 18-month forecast fixture.
+Executive explicitly distinguishes filtered operating measures from consolidated group measures. Mobile charts retain all observations with at most five visible date labels. CI runs frontend regression tests and two consecutive offline closes through the complete v0.22 wrapper in an isolated 36-month actual / 24-month forecast fixture.
 
-See `docs/v0.21-status.md` and `docs/fx-integrity-and-close-continuity.md`.
+See `docs/v0.22-status.md`, `docs/v0.21-status.md` and `docs/fx-integrity-and-close-continuity.md`.
 
 ### Transaction FX foundation
 
@@ -130,9 +134,9 @@ The current system includes:
 - 236 synthetic product references across a multi-level hierarchy
 - six legal entities and two factories
 - 36 rolling actual months
-- 18 rolling operating forecast months
-- 12-month Base / Upside / Downside liquidity forecast
-- 12-month Base / Upside / Downside integrated three-statement forecast
+- 24 rolling operating forecast months across Base / Upside / Downside
+- 24-month liquidity, covenant and workforce forecasts
+- 24-month integrated P&L / Balance Sheet / Cash Flow with separately labelled 12M and 24M measures
 - Month x Entity x Division x Function workforce roll-forward
 - driver-based FTE, attrition, hiring, payroll and recruitment-cost forecast
 - functional-currency journals and local trial balances for all six entities

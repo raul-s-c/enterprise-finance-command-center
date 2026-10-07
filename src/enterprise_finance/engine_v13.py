@@ -14,7 +14,7 @@ from .three_statement_forecast import (
 
 
 VERSION = "0.13.0"
-HORIZON = 12
+DEFAULT_HORIZON = 12
 
 
 def _read_csv(path: str) -> pd.DataFrame:
@@ -36,23 +36,42 @@ def _scenario_summary(pnl: pd.DataFrame, bs: pd.DataFrame, cf: pd.DataFrame) -> 
         c = cf[cf.scenario.eq(scenario)].sort_values("horizon_month")
         if p.empty or b.empty or c.empty:
             continue
-        final_bs = b.iloc[-1]
+        p12 = p[p.horizon_month.le(12)]
+        b12 = b[b.horizon_month.le(12)]
+        c12 = c[c.horizon_month.le(12)]
+        final_bs_12 = b12.iloc[-1] if not b12.empty else b.iloc[-1]
+        final_bs_24 = b.iloc[-1]
         rows.append({
             "scenario": scenario,
-            "revenue_12m": float(p.revenue.sum()),
-            "ebit_12m": float(p.ebit.sum()),
-            "net_income_12m": float(p.net_income.sum()),
-            "operating_cash_flow_12m": float(c.operating_cash_flow.sum()),
-            "free_cash_flow_12m": float(c.free_cash_flow.sum()),
-            "ending_cash_12m": float(final_bs.cash),
-            "ending_net_receivables_12m": float(final_bs.trade_receivables),
-            "ending_net_inventory_12m": float(final_bs.inventory),
-            "ending_debt_12m": float(final_bs.debt),
-            "ending_contract_liabilities_12m": float(final_bs.contract_liabilities),
-            "ending_assets_12m": float(final_bs.assets),
-            "ending_liabilities_12m": float(final_bs.liabilities),
-            "ending_equity_12m": float(final_bs.equity),
-            "ending_balance_check": float(final_bs.balance_check),
+            "revenue_12m": float(p12.revenue.sum()),
+            "ebit_12m": float(p12.ebit.sum()),
+            "net_income_12m": float(p12.net_income.sum()),
+            "operating_cash_flow_12m": float(c12.operating_cash_flow.sum()),
+            "free_cash_flow_12m": float(c12.free_cash_flow.sum()),
+            "ending_cash_12m": float(final_bs_12.cash),
+            "ending_net_receivables_12m": float(final_bs_12.trade_receivables),
+            "ending_net_inventory_12m": float(final_bs_12.inventory),
+            "ending_debt_12m": float(final_bs_12.debt),
+            "ending_contract_liabilities_12m": float(final_bs_12.contract_liabilities),
+            "ending_assets_12m": float(final_bs_12.assets),
+            "ending_liabilities_12m": float(final_bs_12.liabilities),
+            "ending_equity_12m": float(final_bs_12.equity),
+            "ending_balance_check_12m": float(final_bs_12.balance_check),
+            "ending_balance_check": float(final_bs_12.balance_check),
+            "revenue_24m": float(p.revenue.sum()),
+            "ebit_24m": float(p.ebit.sum()),
+            "net_income_24m": float(p.net_income.sum()),
+            "operating_cash_flow_24m": float(c.operating_cash_flow.sum()),
+            "free_cash_flow_24m": float(c.free_cash_flow.sum()),
+            "ending_cash_24m": float(final_bs_24.cash),
+            "ending_net_receivables_24m": float(final_bs_24.trade_receivables),
+            "ending_net_inventory_24m": float(final_bs_24.inventory),
+            "ending_debt_24m": float(final_bs_24.debt),
+            "ending_contract_liabilities_24m": float(final_bs_24.contract_liabilities),
+            "ending_assets_24m": float(final_bs_24.assets),
+            "ending_liabilities_24m": float(final_bs_24.liabilities),
+            "ending_equity_24m": float(final_bs_24.equity),
+            "ending_balance_check_24m": float(final_bs_24.balance_check),
         })
     return pd.DataFrame(rows)
 
@@ -74,10 +93,11 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
         balance_sheet=balance_sheet,
         config=config,
         end_month=end_month,
-        horizon=HORIZON,
+        horizon=int(config["group"].get("forecast_months", DEFAULT_HORIZON)),
     )
     statement_checks = validate_three_statement_forecast(
-        forecast_pnl, forecast_bs, forecast_cf, horizon=HORIZON
+        forecast_pnl, forecast_bs, forecast_cf,
+        horizon=int(config["group"].get("forecast_months", DEFAULT_HORIZON))
     )
     summary = _scenario_summary(forecast_pnl, forecast_bs, forecast_cf)
 
@@ -130,6 +150,10 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     manifest["downside_12m_forecast_net_income"] = round(float(d.get("net_income_12m", 0.0)), 2)
     manifest["downside_12m_forecast_free_cash_flow"] = round(float(d.get("free_cash_flow_12m", 0.0)), 2)
     manifest["downside_12m_forecast_assets"] = round(float(d.get("ending_assets_12m", 0.0)), 2)
+    manifest["base_24m_forecast_revenue"] = round(float(b.get("revenue_24m", 0.0)), 2)
+    manifest["base_24m_forecast_ebit"] = round(float(b.get("ebit_24m", 0.0)), 2)
+    manifest["base_24m_forecast_free_cash_flow"] = round(float(b.get("free_cash_flow_24m", 0.0)), 2)
+    manifest["base_24m_forecast_ending_cash"] = round(float(b.get("ending_cash_24m", 0.0)), 2)
     manifest["validation"] = checks
     with open("web/data/manifest.json", "w", encoding="utf-8") as handle:
         json.dump(manifest, handle, indent=2)

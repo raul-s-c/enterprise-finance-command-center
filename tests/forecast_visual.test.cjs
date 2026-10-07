@@ -28,3 +28,13 @@ test('liquidity bars use reported OCF, CAPEX and ending cash without inventing a
   assert.match(global.FinanceForecastVisual.accuracy([{horizon_month:1,mape:null,bias:0}]),/No realized forecast vintages/);
   assert.match(global.FinanceForecastVisual.liquidity([{scenario:'<unsafe>',forecast_operating_cash_flow_12m:1e6,forecast_capex_12m:1e5,ending_cash_12m:2e6}]),/&lt;unsafe&gt;/);
 });
+
+test('liquidity scenarios display separate 24-month flows and ending cash when published',()=>{
+  const rows=['Base','Downside','Upside'].map((scenario,index)=>({scenario,forecast_operating_cash_flow_12m:10e6+index,forecast_capex_12m:2e6,ending_cash_12m:30e6,forecast_operating_cash_flow_24m:24e6+index,forecast_capex_24m:5e6,ending_cash_24m:60e6}));
+  const html=global.FinanceForecastVisual.liquidity(rows);
+  assert.equal((html.match(/class="fv-scenario"/g)||[]).length,3);
+  assert.match(html,/24M OCF/);
+  assert.match(html,/24M CAPEX/);
+  assert.match(html,/Month-24 cash/);
+  assert.doesNotMatch(html,/NaN|undefined/);
+});

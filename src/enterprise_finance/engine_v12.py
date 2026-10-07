@@ -11,7 +11,7 @@ from .liquidity_forecast_v12 import build_liquidity_forecast, validate_liquidity
 
 
 VERSION = "0.12.0"
-HORIZON = 12
+DEFAULT_HORIZON = 12
 
 
 def _read_csv(path: str) -> pd.DataFrame:
@@ -29,24 +29,32 @@ def _scenario_summary(forecast: pd.DataFrame) -> pd.DataFrame:
     rows: list[dict] = []
     for scenario, group in forecast.groupby("scenario"):
         group = group.sort_values("horizon_month")
-        final = group.iloc[-1]
+        first_12 = group[group.horizon_month.le(12)]
+        final_12 = first_12.iloc[-1] if not first_12.empty else group.iloc[-1]
+        final_horizon = group.iloc[-1]
         rows.append({
             "scenario": str(scenario),
-            "ending_cash_12m": float(final.ending_cash),
-            "gross_debt_12m": float(final.gross_debt),
-            "net_debt_12m": float(final.net_debt),
-            "liquidity_headroom_12m": float(final.liquidity_headroom),
-            "deployable_cash_12m": float(final.deployable_cash),
-            "net_leverage_12m": float(final.net_leverage),
-            "interest_coverage_12m": float(final.interest_coverage),
-            "undrawn_rcf_12m": float(final.undrawn_rcf),
-            "covenant_status_12m": str(final.covenant_status),
+            "ending_cash_12m": float(final_12.ending_cash),
+            "gross_debt_12m": float(final_12.gross_debt),
+            "net_debt_12m": float(final_12.net_debt),
+            "liquidity_headroom_12m": float(final_12.liquidity_headroom),
+            "deployable_cash_12m": float(final_12.deployable_cash),
+            "deployable_cash_24m": float(final_horizon.deployable_cash),
+            "net_leverage_12m": float(final_12.net_leverage),
+            "interest_coverage_12m": float(final_12.interest_coverage),
+            "undrawn_rcf_12m": float(final_12.undrawn_rcf),
+            "covenant_status_12m": str(final_12.covenant_status),
             "minimum_liquidity_headroom": float(group.liquidity_headroom.min()),
             "minimum_cash": float(group.ending_cash.min()),
             "maximum_rcf_drawn": float(group.rcf_drawn.max()),
-            "forecast_capex_12m": float(group.capex.sum()),
-            "forecast_operating_cash_flow_12m": float(group.operating_cash_flow.sum()),
-            "scheduled_debt_repayment_12m": float(group.scheduled_debt_repayment.sum()),
+            "forecast_capex_12m": float(first_12.capex.sum()),
+            "forecast_operating_cash_flow_12m": float(first_12.operating_cash_flow.sum()),
+            "scheduled_debt_repayment_12m": float(first_12.scheduled_debt_repayment.sum()),
+            "ending_cash_24m": float(final_horizon.ending_cash),
+            "net_debt_24m": float(final_horizon.net_debt),
+            "liquidity_headroom_24m": float(final_horizon.liquidity_headroom),
+            "forecast_capex_24m": float(group.capex.sum()),
+            "forecast_operating_cash_flow_24m": float(group.operating_cash_flow.sum()),
         })
     return pd.DataFrame(rows)
 
@@ -69,6 +77,10 @@ def _capital_allocation(forecast: pd.DataFrame, config: dict) -> pd.DataFrame:
     allocation_limit = max(min(downside_deployable, downside_headroom), 0.0)
     summary["strategic_liquidity_buffer"] = strategic_buffer
     summary["downside_protected_allocation_capacity"] = allocation_limit
+    downside_deployable_24m = float(downside.iloc[0].deployable_cash_24m) if not downside.empty else 0.0
+    downside_headroom_24m = float(downside.iloc[0].minimum_liquidity_headroom) if not downside.empty else 0.0
+    allocation_limit_24m = max(min(downside_deployable_24m, downside_headroom_24m), 0.0)
+    summary["downside_protected_allocation_capacity_24m"] = allocation_limit_24m
     summary["capital_allocation_status"] = summary.apply(
         lambda row: "Capacity available" if allocation_limit > 0.0 else "Preserve liquidity",
         axis=1,
@@ -77,7 +89,7 @@ def _capital_allocation(forecast: pd.DataFrame, config: dict) -> pd.DataFrame:
 
 
 def build(end_month: str, config_path: str = "config/company.yml", allow_live_macro: bool = True):
-    """Run v0.11 Treasury and add a 12-month driver-based liquidity forecast."""
+    """Run v0.11 Treasury and add a configurable rolling driver-based liquidity forecast."""
     result = build_v11(end_month, config_path=config_path, allow_live_macro=allow_live_macro)
     config = base_engine.load_config(config_path)
 
@@ -97,9 +109,11 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
         advances=advances,
         config=config,
         end_month=end_month,
-        horizon=HORIZON,
+        horizon=int(config["group"].get("forecast_months", DEFAULT_HORIZON)),
     )
-    forecast_checks = validate_liquidity_forecast(liquidity_forecast, horizon=HORIZON)
+    forecast_checks = validate_liquidity_forecast(
+        liquidity_forecast, horizon=int(config["group"].get("forecast_months", DEFAULT_HORIZON))
+    )
     scenario_summary = _scenario_summary(liquidity_forecast)
     capital_allocation = _capital_allocation(liquidity_forecast, config)
 
@@ -153,6 +167,9 @@ def build(end_month: str, config_path: str = "config/company.yml", allow_live_ma
     manifest["base_12m_net_leverage"] = round(float(base_values.get("net_leverage_12m", 0.0)), 4)
     manifest["base_12m_interest_coverage"] = round(float(base_values.get("interest_coverage_12m", 0.0)), 4)
     manifest["base_12m_deployable_cash"] = round(float(base_values.get("deployable_cash_12m", 0.0)), 2)
+    manifest["base_24m_ending_cash"] = round(float(base_values.get("ending_cash_24m", 0.0)), 2)
+    manifest["base_24m_forecast_capex"] = round(float(base_values.get("forecast_capex_24m", 0.0)), 2)
+    manifest["base_24m_forecast_operating_cash_flow"] = round(float(base_values.get("forecast_operating_cash_flow_24m", 0.0)), 2)
     manifest["downside_minimum_liquidity_headroom"] = round(float(downside_values.get("minimum_liquidity_headroom", 0.0)), 2)
     manifest["downside_12m_ending_cash"] = round(float(downside_values.get("ending_cash_12m", 0.0)), 2)
     manifest["downside_12m_covenant_status"] = str(downside_values.get("covenant_status_12m", ""))
