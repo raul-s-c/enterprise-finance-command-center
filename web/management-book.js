@@ -139,7 +139,8 @@
       const next=pages[i+1];
       const pair=next&&!next.contribution&&!next.fullScreen?[page,next]:[page];
       const sameScope=pair.length===1||pair.every(p=>(p.policy?.key||'group')===(pair[0].policy?.key||'group'));
-      result.push({title:pair.map(p=>p.title).join(' · '),policy:sameScope?pair[0].policy:root.ReportContext.group,custom:pair.some(p=>p.custom),html:`<div class="story-board ${pair.length===1?'story-single':''}">${pair.map(p=>`<section class="story-composite" data-source-section="${esc(p.title)}">${p.html}</section>`).join('')}</div>`});
+      const cashDetail=typeof state!=='undefined'&&state.view==='cash-flow'&&pair.some(p=>p.title==='Latest cash bridge');
+      result.push({title:pair.map(p=>p.title).join(' · '),policy:sameScope?pair[0].policy:root.ReportContext.group,custom:pair.some(p=>p.custom),html:`<div class="story-board ${pair.length===1?'story-single':''}${cashDetail?' cash-detail-board':''}">${pair.map(p=>`<section class="story-composite" data-source-section="${esc(p.title)}">${p.html}</section>`).join('')}</div>`});
       i+=pair.length;
     }
     if(reviewOverview&&result.length){
