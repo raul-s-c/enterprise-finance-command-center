@@ -24,8 +24,10 @@
   .report-mode .cj-evidence-row{min-height:36px;margin-top:2px;padding:3px 6px}
   .report-mode .cj-evidence #cj-open-evidence{min-height:26px}
   .cj-controls>p{display:none}
-  .cj-proof-chain{margin-top:6px}
-  .cj-proof-chain span{min-height:42px;padding:4px}
+  .cj-controls table{line-height:1.2}
+  .cj-controls th,.cj-controls td{padding:2px 4px}
+  .cj-proof-chain{margin-top:4px}
+  .cj-proof-chain span{min-height:36px;padding:3px}
 }
 .cj-matrix header span{font-size:10px}
 .cj-guide{font-size:10px}
