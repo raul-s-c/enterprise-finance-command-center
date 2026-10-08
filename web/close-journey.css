@@ -38,3 +38,6 @@
   .report-mode .cj-steps button{min-height:68px}
   .cj-matrix td,.cj-matrix th{padding-block:1px}
 }
+.cj-controls th:nth-child(1){width:36%}
+.cj-controls th:nth-child(2){width:32%}
+.cj-controls td{overflow-wrap:anywhere}
