@@ -769,6 +769,10 @@ test('close journey stays readable and navigable at laptop, tablet and mobile wi
     await page.goto('/#view=close-journey');
     await expect(page.getByRole('heading',{name:'From business activity to management action'})).toBeVisible();
     await expect(page.locator('[data-cj-step]')).toHaveCount(8);
+    if(viewport.width>900){
+      await expect(page.locator('.cj-matrix summary')).toBeVisible();
+      expect(await page.locator('.cj-matrix').evaluate(matrix=>matrix.open),`competency map should collapse only when the viewport needs space: ${viewport.width}x${viewport.height}`).toBe(viewport.width>1180&&viewport.height>760);
+    }
     const sizes=await page.evaluate(()=>Object.fromEntries([
       ['stage', '.cj-steps strong'],['status','.cj-steps span'],['outcome','.cj-steps small'],
       ['explanation','.cj-workspace p'],['inputs','.cj-io ul'],['controls','.cj-controls table'],
@@ -808,7 +812,7 @@ test('close journey stays readable and navigable at laptop, tablet and mobile wi
     if(viewport.width>600){
       expect(await page.evaluate(()=>parseFloat(getComputedStyle(document.querySelector('.cj-matrix table')).fontSize))).toBeGreaterThanOrEqual(10);
     }
-    if([1366,1280,1045,390].includes(viewport.width)){
+    if([1366,1280,1180,1045,390].includes(viewport.width)){
       const screenshot=testInfo.outputPath(`close-journey-${viewport.width}x${viewport.height}.png`);
       await page.screenshot({path:screenshot});
       await testInfo.attach(`close-journey-${viewport.width}x${viewport.height}`,{path:screenshot,contentType:'image/png'});
@@ -819,6 +823,15 @@ test('close journey stays readable and navigable at laptop, tablet and mobile wi
     await expect(page.locator('.cj-controls table')).toContainText('Result / limit');
     await expect(page.locator('.cj-controls table')).toContainText('€0 / €0.05 max');
   }
+  await page.setViewportSize({width:1366,height:768});
+  await page.goto('/#view=close-journey');
+  await expect(page.locator('.cj-matrix')).toHaveAttribute('open','');
+  await page.setViewportSize({width:1045,height:718});
+  await expect(page.locator('.cj-matrix')).not.toHaveAttribute('open','');
+  await page.locator('.cj-matrix summary').click();
+  await expect(page.locator('.cj-matrix table')).toBeVisible();
+  await page.setViewportSize({width:1366,height:768});
+  await expect(page.locator('.cj-matrix')).toHaveAttribute('open','');
   expect(errors).toEqual([]);
 });
 

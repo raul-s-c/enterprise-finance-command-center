@@ -47,3 +47,12 @@
 .cj-controls th:nth-child(1){width:36%}
 .cj-controls th:nth-child(2){width:32%}
 .cj-controls td{overflow-wrap:anywhere}
+.cj-matrix summary{display:flex;align-items:baseline;gap:10px;cursor:pointer;list-style:none}
+.cj-matrix summary::-webkit-details-marker{display:none}
+.cj-matrix summary h3{margin:0}
+.cj-matrix summary span{font-size:10px;color:#5f6f86}
+.cj-matrix:not([open]){padding-block:7px}
+@media(min-width:901px) and (max-width:1180px), (min-width:901px) and (max-height:760px){
+  .report-mode.close-journey-active .content:has(.cj-matrix[open]){overflow:auto}
+  .close-journey:has(.cj-matrix[open]){height:auto;min-height:100%}
+}
