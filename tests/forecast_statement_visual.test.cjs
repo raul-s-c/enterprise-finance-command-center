@@ -43,7 +43,8 @@ test('scenario names are escaped and no invented case is displayed',()=>{
 
 test('group Base workforce aggregation reconciles personnel and non-people OPEX',()=>{
   const rows=visual.workforceMonths(published.workforce_forecast,published.meta.end_month);
-  assert.equal(rows.length,12);
+  assert.equal(rows.length,24);
+  assert.equal(rows.at(-1).month,published.workforce_forecast.at(-1).month);
   for(const row of rows)assert.ok(Math.abs(row.personnel+row.nonPeople-row.opex)<.1,`OPEX split failed for ${row.month}`);
   assert.ok(rows.at(-1).fte>0);
   assert.match(visual.workforce(rows),/Forecast FTE vs target/);

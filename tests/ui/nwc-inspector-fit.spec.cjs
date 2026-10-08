@@ -5,6 +5,8 @@ test('working capital shows complete inspector beside source evidence on a lapto
   await page.goto('/#view=working-capital&page=0');
   await expect(page.locator('.cx-flow-map.nwc-flow-compact button')).toHaveCount(4);
   await expect(page.locator('.cx-evidence tbody tr')).toHaveCount(2);
+  await expect(page.locator('.cx-evidence th[data-field="net_working_capital"]')).toHaveText('Net WC');
+  await expect(page.locator('.cx-evidence th[data-field="net_working_capital"]')).toHaveAttribute('aria-label','Net working capital');
   const geometry=await page.evaluate(()=>{
     const inspector=document.querySelector('.cx-inspector'),details=inspector.querySelector('dl');
     const evidence=document.querySelector('.cx-evidence').getBoundingClientRect();
