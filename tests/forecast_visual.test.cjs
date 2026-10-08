@@ -5,7 +5,8 @@ require('../web/forecast-visual.js');
 
 test('forecast charts preserve all published horizons and financial sign semantics',()=>{
   const html=global.FinanceForecastVisual.accuracy(data.forecast_accuracy);
-  assert.equal((html.match(/class="fv-error-point"/g)||[]).length,18);
+  assert.equal((html.match(/class="fv-error-point"/g)||[]).length,data.forecast_accuracy.length);
+  assert.equal(data.forecast_accuracy.at(-1).horizon_month,24);
   assert.equal((html.match(/class="fv-negative"/g)||[]).length,data.forecast_accuracy.filter(row=>Number(row.bias)<0).length);
   const pct=value=>new Intl.NumberFormat('en-GB',{style:'percent',minimumFractionDigits:1,maximumFractionDigits:1}).format(Number(value));
   const first=data.forecast_accuracy[0],last=data.forecast_accuracy.at(-1);
