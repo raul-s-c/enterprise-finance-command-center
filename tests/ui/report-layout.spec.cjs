@@ -719,7 +719,7 @@ test('Cash Flow uses a full-width signed trend with source-tied monthly evidence
 test('all report destinations retain evidence instead of standalone KPI pages',async({page})=>{
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
   const reports=['executive','pnl','margin','working-capital','cash-flow','treasury','balance-sheet','forecast','macro-sensitivities','business-drivers','profitability','intercompany','operations-capex','fx','performance-review','action-execution','data-journey','close-journey'];
-  for(const viewport of [{width:1366,height:768},{width:1024,height:768},{width:900,height:900},{width:390,height:844}]){
+  for(const viewport of [{width:1366,height:768},{width:1280,height:720},{width:1180,height:768},{width:1100,height:768},{width:1045,height:718},{width:1024,height:768},{width:900,height:900},{width:390,height:844}]){
   await page.setViewportSize(viewport);
   for(const report of reports){
     await page.goto(`/#view=${report}`);
@@ -743,10 +743,18 @@ test('all report destinations retain evidence instead of standalone KPI pages',a
         cards:content.querySelectorAll('.kpi,.report-kpi,.sw-kpi,.story-kpi').length,
         supporting:content.querySelectorAll('.panel,.financial-report,.sw-panel,.cx-workspace,.story-region,.tower-analytics,.carrying-value-chart,.prv-story,.prv-coverage').length,
         text:content.innerText.trim().length,
-        horizontalOverflow:document.documentElement.scrollWidth>innerWidth+1
+        horizontalOverflow:document.documentElement.scrollWidth>innerWidth+1,
+        visiblePanels:[...content.querySelectorAll('.panel,.financial-report,.sw-panel,.cx-workspace,.story-region,.tower-analytics,.carrying-value-chart,.prv-story,.prv-coverage')]
+          .filter(panel=>panel.getClientRects().length&&getComputedStyle(panel).visibility!=='hidden')
+          .map(panel=>{const rect=panel.getBoundingClientRect();return{name:panel.className,left:Math.round(rect.left),right:Math.round(rect.right),width:Math.round(rect.width)}})
       }));
       expect(evidence.text,`${report} page ${index} is blank`).toBeGreaterThan(0);
       expect(evidence.horizontalOverflow,`${report} page ${index} overflows the document`).toBe(false);
+      for(const panel of evidence.visiblePanels){
+        expect(panel.left,`${report} page ${index} panel starts outside the viewport at ${viewport.width}px: ${JSON.stringify(panel)}`).toBeGreaterThanOrEqual(-1);
+        expect(panel.right,`${report} page ${index} panel extends outside the viewport at ${viewport.width}px: ${JSON.stringify(panel)}`).toBeLessThanOrEqual(viewport.width+1);
+        expect(panel.width,`${report} page ${index} panel has no usable width at ${viewport.width}px: ${JSON.stringify(panel)}`).toBeGreaterThan(0);
+      }
       if(evidence.cards)expect(evidence.supporting,`${report} page ${index} contains only KPIs`).toBeGreaterThan(0);
     }
   }
@@ -756,11 +764,15 @@ test('all report destinations retain evidence instead of standalone KPI pages',a
 
 test('close journey stays readable and navigable at laptop, tablet and mobile widths',async({page},testInfo)=>{
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
-  for(const viewport of [{width:1366,height:768},{width:1180,height:768},{width:1100,height:768},{width:1045,height:718},{width:1024,height:768},{width:390,height:844}]){
+  for(const viewport of [{width:1366,height:768},{width:1280,height:720},{width:1180,height:768},{width:1100,height:768},{width:1045,height:718},{width:1024,height:768},{width:390,height:844}]){
     await page.setViewportSize(viewport);
     await page.goto('/#view=close-journey');
     await expect(page.getByRole('heading',{name:'From business activity to management action'})).toBeVisible();
     await expect(page.locator('[data-cj-step]')).toHaveCount(8);
+    if(viewport.width>900){
+      await expect(page.locator('.cj-matrix summary')).toBeVisible();
+      expect(await page.locator('.cj-matrix').evaluate(matrix=>matrix.open),`competency map should collapse only when the viewport needs space: ${viewport.width}x${viewport.height}`).toBe(viewport.width>1180&&viewport.height>760);
+    }
     const sizes=await page.evaluate(()=>Object.fromEntries([
       ['stage', '.cj-steps strong'],['status','.cj-steps span'],['outcome','.cj-steps small'],
       ['explanation','.cj-workspace p'],['inputs','.cj-io ul'],['controls','.cj-controls table'],
@@ -776,9 +788,12 @@ test('close journey stays readable and navigable at laptop, tablet and mobile wi
       right:Math.round(workspace.getBoundingClientRect().right),
       columns:getComputedStyle(workspace).gridTemplateColumns.split(' ').length,
       evidenceColumn:getComputedStyle(workspace.querySelector('.cj-evidence')).gridColumn,
-      panels:[...workspace.children].map(panel=>({name:panel.className,right:Math.round(panel.getBoundingClientRect().right),scroll:panel.scrollWidth,client:panel.clientWidth}))
+      panels:[...workspace.children].map(panel=>({name:panel.className,right:Math.round(panel.getBoundingClientRect().right),scroll:panel.scrollWidth,client:panel.clientWidth,content:panel.scrollHeight,height:panel.clientHeight}))
     }));
     expect(panelFit.right,`close journey workspace extends beyond viewport at ${viewport.width}px: ${JSON.stringify(panelFit)}`).toBeLessThanOrEqual(page.viewportSize().width+1);
+    if(viewport.width>900){
+      expect(panelFit.panels.filter(panel=>panel.content>panel.height+1),`close journey panels clip content at ${viewport.width}x${viewport.height}: ${JSON.stringify(panelFit.panels)}`).toEqual([]);
+    }
     if(viewport.width>900&&viewport.width<=1180){
       expect(panelFit.columns,`close journey should use two readable columns at ${viewport.width}px: ${JSON.stringify(panelFit)}`).toBe(2);
       expect(panelFit.evidenceColumn,`evidence should span the workspace at ${viewport.width}px: ${JSON.stringify(panelFit)}`).toBe('1 / -1');
@@ -797,7 +812,7 @@ test('close journey stays readable and navigable at laptop, tablet and mobile wi
     if(viewport.width>600){
       expect(await page.evaluate(()=>parseFloat(getComputedStyle(document.querySelector('.cj-matrix table')).fontSize))).toBeGreaterThanOrEqual(10);
     }
-    if(viewport.width===1366||viewport.width===390){
+    if([1366,1280,1180,1045,390].includes(viewport.width)){
       const screenshot=testInfo.outputPath(`close-journey-${viewport.width}x${viewport.height}.png`);
       await page.screenshot({path:screenshot});
       await testInfo.attach(`close-journey-${viewport.width}x${viewport.height}`,{path:screenshot,contentType:'image/png'});
@@ -808,6 +823,18 @@ test('close journey stays readable and navigable at laptop, tablet and mobile wi
     await expect(page.locator('.cj-controls table')).toContainText('Result / limit');
     await expect(page.locator('.cj-controls table')).toContainText('€0 / €0.05 max');
   }
+  await page.setViewportSize({width:1366,height:768});
+  await page.goto('/#view=close-journey');
+  await expect(page.locator('.cj-matrix')).toHaveAttribute('open','');
+  await page.setViewportSize({width:1045,height:718});
+  await expect(page.locator('.cj-matrix')).not.toHaveAttribute('open','');
+  await page.locator('.cj-matrix summary').click();
+  await expect(page.locator('.cj-matrix table')).toBeVisible();
+  const expandedMap=await page.locator('#content').evaluate(element=>({overflow:getComputedStyle(element).overflowY,content:element.scrollHeight,viewport:element.clientHeight}));
+  expect(expandedMap.overflow).toBe('auto');
+  expect(expandedMap.content).toBeGreaterThan(expandedMap.viewport);
+  await page.setViewportSize({width:1366,height:768});
+  await expect(page.locator('.cj-matrix')).toHaveAttribute('open','');
   expect(errors).toEqual([]);
 });
 
@@ -849,7 +876,7 @@ test('short desktop windows keep story, contribution and close controls reachabl
     viewport:element.clientHeight
   }));
   expect(journeyScroll.overflow).toBe('auto');
-  expect(journeyScroll.content).toBeGreaterThan(journeyScroll.viewport);
+  expect(journeyScroll.content).toBeLessThanOrEqual(journeyScroll.viewport);
   await journey.evaluate(element=>element.scrollTo({top:element.scrollHeight,behavior:'instant'}));
   await expect(page.locator('#cj-next')).toBeInViewport();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
