@@ -774,9 +774,15 @@ test('close journey stays readable and navigable at laptop, tablet and mobile wi
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`document overflows at ${viewport.width}px`).toBe(true);
     const panelFit=await page.locator('.cj-workspace').evaluate(workspace=>({
       right:Math.round(workspace.getBoundingClientRect().right),
+      columns:getComputedStyle(workspace).gridTemplateColumns.split(' ').length,
+      evidenceColumn:getComputedStyle(workspace.querySelector('.cj-evidence')).gridColumn,
       panels:[...workspace.children].map(panel=>({name:panel.className,right:Math.round(panel.getBoundingClientRect().right),scroll:panel.scrollWidth,client:panel.clientWidth}))
     }));
     expect(panelFit.right,`close journey workspace extends beyond viewport at ${viewport.width}px: ${JSON.stringify(panelFit)}`).toBeLessThanOrEqual(page.viewportSize().width+1);
+    if(viewport.width>900&&viewport.width<=1180){
+      expect(panelFit.columns,`close journey should use two readable columns at ${viewport.width}px: ${JSON.stringify(panelFit)}`).toBe(2);
+      expect(panelFit.evidenceColumn,`evidence should span the workspace at ${viewport.width}px: ${JSON.stringify(panelFit)}`).toBe('1 / -1');
+    }
     if(viewport.width>900){
       const canvas=await page.locator('#content').evaluate(element=>({scrollHeight:element.scrollHeight,clientHeight:element.clientHeight}));
       expect(canvas.scrollHeight,`close journey requires vertical page scrolling at ${viewport.width}px: ${JSON.stringify(canvas)}`).toBeLessThanOrEqual(canvas.clientHeight+1);
