@@ -808,7 +808,7 @@ test('close journey stays readable and navigable at laptop, tablet and mobile wi
     if(viewport.width>600){
       expect(await page.evaluate(()=>parseFloat(getComputedStyle(document.querySelector('.cj-matrix table')).fontSize))).toBeGreaterThanOrEqual(10);
     }
-    if(viewport.width===1366||viewport.width===390){
+    if([1366,1280,1045,390].includes(viewport.width)){
       const screenshot=testInfo.outputPath(`close-journey-${viewport.width}x${viewport.height}.png`);
       await page.screenshot({path:screenshot});
       await testInfo.attach(`close-journey-${viewport.width}x${viewport.height}`,{path:screenshot,contentType:'image/png'});
