@@ -794,6 +794,8 @@ test('close journey stays readable and navigable at laptop, tablet and mobile wi
     await page.locator('[data-cj-step="1"]').click();
     await expect(page.locator('#cj-next')).toBeEnabled();
     await expect(page.locator('.cj-guide')).toContainText('2 of 8 · Transactions');
+    await expect(page.locator('.cj-controls table')).toContainText('Result / limit');
+    await expect(page.locator('.cj-controls table')).toContainText('€0 / €0.05 max');
   }
   expect(errors).toEqual([]);
 });

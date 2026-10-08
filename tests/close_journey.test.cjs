@@ -17,11 +17,29 @@ test('close journey covers the complete process with real evidence routes',()=>{
 });
 
 test('every close-journey control exists and passes in the published close',()=>{
-  for(const stage of journey.stages)for(const [key] of stage.controls){
+  for(const stage of journey.stages)for(const control of stage.controls){
+    const [key,,source,limit,unit]=control;
     assert.ok(Object.hasOwn(data.validation,key),`${stage.title}: ${key}`);
     const value=data.validation[key];
     assert.equal(typeof value,'number',`${stage.title}: ${key}`);
-    assert.ok(Math.abs(value)<0.1,`${stage.title}: ${key} = ${value}`);
+    assert.ok(Number.isFinite(limit)&&limit>=0,`${stage.title}: ${key} has an explicit threshold`);
+    assert.ok(['EUR','count'].includes(unit),`${stage.title}: ${key} has a declared unit`);
+    assert.ok(source,`${stage.title}: ${key} has a source dataset`);
+    assert.equal(journey.passed(data,control),true,`${stage.title}: ${key} = ${value} / ${limit}`);
+    assert.match(journey.resultLabel(data,control),/\/.*(max|allowed)$/);
   }
   assert.equal(data.validation.passed,true);
+});
+
+test('close journey uses the exact published threshold instead of a generic finance tolerance',()=>{
+  const creditLoss=journey.stages.find(stage=>stage.title==='Legal close').controls.find(control=>control[0]==='credit_loss_allowance_max_gap');
+  assert.equal(creditLoss[3],0.05);
+  assert.equal(journey.passed({validation:{credit_loss_allowance_max_gap:0.05}},creditLoss),true);
+  assert.equal(journey.passed({validation:{credit_loss_allowance_max_gap:0.06}},creditLoss),false);
+  assert.equal(journey.passed({validation:{credit_loss_allowance_max_gap:-0.06}},creditLoss),false);
+
+  const strictCount=journey.stages.find(stage=>stage.title==='Actions & benefits').controls.find(control=>control[0]==='management_action_orphans');
+  assert.equal(journey.passed({validation:{management_action_orphans:0}},strictCount),true);
+  assert.equal(journey.passed({validation:{management_action_orphans:1}},strictCount),false);
+  assert.equal(journey.passed({validation:{}},creditLoss),false);
 });
