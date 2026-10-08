@@ -719,7 +719,7 @@ test('Cash Flow uses a full-width signed trend with source-tied monthly evidence
 test('all report destinations retain evidence instead of standalone KPI pages',async({page})=>{
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
   const reports=['executive','pnl','margin','working-capital','cash-flow','treasury','balance-sheet','forecast','macro-sensitivities','business-drivers','profitability','intercompany','operations-capex','fx','performance-review','action-execution','data-journey','close-journey'];
-  for(const viewport of [{width:1366,height:768},{width:1024,height:768},{width:900,height:900},{width:390,height:844}]){
+  for(const viewport of [{width:1366,height:768},{width:1180,height:768},{width:1100,height:768},{width:1045,height:718},{width:1024,height:768},{width:900,height:900},{width:390,height:844}]){
   await page.setViewportSize(viewport);
   for(const report of reports){
     await page.goto(`/#view=${report}`);
@@ -743,10 +743,18 @@ test('all report destinations retain evidence instead of standalone KPI pages',a
         cards:content.querySelectorAll('.kpi,.report-kpi,.sw-kpi,.story-kpi').length,
         supporting:content.querySelectorAll('.panel,.financial-report,.sw-panel,.cx-workspace,.story-region,.tower-analytics,.carrying-value-chart,.prv-story,.prv-coverage').length,
         text:content.innerText.trim().length,
-        horizontalOverflow:document.documentElement.scrollWidth>innerWidth+1
+        horizontalOverflow:document.documentElement.scrollWidth>innerWidth+1,
+        visiblePanels:[...content.querySelectorAll('.panel,.financial-report,.sw-panel,.cx-workspace,.story-region,.tower-analytics,.carrying-value-chart,.prv-story,.prv-coverage')]
+          .filter(panel=>panel.getClientRects().length&&getComputedStyle(panel).visibility!=='hidden')
+          .map(panel=>{const rect=panel.getBoundingClientRect();return{name:panel.className,left:Math.round(rect.left),right:Math.round(rect.right),width:Math.round(rect.width)}})
       }));
       expect(evidence.text,`${report} page ${index} is blank`).toBeGreaterThan(0);
       expect(evidence.horizontalOverflow,`${report} page ${index} overflows the document`).toBe(false);
+      for(const panel of evidence.visiblePanels){
+        expect(panel.left,`${report} page ${index} panel starts outside the viewport at ${viewport.width}px: ${JSON.stringify(panel)}`).toBeGreaterThanOrEqual(-1);
+        expect(panel.right,`${report} page ${index} panel extends outside the viewport at ${viewport.width}px: ${JSON.stringify(panel)}`).toBeLessThanOrEqual(viewport.width+1);
+        expect(panel.width,`${report} page ${index} panel has no usable width at ${viewport.width}px: ${JSON.stringify(panel)}`).toBeGreaterThan(0);
+      }
       if(evidence.cards)expect(evidence.supporting,`${report} page ${index} contains only KPIs`).toBeGreaterThan(0);
     }
   }
