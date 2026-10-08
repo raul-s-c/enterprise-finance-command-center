@@ -134,6 +134,17 @@ test('P&L retains a readable canvas in short windows and signed endpoints',async
   expect(endpoints.length).toBeGreaterThan(0);expect(endpoints.every(x=>x==='0px')).toBe(true);
 });
 
+test('Back from a direct report link stays inside the finance dashboard',async({page})=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=pnl&entity=US01&division=Hardware');
+  const back=page.getByRole('button',{name:'Back',exact:true});
+  await expect(back).toBeEnabled();
+  await back.click();
+  await expect(page.locator('#viewTitle')).toHaveText('Executive');
+  await expect(page).toHaveURL(/#view=executive/);
+  await expect(page.locator('#nav button[aria-current="page"]')).toContainText('Executive');
+});
+
 test('graphical P&L restores filters with Back and factory content stays inside cards',async({page})=>{
   await page.setViewportSize({width:1366,height:900});
   await page.goto('/#view=pnl');

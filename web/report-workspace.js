@@ -124,6 +124,14 @@ function reportReadRoute(){
   reportState.view=state.view;
 }
 function reportNavigate(page){reportState.page=RM.pageIndex(page);render();}
+function reportBack(){
+  const depth=Number(history.state?.reportDepth)||0;
+  if(depth>0){history.back();return;}
+  state.view='executive';reportState.page=0;reportState.section='Overview';
+  const hash=new URLSearchParams({view:'executive',page:0,section:'Overview',entity:state.entity,division:state.division,metric:reportState.metric});
+  history.replaceState({reportApp:true,reportDepth:0},'',`#${hash}`);
+  reportReadRoute();render(true);
+}
 function setupFilters(){
   for(const [key,id] of [['entity','entityFilter'],['division','divisionFilter']]){
     document.getElementById(id).onchange=event=>{
@@ -151,8 +159,10 @@ function setupNav(){
   document.body.classList.add('report-mode');
   document.getElementById('nav').innerHTML=RN.areas.map(area=>`<button data-area="${area.id}" title="${RM.escape(area.description)}">${reportNavIcon(area.landing)}<span>${RM.escape(area.label)}</span></button>`).join('');
   document.getElementById('nav').addEventListener('click',event=>{const button=event.target.closest('[data-area]');if(button){const area=RN.areas.find(item=>item.id===button.dataset.area);state.view=area.landing;reportState.page=0;render();}});
-  document.querySelector('.filters').insertAdjacentHTML('beforeend','<button id="reportBack" title="Return to the previous report and filters">Back</button><button id="reportReset" title="Reset entity and division filters">Reset</button><button id="reportHelp">Help</button>');
-  document.getElementById('reportBack').onclick=()=>history.back();
+  document.querySelector('.filters').insertAdjacentHTML('beforeend','<button id="reportBack" title="Return to the previous report, or Executive if this is a direct link">Back</button><button id="reportReset" title="Reset entity and division filters">Reset</button><button id="reportHelp">Help</button>');
+  const depth=Number(history.state?.reportDepth)||0;
+  history.replaceState({...history.state,reportApp:true,reportDepth:depth},'',location.href);
+  document.getElementById('reportBack').onclick=reportBack;
   document.querySelector('.topbar>div:first-child').insertAdjacentHTML('afterbegin','<span id="reportAreaLabel" class="report-area-label"></span>');
   document.querySelector('.topbar>div:first-child').insertAdjacentHTML('beforeend','<nav id="reportModules" class="report-modules" aria-label="Reports in current area"></nav>');
   document.querySelector('.topbar').insertAdjacentHTML('beforebegin',`<div class="mobile-module"><label>Area<select id="reportArea">${RN.areas.map(area=>`<option value="${area.id}">${RM.escape(area.label)}</option>`).join('')}</select></label><label>Report<select id="reportModule"></select></label></div>`);
@@ -255,9 +265,9 @@ function render(restoring=false){
   document.getElementById('reportPrevious').disabled=reportState.page===0;
   document.getElementById('reportNext').disabled=reportState.page===pages.length-1;
   const hash=new URLSearchParams({view:state.view,page:reportState.page,section:pages[reportState.page].title,entity:state.entity,division:state.division,metric:reportState.metric});
-  const depth=history.state?.reportDepth||0;
-  if(location.hash!==`#${hash}`)history[restoring?'replaceState':'pushState']({reportDepth:restoring?depth:depth+1},'',`#${hash}`);
-  document.getElementById('reportBack').disabled=!(history.state?.reportDepth>0);
+  const depth=Number(history.state?.reportDepth)||0;
+  if(location.hash!==`#${hash}`)history[restoring?'replaceState':'pushState']({...history.state,reportApp:true,reportDepth:restoring?depth:depth+1},'',`#${hash}`);
+  document.getElementById('reportBack').disabled=false;
   const openPnlEvidence=key=>{
     const s=reportCurrent(),row=PnlVisual.rows(s.current,s.prior||{},RM).find(r=>r.key===key);
     if(!row)return;
