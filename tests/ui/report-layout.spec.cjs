@@ -830,6 +830,9 @@ test('close journey stays readable and navigable at laptop, tablet and mobile wi
   await expect(page.locator('.cj-matrix')).not.toHaveAttribute('open','');
   await page.locator('.cj-matrix summary').click();
   await expect(page.locator('.cj-matrix table')).toBeVisible();
+  const expandedMap=await page.locator('#content').evaluate(element=>({overflow:getComputedStyle(element).overflowY,content:element.scrollHeight,viewport:element.clientHeight}));
+  expect(expandedMap.overflow).toBe('auto');
+  expect(expandedMap.content).toBeGreaterThan(expandedMap.viewport);
   await page.setViewportSize({width:1366,height:768});
   await expect(page.locator('.cj-matrix')).toHaveAttribute('open','');
   expect(errors).toEqual([]);
@@ -873,7 +876,7 @@ test('short desktop windows keep story, contribution and close controls reachabl
     viewport:element.clientHeight
   }));
   expect(journeyScroll.overflow).toBe('auto');
-  expect(journeyScroll.content).toBeGreaterThan(journeyScroll.viewport);
+  expect(journeyScroll.content).toBeLessThanOrEqual(journeyScroll.viewport);
   await journey.evaluate(element=>element.scrollTo({top:element.scrollHeight,behavior:'instant'}));
   await expect(page.locator('#cj-next')).toBeInViewport();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
