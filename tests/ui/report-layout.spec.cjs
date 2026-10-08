@@ -756,7 +756,7 @@ test('all report destinations retain evidence instead of standalone KPI pages',a
 
 test('close journey stays readable and navigable at laptop, tablet and mobile widths',async({page},testInfo)=>{
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
-  for(const viewport of [{width:1366,height:768},{width:1024,height:768},{width:390,height:844}]){
+  for(const viewport of [{width:1366,height:768},{width:1180,height:768},{width:1100,height:768},{width:1045,height:718},{width:1024,height:768},{width:390,height:844}]){
     await page.setViewportSize(viewport);
     await page.goto('/#view=close-journey');
     await expect(page.getByRole('heading',{name:'From business activity to management action'})).toBeVisible();
@@ -772,6 +772,17 @@ test('close journey stays readable and navigable at laptop, tablet and mobile wi
     expect(sizes.proof,`${viewport.width}px proof chain: ${JSON.stringify(sizes)}`).toBeGreaterThanOrEqual(11);
     expect(sizes.evidence,`${viewport.width}px evidence link: ${JSON.stringify(sizes)}`).toBeGreaterThanOrEqual(viewport.width<=600?11:10);
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`document overflows at ${viewport.width}px`).toBe(true);
+    const panelFit=await page.locator('.cj-workspace').evaluate(workspace=>({
+      right:Math.round(workspace.getBoundingClientRect().right),
+      columns:getComputedStyle(workspace).gridTemplateColumns.split(' ').length,
+      evidenceColumn:getComputedStyle(workspace.querySelector('.cj-evidence')).gridColumn,
+      panels:[...workspace.children].map(panel=>({name:panel.className,right:Math.round(panel.getBoundingClientRect().right),scroll:panel.scrollWidth,client:panel.clientWidth}))
+    }));
+    expect(panelFit.right,`close journey workspace extends beyond viewport at ${viewport.width}px: ${JSON.stringify(panelFit)}`).toBeLessThanOrEqual(page.viewportSize().width+1);
+    if(viewport.width>900&&viewport.width<=1180){
+      expect(panelFit.columns,`close journey should use two readable columns at ${viewport.width}px: ${JSON.stringify(panelFit)}`).toBe(2);
+      expect(panelFit.evidenceColumn,`evidence should span the workspace at ${viewport.width}px: ${JSON.stringify(panelFit)}`).toBe('1 / -1');
+    }
     if(viewport.width>900){
       const canvas=await page.locator('#content').evaluate(element=>({scrollHeight:element.scrollHeight,clientHeight:element.clientHeight}));
       expect(canvas.scrollHeight,`close journey requires vertical page scrolling at ${viewport.width}px: ${JSON.stringify(canvas)}`).toBeLessThanOrEqual(canvas.clientHeight+1);
