@@ -719,7 +719,7 @@ test('Cash Flow uses a full-width signed trend with source-tied monthly evidence
 test('all report destinations retain evidence instead of standalone KPI pages',async({page})=>{
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
   const reports=['executive','pnl','margin','working-capital','cash-flow','treasury','balance-sheet','forecast','macro-sensitivities','business-drivers','profitability','intercompany','operations-capex','fx','performance-review','action-execution','data-journey','close-journey'];
-  for(const viewport of [{width:1366,height:768},{width:1180,height:768},{width:1100,height:768},{width:1045,height:718},{width:1024,height:768},{width:900,height:900},{width:390,height:844}]){
+  for(const viewport of [{width:1366,height:768},{width:1280,height:720},{width:1180,height:768},{width:1100,height:768},{width:1045,height:718},{width:1024,height:768},{width:900,height:900},{width:390,height:844}]){
   await page.setViewportSize(viewport);
   for(const report of reports){
     await page.goto(`/#view=${report}`);
@@ -764,7 +764,7 @@ test('all report destinations retain evidence instead of standalone KPI pages',a
 
 test('close journey stays readable and navigable at laptop, tablet and mobile widths',async({page},testInfo)=>{
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
-  for(const viewport of [{width:1366,height:768},{width:1180,height:768},{width:1100,height:768},{width:1045,height:718},{width:1024,height:768},{width:390,height:844}]){
+  for(const viewport of [{width:1366,height:768},{width:1280,height:720},{width:1180,height:768},{width:1100,height:768},{width:1045,height:718},{width:1024,height:768},{width:390,height:844}]){
     await page.setViewportSize(viewport);
     await page.goto('/#view=close-journey');
     await expect(page.getByRole('heading',{name:'From business activity to management action'})).toBeVisible();
@@ -784,9 +784,12 @@ test('close journey stays readable and navigable at laptop, tablet and mobile wi
       right:Math.round(workspace.getBoundingClientRect().right),
       columns:getComputedStyle(workspace).gridTemplateColumns.split(' ').length,
       evidenceColumn:getComputedStyle(workspace.querySelector('.cj-evidence')).gridColumn,
-      panels:[...workspace.children].map(panel=>({name:panel.className,right:Math.round(panel.getBoundingClientRect().right),scroll:panel.scrollWidth,client:panel.clientWidth}))
+      panels:[...workspace.children].map(panel=>({name:panel.className,right:Math.round(panel.getBoundingClientRect().right),scroll:panel.scrollWidth,client:panel.clientWidth,content:panel.scrollHeight,height:panel.clientHeight}))
     }));
     expect(panelFit.right,`close journey workspace extends beyond viewport at ${viewport.width}px: ${JSON.stringify(panelFit)}`).toBeLessThanOrEqual(page.viewportSize().width+1);
+    if(viewport.width>900){
+      expect(panelFit.panels.filter(panel=>panel.content>panel.height+1),`close journey panels clip content at ${viewport.width}x${viewport.height}: ${JSON.stringify(panelFit.panels)}`).toEqual([]);
+    }
     if(viewport.width>900&&viewport.width<=1180){
       expect(panelFit.columns,`close journey should use two readable columns at ${viewport.width}px: ${JSON.stringify(panelFit)}`).toBe(2);
       expect(panelFit.evidenceColumn,`evidence should span the workspace at ${viewport.width}px: ${JSON.stringify(panelFit)}`).toBe('1 / -1');
