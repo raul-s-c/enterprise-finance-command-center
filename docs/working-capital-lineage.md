@@ -43,6 +43,17 @@ existing oldest-accrual, division-preference and supplier-priority policy.
 These are controlled analytical allocations, not actual invoice or remittance
 matches.
 
+## Fixed asset lifecycle (v0.25)
+
+Version 0.25 also publishes `data/processed/fixed_asset_project_register.csv`,
+`data/processed/fixed_asset_project_events.csv` and the lazy-loaded
+`web/data/fixed_asset_detail.json`. Project spend and CIP-to-PPE transfers keep
+their posted journal IDs; the register reconciles gross PPE, CIP, accumulated
+depreciation and entity/month depreciation back to the ledger. Project-level
+depreciation is reconstructed from approved budget and useful life because
+depreciation is posted in an aggregate entity journal. Opening PPE remains an
+entity pool; the register does not invent individual legacy asset IDs.
+
 Remaining work: connect provisions and consolidation adjustments directly to
 invoice-level net AR, and model matched customer/vendor settlement only if
 remittance, invoice and bank-reference evidence becomes available.
