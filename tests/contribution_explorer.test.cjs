@@ -12,6 +12,17 @@ test('CAPEX separates cash spending from noncash asset transfers',()=>{
   assert.ok(C.records(data,'capex',month,'GO_LIVE').every(r=>r.event==='GO_LIVE'));
   assert.ok(C.records(data,'capex',month,'SPEND').every(r=>r.event==='SPEND'));
 });
+test('invoice evidence respects the selected close and supported entity/customer scope',()=>{
+  const invoices=[
+    {month:'2026-09',entity:'US01',division:'Hardware',customer:'C1',customer_segment:'Strategic',invoice_id:'I-1'},
+    {month:'2026-09',entity:'US01',division:'Hardware',customer:'C2',customer_segment:'Core',invoice_id:'I-2'},
+    {month:'2026-09',entity:'ES01',division:'Events',customer:'C1',customer_segment:'Strategic',invoice_id:'I-3'},
+    {month:'2026-08',entity:'US01',division:'Hardware',customer:'C1',customer_segment:'Strategic',invoice_id:'I-4'},
+  ];
+  assert.deepEqual(C.invoiceRecords({ar_invoice_aging:invoices},'2026-09',[invoices[0]],{}).map(r=>r.invoice_id),['I-1']);
+  assert.deepEqual(C.invoiceRecords({ar_invoice_aging:invoices},'2026-09',[],{entity:'US01',division:'Hardware'}).map(r=>r.invoice_id),['I-1','I-2']);
+  assert.deepEqual(C.invoiceRecords({ar_invoice_aging:invoices},'2026-09',[],{entity:'missing'}),[]);
+});
 test('every dimension and measure reconciles to its own source, without changing data',()=>{
   const before=JSON.stringify(data);
   for(const [key,def]of Object.entries(C.definitions)){
