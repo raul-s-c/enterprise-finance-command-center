@@ -27,6 +27,8 @@ test('CAPEX project register traces cash, CIP, PPE and modeled depreciation on m
   }}));
   await page.setViewportSize({width:390,height:844});
   await page.goto('/#view=operations-capex&page=0');
+  await page.waitForLoadState('networkidle');
+  await page.evaluate(()=>{data.meta.version='0.25.0';data.meta.fixed_asset_project_count=1;state.view='operations-capex';reportState.page=0;render();});
   const workspace=page.locator('.statement-workspace');
   await expect(workspace).toBeVisible();
   await expect(workspace.getByRole('button',{name:'Project asset register'})).toBeVisible();
