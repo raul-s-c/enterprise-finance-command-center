@@ -37,7 +37,7 @@ test('CAPEX project register traces cash, CIP, PPE and modeled depreciation on m
   await assetRegister.click();
   const dialog=page.locator('#reportDialog');
   await expect(dialog.locator('#reportDialogTitle')).toHaveText('CAPEX · project-to-asset lifecycle');
-  await expect(dialog).toContainText('Opening PPE remains an entity-level pool');
+  await expect(dialog).toContainText(/opening PPE remains an entity-level pool/i);
   await dialog.getByRole('button',{name:/Brno assembly cell/}).click();
   await expect(dialog).toContainText('CAPEX-2025-04-CAPEX-TEST-01');
   await expect(dialog).toContainText('GOLIVE-2026-01-CAPEX-TEST-01');
