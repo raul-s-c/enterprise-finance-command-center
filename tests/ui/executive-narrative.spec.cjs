@@ -8,13 +8,17 @@ test('Executive narrative teaches result, scoped drivers and group outlook throu
   await expect(narrative).toBeVisible();
   await expect(narrative).toContainText('RESULT');
   await expect(narrative).toContainText('WHY IT MOVED · All entities · All divisions');
-  await expect(narrative).toContainText('Review source · price_volume_mix.csv');
+  await expect(narrative).toContainText('Evidence · published price, volume and mix analysis · prior year');
+  await expect(narrative).not.toContainText('.csv');
+  await expect(narrative).not.toContainText('source_key');
   await expect(narrative).toContainText('GROUP OUTLOOK');
   await expect(narrative).toContainText('FY EBIT outlook');
 
   await page.locator('#entityFilter').selectOption('US01');
   await page.locator('#divisionFilter').selectOption('Hardware');
   await expect(narrative).toContainText('Selected scope · US01 · Hardware');
+  await expect(page.locator('.story-kpi[data-story-focus="free-cash-flow"]')).toContainText('Free cash flow · Group');
+  await expect(page.locator('.story-kpi[data-story-focus="net-working-capital"]')).toContainText('Net working capital · Group');
   await expect(narrative).toContainText('WHY IT MOVED · US01 · Hardware');
   await expect(narrative).toContainText('GROUP OUTLOOK');
   await expect(page.locator('html')).toHaveJSProperty('scrollWidth',await page.evaluate(()=>innerWidth));

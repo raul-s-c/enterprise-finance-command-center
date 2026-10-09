@@ -26,14 +26,15 @@ test('filtered Executive keeps consolidated evidence distinct from operating evi
   assert.equal(rows[0][2],global.ReportCharts.money(expected));
 });
 
-test('Executive narrative ties the result to scoped commercial drivers, source keys and a clearly labelled group outlook',()=>{
+test('Executive narrative explains scoped commercial drivers without leaking source keys and labels group outlook',()=>{
   const group=render({entity:'all',division:'all'});
   assert.match(group,/aria-label="Executive narrative"/);
   assert.ok(group.includes(`RESULT · ${data.meta.end_month} close`));
   assert.match(group,/Revenue [^<]+ vs PY · EBIT [^<]+ vs PY/);
   assert.match(group,/WHY IT MOVED · All entities · All divisions/);
   assert.match(group,/Price [^<]+ · Volume [^<]+ · Mix [^<]+/);
-  assert.ok(group.includes(`Review source · price_volume_mix.csv · ${data.meta.end_month}|All|price_effect`));
+  assert.ok(group.includes('Evidence · published price, volume and mix analysis · prior year'));
+  assert.doesNotMatch(group,/\.csv|source_key|source_dataset/);
   assert.match(group,/OUTLOOK &amp; RESPONSE · GROUP OUTLOOK/);
   const outlook=data.performance_review.find(row=>row.review_month===data.meta.end_month&&row.scope_level==='Group'&&row.category==='FY Outlook'&&row.metric==='FY EBIT outlook');
   assert.ok(outlook);
@@ -44,6 +45,9 @@ test('Executive narrative ties the result to scoped commercial drivers, source k
   const filtered=render({entity:'US01',division:'Hardware'});
   assert.match(filtered,/Selected scope · US01 · Hardware/);
   assert.match(filtered,/WHY IT MOVED · US01 · Hardware/);
+  assert.match(filtered,/Evidence · published monthly performance review/);
+  assert.match(filtered,/Free cash flow · Group/);
+  assert.match(filtered,/Net working capital · Group/);
   assert.match(filtered,/OUTLOOK &amp; RESPONSE · GROUP OUTLOOK/);
   assert.doesNotMatch(filtered,/Group mix reduced year-on-year revenue/);
 
