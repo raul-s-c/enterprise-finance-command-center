@@ -32,6 +32,7 @@ test('CAPEX project register traces cash, CIP, PPE and modeled depreciation on m
   const workspace=page.locator('.statement-workspace');
   await expect(workspace).toBeVisible();
   const assetRegister=workspace.locator('[data-sw-fixed-assets]');
+  console.log('CAPEX_BOX_DIAGNOSTIC',JSON.stringify(await assetRegister.evaluate(button=>{const chain=[];let node=button;while(node&&node!==document.body){const rect=node.getBoundingClientRect(),style=getComputedStyle(node);chain.push({tag:node.tagName,className:node.className,display:style.display,visibility:style.visibility,width:rect.width,height:rect.height,x:rect.x,y:rect.y,overflow:style.overflow,overflowY:style.overflowY});node=node.parentElement;}return chain;})));
   await expect(assetRegister).toBeVisible();
   await expect(assetRegister).toHaveAttribute('aria-label','Project asset register');
   await assetRegister.click();
