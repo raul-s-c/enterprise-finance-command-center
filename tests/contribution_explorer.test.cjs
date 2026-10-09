@@ -23,6 +23,17 @@ test('invoice evidence respects the selected close and supported entity/customer
   assert.deepEqual(C.invoiceRecords({ar_invoice_aging:invoices},'2026-09',[],{entity:'US01',division:'Hardware'}).map(r=>r.invoice_id),['I-1','I-2']);
   assert.deepEqual(C.invoiceRecords({ar_invoice_aging:invoices},'2026-09',[],{entity:'missing'}),[]);
 });
+
+test('AP source-item evidence respects the selected close and supplier scope',()=>{
+  const items=[
+    {month:'2026-09',entity:'US01',division:'Hardware',supplier:'SUP-1',supplier_category:'Manufacturing Supply',source_item_id:'ACCRUAL-1'},
+    {month:'2026-09',entity:'US01',division:'Software',supplier:'SUP-1',supplier_category:'Business Services',source_item_id:'ACCRUAL-2'},
+    {month:'2026-09',entity:'ES01',division:'Hardware',supplier:'SUP-2',supplier_category:'Manufacturing Supply',source_item_id:'ACCRUAL-3'},
+  ];
+  assert.deepEqual(C.payableItemRecords({ap_item_aging:items},'2026-09',[items[0]],{}).map(r=>r.source_item_id),['ACCRUAL-1']);
+  assert.deepEqual(C.payableItemRecords({ap_item_aging:items},'2026-09',[],{entity:'US01',division:'Hardware'}).map(r=>r.source_item_id),['ACCRUAL-1']);
+  assert.deepEqual(C.payableItemRecords({ap_item_aging:items},'2026-08',[],{entity:'US01'}),[]);
+});
 test('every dimension and measure reconciles to its own source, without changing data',()=>{
   const before=JSON.stringify(data);
   for(const [key,def]of Object.entries(C.definitions)){
