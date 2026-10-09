@@ -36,7 +36,7 @@ The dedicated AR and AP schedules reconcile to their respective external legal-l
 
 ## Remaining lineage work
 
-Complete end-to-end attribution still requires document identifiers connecting customer invoices and collections, supplier accruals and payments, inventory movements, provisions, consolidation adjustments and CAPEX projects to their source journal postings. The complete closing WC schedules and entity/product operating cross-tab are published without allocating financial or consolidation lines. No accounting output is changed.
+Receivables now expose source sale-journal invoice IDs and a reconciled invoice-grain closing schedule. Posted entity/division collection credits are applied using the published risk-aware oldest-receivable policy; these modeled allocations are explicitly not bank-matched receipts. Complete end-to-end attribution still requires supplier invoice/payment documents, inventory movement/warehouse-lot documents, and direct links from provisions, consolidation adjustments and CAPEX projects to source journal postings. The complete closing WC schedules and entity/product operating cross-tab remain distinct; no financial or consolidation line is allocated without a published source.
 
 ## Verification
 

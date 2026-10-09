@@ -32,3 +32,8 @@ def test_dashboard_data_fetch_uses_current_release_cache_key():
 
     assert match, "The dashboard fetch must carry an explicit cache-busting key."
     assert match.group(1) == VERSION
+
+
+def test_lazy_invoice_evidence_uses_the_published_dataset_version():
+    explorer = (WEB / "contribution-explorer.js").read_text(encoding="utf-8")
+    assert "data/ar_invoice_detail.json?v=${encodeURIComponent(data.meta.version)}" in explorer
