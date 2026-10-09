@@ -59,6 +59,15 @@ def test_every_journal_balances():
     assert checks["trial_balance_gap"] <= 0.02
 
 
+def test_sale_journal_preserves_product_sku_and_customer_lineage():
+    _, _, _, simulation, accounting = _fixture(4)
+    sales = accounting.journal.loc[accounting.journal["journal_type"].eq("sale")]
+    assert not sales.empty
+    assert sales["product"].isin(simulation.products["product"]).all()
+    assert sales["customer"].isin(simulation.customers["customer"]).all()
+    assert not sales["product"].astype(str).str.contains(r"<bound method Series\\.prod", regex=True).any()
+
+
 def test_balance_sheet_and_intercompany_reconcile():
     config, _, _, _, accounting = _fixture(6)
     legal_bs = balance_sheet(accounting.journal)
