@@ -182,7 +182,7 @@
     "entity_product_profitability_duplicate_rows": 0,
     "working_capital_lineage_max_gap": 7.450580596923828e-09
   },
-  "version": "0.22.0",
+  "version": "0.22.1",
   "latest_factory_absorption_variance": -914870.43,
   "latest_factory_under_absorption": 0.0,
   "latest_factory_over_absorption": 914870.43,
