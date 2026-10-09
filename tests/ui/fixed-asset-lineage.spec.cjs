@@ -31,6 +31,7 @@ test('CAPEX project register traces cash, CIP, PPE and modeled depreciation on m
   await page.evaluate(()=>{data.meta.version='0.25.0';data.meta.fixed_asset_project_count=1;state.view='operations-capex';reportState.page=0;render();});
   const workspace=page.locator('.statement-workspace');
   await expect(workspace).toBeVisible();
+  console.log('CAPEX_REPORT_DIAGNOSTIC',JSON.stringify(await page.evaluate(()=>({version:data.meta.version,projectCount:data.meta.fixed_asset_project_count,view:state.view,page:reportState.page,title:reportState.pages[reportState.page]?.title,pageHasButton:reportState.pages[reportState.page]?.html.includes('Project asset register'),contentHasButton:document.querySelector('#content')?.innerHTML.includes('Project asset register'),button:document.querySelector('[data-sw-fixed-assets]')?.outerHTML}))));
   await expect(workspace.getByRole('button',{name:'Project asset register'})).toBeVisible();
   await workspace.getByRole('button',{name:'Project asset register'}).click();
   const dialog=page.locator('#reportDialog');
