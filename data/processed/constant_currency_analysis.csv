@@ -1,5 +1,5 @@
 month,entity,division,functional_currency,current_fx_to_eur,constant_currency_fx_to_eur,reported_revenue,constant_currency_revenue,revenue_fx_effect,reported_ebit,constant_currency_ebit,ebit_fx_effect
-2026-09,CN01,Hardware,CNY,0.1282801228521051,0.1257099073832021,0.0,0.0,0.0,92185.15,90338.13,1847.02
+2026-09,CN01,Hardware,CNY,0.1294634739404738,0.1196369995910589,0.0,0.0,0.0,92185.15,85188.16,6996.99
 2026-09,CZ01,Hardware,CZK,0.0411582685090604,0.0410732055209855,0.0,0.0,0.0,218379.73,217928.4,451.33
 2026-09,DE01,Hardware,EUR,1.0,1.0,6069665.33,6069665.33,0.0,995386.41,995386.41,-0.0
 2026-09,DE01,Software,EUR,1.0,1.0,948116.76,948116.76,0.0,502444.31,502444.31,0.0

@@ -161,5 +161,10 @@
   "ar_invoice_application_max_gap": 0.0,
   "ar_invoice_unallocated_credit": 0.0,
   "ar_invoice_rows": 2735,
-  "ar_invoice_application_rows": 73820
+  "ar_invoice_application_rows": 73820,
+  "ap_item_aging_max_gap": 0.0,
+  "ap_item_application_max_gap": 0.0,
+  "ap_item_unallocated_reduction": 0.0,
+  "ap_item_rows": 7037,
+  "ap_item_application_rows": 148454
 }
