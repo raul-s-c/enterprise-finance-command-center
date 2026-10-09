@@ -41,6 +41,7 @@ test('AR contribution opens reconciled invoice evidence and modeled source appli
   await expect(dialog.locator('#reportDialogBody')).toContainText('Gross open AR');
   await expect(dialog.locator('#reportDialogBody')).toContainText('CONTRACT-APPLY-2026-09-US01-C1-HW');
   await expect(dialog.locator('#reportDialogBody')).toContainText('not bank-matched receipts');
+  await expect(dialog.getByRole('button',{name:'Next items'})).toHaveCount(0);
   await expect(dialog.locator('#cx-invoice-list-back')).toBeVisible();
   await page.screenshot({path:'test-results/ar-invoice-lineage-mobile.png'});
 });
