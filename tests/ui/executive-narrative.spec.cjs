@@ -17,6 +17,8 @@ test('Executive narrative teaches result, scoped drivers and group outlook throu
   await page.locator('#entityFilter').selectOption('US01');
   await page.locator('#divisionFilter').selectOption('Hardware');
   await expect(narrative).toContainText('Selected scope · US01 · Hardware');
+  await expect(page.locator('.story-kpi[data-story-focus="free-cash-flow"]')).toContainText('Free cash flow · Group');
+  await expect(page.locator('.story-kpi[data-story-focus="net-working-capital"]')).toContainText('Net working capital · Group');
   await expect(narrative).toContainText('WHY IT MOVED · US01 · Hardware');
   await expect(narrative).toContainText('GROUP OUTLOOK');
   await expect(page.locator('html')).toHaveJSProperty('scrollWidth',await page.evaluate(()=>innerWidth));
