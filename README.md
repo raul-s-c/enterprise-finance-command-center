@@ -1,1 +1,573 @@
-Y™Áäx-ÆÈ‹j◊ù¢Îi∫⁄+äßj[hëÈ‹¢ÈÌ˜ﬂ}NãZñã≠¶Îeäw¨‘åÅπ—ï…¡…•ÕîÅ•πÖπçîÅΩµµÖπêÅïπ—ï»4(4)π—ï…¡…•ÕîÅ•πÖπçîÅΩµµÖπêÅïπ—ï»Å•ÃÅÖ∏Åïπêµ—ºµïπêÅ<ÄºÅ@ôÅ¡Ω…—ôΩ±•ºÅ¡…Ω©ïç–Åâ’•±–ÅÖ…Ω’πêÅÑÅçΩπ—•π’Ω’Õ±‰ÅïŸΩ±Ÿ•πúÅÕÂπ—°ï—•åÅµ’±—•πÖ—•ΩπÖ∞ÅçΩµ¡Öπ‰∏4(4)Q°îÅ¡…Ω©ïç–ÅµΩëï±ÃÅïçΩπΩµ•åÅÖç—•Ÿ•—‰Åô•…Õ–ÅÖπêÅëï…•ŸïÃÅÖççΩ’π—•πú∞Åô•πÖπç•Ö∞ÅÕ—Ö—ïµïπ—Ã∞Å]Ω…≠•πúÅÖ¡•—Ö∞∞ÅQ…ïÖÕ’…‰∞Å	’ëùï–∞ÅΩ…ïçÖÕ–ÅÖπêÅµÖπÖùïµïπ–ÅÖπÖ±Â—•çÃÅô…Ω¥Å—°îÅÕÖµîÅïçΩπΩµ•åÅÕÂÕ—ï¥∏4(4)1•ŸîÅÖ¡¡±•çÖ—•Ω∏ËÅ°——¡ÃËºΩ…Ö’∞µÃµåπù•—°’àπ•ºΩïπ—ï…¡…•Õîµô•πÖπçîµçΩµµÖπêµçïπ—ï»º4(4)]Ω…≠•πúµçÖ¡•—Ö∞ÅçΩπ—…•â’—•Ω∏ÅÕç…ïïπÃÅçΩππïç–Å—ºÅm±ïùÖ∞Å±ïëùï»ÅïŸ•ëïπçït°ëΩçÃΩ›Ω…≠•πúµçÖ¡•—Ö∞µ±•πïÖùîπµê§ËÅÕΩ’…çîÅ©Ω’…πÖ∞Å¡ΩÕ—•πùÃÅÖπêÅµΩπ—°±‰ÅÖççΩ’π–Å…Ω±±ôΩ…›Ö…ëÃ∞Å›•—†Åï·¡±•ç•–ÅÕï¡Ö…Ö—•Ω∏Åô…Ω¥ÅÖπÖ±Â—•çÖ∞Å•πŸΩ•çîÅÖ±±ΩçÖ—•ΩπÃÅÖπêÅçΩπÕΩ±•ëÖ—•Ω∏ÅÖë©’Õ—µïπ—Ã∏4(4(ååÅMÂπ—°ï—•åÅù…Ω’¿4(4)Q°îÅô•ç—•ΩπÖ∞ÅçΩµ¡Öπ‰Å•ÃÄ®©’…ïΩ∏ÅMÂÕ—ïµÃÅ…Ω’¿®®Å›•—†ÅôΩ’»Åëï±•âï…Ö—ï±‰Åë•ôôï…ïπ–Åâ’Õ•πïÕÃÅµΩëï±ÃË4(4(¥ÅMΩô—›Ö…îÉäPÅ…ïç’……•πúÅÕ’âÕç…•¡—•ΩπÃÅÖπêÅÕï…Ÿ•çïÃ4(¥Å!Ö…ë›Ö…îÉäPÅµÖπ’ôÖç—’…ïêÅ¡…Ωë’ç—ÃÅÖπêÅôÖç—Ω…‰ÅïçΩπΩµ•çÃ4(¥ÅŸïπ—ÃÄòÅA…Ω©ïç—ÃÉäPÅâΩΩ≠•πùÃ∞ÅâÖç≠±ΩúÅÖπêÅ¡…Ω©ïç–Åëï±•Ÿï…‰4(¥ÅM¡Ö…îÅAÖ…—ÃÉäPÅ°•ù†µM-TÅÖô—ï…µÖ…≠ï–ÅÖç—•Ÿ•—‰Å±•π≠ïêÅ—ºÅ•πÕ—Ö±±ïêÅâÖÕî4(4)Q°îÅù…Ω’¿Å°ÖÃÅ±ïùÖ∞Åïπ—•—•ïÃÅ•∏Åï…µÖπ‰∞ÅM¡Ö•∏∞ÅÈïç†ÅIï¡’â±•å∞Å°•πÑ∞Å—°îÅUπ•—ïêÅM—Ö—ïÃÅÖπêÅ)Ö¡Ö∏∏Å	…πºÅÖπêÅM’È°Ω‘ÅΩ¡ï…Ö—îÅµÖπ’ôÖç—’…•πúÅÕ•—ïÃÅÖπêÅÕ’¡¡±‰ÅçΩµµï…ç•Ö∞Åïπ—•—•ïÃÅ—°…Ω’ù†ÅçΩÕ–µ¡±’ÃÅ•π—ï…çΩµ¡Öπ‰Åô±Ω›Ã∏4(4(ååÅΩ…îÅÖ…ç°•—ïç—’…î4(4)ÅÅÅ—ï·–4)A’â±•åÅµÖç…ºÅë…•Ÿï…Ã4(ÄÄÄÄÄÄÄÄ¥¯4)	’Õ•πïÕÃÅë…•Ÿï…Ã4(ÄÄÄÄÄÄÄÄ¥¯4)]Ω…≠ôΩ…çîÅçÖ¡Öç•—‰ÅÖπêÅçΩÕ–4(ÄÄÄÄÄÄÄÄ¥¯4)=¡ï…Ö—•πúÅïŸïπ—Ã4(ÄÄÄÄÄÄÄÄ¥¯4)Ω’â±îµïπ—…‰Å±ïùÖ∞Å±ïëùï»4(ÄÄÄÄÄÄÄÄ¥¯4)’πç—•ΩπÖ∞µç’……ïπç‰ÅâΩΩ≠ÃÄºÅ1ïùÖ∞µïπ—•—‰Åô•πÖπç•Ö±Ã4(ÄÄÄÄÄÄÄÄ¥¯4)%π—ï…çΩµ¡Öπ‰ÅçΩπÕΩ±•ëÖ—•Ω∏ÄºÅUHÅ—…ÖπÕ±Ö—•Ω∏ÄºÅQ4(ÄÄÄÄÄÄÄÄ¥¯4)ç—’Ö∞Å@ô0ÄºÅ	Ö±ÖπçîÅM°ïï–ÄºÅÖÕ†Å±Ω‹4(ÄÄÄÄÄÄÄÄ¥¯4)]Ω…≠•πúÅÖ¡•—Ö∞ÄºÅÕÕï–ÅE’Ö±•—‰ÄºÅ’Õ—Ωµï»Å’πë•πúÄºÅQ…ïÖÕ’…‰ÄºÅA`4(ÄÄÄÄÄÄÄÄ¥¯4)ππ’Ö∞Å	’ëùï–ÄºÅIΩ±±•πúÅΩ…ïçÖÕ–4(ÄÄÄÄÄÄÄÄ¥¯4)Ω…›Ö…êÅ1•≈’•ë•—‰4(ÄÄÄÄÄÄÄÄ¥¯4)%π—ïù…Ö—ïêÅΩ…ïçÖÕ–Å@ô0ÄºÅ	Ö±ÖπçîÅM°ïï–ÄºÅÖÕ†Å±Ω‹4(ÄÄÄÄÄÄÄÄ¥¯4)Ö¡•—Ö∞Å±±ΩçÖ—•Ω∏ÅÖ¡Öç•—‰4(ÄÄÄÄÄÄÄÄ¥¯4)5Ωπ—°±‰ÅAï…ôΩ…µÖπçîÅIïŸ•ï‹ÄºÅ5ÖπÖùïµïπ–Åç—•ΩπÃ4(ÄÄÄÄÄÄÄÄ¥¯4)<ÅÖπÖ±Â—•çÃ4)ÅÅÄ4(4)@ô0∞Å	Ö±ÖπçîÅM°ïï–ÅÖπêÅÖÕ†Å±Ω‹ÅÖ…îÅπΩ–Å•πëï¡ïπëïπ—±‰Åùïπï…Ö—ïêÅëÖÕ°âΩÖ…êÅπ’µâï…Ã∏ÅQ°ï‰ÅÖ…îÅçΩπÕï≈’ïπçïÃÅΩòÅçΩππïç—ïêÅΩ¡ï…Ö—•πú∞ÅÖççΩ’π—•πúÅÖπêÅô•πÖπç•πúÅïŸïπ—Ã∏4(4(ååÅ’……ïπ–Å…ï±ïÖÕîËÅÿ¿∏»‘∏¿4(4)Yï…Õ•Ω∏Ä¿∏»»Åï·—ïπëÃÅ—°îÅ…Ω±±•πúÅôΩ…ïçÖÕ–Å—ºÄ»–ÅµΩπ—°ÃÅÖç…ΩÕÃÅ	ÖÕî∞ÅU¡Õ•ëîÅÖπêÅΩ›πÕ•ëîÅÕçïπÖ…•ΩÃ∞Å›Ω…≠ôΩ…çî∞Å±•≈’•ë•—‰ÅÖπêÅ—°îÅ•π—ïù…Ö—ïêÅ—°…ïîÅÕ—Ö—ïµïπ—Ã∏Å·•Õ—•πúÄƒ»µµΩπ—†ÅÕ’µµÖ…•ïÃÅ…ïµÖ•∏ÅÕï¡Ö…Ö—ï±‰Å±Öâï±±ïêÏÅ—°îÅ…ï±ïÖÕîÅÖ±ÕºÅï·¡ΩÕïÃÄ»–µµΩπ—†Åô±Ω‹ÅÖπêÅïπë•πúµâÖ±ÖπçîÅµïÖÕ’…ïÃ∏Å±ΩÕîÅçΩπ—…Ω±ÃÅçΩŸï»Å—°îÅçΩµ¡±ï—îÅôΩ…ïçÖÕ–Å°Ω…•ÈΩ∏∏ÅAÖ—ç†Ä¿∏»»∏ƒÅô•·ïÃÅµΩâ•±îÅ@ô0ÅïŸ•ëïπçîµ—Öâ±îÅô•–ÅÖπêÅ…Ω—Ö—ïÃÅÕ—Ö—•åÅÖÕÕï–ÅçÖç°îÅ≠ïÂÃÏÅ•–ÅëΩïÃÅπΩ–ÅÖ±—ï»Åô•πÖπç•Ö∞ÅâÖ±ÖπçïÃÅΩ»ÅçΩπ—…Ω±Ã∏ÅYï…Õ•Ω∏Ä¿∏»ÃÅÖëëÃÅÑÅ…ïçΩπç•±ïêÅ•πŸΩ•çîµù…Ö•∏ÅHÅïŸ•ëïπçîÅÕç°ïë’±îÅÖπêÅï·¡±•ç•–ÅµΩëï±ïêÅÖ±±ΩçÖ—•ΩπÃÅΩòÅ¡ΩÕ—ïêÅçΩ±±ïç—•Ω∏Åç…ïë•—ÃÏÅ•–ÅëΩïÃÅπΩ–Åç°ÖπùîÅ©Ω’…πÖ∞Åïπ—…•ïÃ∞ÅçÖÕ†ÅΩ»Å—°îÅç’Õ—Ωµï»µ±ïŸï∞ÅHÅÕç°ïë’±î∞ÅÖπêÅ•–Å•ÃÅπΩ–ÅâÖπ¨ÅµÖ—ç°•πú∏ÅYï…Õ•Ω∏Ä¿∏»–ÅÖëëÃÅÕΩ’…çîµÖçç…’Ö∞µù…Ö•∏Å@ÅïŸ•ëïπçî∞Å…ïçΩπç•±•πúÅ—ºÅÕ’¡¡±•ï»ÅÖù•πúÅ›•—°Ω’–Åç±Ö•µ•πúÅÕ’¡¡±•ï»Å•πŸΩ•çîÅΩ»Å…ïµ•——ÖπçîÅµÖ—ç°•πú∏ÅYï…Õ•Ω∏Ä¿∏»‘ÅçΩππïç—ÃÅ¡ΩÕ—ïêÅA`Å¡…Ω©ïç–ÅïŸïπ—ÃÅ—°…Ω’ù†Å%@∞ÅπΩ∏µçÖÕ†Åùºµ±•Ÿî∞ÅAAÅÖπêÅµΩëï±ïêÅëï¡…ïç•Ö—•Ω∏Å›•—°Ω’–ÅôÖâ…•çÖ—•πúÅÖÕÕï–µ±ïŸï∞Å©Ω’…πÖ∞Å%Ã∏4(4)Yï…Õ•Ω∏Ä¿∏»ƒÅÖëëïêÄ®©`Å%π—ïù…•—‰ÄòÅ±ΩÕîÅΩπ—•π’•—‰®®∏ÅQ…ÖπÕÖç—•Ω∏Å`ÅÕ’µµÖ…•ïÃÅ…ïçΩπç•±îÅïŸï…‰ÅµïÖÕ’…îÅÖπêÅ≠ï‰Å—ºÅëΩç’µïπ–ÅÕπÖ¡Õ°Ω—ÃÏÅ±•ôïçÂç±îÅÕπÖ¡Õ°Ω—ÃÅ…ïçΩπç•±îÅ—ºÅÕΩ’…çîÅëΩç’µïπ—ÃÅÖπêÅΩôô•ç•Ö∞ΩôÖ±±âÖç¨Å…Ö—ïÃÏÅëΩç’µïπ—ÃÅ…ïçΩπç•±îÅ—ºÅ—°îÅÖ’—°Ω…•—Ö—•ŸîÅ©Ω’…πÖ∞∏Å5•ÕÕ•πú∞Åë’¡±•çÖ—î∞ÅΩ…¡°ÖπïêÅÖπêÅπΩ∏µô•π•—îÅëÖ—ÑÅâ±Ωç¨Å…ï±ïÖÕî∏4(4)%π—ï…çΩµ¡Öπ‰ÅçΩπ—…Öç—ÃÅπΩ‹Å…ï—Ö•∏ÅâΩ—†Å…ïç•¡…ΩçÖ∞Å©Ω’…πÖ∞Å…ïôï…ïπçïÃÅ›•—†ÅΩπîÅÕï±±ï»µô’πç—•ΩπÖ∞ÅçΩπ—…Öç–Åç’……ïπç‰ÅÖπêÅΩπîÅëï—ï…µ•π•Õ—•åÅÕï——±ïµïπ–ÅµΩπ—†∏ÅQ°îÅÕï±±ï»ùÃÅëΩµïÕ—•åµç’……ïπç‰Å±ïúÅÕ—ÖÂÃÅ•∏Å—°îÅçΩπ—…Öç–Å…ïù•Õ—ï»∞ÅπΩ–Å—°îÅôΩ…ï•ù∏µç’……ïπç‰Åï·¡ΩÕ’…îÅ¡Ω¡’±Ö—•Ω∏∏ÅQ°îÅÿ¿∏»¿ÅÖπÖ±Â—•çÖ∞Å¡Ω¡’±Ö—•Ω∏Å•ÃÅ…ïâ’•±–Å’πëï»Å—°•ÃÅçΩ……ïç—ïêÅ¡Ω±•ç‰ÏÅ—…ÖπÕÖç—•Ω∏Å`Å—Ω—Ö±ÃÅÖ…îÅ—°ï…ïôΩ…îÅπΩ–Åë•…ïç—±‰ÅçΩµ¡Ö…Öâ±îÅÖç…ΩÕÃÅ—°îÅ¡Ω±•ç‰Åç°Öπùî∏Å!•Õ—Ω…•çÖ∞Å0ÅÕ—Ö—ïµïπ—ÃÅÖ…îÅ’πç°Öπùïê∏4(4)·ïç’—•ŸîÅï·¡±•ç•—±‰Åë•Õ—•πù’•Õ°ïÃÅô•±—ï…ïêÅΩ¡ï…Ö—•πúÅµïÖÕ’…ïÃÅô…Ω¥ÅçΩπÕΩ±•ëÖ—ïêÅù…Ω’¿ÅµïÖÕ’…ïÃ∏Å5Ωâ•±îÅç°Ö…—ÃÅ…ï—Ö•∏ÅÖ±∞ÅΩâÕï…ŸÖ—•ΩπÃÅ›•—†ÅÖ–ÅµΩÕ–Åô•ŸîÅŸ•Õ•â±îÅëÖ—îÅ±Öâï±Ã∏Å$Å…’πÃÅô…Ωπ—ïπêÅ…ïù…ïÕÕ•Ω∏Å—ïÕ—ÃÅÖπêÅ—›ºÅçΩπÕïç’—•ŸîÅΩôô±•πîÅç±ΩÕïÃÅ—°…Ω’ù†Å—°îÅçΩµ¡±ï—îÅÿ¿∏»‘Å›…Ö¡¡ï»Å•∏ÅÖ∏Å•ÕΩ±Ö—ïêÄ»–µµΩπ—†ÅÖç—’Ö∞ÄºÄ»–µµΩπ—†ÅôΩ…ïçÖÕ–Åô•·—’…î∏4(4)Yï…Õ•Ω∏Ä¿∏»‘ÅÖëëÃÅÑÅ¡…Ω©ïç–µ±ïŸï∞Åô•·ïêµÖÕÕï–Å…ïù•Õ—ï»Å—°Ö–Å—…ÖçïÃÅ¡ΩÕ—ïêÅçÖÕ†ÅÕ¡ïπêÅ—°…Ω’ù†Å%@ÅÖπêÅπΩ∏µçÖÕ†ÅçΩµµ•ÕÕ•Ωπ•πúÅ—ºÅAAÅÖπêÅµΩëï±ïêÅëï¡…ïç•Ö—•Ω∏∞Å›•—†Å…ï±ïÖÕîÅçΩπ—…Ω±ÃÅÖùÖ•πÕ–Å—°îÅ0∏Å%–Å¡…ïÕï…ŸïÃÅ—°îÅïŸ•ëïπçîÅâΩ’πëÖ…‰ËÅëï¡…ïç•Ö—•Ω∏Å©Ω’…πÖ±ÃÅÖ…îÅïπ—•—‰µÖùù…ïùÖ—ïêÅÖπêÅΩ¡ïπ•πúÅAAÅ•ÃÅπΩ–ÅôÖ±Õï±‰ÅÕ¡±•–Å•π—ºÅ•πë•Ÿ•ë’Ö∞ÅÖÕÕï—Ã∏4(4)MïîÅÅëΩçÃΩÿ¿∏»‘µÕ—Ö—’ÃπµëÄ∞ÅÅëΩçÃΩÿ¿∏»–µÕ—Ö—’ÃπµëÄ∞ÅÅëΩçÃΩÿ¿∏»ÃµÕ—Ö—’ÃπµëÄ∞ÅÅëΩçÃΩÿ¿∏»»µÕ—Ö—’ÃπµëÄ∞ÅÅëΩçÃΩÿ¿∏»ƒµÕ—Ö—’ÃπµëÄÅÖπêÅÅëΩçÃΩô‡µ•π—ïù…•—‰µÖπêµç±ΩÕîµçΩπ—•π’•—‰πµëÄ∏4(4(åååÅQ…ÖπÕÖç—•Ω∏Å`ÅôΩ’πëÖ—•Ω∏4(4)Yï…Õ•Ω∏Ä¿∏»¿ÅÖëëÃÄ®©Q…ÖπÕÖç—•Ω∏Å`Å·¡ΩÕ’…îÄòÅIïµïÖÕ’…ïµïπ–®®Å—ºÅ—°îÅçΩππïç—ïêÅô•πÖπçîÅµΩëï∞∏4(4)Ω…ï•ù∏µç’……ïπç‰ÅµΩπï—Ö…‰ÅëΩç’µïπ—ÃÅÖ…îÅÕΩ’…çïêÅô…Ω¥ÅÖç—’Ö∞Åï·—ï…πÖ∞ÅÖπêÅ•π—ï…çΩµ¡Öπ‰ÅHΩ@Å©Ω’…πÖ∞Å±•πïÃ∏ÅÖç†ÅëΩç’µïπ–Å¡…ïÕï…ŸïÃÅ•—ÃÅÕΩ’…çîÅ©Ω’…πÖ∞∞Å•ÕÕ’îÅÖπêÅÕï——±ïµïπ–ÅµΩπ—†∞Å±ïùÖ∞Åïπ—•—‰∞Åë•Ÿ•Õ•Ω∏∞ÅçΩ’π—ï…¡Ö…—‰∞ÅÕΩ’…çîÅÖççΩ’π–∞Åô’πç—•ΩπÖ∞Åç’……ïπç‰∞Å—…ÖπÕÖç—•Ω∏Åç’……ïπç‰∞ÅΩ…•ù•πÖ∞ÅÖµΩ’π—ÃÅÖπêÅ¡ÖÂµïπ–Å—ï…µÃ∏4(4)=¡ï∏ÅëΩç’µïπ—ÃÅÖ…îÅ…ïµïÖÕ’…ïêÅµΩπ—°±‰Å•∏Åô’πç—•ΩπÖ∞Åç’……ïπç‰Å’Õ•πúÅ—°îÅÕÖµîÅΩôô•ç•Ö∞ΩôÖ±±âÖç¨Å`Å±•πïÖùîÅÖÃÅ—°îÅ…ïÕ–ÅΩòÅ—°îÅµΩëï∞∏ÅIïÖ±•ÈïêÅÖπêÅ’π…ïÖ±•ÈïêÅ`Å@ô0ÅÖ…îÅ≠ï¡–ÅÕï¡Ö…Ö—îÅô…Ω¥ÅQ∞Å›•—†Åï·¡ΩÕ’…î∞ÅÖùï•πúÅÖπêÅ±•ôïçÂç±îÅŸ•Õ•â±îÅâ‰Åïπ—•—‰∞Åë•Ÿ•Õ•Ω∏ÅÖπêÅ—…ÖπÕÖç—•Ω∏Åç’……ïπç‰∏ÅQ°îÅÕ’â±ïëùï»Å•ÃÅÖ∏ÅÖπÖ±Â—•çÖ∞ÅÖççΩ’π—•πúÅ±ÖÂï»ÅÕΩ’…çïêÅô…Ω¥Å—°îÅÖ’—°Ω…•—Ö—•ŸîÅ©Ω’…πÖ∞ÏÅ•–ÅëΩïÃÅπΩ–Å¡ΩÕ–ÅâÖ±Öπç•πúÅÖë©’Õ—µïπ—ÃÅâÖç¨Å•π—ºÅ°•Õ—Ω…•çÖ∞ÅÕ—Ö—ïµïπ—Ã∏4(4)Iï±ïÖÕîÅçΩπ—…Ω±ÃÅ…ï≈’•…îË4(4)ÅÅÅ—ï·–4)IïŸ•ï‹ÅÖç—’Ö∞ÄºÅâïπç°µÖ…¨ÄºÅŸÖ…•ÖπçîÄÙÅÕΩ’…çîÅëÖ—Ñ4)IïŸ•ï‹Å%ÃÅÖπêÅÖç—•Ω∏Å%ÃÄÙÅ’π•≈’î4)Ÿï…‰Å…ï≈’•…ïêÅ@ƒΩ@»ÅÖç—•Ω∏ÄÙÅ¡…ïÕïπ–4)Ÿï…‰ÅÖç—•Ω∏ÄÙÅŸÖ±•êÅ…ïŸ•ï‹ÅïŸ•ëïπçîÄ¨ÅΩ›πï»Ä¨Åë’îÅµΩπ—†4)Ÿï…‰Å—ï…µ•πÖ∞ÅÖç—•Ω∏ÄÙÅëÖ—ïêÅç±ΩÕ’…îÅΩ»ÅçÖπçï±±Ö—•Ω∏ÅïŸ•ëïπçî4)Ÿï…‰ÅΩŸï…ë’îÅÖç—•Ω∏ÄÙÅµÖπÖùïµïπ–ÅΩ»Åï·ïç’—•ŸîÅïÕçÖ±Ö—•Ω∏4)’……ïπ–Å…ï≈’•…ïêÅÕ•ùπÖ±ÃÄÙÅΩπîÅÖç—•ŸîÅÖç—•Ω∏Å≠ï‰ÅïÖç†4)ç—•Ω∏ÅÖπêÅ…ïŸ•ï‹Å°•Õ—Ω…•ïÃÄÙÅ’π•≈’îÅµΩπ—°±‰ÅÕπÖ¡Õ°Ω—Ã4)Ÿï…‰ÅÖç—•Ω∏ÅçÂç±îÄÙÅΩπîÅçΩπ—…Ω±±ïêÅï·ïç’—•Ω∏Å¡±Ö∏4)¡¡…ΩŸÖ∞ÅµΩπ—†ÄÅïôôïç—•ŸîÅµΩπ—†4)%π—ï…Ÿïπ—•Ω∏Å…Ö—ïÃÄÙÅπΩ∏µπïùÖ—•ŸîÅÖπêÅçÖ¡¡ïê4)•…ïç—•ΩπÖ∞Å—…•ùùï»Åâïπïô•—ÃÄÙÅï·¡±•ç•—±‰ÅπΩ∏µÖëë•—•Ÿî4)=¡ï…Ö—•πúÅÖπêÅôΩ…ïçÖÕ–Å•µ¡Öç–ÄÙÅÖëë•—•ŸîÅçÖ’ÕÖ∞Åâ…•ëùî4)Ÿï…‰ÅµÖç…ºÅë…•Ÿï»µµΩπ—†ÄÙÅÖ¡¡±•ïêÅŸÖ±’îÄ¨ÅÕΩ’…çîÄ¨ÅÕ—Ö—’Ã4)=ôô•ç•Ö∞ÅΩâÕï…ŸÖ—•ΩπÃÄÙÅï·Öç–µµΩπ—†ÅΩŸï…±ÖÂÃÅΩπ±‰4)5•ÕÕ•πúÅΩôô•ç•Ö∞ÅΩâÕï…ŸÖ—•ΩπÃÄÙÅëï—ï…µ•π•Õ—•åÅôÖ±±âÖç¨4)MïπÕ•—•Ÿ•—‰Åëï—Ö•∞ÄÙÅù…Ω’¿ÅÕ’µµÖ…‰4)MïπÕ•—•Ÿ•—‰Å	%PÄÙÅ…ΩÕÃÅA…Ωô•–Å•µ¡Öç–Ä¨Å=A`Åâïπïô•–4)MïπÕ•—•Ÿ•—‰Å9ï–Åïâ–Å•µ¡Öç–ÄÙÅ•πŸï…ÕîÅΩòÅπë•πúÅÖÕ†Å•µ¡Öç–4)MïπÕ•—•Ÿ•—‰Åë•…ïç—•Ω∏ÄÙÅïçΩπΩµ•çÖ±±‰ÅçΩπ—…Ω±±ïê4)M—ÖπëÖ±ΩπîÅÕïπÕ•—•Ÿ•—•ïÃÄÙÅï·¡±•ç•—±‰ÅπΩ∏µÖëë•—•Ÿî4)Q…ÖπÕÖç—•Ω∏Å`ÅëΩç’µïπ—ÃÄÙÅ’π•≈’îÅÕΩ’…çîÅ©Ω’…πÖ±ÃÄ¨ÅHΩ@ÅÖççΩ’π—Ã4)’πç—•ΩπÖ∞Åç’……ïπç‰ÄÑÙÅ—…ÖπÕÖç—•Ω∏Åç’……ïπç‰4)Q…ÖπÕÖç—•Ω∏Å`ÅÕπÖ¡Õ°Ω—ÃÄÙÅ’π•≈’îÅëΩç’µïπ–µµΩπ—†Å±•ôïçÂç±î4)Ö……Â•πúÅŸÖ±’îÄÙÅ—…ÖπÕÖç—•Ω∏ÅÖµΩ’π–É\Åç±ΩÕ•πúÅ—…ÖπÕÖç—•Ω∏Å`4)1•ôïçÂç±îÅ`Å@ô0ÄÙÅô’πç—•ΩπÖ∞ÅçÖ……Â•πúµŸÖ±’îÅµΩŸïµïπ–4)M’µµÖ…‰Å`Å@ô0ÄÙÅ…ïÖ±•ÈïêÅ`Ä¨Å’π…ïÖ±•ÈïêÅ`4)IïŸ•ï‹ÅÕ’µµÖ…‰ÄÙÅç’……ïπ–Åç±ΩÕîÅµΩπ—†4)±∞ÅÖççΩ’π—•πú∞Å›Ω…≠ôΩ…çî∞Å`ÅÖπêÅ—°…ïîµÕ—Ö—ïµïπ–ÅçΩπ—…Ω±ÃÄÙÅ¡ÖÕÕïê4)ÅÅÄ4(4)Q°îÅÿ¿∏ƒ‘Å›Ω…≠ôΩ…çî∞Åµ’±—§µç’……ïπç‰ÅÖπêÅ•π—ïù…Ö—ïêÅôΩ…ïçÖÕ–ÅçÖ¡Öâ•±•—•ïÃÅ…ïµÖ•∏Åô’±±‰ÅÖç—•ŸîÅ’πëï…πïÖ—†Å—°îÅ…ïŸ•ï‹Å±ÖÂï»∏ÅQ°îÅ	Ö±ÖπçîÅM°ïï–ÅÕ—•±∞Å°ÖÃÅπºÅâÖ±Öπç•πúÅ¡±’úËÅçÖÕ†ÅçΩµïÃÅô…Ω¥Å±•≈’•ë•—‰∞Å]Ω…≠•πúÅÖ¡•—Ö∞Åô…Ω¥ÅΩ¡ï…Ö—•πúÅë…•Ÿï…Ã∞ÅAAΩ%@Åô…Ω¥ÅA`∞Åëïâ–Åô…Ω¥Å•—ÃÅ…Ω±∞µôΩ…›Ö…êÅÖπêÅ…ï—Ö•πïêÅïÖ…π•πùÃÅô…Ω¥ÅôΩ…ïçÖÕ–Å9ï–Å%πçΩµî∏4(4)Q°îÅA±Ö∏ÄòÅΩ…ïçÖÕ–Å…ï¡Ω…–Å¡Ö•…ÃÅÑÅ¡’â±•Õ°ïêÅ—°…ïîµÕçïπÖ…•ºÅçΩµ¡Ö…•ÕΩ∏Å›•—†ÅÑÅ…Ω’¿Å	ÖÕîÅ›Ω…≠ôΩ…çîÅΩ’—±ΩΩ¨∏ÅIïÖëï…ÃÅçÖ∏ÅÕ›•—ç†ÅIïŸïπ’î∞Å	%P∞Åô…ïîÅçÖÕ†Åô±Ω‹ÅÖπêÅïπë•πúÅçÖÕ†∞Å•πÕ¡ïç–Å—°îÅâÖ±ÖπçîµÕ°ïï–Åï≈’Ö—•Ω∏∞ÅçΩµ¡Ö…îÅQÅ›•—†Å•—ÃÅ—Ö…ùï–∞ÅÖπêÅΩ¡ï∏Å—°îÅΩ…•ù•πÖ∞ÅÕΩ’…çîÅ—Öâ±ïÃ∏ÅQ°ïÕîÅÖ…îÅô•·ïêÅ…Ω’¿ÅµïÖÕ’…ïÃÏÅïπ—•—‰Ωë•Ÿ•Õ•Ω∏ÅÕï±ïç—•ΩπÃÅëºÅπΩ–ÅÕ•±ïπ—±‰Åç°ÖπùîÅΩπîÅÕ•ëîÅΩòÅ—°îÅçΩµ¡Ö…•ÕΩ∏∏4(4)MïîË4(4(¥ÅÅëΩçÃΩµΩπ—°±‰µ¡ï…ôΩ…µÖπçîµ…ïŸ•ï‹πµëÄ4(¥ÅÅëΩçÃΩµÖπÖùïµïπ–µÖç—•Ω∏µ±•ôïçÂç±îπµëÄ4(¥ÅÅëΩçÃΩµÖπÖùïµïπ–µÖç—•Ω∏µï·ïç’—•Ω∏πµëÄ4(¥ÅÅëΩçÃΩµÖç…ºµë…•Ÿï»µ±•πïÖùîµÖπêµÕïπÕ•—•Ÿ•—•ïÃπµëÄ4(¥ÅÅëΩçÃΩ—…ÖπÕÖç—•Ω∏µô‡µÕ’â±ïëùï»πµëÄ4(¥ÅÅëΩçÃΩ›Ω…≠ôΩ…çîµçΩÕ–µ¡±Öππ•πúπµëÄ4(¥ÅÅëΩçÃΩµ’±—•ç’……ïπç‰µô‡πµëÄ4(¥ÅÅëΩçÃΩ•π—ïù…Ö—ïêµ—°…ïîµÕ—Ö—ïµïπ–µôΩ…ïçÖÕ–πµëÄ4(¥ÅÅëΩçÃΩçÖ¡ï‡µçÖÕ†µ—…ÖπÕôï»πµëÄ4(4(ååÅ•πÖπçîÅÕçΩ¡î4(4)Q°îÅç’……ïπ–ÅÕÂÕ—ï¥Å•πç±’ëïÃË4(4(¥Ä»ÃÿÅÕÂπ—°ï—•åÅ¡…Ωë’ç–Å…ïôï…ïπçïÃÅÖç…ΩÕÃÅÑÅµ’±—§µ±ïŸï∞Å°•ï…Ö…ç°‰4(¥ÅÕ•‡Å±ïùÖ∞Åïπ—•—•ïÃÅÖπêÅ—›ºÅôÖç—Ω…•ïÃ4(¥ÄÃÿÅ…Ω±±•πúÅÖç—’Ö∞ÅµΩπ—°Ã4(¥Ä»–Å…Ω±±•πúÅΩ¡ï…Ö—•πúÅôΩ…ïçÖÕ–ÅµΩπ—°ÃÅÖç…ΩÕÃÅ	ÖÕîÄºÅU¡Õ•ëîÄºÅΩ›πÕ•ëî4(¥Ä»–µµΩπ—†Å±•≈’•ë•—‰∞ÅçΩŸïπÖπ–ÅÖπêÅ›Ω…≠ôΩ…çîÅôΩ…ïçÖÕ—Ã4(¥Ä»–µµΩπ—†Å•π—ïù…Ö—ïêÅ@ô0ÄºÅ	Ö±ÖπçîÅM°ïï–ÄºÅÖÕ†Å±Ω‹Å›•—†ÅÕï¡Ö…Ö—ï±‰Å±Öâï±±ïêÄƒ…4ÅÖπêÄ»—4ÅµïÖÕ’…ïÃ4(¥Å5Ωπ—†Å‡Åπ—•—‰Å‡Å•Ÿ•Õ•Ω∏Å‡Å’πç—•Ω∏Å›Ω…≠ôΩ…çîÅ…Ω±∞µôΩ…›Ö…ê4(¥Åë…•Ÿï»µâÖÕïêÅQ∞ÅÖ——…•—•Ω∏∞Å°•…•πú∞Å¡ÖÂ…Ω±∞ÅÖπêÅ…ïç…’•—µïπ–µçΩÕ–ÅôΩ…ïçÖÕ–4(¥Åô’πç—•ΩπÖ∞µç’……ïπç‰Å©Ω’…πÖ±ÃÅÖπêÅ±ΩçÖ∞Å—…•Ö∞ÅâÖ±ÖπçïÃÅôΩ»ÅÖ±∞ÅÕ•‡Åïπ—•—•ïÃ4(¥ÅÑÅŸ•Õ’Ö∞ÅôÖç—Ω…‰ÅÖâÕΩ…¡—•Ω∏Åâ…•ëùîÅ—•ïêÅ—ºÅ—°îÅ¡ΩÕ—ïêÅŸÖ…•Öπçî∞ÅâïÕ•ëîÅÑÅÕï¡Ö…Ö—ï±‰Å±Öâï±±ïêÅÕΩ’…çîµôÖç—Ω…‰ÅÕÖ±ïÃÅµ•‡4(¥ÅÑÅA`Å¡…Ω©ïç–Åô±Ω‹Å—°Ö–ÅÕï¡Ö…Ö—ïÃÅçÖÕ†ÅMA9Åô…Ω¥ÅπΩπçÖÕ†Å=}1%YÅ—…ÖπÕôï…ÃÅ—ºÅAA4(¥ÅÑÅÕï±ïç—Öâ±îÄƒ»µµΩπ—†Å¡Ω…—ôΩ±•ºµëïç•Õ•Ω∏Å—•µï±•πîÅçΩππïç—•πúÅ¡…Ωë’ç–Å±•ôïçÂç±îÅïŸïπ—ÃÅ—ºÅ—°ï•»Å¡’â±•Õ°ïêÅ…ïÖÕΩπÃ4(¥ÅëΩç’µïπ–µ±ïŸï∞Å—…ÖπÕÖç—•Ω∏Å`Åï·¡ΩÕ’…î∞ÅÖùï•πúÅÖπêÅ…ïÖ±•ÈïêΩ’π…ïÖ±•ÈïêÅ…ïµïÖÕ’…ïµïπ–4(¥ÅUHÅù…Ω’¿Å—…ÖπÕ±Ö—•Ω∏Å›•—†Å°•Õ—Ω…•çÖ∞Åï≈’•—‰Å…Ö—ïÃÅÖπêÅï·¡±•ç•–ÅQÄºÅ=$4(¥Å…ï¡Ω…—ïêÅŸï…Õ’ÃÅçΩπÕ—Öπ–µç’……ïπç‰ÅIïŸïπ’îÅÖπêÅ	%P4(¥ÅÕΩ’…çîµ—•ïêÅµΩπ—°±‰Å¡ï…ôΩ…µÖπçîÅ…ïŸ•ï‹ÅÖç…ΩÕÃÅù…Ω’¿ÅÖπêÅΩ¡ï…Ö—•πúÅÕçΩ¡ïÃ4(¥Åëï—ï…µ•π•Õ—•åÅŸÖ…•ÖπçîÅï·¡±ÖπÖ—•ΩπÃÅÖπêÅΩ›πïêÅ@ƒΩ@»ÅµÖπÖùïµïπ–ÅÖç—•ΩπÃ4(¥Å¡ï…Õ•Õ—ïπ–ÅµÖπÖùïµïπ–ÅÖç—•Ω∏Å±•ôïçÂç±î∞ÅµΩπ—°±‰ÅÕπÖ¡Õ°Ω—ÃÅÖπêÅç°ÖπùîÅ°•Õ—Ω…‰4(¥ÅÖ¡¡…ΩŸïêÅÖç—•Ω∏Åï·ïç’—•Ω∏Å¡±ÖπÃÅÖπêÅïôôïç—•ŸîÅëÖ—ïÃ4(¥ÅçÖ’ÕÖ∞ÅΩ¡ï…Ö—•πúÅÖπêÅôΩ…ïçÖÕ–ÅÖç—•Ω∏µ•µ¡Öç–Åâ…•ëùïÃ4(¥Åë•…ïç—•ΩπÖ∞∞ÅπΩ∏µÖëë•—•ŸîÅ¡ï»µÖç—•Ω∏Åâïπïô•–Å—…Öç≠•πú4(¥ÅëΩ’â±îµïπ—…‰ÅÖççΩ’π—•πú4(¥Å±ïùÖ∞ÅÖπêÅçΩπÕΩ±•ëÖ—ïêÅÖç—’Ö∞Å@ô0ÄºÅ	Ö±ÖπçîÅM°ïï–ÄºÅÖÕ†Å±Ω‹4(¥Å•π—ï…çΩµ¡Öπ‰ÅçΩÕ–µ¡±’ÃÅµÖπ’ôÖç—’…•πúÅÖπêÅï±•µ•πÖ—•ΩπÃ4(¥Å±ïùÖ∞µïπ—•—‰ÅçÖÕ†Å¡ΩΩ±•πúÅÖπêÅQ…ïÖÕ’…‰Å%Å¡ΩÕ•—•ΩπÃ4(¥Åëïâ–ÅÖπêÅµÖ—’…•—‰ÅÕç°ïë’±ïÃ4(¥Å±•≈’•ë•—‰Å°ïÖë…ΩΩ¥ÅÖπêÅçΩŸïπÖπ–ÅµΩπ•—Ω…•πú4(¥ÅIÅ…ï≈’•…ïµïπ–ÅÖπêÅÖŸÖ•±Öâ•±•—‰ÅµΩëï±±•πú4(¥ÅëΩ›πÕ•ëîµ¡…Ω—ïç—ïêÅçÖ¡•—Ö∞µÖ±±ΩçÖ—•Ω∏ÅçÖ¡Öç•—‰4(¥Åç’Õ—Ωµï»µ±ïŸï∞ÅHÅÖù•πúÅÖπêÅ·¡ïç—ïêÅ…ïë•–Å1ΩÕÃÅÖççΩ’π—•πú4(¥ÅM-Tµ±ïŸï∞Å•πŸïπ—ΩÀo}ˆ⁄$z{-ÆÈ‹j◊ù∂VW2FÜRFV6ó6ñˆ‚÷7&óFñ6¬7FGW2fó6ñ&∆Rˆ‚6Ü˜'B∆F˜2vÜñ∆R&WFñÊñÊrFÜR6ˆ◊∆WFR7FFRÊBWfñFVÊ6Rˆ‚FV÷ÊB‚6VR∑FÜRW&f˜&÷Ê6R&WfñWr6ˆ6∑óBwVñFU“ÜFˆ72˜W&f˜&÷Ê6R◊&WfñWr÷6ˆ6∑óBÊ÷Bí‡–†–•FÜRd¬¬&∆Ê6R6ÜVWBÊB66Çf∆˜rvW26ˆ÷&ñÊR7GV¬&W˜'FñÊrvóFÇFÜR&6Rf˜'v&B7FFV÷VÁB‚∆‚bf˜&V67B6ˆ◊&W2&6R¬W6ñFRÊBF˜vÁ6ñFRFá&VR◊7FFV÷VÁB6ˆÁ6WVVÊ6W3≤G&V7W'í6ˆÊÊV7G2∆óVñFóGíÊB6˜fVÊÁBÜVG&ˆˆ”≤&ˆfóF&ñ∆óGíG&6W2V&∆ó6ÜVB&ˆGV7BÊB7W7Fˆ÷W"V6ˆÊˆ÷ñ73≤˜W&FñˆÁ2b4UÇ6W&FW266ÇñÁfW7F÷VÁBg&ˆ“Êˆ‚÷66Ç76WB6ˆ÷÷ó76ñˆÊñÊr‡–†–§ˆ‚ÜˆÊW2ÊBÊ'&˜rF&∆WG2¬FÜRd¬∂VW2∆¬FV‚7FFV÷VÁB∆ñÊW2ˆ‚ˆÊR67&VV‚‚óG2¢•f«VW2¢¢ÊB¢¨ÈBí¢¢6ˆÁG&ˆ«27vóF6Ç&WGvVV‚íÙ7GV¬÷˜VÁG2ÊB6ñvÊVB'6ˆ«WFR˜W&6VÁFvRf&ñÊ6W2vóFÜ˜WB6ñFWvó267&ˆ∆∆ñÊr‚w&VV‚ÊB&VB&Vf∆V7BV&ÊñÊw2ñ◊7B¬6Ú∆˜vW"6˜7Bó2ff˜&&∆S≤FÜRvñFR◊67&VV‚7V◊V∆FófR'&ñFvRÊB6˜W&6R÷ñÁ7V7Fñˆ‚&VÜfñ˜"&RVÊ6ÜÊvVB‡–†–§ˆ‚ÜˆÊW2¬7FFV÷VÁB˜fW'fñWrvW26Ü˜rFá&VR6ˆ◊∆WFRÜVF∆ñÊRñÊFñ6F˜'2ÊBfó6ñ&∆R¢§∆¬ñÊFñ6F˜'2¢¢6ˆÁG&ˆ¬ñÁ7FVBˆb6∆óñÊrFFóFñˆÊ¬6&G2BFÜRfñWw˜'BVFvR‚FÜR6ˆÁG&ˆ¬&WFñÁ266W72FÚWfW'í6˜W&6R◊FñVBµíÊB6∆7V∆Fñˆ‚‚FÜR7V'vR6V∆V7F˜"W6W2FÜRfñ∆&∆RvñGFÇ6Ú∆ˆÊvW"&W˜'BÊ÷W2&V÷ñ‚&VF&∆R‡–†–•FÜRd¬ıUÇFWFñ¬ó26˜W&6R◊FñVBGvV«fR÷÷ˆÁFÇ÷óÇÊBG&VÊB&FÜW"FÜ‚7'6Rµí∆ó7B‚óB6Ü˜w2V&∆ó6ÜVBw&˜WıUÇ¬V&∆ó6ÜVBv˜&∂f˜&6RW'6ˆÊÊV¬6˜7B¬FÜRWá∆ñ6óF«íFW&ófVBÊˆ‚◊V˜∆RFñffW&VÊ6R¬ÊBñÊFWVÊFVÁBFófó6ñˆÊ¬ıUÇg&ˆ“÷ÊvV÷VÁBFWFñ¬‚FÜRFófó6ñˆ‚F˜F¬ó26ÜV6∂VBvñÁ7Bw&˜W7GV√≤W'6ˆÊÊV¬ó2Ê˜B∆∆ˆ6FVBFÚFófó6ñˆÁ2vóFÜ˜WB6˜W&6RWfñFVÊ6R‡–†–•FÜR∆ñ6Fñˆ‚ó27FFñ2ÊB&VG26ˆ◊7B•4Ù‚vVÊW&FVB'íFÜRfñÊÊ6RVÊvñÊR‡–†–¢22&V∆V6R6ˆÁG&ˆ«0–†–§FW∆˜ñ÷VÁBó2&∆ˆ6∂VBñb÷FW&ñ¬6ˆÁG&ˆ«2fñ¬‚FÜR7VóFRñÊ6«VFW3†–†–¢“¶˜W&Ê¬ÊBG&ñ¬÷&∆Ê6RñÁFVw&óGê–¢“∆Vv¬ÊB6ˆÁ6ˆ∆ñFFVB7GV¬&∆Ê6R6ÜVWBWVFñˆÁ0–¢“7GV¬66Ç÷f∆˜r&V6ˆÊ6ñ∆ñFñˆ‡–¢“ñÁFW&6ˆ◊Áí"ÙÊB6ˆÁ6ˆ∆ñFFñˆ‚'&ñFvW0–¢“G&V7W'íî2&V6Vóf&∆R˜ñ&∆R&V6ˆÊ6ñ∆ñFñˆ‡–¢“66Ç◊ˆˆ¬¶W&Ú◊7V“6ˆÁG&ˆ¿–¢“FV'B66ÜVGV∆RFÚt¬&V6ˆÊ6ñ∆ñFñˆ‡–¢“7V'6ñFñ'í÷ñÊñ◊V“÷66Ç6ˆÁG&ˆ¿–¢“"¬ñÁfVÁF˜'íÊB7V&∆VFvW"&V6ˆÊ6ñ∆ñFñˆ‡–¢“T4¬ÊBñÁfVÁF˜'í◊&˜fó6ñˆ‚&V6ˆÊ6ñ∆ñFñˆ‡–¢“f7F˜'í'6˜'Fñˆ‚66ÜVGV∆RFÚ∆VFvW –¢“6ˆgGv&R%"¬WfVÁG2&6∂∆ˆrÊB7&R'G2ñÁ7F∆∆VB÷&6R&ˆ∆¬÷f˜'v&G0–¢“6ˆÁG&7B÷∆ñ&ñ∆óGí7V&∆VFvW"FÚ66˜VÁB#3 –¢“7W7Fˆ÷W"÷GfÊ6RÊB&VgVÊB¶˜W&Ê¬&∆Ê6ñÊp–¢“6ˆÁG&7B÷v&R"FÚ66˜VÁB –¢“ÊÚ7F∆R7W7Fˆ÷W"GfÊ6W2&WñˆÊBFÜR&VgVÊBw&6RW&ñˆ@–¢“f˜&V67BÊÚ÷∆ˆˆ∂ÜVBÊBV6ˆÊˆ÷ñ2◊66∆R∆W6ñ&ñ∆óGê–¢“g&˜¶V‚'VFvWBÊÚ÷ÜñÊG6ñváBÊB"÷÷ˆÁFÇ6˜fW&vP–¢“∆óVñFóGí7W7Fˆ÷W"˜7W∆ñW"66ÇñFVÁFóFñW0–¢“∆óVñFóGí66Ç&ˆ∆¬÷f˜'v&@–¢“$4bñFVÁFóGíÊBf6ñ∆óGí÷∆ñ÷óB6ˆÁG&ˆ¿–¢“6ˆ◊∆WFR&6RÚW6ñFRÚF˜vÁ6ñFR∆óVñFóGí6˜fW&vP–¢“f˜'v&B∆óVñFóGí◊6Ü˜'Ff∆¬FWFV7Fñˆ‡–¢“f˜&V67B&∆Ê6R6ÜVWBWVFñˆ‡–¢“f˜&V67B66Çf∆˜r&ˆ∆¬÷f˜'v&@–¢“f˜&V67BT$ïBÊBÊWBñÊ6ˆ÷RñFVÁFóFñW0–¢“f˜&V67B&∆Ê6R6ÜVWBÚ66Çf∆˜r66Ç∆ñÊ∞–¢“6ˆ◊∆WFR&6RÚW6ñFRÚF˜vÁ6ñFRFá&VR◊7FFV÷VÁB6˜fW&vP–¢“v˜&∂f˜&6ReDR&ˆ∆¬÷f˜'v&BÊBÊˆ‚÷ÊVvFófR66óGê–¢“v˜&∂f˜&6RW'6ˆÊÊV¬÷6˜7B∆∆ˆ6Fñˆ‚FÚ˜W&FñÊr&V6˜&G0–¢“ó&ˆ∆¬¶˜W&Ê¬ÊBFó&V7B÷66Ç6WGF∆V÷VÁBñÁFVw&óGê–¢“v˜&∂f˜&6R÷G&ófV‚f˜&V67BıUÇñFVÁFóGê–¢“v˜&∂f˜&6R÷v&R∆óVñFóGíó&ˆ∆¬66ÇñFVÁFóGê–¢“gVÊ7FñˆÊ¬÷7W'&VÊ7í¶˜W&Ê¬&∆Ê6RÊBUU"&˜VÊB◊G&ó6ˆÁG&ˆ¿–¢“G&Á6∆FVB&∆Ê6R6ÜVWBWVFñˆ‚ñÊ6«VFñÊrÜó7F˜&ñ6¬WVóGíÊB5D–¢“gVÊ7FñˆÊ¬÷7W'&VÊ7í¬G&Á6∆Fñˆ‚ÊB6ˆÁ7FÁB÷7W'&VÊ7í˜WGWB6ˆ◊∆WFVÊW70–¢“W&f˜&÷Ê6R◊&WfñWr6˜W&6Rf«VRÊBf&ñÊ6RFñR÷˜W@–¢“VÊóVR&WfñWrˆ7Fñˆ‚îG2ÊB7W'&VÁB÷÷ˆÁFÇ6ˆ◊∆WFVÊW70–¢“&WVó&VB÷7Fñˆ‚6˜fW&vRÊBf∆ñB7Fñˆ‚˜vÊW'6Üó –¢“ÊÚ˜'Ü‚÷ÊvV÷VÁB7FñˆÁ0–¢“VÊóVR7FófR7Fñˆ‚∂Wó2ÊB6ˆ◊∆WFR7W'&VÁB◊G&ñvvW"6˜fW&vP–¢“FW&÷ñÊ¬7Fñˆ‚WfñFVÊ6RÊB˜fW&GVRW66∆Fñˆ‡–¢“7Fñˆ‚¬&WfñWrÊB6ÜÊvR÷Üó7F˜'íñÁFVw&óGê–¢“ˆÊRWÜV7WFñˆ‚∆‚W"7Fñˆ‚7ñ6∆RvóFÇFFVBWfñFVÊ6P–¢“WÜV7WFñˆ‚◊∆‚66˜R¬&FW2ÊBVffV7FófR÷FFRñÁFVw&óGê–¢“6ˆ◊∆WFR&VÊVfóB6Ê6Ü˜G2ÊBFFóFófRf˜&V67B'&ñFvR6˜fW&vP–¢“6ˆ◊∆WFR÷7&Ú∆ñÊVvRÊB6VÁ6óFófóGíFWFñ¬◊FÚ◊7V÷÷'í&V6ˆÊ6ñ∆ñFñˆ‡–†–§fñ∆VB6ˆÁG&ˆ¬&ó6W2‚WÜ6WFñˆ‚&Vf˜&RFW∆˜ñ÷VÁB‡–†–¢22÷ñ‚vVÊW&FVB˜WGWG0–†–¶FWá@–¶FF˜&ˆ6W76VBˆ∆Vv≈˜Ê¬Ê77`–¶FF˜&ˆ6W76VBˆ÷ÊvV÷VÁE˜Ê¬Ê77`–¶FF˜&ˆ6W76VBˆ&∆Ê6U˜6ÜVWBÊ77`–¶FF˜&ˆ6W76VBˆ66Öˆf∆˜rÊ77`–¶FF˜&ˆ6W76VB˜v˜&∂ñÊuˆ6óF¬Ê77`–¶FF˜&ˆ6W76VBˆ%ˆvñÊrÊ77`–¶FF˜&ˆ6W76VBˆ7&VFóEˆ∆˜75ˆ∆∆˜vÊ6RÊ77`–¶FF˜&ˆ6W76VBˆñÁfVÁF˜'ïˆvñÊrÊ77`–¶FF˜&ˆ6W76VBˆñÁfVÁF˜'ï˜&˜fó6ñˆ‚Ê77`–¶FF˜&ˆ6W76VBˆˆvñÊrÊ77`–¶FF˜&ˆ6W76VB˜7W∆ñW%ˆ6ˆÊ6VÁG&Fñˆ‚Ê77`–¶FF˜&ˆ6W76VBˆ6ˆÁG&7Eˆ∆ñ&ñ∆óFñW2Ê77`–¶FF˜&ˆ6W76VBˆ7W7Fˆ÷W%ˆGfÊ6W2Ê77`–¶FF˜&ˆ6W76VBˆ6ˆÁG&7Eˆ∆ñ&ñ∆óGï˜7V÷÷'íÊ77`–¶FF˜&ˆ6W76VB˜G&V7W'ïˆ66Ö˜ˆˆ¬Ê77`–¶FF˜&ˆ6W76VB˜G&V7W'ïˆVÁFóGïˆ66ÇÊ77`–¶FF˜&ˆ6W76VBˆFV'E˜66ÜVGV∆RÊ77`–¶FF˜&ˆ6W76VBˆFV'Eˆ÷GW&óGïˆ∆FFW"Ê77`–¶FF˜&ˆ6W76VBˆ∆óVñFóGïˆ6˜fVÊÁG2Ê77`–¶FF˜&ˆ6W76VBˆ∆óVñFóGïˆf˜&V67BÊ77`–¶FF˜&ˆ6W76VBˆ∆óVñFóGïˆf˜&V67E˜7V÷÷'íÊ77`–¶FF˜&ˆ6W76VBˆ6óF≈ˆ∆∆ˆ6FñˆÂˆ66óGíÊ77`–¶FF˜&ˆ6W76VBˆf˜&V67E˜Ê¬Ê77`–¶FF˜&ˆ6W76VBˆf˜&V67Eˆ&∆Ê6U˜6ÜVWBÊ77`–¶FF˜&ˆ6W76VBˆf˜&V67Eˆ66Öˆf∆˜rÊ77`–¶FF˜&ˆ6W76VB˜Fá&VU˜7FFV÷VÁEˆf˜&V67E˜7V÷÷'íÊ77`–¶FF˜&ˆ6W76VB˜v˜&∂f˜&6U˜66ÜVGV∆RÊ77`–¶FF˜&ˆ6W76VB˜v˜&∂f˜&6U˜7V÷÷'íÊ77`–¶FF˜&ˆ6W76VB˜v˜&∂f˜&6Uˆf˜&V67BÊ77`–¶FF˜&ˆ6W76VBˆgVÊ7FñˆÊ≈ˆ7W'&VÊ7ïˆ¶˜W&Ê≈˜6◊∆RÊ77`–¶FF˜&ˆ6W76VBˆ∆ˆ6≈˜G&ñ≈ˆ&∆Ê6RÊ77`–¶FF˜&ˆ6W76VBˆgÖ˜G&Á6∆Fñˆ‚Ê77`–¶FF˜&ˆ6W76VBˆ6ˆÁ7FÁEˆ7W'&VÊ7ïˆÊ«ó6ó2Ê77`–¶FF˜&ˆ6W76VBˆ÷ˆÁFÜ«ï˜W&f˜&÷Ê6U˜&WfñWrÊ77`–¶FF˜&ˆ6W76VBˆ÷ÊvV÷VÁEˆ7FñˆÁ2Ê77`–¶FF˜&ˆ6W76VBˆ÷ÊvV÷VÁEˆ7FñˆÂˆÜó7F˜'íÊ77`–¶FF˜&ˆ6W76VBˆ÷ÊvV÷VÁEˆ7FñˆÂˆ6ÜÊvW2Ê77`–¶FF˜&ˆ6W76VB˜W&f˜&÷Ê6U˜&WfñWuˆÜó7F˜'íÊ77`–¶FF˜&ˆ6W76VB˜W&f˜&÷Ê6U˜&WfñWu˜7V÷÷'íÊ77`–¶FF˜&ˆ6W76VBˆ÷ÊvV÷VÁEˆ7FñˆÂ˜∆Á2Ê77`–¶FF˜&ˆ6W76VBˆ÷ÊvV÷VÁEˆ7FñˆÂˆ&VÊVfóG2Ê77`–¶FF˜&ˆ6W76VBˆ÷ÊvV÷VÁEˆ7FñˆÂˆ7GV≈ˆñ◊7BÊ77`–¶FF˜&ˆ6W76VBˆ÷ÊvV÷VÁEˆ7FñˆÂˆf˜&V67Eˆ'&ñFvRÊ77`–¶FF˜&ˆ6W76VBˆ÷7&ıˆ∆ñÊVvRÊ77`–¶FF˜&ˆ6W76VBˆfñÊÊ6ñ≈˜6VÁ6óFófóGïˆFWFñ¬Ê77`–¶FF˜&ˆ6W76VBˆfñÊÊ6ñ≈˜6VÁ6óFófóGï˜7V÷÷'íÊ77`–¶FF˜&ˆ6W76VB˜G&Á67FñˆÂˆgÖˆFˆ7V÷VÁG2Ê77`–¶FF˜&ˆ6W76VB˜G&Á67FñˆÂˆgÖ˜6Ê6Ü˜G2Ê77`–¶FF˜&ˆ6W76VB˜G&Á67FñˆÂˆgÖ˜7V÷÷'íÊ77`–¶FF˜&ˆ6W76VBˆñÁFW&6ˆ◊ÁïˆgÖˆ6ˆÁG&7G2Ê77`–¶FF˜&ˆ6W76VB˜6ˆgGv&U˜7V'67&óFñˆÂ˜7V÷÷'íÊ77`–¶FF˜&ˆ6W76VBˆWfVÁG5ˆ&6∂∆ˆrÊ77`–¶FF˜&ˆ6W76VBˆÜ&Gv&Uˆf7F˜'ïˆV6ˆÊˆ÷ñ72Ê77`–¶FF˜&ˆ6W76VB˜7&U˜'G5ˆV6ˆÊˆ÷ñ72Ê77`–¶FF˜&ˆ6W76VBˆVÁFóGï˜&ˆGV7E˜&ˆfóF&ñ∆óGíÊ77`–¶FF˜&ˆ6W76VBˆÊÁV≈ˆ'VFvWBÊ77`–¶FF˜&ˆ6W76VBˆ'VFvWE˜W&f˜&÷Ê6RÊ77`–¶FF˜&ˆ6W76VBˆgï˜∆Âˆ'&ñFvRÊ77`–¶FF˜&ˆ6W76VBˆf˜&V67E˜fñÁFvW2Ê77`–¶FF˜&ˆ6W76VBˆf˜&V67Eˆ67W&7íÊ77`–¶FF˜&ˆ6W76VB˜f∆ñFFñˆ‚Êß6ˆ‡–ßvV"ˆFFˆF6Ü&ˆ&BÊß6ˆ‡–ßvV"ˆFFˆ÷ÊñfW7BÊß6ˆ‡–¶ –†–§gV∆¬&W&ˆGV6ñ&∆R˜W&FñÊrÊB¶˜W&Ê¬FWFñ¬ó2vVÊW&FVBB'VÁFñ÷RÊBñÁFVÁFñˆÊ∆«íWÜ6«VFVBg&ˆ“vóBÜó7F˜'í‡–†–¢22WFˆ÷Fñˆ‡–†–§vóDáV"7FñˆÁ2W&f˜&◊2FÜR6ˆ◊∆WFR6∆˜6RWFˆ÷Fñ6∆«ì†–†–§vVÊW&FVBFFó26ˆ÷÷óGFVBˆÊ«ígFW"&˜FÇFÜR'Vñ∆B6ÜV6∑2ÊBFÜR6ˆÁ6V7WFófR÷6∆˜6R&Vw&W76ñˆ‚72‚V&∆ñ6Fñˆ‚&V¶V7G27WW'6VFVB6˜W&6R&Wfó6ñˆÁ2¬ÊBvW2FW∆˜ñ÷VÁBFWVÊG2ˆ‚7V66W76gV¬FFV&∆ñ6Fñˆ‚‚6VRFˆ72ˆ6∆˜6R◊V&∆ñ6Fñˆ‚Ê÷F‡–†–£‚ñÁ7F∆¬FÜRfñÊÊ6RVÊvñÊP–£"‚'V‚FW7G0–£2‚&Vg&W6Ç÷7&ÚñÁWG2vÜW&Rfñ∆&∆P–£B‚6ñ◊V∆FR˜W&FñÊrFV÷ÊBÊB'Vñ∆BFÜRv˜&∂f˜&6R&ˆ∆¬÷f˜'v&@–£R‚∆∆ˆ6FRó&ˆ∆¬ÊBÊˆ‚◊V˜∆RıUÇFÚ˜W&FñÊr7FófóGê–£b‚7&VFRFÜR∆Vv¬∆VFvW"vóFÇó&ˆ∆¬6WGF∆VBFó&V7F«íFá&˜VvÇ66Ä–£r‚˜7Bf7F˜'í'6˜'Fñˆ‚ÊB&˜fó6ñˆÁ0–£Ç‚&V'Vñ∆B7W7Fˆ÷W"6WGF∆V÷VÁB¬GfÊ6W2ÊB6ˆÁG&7B∆ñ&ñ∆óFñW0–£í‚&V6ˆÁ7G'V7B"ÚñÁfVÁF˜'íÚ66ÜVGV∆W0–£‚'Vñ∆B'VFvWBÊBv˜&∂f˜&6R÷G&ófV‚&ˆ∆∆ñÊrf˜&V67BfñÁFvW0–£‚«í∆Vv¬÷VÁFóGí66Çˆˆ∆ñÊp–£"‚&V'Vñ∆B7GV¬&∆Ê6R6ÜVWBÊB66Çf∆˜rgFW"ˆˆ∆ñÊp–£2‚'Vñ∆BFV'B¬÷GW&óGí¬∆óVñFóGíÊB6˜fVÊÁB66ÜVGV∆W0–£B‚'Vñ∆BFÜRó&ˆ∆¬÷v&R"÷÷ˆÁFÇ66VÊ&ñÚ∆óVñFóGíf˜&V67@–£R‚6∆7V∆FRF˜vÁ6ñFR◊&˜FV7FVB6óF¬÷∆∆ˆ6Fñˆ‚66óGê–£b‚'Vñ∆BFÜRñÁFVw&FVBFá&VR◊7FFV÷VÁBf˜&V67@–£r‚7&VFRgVÊ7FñˆÊ¬÷7W'&VÊ7í¶˜W&Ê¬÷ó'&˜'2ÊB∆ˆ6¬G&ñ¬&∆Ê6W0–£Ç‚G&Á6∆FRf˜&Vñv‚VÁFóFñW2FÚUU"ÊB6∆7V∆FR5DÚÙ4ê–£í‚6∆7V∆FR&W˜'FVBÊB6ˆÁ7FÁB÷7W'&VÊ7í&WfVÁVRÊBT$ï@–£#‚'Vñ∆BFÜR6˜W&6R◊FñVB÷ˆÁFÜ«íW&f˜&÷Ê6R&WfñWp–£#‚7&VFR˜vÊVB÷ÊvV÷VÁB7FñˆÁ2f˜"÷FW&ñ¬GfW'6R6ñvÊ«0–£#"‚&V6ˆÊ6ñ∆R7FñˆÁ2vóFÇFÜR&ñ˜"6∆˜6RÊBVÊB6ˆÁG&ˆ∆∆VBÜó7F˜'ê–£#2‚6∆7V∆FRvR¬˜fW&GVR7FGW2¬6''í÷f˜'v&BÊBW66∆Fñˆ‡–£#B‚7&VFR˜"6''íf˜'v&BˆÊR6ˆÁG&ˆ∆∆VBWÜV7WFñˆ‚∆‚W"7Fñˆ‚7ñ6∆P–£#R‚«í&˜fVBñÁFW'fVÁFñˆÁ2ˆÊ«íg&ˆ“FÜVó"VffV7FófR÷ˆÁFÄ–£#b‚÷V7W&RÊˆ‚÷FFóFófRG&ñvvW"ñ◊&˜fV÷VÁBÊBFFóFófR˜W&FñÊrˆf˜&V67Bñ◊7@–£#r‚76V÷&∆Rv˜&∂f˜&6R¬eÇ¬&WfñWr¬∆ñfV7ñ6∆R¬WÜV7WFñˆ‚ÊB6˜&RfñÊÊ6RF6Ü&ˆ&BFF6WG0–£#Ç‚'V‚&V∆V6R6ˆÁG&ˆ«0–£#í‚V&∆ó6Ç6ˆ◊7B4dÚFF6WG0–£3‚6ˆ÷÷óBvVÊW&FVB˜WGWG0–£3‚FW∆˜ívóDáV"vW0–†–§ÊÚñBFF&6R¬∆ñ6Fñˆ‚6W'fW"¬ƒƒ“í˜"ñB÷&∂WB÷FF7V'67&óFñˆ‚ó2&WVó&VB‡–†–¢22'V‚∆ˆ6∆«ê–†–¶&6Ä–ßóFÜˆ‚÷“óñÁ7F∆¬÷R"Â∂FWe“ –ßóFW7@–ßóFÜˆ‚÷“VÁFW'&ó6UˆfñÊÊ6RÊ6∆í'Vñ∆B“÷VÊB÷÷ˆÁFÇ##b”Ä–¶ –†–•FÚFó6&∆R∆ófR÷7&Ú&WG&ñWf√†–†–¶&6Ä–ßóFÜˆ‚÷“VÁFW'&ó6UˆfñÊÊ6RÊ6∆í'Vñ∆B“÷VÊB÷÷ˆÁFÇ##b”Ç“÷ˆff∆ñÊR÷÷7&–¶ –†–¢227ñÁFÜWFñ2FFÊ˜Fñ6P–†–§W&Vˆ‚7ó7FV◊2w&˜Wó2fñ7FñˆÊ¬‚6ˆ◊ÁíÊ÷W2¬7W7Fˆ÷W'2¬7W∆ñW'2¬&ˆGV7G2¬G&Á67FñˆÁ2ÊBfñÊÊ6ñ¬&W7V«G2&R7ñÁFÜWFñ2‚&V¬V&∆ñ2÷7&ˆV6ˆÊˆ÷ñ2FF÷í&RW6VB2WáFW&Ê¬G&ófW'2'WBFˆW2Ê˜B&W&W6VÁBFÜRfñÊÊ6ñ¬W&f˜&÷Ê6RˆbÁí&V¬6ˆ◊Áí‡–¢2∆ÊÊñÊr˜WF∆ˆˆ≤fó7V¿–†–•FÜRïDBW&f˜&÷Ê6RvR6ˆ◊&W2÷ˆÁFÜ«í7GV¬ÊBg&˜¶V‚ÊÁV¬'VFvWBvóFÇfó6ñ&∆R2(â"'VFvWBFV«F2¬6˜W&6VBg&ˆ“'VFvWE˜W&f˜&÷Ê6V‚FÜReí˜WF∆ˆˆ≤Wfˆ«WFñˆ‚vR6ˆ◊&W2FÜRg&˜¶V‚'VFvWB¬d2”b¬d2”2¬d2”ÊB∆FW7BgV∆¬◊ñV"˜WF∆ˆˆ≤2V&∆ó6ÜVBF˜F«2f˜"FÜR6V∆V7FVBVÁFóGíˆFófó6ñˆ‚‚&WfVÁVRÙT$ïB7vóF6ÜW2&Rfó7V¬ˆÊ«ì¢FÜWí&WW6R'VFvWE˜W&f˜&÷Ê6VÊBgï˜∆Âˆ'&ñFvV¬&W6W'fñÊr6˜W&6Rf«VW2&VÜñÊBWáÊF&∆RFó66∆˜7W&W2‚&WfVÁVR÷g&VR6˜7B6VÁFW'2˜V‚T$ïBÊBFó6&∆RFÜRVÊfñ∆&∆R&WfVÁVR6Üˆñ6R&FÜW"FÜ‚&W6VÁFñÊr&∆Ê≤6Ü'B‚Üó7F˜&ñ6¬fñÁFvW2&RÊ˜BFFóFófR'&ñFvR7FW3≤˜6óFófRf&ñÊ6R6ñvÁ2FÚÊ˜BWFˆ÷Fñ6∆«í÷V‚ff˜&&∆R6˜7BW&f˜&÷Ê6R‡–
+# Enterprise Finance Command Center
+
+Enterprise Finance Command Center is an end-to-end CFO / FP&A portfolio project built around a continuously evolving synthetic multinational company.
+
+The project models economic activity first and derives accounting, financial statements, Working Capital, Treasury, Budget, Forecast and management analytics from the same economic system.
+
+Live application: https://raul-s-c.github.io/enterprise-finance-command-center/
+
+Working-capital contribution screens connect to [legal ledger evidence](docs/working-capital-lineage.md): source journal postings and monthly account rollforwards, with explicit separation from analytical invoice allocations and consolidation adjustments.
+
+## Synthetic group
+
+The fictional company is **Aureon Systems Group** with four deliberately different business models:
+
+- Software ‚Äî recurring subscriptions and services
+- Hardware ‚Äî manufactured products and factory economics
+- Events & Projects ‚Äî bookings, backlog and project delivery
+- Spare Parts ‚Äî high-SKU aftermarket activity linked to installed base
+
+The group has legal entities in Germany, Spain, Czech Republic, China, the United States and Japan. Brno and Suzhou operate manufacturing sites and supply commercial entities through cost-plus intercompany flows.
+
+## Core architecture
+
+```text
+Public macro drivers
+        ->
+Business drivers
+        ->
+Workforce capacity and cost
+        ->
+Operating events
+        ->
+Double-entry legal ledger
+        ->
+Functional-currency books / Legal-entity financials
+        ->
+Intercompany consolidation / EUR translation / CTA
+        ->
+Actual P&L / Balance Sheet / Cash Flow
+        ->
+Working Capital / Asset Quality / Customer Funding / Treasury / CAPEX
+        ->
+Annual Budget / Rolling Forecast
+        ->
+Forward Liquidity
+        ->
+Integrated Forecast P&L / Balance Sheet / Cash Flow
+        ->
+Capital Allocation Capacity
+        ->
+Monthly Performance Review / Management Actions
+        ->
+CFO analytics
+```
+
+P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
+
+## Current release: v0.25.0
+
+Version 0.22 extends the rolling forecast to 24 months across Base, Upside and Downside scenarios, workforce, liquidity and the integrated three statements. Existing 12-month summaries remain separately labelled; the release also exposes 24-month flow and ending-balance measures. Close controls cover the complete forecast horizon. Patch 0.22.1 fixes mobile P&L evidence-table fit and rotates static asset cache keys; it does not alter financial balances or controls. Version 0.23 adds a reconciled invoice-grain AR evidence schedule and explicit modeled allocations of posted collection credits; it does not change journal entries, cash or the customer-level AR schedule, and it is not bank matching. Version 0.24 adds source-accrual-grain AP evidence, reconciling to supplier aging without claiming supplier invoice or remittance matching. Version 0.25 connects posted CAPEX project events through CIP, non-cash go-live, PPE and modeled depreciation without fabricating asset-level journal IDs.
+
+Version 0.21 added **FX Integrity & Close Continuity**. Transaction FX summaries reconcile every measure and key to document snapshots; lifecycle snapshots reconcile to source documents and official/fallback rates; documents reconcile to the authoritative journal. Missing, duplicate, orphaned and non-finite data block release.
+
+Intercompany contracts now retain both reciprocal journal references with one seller-functional contract currency and one deterministic settlement month. The seller's domestic-currency leg stays in the contract register, not the foreign-currency exposure population. The v0.20 analytical population is rebuilt under this corrected policy; transaction FX totals are therefore not directly comparable across the policy change. Historical GL statements are unchanged.
+
+Executive explicitly distinguishes filtered operating measures from consolidated group measures. Mobile charts retain all observations with at most five visible date labels. CI runs frontend regression tests and two consecutive offline closes through the complete v0.25 wrapper in an isolated 24-month actual / 24-month forecast fixture.
+
+Version 0.25 adds a project-level fixed-asset register that traces posted cash spend through CIP and non-cash commissioning to PPE and modeled depreciation, with release controls against the GL. It preserves the evidence boundary: depreciation journals are entity-aggregated and opening PPE is not falsely split into individual assets.
+
+See `docs/v0.25-status.md`, `docs/v0.24-status.md`, `docs/v0.23-status.md`, `docs/v0.22-status.md`, `docs/v0.21-status.md` and `docs/fx-integrity-and-close-continuity.md`.
+
+### Transaction FX foundation
+
+Version 0.20 adds **Transaction FX Exposure & Remeasurement** to the connected finance model.
+
+Foreign-currency monetary documents are sourced from actual external and intercompany AR/AP journal lines. Each document preserves its source journal, issue and settlement month, legal entity, division, counterparty, source account, functional currency, transaction currency, original amounts and payment terms.
+
+Open documents are remeasured monthly in functional currency using the same official/fallback FX lineage as the rest of the model. Realized and unrealized FX P&L are kept separate from CTA, with exposure, ageing and lifecycle visible by entity, division and transaction currency. The subledger is an analytical accounting layer sourced from the authoritative journal; it does not post balancing adjustments back into historical statements.
+
+Release controls require:
+
+```text
+Review actual / benchmark / variance = source data
+Review IDs and action IDs = unique
+Every required P1/P2 action = present
+Every action = valid review evidence + owner + due month
+Every terminal action = dated closure or cancellation evidence
+Every overdue action = management or executive escalation
+Current required signals = one active action key each
+Action and review histories = unique monthly snapshots
+Every action cycle = one controlled execution plan
+Approval month < effective month
+Intervention rates = non-negative and capped
+Directional trigger benefits = explicitly non-additive
+Operating and forecast impact = additive causal bridge
+Every macro driver-month = applied value + source + status
+Official observations = exact-month overlays only
+Missing official observations = deterministic fallback
+Sensitivity detail = group summary
+Sensitivity EBIT = Gross Profit impact + OPEX benefit
+Sensitivity Net Debt impact = inverse of Ending Cash impact
+Sensitivity direction = economically controlled
+Standalone sensitivities = explicitly non-additive
+Transaction FX documents = unique source journals + AR/AP accounts
+Functional currency != transaction currency
+Transaction FX snapshots = unique document-month lifecycle
+Carrying value = transaction amount √ó closing transaction FX
+Lifecycle FX P&L = functional carrying-value movement
+Summary FX P&L = realized FX + unrealized FX
+Review summary = current close month
+All accounting, workforce, FX and three-statement controls = passed
+```
+
+The v0.15 workforce, multi-currency and integrated forecast capabilities remain fully active underneath the review layer. The Balance Sheet still has no balancing plug: cash comes from liquidity, Working Capital from operating drivers, PPE/CIP from CAPEX, debt from its roll-forward and retained earnings from forecast Net Income.
+
+The Plan & Forecast report pairs a published three-scenario comparison with a Group Base workforce outlook. Readers can switch Revenue, EBIT, free cash flow and ending cash, inspect the balance-sheet equation, compare FTE with its target, and open the original source tables. These are fixed Group measures; entity/division selections do not silently change one side of the comparison.
+
+See:
+
+- `docs/monthly-performance-review.md`
+- `docs/management-action-lifecycle.md`
+- `docs/management-action-execution.md`
+- `docs/macro-driver-lineage-and-sensitivities.md`
+- `docs/transaction-fx-subledger.md`
+- `docs/workforce-cost-planning.md`
+- `docs/multicurrency-fx.md`
+- `docs/integrated-three-statement-forecast.md`
+- `docs/capex-cash-transfer.md`
+
+## Finance scope
+
+The current system includes:
+
+- 236 synthetic product references across a multi-level hierarchy
+- six legal entities and two factories
+- 36 rolling actual months
+- 24 rolling operating forecast months across Base / Upside / Downside
+- 24-month liquidity, covenant and workforce forecasts
+- 24-month integrated P&L / Balance Sheet / Cash Flow with separately labelled 12M and 24M measures
+- Month x Entity x Division x Function workforce roll-forward
+- driver-based FTE, attrition, hiring, payroll and recruitment-cost forecast
+- functional-currency journals and local trial balances for all six entities
+- a visual factory absorption bridge tied to the posted variance, beside a separately labelled source-factory sales mix
+- a CAPEX project flow that separates cash SPEND from noncash GO_LIVE transfers to PPE
+- a selectable 12-month portfolio-decision timeline connecting product lifecycle events to their published reasons
+- document-level transaction FX exposure, ageing and realized/unrealized remeasurement
+- EUR group translation with historical equity rates and explicit CTA / OCI
+- reported versus constant-currency Revenue and EBIT
+- source-tied monthly performance review across group and operating scopes
+- deterministic variance explanations and owned P1/P2 management actions
+- persistent management action lifecycle, monthly snapshots and change history
+- approved action execution plans and effective dates
+- causal operating and forecast action-impact bridges
+- directional, non-additive per-action benefit tracking
+- double-entry accounting
+- legal and consolidated actual P&L / Balance Sheet / Cash Flow
+- intercompany cost-plus manufacturing and eliminations
+- legal-entity cash pooling and Treasury IC positions
+- debt and maturity schedules
+- liquidity headroom and covenant monitoring
+- RCF requirement and availability modelling
+- downside-protected capital-allocation capacity
+- customer-level AR aging and Expected Credit Loss accounting
+- SKU-level inventory aging and obsolescence provisions
+- supplier-level AP aging, concentration and single-source exposure
+- customer advances, contract liabilities, cancellations and refunds
+- factory capacity and absorption accounting
+- CAPEX from CIP through go-live, PPE and depreciation
+- Software ARR / MRR / churn / NRR
+- Events bookings / backlog / book-to-bill
+- Spare Parts installed-base economics
+- entity-to-product, family, quality-tier and customer profitability
+- complete closing external AR/AP and legal SKU inventory contribution schedules
+- price / volume / mix analysis
+- deterministic product lifecycle decisions
+- frozen Annual Budget
+- YTD Actual vs Budget
+- FY Budget vs Latest Outlook
+- FC-1 / FC-3 / FC-6 outlook reconstruction
+- forecast MAPE, bias and economic-scale controls
+- automated monthly close and GitHub Pages deployment
+
+## Product hierarchy
+
+```text
+Division
+  -> Product Family
+      -> Product Subfamily
+          -> Product Type
+              -> Quality Tier
+                  -> SKU / Generation
+```
+
+Commercial tiers are typically Essential, Professional and Premium. Customers receive deterministic partial assortments rather than an artificial customer x SKU Cartesian product.
+
+See `docs/product-hierarchy.md`.
+
+The profitability mix report compares families with division/quality tiers on a shared Revenue or Operating contribution measure, displays their reconciliation, and keeps both original schedules available.
+
+## Working Capital and customer funding
+
+The Working Capital asset-quality pages pair ranked ECL/SKU provision exposure with five-bucket AR/inventory aging and 12-month risk-share trends; the original schedules remain one click away.
+
+Supplier pages pair source-ranked trailing spend with open-AP exposure for the same selected entity/division, then show group AP aging and its 12-month weighted-age trend. Source tables remain available below each visual; no overdue exposure or group spend denominator is inferred from incomplete detail.
+
+Three trade schedules reconcile to the legal GL:
+
+```text
+Customer AR aging   -> 1100_AR
+SKU Inventory aging -> 1200_INVENTORY
+Supplier AP aging   -> 2100_AP
+```
+
+Asset valuation is separated from operating exposure:
+
+```text
+Gross Trade Receivables
+- Expected Credit Loss Allowance
+= Net Trade Receivables
+
+Gross Legal Inventory
+- Inventory Provision
+- Unrealized Intercompany Markup Reserve
+= Net Consolidated Inventory
+```
+
+Customer funding is also separate from Revenue:
+
+```text
+Trade NWC
+= Net AR + Net Inventory - Trade AP
+
+Operating NWC
+= Trade NWC - Contract Liabilities
+```
+
+See:
+
+- `docs/working-capital-schedules.md`
+- `docs/provisions-and-asset-quality.md`
+- `docs/supplier-payables-and-concentration.md`
+- `docs/contract-liabilities-and-customer-advances.md`
+
+## Treasury and liquidity
+
+Germany (`DE01`) acts as the Treasury hub. Subsidiaries retain configured operating cash minimums; excess liquidity can be swept to HQ and local shortfalls can be funded from HQ through reciprocal Treasury intercompany balances.
+
+The Treasury layer answers:
+
+```text
+Where is cash located?
+How much cash can be centralized?
+Which entities require funding?
+What is gross debt and net debt?
+When does debt mature?
+How much RCF is available?
+What is liquidity headroom?
+Do leverage and interest-coverage covenants pass?
+What does liquidity look like over the next 12 months?
+How much capital could be deployed while protecting Downside liquidity?
+```
+
+Key controls include:
+
+```text
+Group cash before pooling = Group cash after pooling
+IC Treasury Receivables = IC Treasury Payables
+Debt schedule = 2500_DEBT
+Customer cash identity = 0
+Supplier cash identity = 0
+Forward cash roll-forward = 0
+RCF drawn + undrawn = facility limit
+Forward liquidity shortfall after RCF = 0
+```
+
+See:
+
+- `docs/treasury-and-liquidity.md`
+- `docs/liquidity-forecast-and-capital-allocation.md`
+
+## Divisional operating schedules
+
+The four divisions deliberately use different operating mathematics.
+
+### Software
+
+```text
+Opening MRR
++ New MRR
++ Expansion MRR
+- Contraction MRR
+- Churn MRR
+= Ending MRR
+```
+
+Outputs include ARR, NRR, GRR, recurring mix and customer prepayments.
+
+### Events & Projects
+
+```text
+Opening Backlog
++ Bookings
+- Recognized Revenue
+= Ending Backlog
+```
+
+Outputs include book-to-bill, backlog coverage and project advances.
+
+### Hardware
+
+```text
+Actual Factory Fixed Cost
+- Standard Fixed Cost Absorbed
+= Factory Absorption Variance
+```
+
+The variance is posted to the ledger and affects Gross Profit, AP, tax, retained earnings and cash. Operations additionally expose capacity, utilization and production mix.
+
+### Spare Parts
+
+```text
+Opening Installed Base
++ Hardware Additions
+- Estimated Retirements
+= Ending Installed Base
+```
+
+Outputs include aftermarket revenue, stock coverage and installed-base economics.
+
+See `docs/divisional-operating-schedules.md` and `docs/factory-absorption-accounting.md`.
+
+## Budget and rolling Forecast
+
+Budget and Forecast are separate finance objects.
+
+Budget 2026, for example, is frozen using an October 2025 approval vintage:
+
+```text
+Budget 2026
+Vintage: 2025-10
+Targets: 2026-01 to 2026-12
+```
+
+The planning layer supports:
+
+```text
+YTD Actual vs Budget
+FY Budget vs Latest Outlook
+FY Budget vs FC-1
+FY Budget vs FC-3
+FY Budget vs FC-6
+```
+
+Rolling forecasts are built from monthly Entity / Division totals, de-seasonalized recent run-rate, structural growth, target-month seasonality and capped historical bias correction. A dedicated economic-scale control prevents internally consistent but implausibly small or large forecasts.
+
+The same forecast vintages feed the P&L outlook, liquidity outlook and integrated three-statement forecast. There is one operating forecast, not three disconnected planning systems.
+
+See:
+
+- `docs/budget-and-fy-planning.md`
+- `docs/v0.9.1-forecast-hotfix.md`
+- `docs/liquidity-forecast-and-capital-allocation.md`
+- `docs/integrated-three-statement-forecast.md`
+
+## CFO application
+
+The interactive reporting workspace uses a light enterprise application shell, fixed-height desktop screens and named subpages, searchable/paginated tables, persistent URL filters, and custom IBCS-inspired comparison and variance visuals. Six primary decision areas replace the former eighteen-item navigation rail; contextual report tabs expose all eighteen views without turning the sidebar into an index. Close Journey teaches the complete chain from public drivers and business activity through journal creation, legal close, consolidation, statements, forecast, performance review and accountable action; every stage exposes its inputs, outputs, release controls and direct links to published evidence. Executive is a one-screen control tower with selectable KPI evidence, AC/PY history, EBIT attribution, a cash-flow driver tree, management priorities and a 36-month company story. P&L, Cash Flow, Balance Sheet, Plan & Forecast, Macro & Sensitivities, Treasury, Business Drivers, Profitability, Intercompany, Operations & CAPEX, and FX & Translation open with premium one-screen cockpits that combine selectable KPIs, history or outlook, bridges or equations, signed contribution, drill-through and calculation/source/control evidence while retaining every original detail page. Macro shocks remain standalone and non-additive; business drivers connect demand and delivery evidence to the statements; intercompany cost-plus transfers remain visible through elimination and inventory-profit reserve; transaction FX P&L remains separate from CTA/OCI. Dedicated contribution workspaces connect reconciled totals to entity, division, customer, supplier, product and project evidence without inventing allocations. The combined NWC analysis adds a prior-year bridge, source-tied formula, dependent entity/division filters, signed ranking, value-flow view, inspector, and underlying records on one screen. See `docs/reporting-workspace.md` and `docs/contribution-explorer.md`. These are custom web visuals, not licensed or certified Zebra BI components.
+
+The GitHub Pages application contains six decision areas and eighteen contextual reports:
+
+- **Executive:** Executive
+- **Performance:** P&L, Margin Engine and Profitability
+- **Cash & Balance:** Working Capital, Cash Flow, Treasury and Balance Sheet
+- **Plan & Outlook:** Plan & Forecast and Macro & Sensitivities
+- **Operations:** Business Drivers, Intercompany, Operations & CAPEX and FX & Translation
+- **Close & Controls:** Close Journey, Performance Review, Action Execution and Data Journey
+
+Performance Review now reads as a connected close narrative: source-tied Actual/Budget scorecards, the highest-materiality explanations, a Group-only price/volume/mix bridge that reconciles to revenue, owned action states, and drillable source coverage. Its responsive layout keeps the decision-critical status visible on short laptops while retaining the complete state and evidence on demand. See [the Performance Review cockpit guide](docs/performance-review-cockpit.md).
+
+The P&L, Balance Sheet and Cash Flow pages combine actual reporting with the Base forward statement. Plan & Forecast compares Base, Upside and Downside three-statement consequences; Treasury connects liquidity and covenant headroom; Profitability traces published product and customer economics; Operations & CAPEX separates cash investment from non-cash asset commissioning.
+
+On phones and narrow tablets, the P&L keeps all ten statement lines on one screen. Its **Values** and **Œî PY** controls switch between PY/Actual amounts and signed absolute/percentage variances without sideways scrolling. Green and red reflect earnings impact, so lower cost is favorable; the wide-screen cumulative bridge and source-inspection behavior are unchanged.
+
+On phones, statement overview pages show three complete headline indicators and a visible **All indicators** control instead of clipping additional cards at the viewport edge. The control retains access to every source-tied KPI and calculation. The subpage selector uses the available width so longer report names remain readable.
+
+The P&L OPEX detail is a source-tied twelve-month mix and trend rather than a sparse KPI list. It shows published group OPEX, published workforce personnel cost, the explicitly derived non-people difference, and independent divisional OPEX from management detail. The division total is checked against group Actual; personnel is not allocated to divisions without source evidence.
+
+The application is static and reads compact JSON generated by the finance engine.
+
+## Release controls
+
+Deployment is blocked if material controls fail. The suite includes:
+
+- journal and trial-balance integrity
+- legal and consolidated actual Balance Sheet equations
+- actual cash-flow reconciliation
+- intercompany AR/AP and consolidation bridges
+- Treasury IC receivable/payable reconciliation
+- cash-pool zero-sum control
+- debt schedule to GL reconciliation
+- subsidiary minimum-cash control
+- AR, inventory and AP subledger reconciliation
+- ECL and inventory-provision reconciliation
+- factory absorption schedule to ledger
+- Software ARR, Events backlog and Spare Parts installed-base roll-forwards
+- contract-liability subledger to account 2300
+- customer-advance and refund journal balancing
+- contract-aware AR to account 1100
+- no stale customer advances beyond the refund grace period
+- forecast no-lookahead and economic-scale plausibility
+- frozen Budget no-hindsight and 12-month coverage
+- liquidity customer/supplier cash identities
+- liquidity cash roll-forward
+- RCF identity and facility-limit control
+- complete Base / Upside / Downside liquidity coverage
+- forward liquidity-shortfall detection
+- forecast Balance Sheet equation
+- forecast Cash Flow roll-forward
+- forecast EBIT and Net Income identities
+- forecast Balance Sheet / Cash Flow cash link
+- complete Base / Upside / Downside three-statement coverage
+- workforce FTE roll-forward and non-negative capacity
+- workforce personnel-cost allocation to operating records
+- payroll journal and direct-cash settlement integrity
+- workforce-driven forecast OPEX identity
+- workforce-aware liquidity payroll cash identity
+- functional-currency journal balance and EUR round-trip control
+- translated Balance Sheet equation including historical equity and CTA
+- functional-currency, translation and constant-currency output completeness
+- performance-review source value and variance tie-out
+- unique review/action IDs and current-month completeness
+- required-action coverage and valid action ownership
+- no orphan management actions
+- unique active action keys and complete current-trigger coverage
+- terminal action evidence and overdue escalation
+- action, review and change-history integrity
+- one execution plan per action cycle with dated evidence
+- execution-plan scope, rates and effective-date integrity
+- complete benefit snapshots and additive forecast bridge coverage
+- complete macro lineage and sensitivity detail-to-summary reconciliation
+
+A failed control raises an exception before deployment.
+
+## Main generated outputs
+
+```text
+data/processed/legal_pnl.csv
+data/processed/management_pnl.csv
+data/processed/balance_sheet.csv
+data/processed/cash_flow.csv
+data/processed/working_capital.csv
+data/processed/ar_aging.csv
+data/processed/credit_loss_allowance.csv
+data/processed/inventory_aging.csv
+data/processed/inventory_provision.csv
+data/processed/ap_aging.csv
+data/processed/supplier_concentration.csv
+data/processed/contract_liabilities.csv
+data/processed/customer_advances.csv
+data/processed/contract_liability_summary.csv
+data/processed/treasury_cash_pool.csv
+data/processed/treasury_entity_cash.csv
+data/processed/debt_schedule.csv
+data/processed/debt_maturity_ladder.csv
+data/processed/liquidity_covenants.csv
+data/processed/liquidity_forecast.csv
+data/processed/liquidity_forecast_summary.csv
+data/processed/capital_allocation_capacity.csv
+data/processed/forecast_pnl.csv
+data/processed/forecast_balance_sheet.csv
+data/processed/forecast_cash_flow.csv
+data/processed/three_statement_forecast_summary.csv
+data/processed/workforce_schedule.csv
+data/processed/workforce_summary.csv
+data/processed/workforce_forecast.csv
+data/processed/functional_currency_journal_sample.csv
+data/processed/local_trial_balance.csv
+data/processed/fx_translation.csv
+data/processed/constant_currency_analysis.csv
+data/processed/monthly_performance_review.csv
+data/processed/management_actions.csv
+data/processed/management_action_history.csv
+data/processed/management_action_changes.csv
+data/processed/performance_review_history.csv
+data/processed/performance_review_summary.csv
+data/processed/management_action_plans.csv
+data/processed/management_action_benefits.csv
+data/processed/management_action_actual_impact.csv
+data/processed/management_action_forecast_bridge.csv
+data/processed/macro_lineage.csv
+data/processed/financial_sensitivity_detail.csv
+data/processed/financial_sensitivity_summary.csv
+data/processed/transaction_fx_documents.csv
+data/processed/transaction_fx_snapshots.csv
+data/processed/transaction_fx_summary.csv
+data/processed/intercompany_fx_contracts.csv
+data/processed/software_subscription_summary.csv
+data/processed/events_backlog.csv
+data/processed/hardware_factory_economics.csv
+data/processed/spare_parts_economics.csv
+data/processed/entity_product_profitability.csv
+data/processed/annual_budget.csv
+data/processed/budget_performance.csv
+data/processed/fy_plan_bridge.csv
+data/processed/forecast_vintages.csv
+data/processed/forecast_accuracy.csv
+data/processed/validation.json
+web/data/dashboard.json
+web/data/manifest.json
+```
+
+Full reproducible operating and journal detail is generated at runtime and intentionally excluded from Git history.
+
+## Automation
+
+GitHub Actions performs the complete close automatically:
+
+Generated data is committed only after both the build checks and the consecutive-close regression pass. Publication rejects superseded source revisions, and Pages deployment depends on successful data publication. See `docs/close-publication.md`.
+
+1. install the finance engine
+2. run tests
+3. refresh macro inputs where available
+4. simulate operating demand and build the workforce roll-forward
+5. allocate payroll and non-people OPEX to operating activity
+6. create the legal ledger with payroll settled directly through cash
+7. post factory absorption and provisions
+8. rebuild customer settlement, advances and contract liabilities
+9. reconstruct AR / Inventory / AP schedules
+10. build Budget and workforce-driven rolling forecast vintages
+11. apply legal-entity cash pooling
+12. rebuild actual Balance Sheet and Cash Flow after pooling
+13. build debt, maturity, liquidity and covenant schedules
+14. build the payroll-aware 12-month scenario liquidity forecast
+15. calculate downside-protected capital-allocation capacity
+16. build the integrated three-statement forecast
+17. create functional-currency journal mirrors and local trial balances
+18. translate foreign entities to EUR and calculate CTA / OCI
+19. calculate reported and constant-currency Revenue and EBIT
+20. build the source-tied monthly performance review
+21. create owned management actions for material adverse signals
+22. reconcile actions with the prior close and append controlled history
+23. calculate age, overdue status, carry-forward and escalation
+24. create or carry forward one controlled execution plan per action cycle
+25. apply approved interventions only from their effective month
+26. measure non-additive trigger improvement and additive operating/forecast impact
+27. assemble workforce, FX, review, lifecycle, execution and core finance dashboard datasets
+28. run release controls
+29. publish compact CFO datasets
+30. commit generated outputs
+31. deploy GitHub Pages
+
+No paid database, application server, LLM API or paid market-data subscription is required.
+
+## Run locally
+
+```bash
+python -m pip install -e ".[dev]"
+pytest
+python -m enterprise_finance.cli build --end-month 2026-08
+```
+
+To disable live macro retrieval:
+
+```bash
+python -m enterprise_finance.cli build --end-month 2026-08 --offline-macro
+```
+
+## Synthetic data notice
+
+Aureon Systems Group is fictional. Company names, customers, suppliers, products, transactions and financial results are synthetic. Real public macroeconomic data may be used as external drivers but does not represent the financial performance of any real company.
+# Planning outlook visual
+
+The YTD performance page compares monthly Actual and frozen Annual Budget with visible AC ‚àí Budget deltas, sourced from `budget_performance`. The FY outlook evolution page compares the frozen Budget, FC-6, FC-3, FC-1 and latest full-year outlook as published totals for the selected entity/division. Revenue/EBIT switches are visual only: they reuse `budget_performance` and `fy_plan_bridge`, preserving source values behind expandable disclosures. Revenue-free cost centers open EBIT and disable the unavailable Revenue choice rather than presenting a blank chart. Historical vintages are not additive bridge steps; positive variance signs do not automatically mean favorable cost performance.
