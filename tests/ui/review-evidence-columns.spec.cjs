@@ -44,7 +44,7 @@ test('close-area navigation stays on one line at laptop width without losing rep
   }));
   expect(score.clipped).toBe(false);
   expect(score.cards).toHaveLength(3);
-  expect(score.cards.every(card=>!card.clipped&&card.barWidth>100)).toBe(true);
+  expect(score.cards.every(card=>!card.clipped&&card.barWidth>100),`score card geometry: ${JSON.stringify(score.cards)}`).toBe(true);
   expect(new Set(score.cards.map(card=>card.top)).size).toBe(1);
   expect(score.cards[0].left).toBeLessThan(score.cards[1].left);
   expect(score.cards[1].left).toBeLessThan(score.cards[2].left);
