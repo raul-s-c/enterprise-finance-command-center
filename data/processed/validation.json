@@ -156,5 +156,10 @@
   "transaction_fx_document_source_max_gap": 0.0,
   "entity_product_profitability_max_gap": 0.0,
   "entity_product_profitability_duplicate_rows": 0,
-  "working_capital_lineage_max_gap": 7.450580596923828e-09
+  "working_capital_lineage_max_gap": 7.450580596923828e-09,
+  "ar_invoice_aging_max_gap": 0.0,
+  "ar_invoice_application_max_gap": 0.0,
+  "ar_invoice_unallocated_credit": 0.0,
+  "ar_invoice_rows": 2735,
+  "ar_invoice_application_rows": 73820
 }
