@@ -27,6 +27,15 @@ test('mobile P&L exposes both actuals and signed variances without sideways scro
   await controls.getByRole('button',{name:'Values'}).click();
   await expect(statement.locator('.pnl-heading>span:nth-child(2)')).toBeVisible();
   await expect(statement.locator('.pnl-heading>span:nth-child(4)')).toBeHidden();
+  await statement.locator('[data-pnl-key="gross_profit"]').click();
+  const evidence=page.locator('#reportDialog');
+  await expect(evidence).toBeVisible();
+  await expect(evidence.locator('#reportDialogTitle')).toHaveText('Gross profit');
+  await expect(evidence.locator('#reportDialogBody')).toContainText('Calculation:');
+  await expect(evidence.locator('#reportDialogBody')).toContainText('Marginal contribution');
+  await expect(evidence.locator('#reportDialogBody')).toContainText('management_detail');
+  await page.locator('#reportDialogClose').click();
+  await expect(evidence).not.toBeVisible();
 
   await page.setViewportSize({width:768,height:720});
   await expect(controls).toBeVisible();
