@@ -2,10 +2,6 @@ const {test,expect}=require('@playwright/test');
 const published=require('../../web/data/dashboard.json');
 
 test('CAPEX project register traces cash, CIP, PPE and modeled depreciation on mobile',async({page})=>{
-  const dashboard=structuredClone(published);
-  dashboard.meta.version='0.25.0';
-  dashboard.meta.fixed_asset_project_count=1;
-  await page.route('**/data/dashboard.json*',route=>route.fulfill({json:dashboard}));
   await page.route('**/data/fixed_asset_detail.json*',route=>route.fulfill({json:{
     month:published.meta.end_month,currency:'EUR',
     evidence_basis:'Project spend and CIP-to-PPE transfer tie to posted journal IDs. Project depreciation is reconstructed from approved budget and useful life because depreciation posts in one aggregate entity journal; opening PPE remains an entity-level pool.',
@@ -27,6 +23,7 @@ test('CAPEX project register traces cash, CIP, PPE and modeled depreciation on m
   await page.goto('/#view=operations-capex&page=0');
   const workspace=page.locator('.statement-workspace');
   await expect(workspace).toBeVisible();
+  await page.evaluate(()=>{data.meta.version='0.25.0';data.meta.fixed_asset_project_count=1;render();});
   await workspace.getByRole('button',{name:'Project asset register'}).click();
   const dialog=page.locator('#reportDialog');
   await expect(dialog.locator('#reportDialogTitle')).toHaveText('CAPEX · project-to-asset lifecycle');
