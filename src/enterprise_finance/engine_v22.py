@@ -6,7 +6,7 @@ from pathlib import Path
 
 from .engine_v21 import _dump_json, build as build_v21
 
-VERSION = "0.22.0"
+VERSION = "0.22.1"
 
 
 def build(end_month: str, config_path: str = "config/company.yml", allow_live_macro: bool = True):

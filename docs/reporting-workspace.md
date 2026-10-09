@@ -1,6 +1,6 @@
 # Interactive reporting workspace
 
-The dashboard is a code-native HTML/CSS/SVG reporting application over the version 0.22.0 finance dataset. No financial engine, balances, tolerances or generated outputs are changed by this redesign. It does not require Power BI hosting or a paid visualization dependency.
+The dashboard is a code-native HTML/CSS/SVG reporting application over the version 0.22.1 finance dataset. No financial engine, balances, tolerances or generated outputs are changed by this redesign. It does not require Power BI hosting or a paid visualization dependency.
 
 ## Guided close journey
 

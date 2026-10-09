@@ -47,7 +47,7 @@ def test_consecutive_closes_preserve_history_and_advance_forecast_24m(tmp_path, 
         assert set(current_frame.horizon_month) == set(range(1, 25)), name
     manifest = json.loads(Path("web/data/manifest.json").read_text())
     dashboard = json.loads(Path("web/data/dashboard.json").read_text())
-    assert manifest["version"] == dashboard["meta"]["version"] == "0.22.0"
+    assert manifest["version"] == dashboard["meta"]["version"] == "0.22.1"
     assert manifest["forecast_months"] == 24
     assert manifest["base_24m_forecast_ending_cash"] == pytest.approx(
         pd.read_csv("data/processed/three_statement_forecast_summary.csv").query("scenario == 'Base'").iloc[0].ending_cash_24m, abs=0.01
