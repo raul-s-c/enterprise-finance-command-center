@@ -166,5 +166,12 @@
   "ap_item_application_max_gap": 0.0,
   "ap_item_unallocated_reduction": 0.0,
   "ap_item_rows": 7037,
-  "ap_item_application_rows": 148454
+  "ap_item_application_rows": 148454,
+  "fixed_asset_event_journal_max_gap": 0.0,
+  "fixed_asset_gross_ppe_max_gap": 0.02,
+  "fixed_asset_cip_max_gap": 0.02,
+  "fixed_asset_accumulated_depreciation_max_gap": 0.0,
+  "fixed_asset_depreciation_max_gap": 0.0,
+  "fixed_asset_project_rows": 4,
+  "fixed_asset_event_rows": 38
 }
