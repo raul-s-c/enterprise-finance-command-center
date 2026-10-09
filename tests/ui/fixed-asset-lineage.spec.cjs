@@ -22,9 +22,11 @@ test('CAPEX project register traces cash, CIP, PPE and modeled depreciation on m
   await page.setViewportSize({width:390,height:844});
   await page.goto('/#view=operations-capex&page=0');
   await page.evaluate(()=>{
-    data.meta.version='0.25.0';
-    data.meta.fixed_asset_project_count=1;
-    const [operation]=StatementWorkspace.pages('operations-capex',data,state);
+    const fixtureData=JSON.parse(JSON.stringify(data));
+    fixtureData.meta.version='0.25.0';
+    fixtureData.meta.fixed_asset_project_count=1;
+    const [operation]=StatementWorkspace.pages('operations-capex',fixtureData,state);
+    if(!operation.html.includes('Project asset register'))throw new Error('CAPEX renderer did not expose the v0.25 asset register');
     document.querySelector('#content').innerHTML=operation.html;
     StatementWorkspace.mount();
   });
