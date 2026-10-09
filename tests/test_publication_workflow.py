@@ -29,7 +29,8 @@ def test_visual_job_runs_browser_regressions_and_retains_evidence():
     assert "npx playwright install --with-deps chromium" in commands
     assert "npm run test:ui" in commands
     assert not any(step.get("continue-on-error") for step in steps)
-    evidence = next(step for step in steps if step.get("uses") == "actions/upload-artifact@v4")
+    evidence = next(step for step in steps
+                    if step.get("uses", "").startswith("actions/upload-artifact@"))
     assert evidence["with"]["name"] == "responsive-ui-evidence"
     assert evidence["with"]["if-no-files-found"] == "error"
 
@@ -38,7 +39,8 @@ def test_build_stages_same_run_candidate_without_persistent_publication():
     steps = jobs()["build"]["steps"]
     assert not any("git push" in step.get("run", "") for step in steps)
     assert not any("upload-pages-artifact" in step.get("uses", "") for step in steps)
-    candidate = next(step for step in steps if step.get("uses") == "actions/upload-artifact@v4")
+    candidate = next(step for step in steps
+                     if step.get("uses", "").startswith("actions/upload-artifact@"))
     assert candidate["if"] == "github.ref == 'refs/heads/main'"
     assert candidate["with"]["name"] == "finance-close-candidate"
     assert candidate["with"]["path"].split() == ["data/processed", "web"]
@@ -49,7 +51,8 @@ def test_build_stages_same_run_candidate_without_persistent_publication():
 
 def test_publish_uses_current_run_artifact_and_checks_revision_before_push():
     steps = jobs()["publish"]["steps"]
-    download = next(step for step in steps if step.get("uses") == "actions/download-artifact@v4")
+    download = next(step for step in steps
+                    if step.get("uses", "").startswith("actions/download-artifact@"))
     # No run-id/repository override: the candidate must belong to this exact run.
     assert download["with"] == {"name": "finance-close-candidate", "path": "."}
     guard = next(step for step in steps if step.get("name") == "Reject superseded source revision")
@@ -61,7 +64,8 @@ def test_publish_uses_current_run_artifact_and_checks_revision_before_push():
     assert "git push origin HEAD:main" in commit["run"]
     assert "--force" not in commit["run"]
     assert "git pull" not in commit["run"]
-    upload = next(step for step in steps if step.get("uses") == "actions/upload-pages-artifact@v3")
+    upload = next(step for step in steps
+                  if step.get("uses", "").startswith("actions/upload-pages-artifact@"))
     assert upload["with"]["path"] == "web"
     assert steps.index(download) < steps.index(guard) < steps.index(commit) < steps.index(upload)
     assert not any(step.get("continue-on-error") or "always()" in step.get("if", "") for step in steps)
