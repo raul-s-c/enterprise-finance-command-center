@@ -95,7 +95,7 @@
   .prv-control-note{font-size:10px;margin-top:4px}
 }
 @media(max-width:1100px) and (min-width:901px){
-  .report-mode .prv-overview{grid-template-rows:auto minmax(0,1fr);gap:8px}
+  .report-mode .prv-overview{grid-template-rows:auto repeat(2,minmax(0,1fr));gap:8px}
   .prv-region-switch{grid-column:1/-1;display:flex;gap:4px;min-height:32px;border-bottom:1px solid #d7e0eb}
   .report-mode .prv-region-switch button{min-height:30px;padding:4px 12px;border:0;border-bottom:2px solid transparent;background:#fff;color:#263a58;font-size:12px}
   .report-mode .prv-region-switch button[aria-pressed="true"]{border-bottom-color:#0869e1;color:#075bd6;font-weight:700}

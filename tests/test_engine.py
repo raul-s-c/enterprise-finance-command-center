@@ -65,7 +65,7 @@ def test_sale_journal_preserves_product_sku_and_customer_lineage():
     assert not sales.empty
     assert sales["product"].isin(simulation.products["product"]).all()
     assert sales["customer"].isin(simulation.customers["customer"]).all()
-    assert not sales["product"].astype(str).str.contains(r"<bound method Series\\.prod", regex=True).any()
+    assert not sales["product"].astype(str).str.contains(r"<bound method Series\.prod", regex=True).any()
 
 
 def test_balance_sheet_and_intercompany_reconcile():
