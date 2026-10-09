@@ -45,9 +45,8 @@ test('close-area navigation stays on one line at laptop width without losing rep
   expect(score.clipped).toBe(false);
   expect(score.cards).toHaveLength(3);
   expect(score.cards.every(card=>!card.clipped&&(card.pair==='signed'||(card.pair==='bars'&&card.barWidth>100)))).toBe(true);
-  expect(new Set(score.cards.map(card=>card.top)).size).toBe(1);
-  expect(score.cards[0].left).toBeLessThan(score.cards[1].left);
-  expect(score.cards[1].left).toBeLessThan(score.cards[2].left);
+  expect(score.cards[0].top).toBeLessThan(score.cards[1].top);
+  expect(score.cards[1].top).toBeLessThan(score.cards[2].top);
   await page.getByRole('button',{name:'Action Execution',exact:true}).click();
   await expect(page.locator('#viewTitle')).toHaveText('Action Execution');
   await page.setViewportSize({width:1280,height:720});
