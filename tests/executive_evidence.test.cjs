@@ -34,7 +34,7 @@ test('Executive narrative explains scoped commercial drivers without leaking sou
   assert.match(group,/WHY IT MOVED · All entities · All divisions/);
   assert.match(group,/Price [^<]+ · Volume [^<]+ · Mix [^<]+/);
   assert.ok(group.includes('Evidence · published price, volume and mix analysis · prior year'));
-  assert.doesNotMatch(group,/\\.csv|source_key|source_dataset/);
+  assert.doesNotMatch(group,/\.csv|source_key|source_dataset/);
   assert.match(group,/OUTLOOK &amp; RESPONSE · GROUP OUTLOOK/);
   const outlook=data.performance_review.find(row=>row.review_month===data.meta.end_month&&row.scope_level==='Group'&&row.category==='FY Outlook'&&row.metric==='FY EBIT outlook');
   assert.ok(outlook);
