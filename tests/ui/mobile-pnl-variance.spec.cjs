@@ -34,8 +34,19 @@ test('mobile P&L exposes both actuals and signed variances without sideways scro
   await expect(evidence.locator('#reportDialogBody')).toContainText('Calculation:');
   await expect(evidence.locator('#reportDialogBody')).toContainText('Marginal contribution');
   await expect(evidence.locator('#reportDialogBody')).toContainText('management_detail');
+  await expect(evidence.locator('.pnl-source-detail th').nth(2)).toContainText('PY (€m)');
+  await expect(evidence.locator('.pnl-source-detail td').first()).toHaveCSS('font-size','10px');
+  expect(await evidence.locator('.pnl-source-detail table').evaluate(node=>node.scrollWidth>node.clientWidth+1)).toBe(false);
+  expect(await evidence.evaluate(node=>node.scrollWidth>node.clientWidth+1)).toBe(false);
   await page.locator('#reportDialogClose').click();
   await expect(evidence).not.toBeVisible();
+  for(const width of [320,600,700]){
+    await page.setViewportSize({width,height:844});
+    await statement.locator('[data-pnl-key="gross_profit"]').click();
+    await expect(evidence).toBeVisible();
+    expect(await evidence.locator('.pnl-source-detail table').evaluate(node=>node.scrollWidth>node.clientWidth+1)).toBe(false);
+    await page.locator('#reportDialogClose').click();
+  }
 
   await page.setViewportSize({width:768,height:720});
   await expect(controls).toBeVisible();
