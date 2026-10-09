@@ -52,7 +52,9 @@ their posted journal IDs; the register reconciles gross PPE, CIP, accumulated
 depreciation and entity/month depreciation back to the ledger. Project-level
 depreciation is reconstructed from approved budget and useful life because
 depreciation is posted in an aggregate entity journal. Opening PPE remains an
-entity pool; the register does not invent individual legacy asset IDs.
+entity pool; its depreciation is the source-ledger residual after modeled
+project depreciation, not an assumed useful-life calculation. The register
+does not invent individual legacy asset IDs.
 
 Remaining work: connect provisions and consolidation adjustments directly to
 invoice-level net AR, and model matched customer/vendor settlement only if

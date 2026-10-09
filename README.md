@@ -65,7 +65,7 @@ Intercompany contracts now retain both reciprocal journal references with one se
 
 Executive explicitly distinguishes filtered operating measures from consolidated group measures. Mobile charts retain all observations with at most five visible date labels. CI runs frontend regression tests and two consecutive offline closes through the complete v0.25 wrapper in an isolated 24-month actual / 24-month forecast fixture.
 
-Version 0.25 adds a project-level fixed-asset register that traces posted cash spend through CIP and non-cash commissioning to PPE and modeled depreciation, with release controls against the GL. It preserves the evidence boundary: depreciation journals are entity-aggregated and opening PPE is not falsely split into individual assets.
+Version 0.25 adds a project-level fixed-asset register that traces posted cash spend through CIP and non-cash commissioning to PPE and modeled depreciation, with release controls against the GL. It preserves the evidence boundary: depreciation journals are entity-aggregated, opening-pool depreciation remains a ledger residual, and opening PPE is not falsely split into individual assets.
 
 See `docs/v0.25-status.md`, `docs/v0.24-status.md`, `docs/v0.23-status.md`, `docs/v0.22-status.md`, `docs/v0.21-status.md` and `docs/fx-integrity-and-close-continuity.md`.
 

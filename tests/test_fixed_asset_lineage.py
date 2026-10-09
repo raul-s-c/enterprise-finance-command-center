@@ -84,3 +84,25 @@ def test_missing_aggregated_depreciation_posting_fails_reconciliation():
     _, _, checks = build_fixed_asset_lineage(journal, events, config, "2026-03")
     assert not checks["passed"]
     assert checks["fixed_asset_depreciation_max_gap"] == pytest.approx(10.0)
+
+
+def test_opening_pool_depreciation_uses_gl_residual_not_an_assumed_useful_life():
+    journal, events, config = fixture()
+    journal = pd.concat([journal, pd.DataFrame([
+        {"month": "2026-01", "entity": "CZ01", "division": "Corporate", "journal_id": "OPEN-CZ01",
+         "journal_type": "opening", "account": "1500_PPE", "debit": 1440.0, "credit": 0.0},
+        {"month": "2026-01", "entity": "CZ01", "division": "Corporate", "journal_id": "OPEN-CZ01",
+         "journal_type": "opening", "account": "1590_ACCUM_DEP", "debit": 0.0, "credit": 100.0},
+        {"month": "2026-03", "entity": "CZ01", "division": "Corporate", "journal_id": "DEP-2026-03-CZ01",
+         "journal_type": "depreciation", "account": "6100_DEPRECIATION", "debit": 5.0, "credit": 0.0},
+        {"month": "2026-03", "entity": "CZ01", "division": "Corporate", "journal_id": "DEP-2026-03-CZ01",
+         "journal_type": "depreciation", "account": "1590_ACCUM_DEP", "debit": 0.0, "credit": 5.0},
+    ])], ignore_index=True)
+
+    register, _, checks = build_fixed_asset_lineage(journal, events, config, "2026-03")
+
+    assert checks["passed"]
+    assert checks["fixed_asset_accumulated_depreciation_max_gap"] == pytest.approx(0.0)
+    # Project depreciation remains budget / useful life; the opening pool's
+    # additional EUR 5 is source-tied but is not falsely assigned an asset life.
+    assert register.iloc[0].depreciation_ltd_modeled == pytest.approx(10.0)

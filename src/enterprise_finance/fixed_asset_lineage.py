@@ -139,18 +139,10 @@ def build_fixed_asset_lineage(
         expected_ppe = float(opening_ppe.get(entity, 0.0)) + float(project_rows.gross_ppe.sum() if not project_rows.empty else 0.0)
         expected_cip = float(project_rows.cip_closing.sum() if not project_rows.empty else 0.0)
         project_dep = float(project_rows.depreciation_ltd_modeled.sum() if not project_rows.empty else 0.0)
-        prehistory_project_dep = 0.0
-        for project in project_config.values():
-            go_live = pd.Period(str(project["start"]), freq="M") + int(project["build_months"]) - 1
-            if str(project["entity"]) == entity and pd.Period(str(project["start"]), freq="M") < first_period:
-                in_service_months = sum(period > go_live for period in months)
-                prehistory_project_dep += float(project["budget"]) / int(project["useful_life_months"]) * in_service_months
-        expected_accum = (
-            float(opening_accum_dep.get(entity, 0.0))
-            + (float(opening_ppe.get(entity, 0.0)) / 144.0) * len(months)
-            + project_dep
-            + prehistory_project_dep
-        )
+        entity_depreciation = journal.loc[
+            journal.entity.astype(str).eq(entity) & journal.account.eq("6100_DEPRECIATION")
+        ].assign(actual=lambda frame: frame.debit - frame.credit).groupby("month").actual.sum()
+        expected_accum = float(opening_accum_dep.get(entity, 0.0)) + float(entity_depreciation.sum())
         gross_gap = max(gross_gap, abs(expected_ppe - float(actual_ppe.get(entity, 0.0))))
         cip_gap = max(cip_gap, abs(expected_cip - float(actual_cip.get(entity, 0.0))))
         accum_dep_residual = max(accum_dep_residual, abs(expected_accum - float(actual_accum_dep.get(entity, 0.0))))
@@ -158,18 +150,30 @@ def build_fixed_asset_lineage(
     depreciation_actual = journal.loc[journal.account.eq("6100_DEPRECIATION")].assign(
         actual=lambda frame: frame.debit - frame.credit
     ).groupby(["month", "entity"]).actual.sum().to_dict()
+    accumulated_depreciation_movement = journal.loc[
+        journal.account.eq("1590_ACCUM_DEP") & journal.journal_type.ne("opening")
+    ].assign(actual=lambda frame: frame.credit - frame.debit).groupby(["month", "entity"]).actual.sum().to_dict()
     depreciation_gaps: list[float] = []
     entities = sorted(journal.entity.astype(str).unique())
     for period in months:
         for entity in entities:
-            expected = float(opening_ppe.get(entity, 0.0)) / 144.0
+            modeled_project_depreciation = 0.0
             for project in project_config.values():
                 if str(project["entity"]) == entity:
                     go_live = pd.Period(str(project["start"]), freq="M") + int(project["build_months"]) - 1
                     if period > go_live:
-                        expected += float(project["budget"]) / int(project["useful_life_months"])
+                        modeled_project_depreciation += float(project["budget"]) / int(project["useful_life_months"])
             actual = float(depreciation_actual.get((str(period), entity), 0.0))
-            depreciation_gaps.append(abs(actual - expected))
+            accumulated_movement = float(accumulated_depreciation_movement.get((str(period), entity), 0.0))
+            # Opening PPE has no asset-level register or known useful life.
+            # Treat its depreciation as the entity-level GL residual rather
+            # than imposing an assumed rate; never let it be negative.
+            opening_pool_residual = actual - modeled_project_depreciation
+            depreciation_gaps.extend([
+                abs(actual - accumulated_movement),
+                max(modeled_project_depreciation - actual, 0.0),
+                max(-opening_pool_residual, 0.0),
+            ])
     depreciation_gap = max(depreciation_gaps, default=0.0)
 
     checks = {
