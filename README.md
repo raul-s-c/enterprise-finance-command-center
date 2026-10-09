@@ -55,7 +55,7 @@ CFO analytics
 
 P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.26.0
+## Current release: v0.27.0
 
 Version 0.22 extends the rolling forecast to 24 months across Base, Upside and Downside scenarios, workforce, liquidity and the integrated three statements. Existing 12-month summaries remain separately labelled; the release also exposes 24-month flow and ending-balance measures. Close controls cover the complete forecast horizon. Patch 0.22.1 fixes mobile P&L evidence-table fit and rotates static asset cache keys; it does not alter financial balances or controls. Version 0.23 adds a reconciled invoice-grain AR evidence schedule and explicit modeled allocations of posted collection credits; it does not change journal entries, cash or the customer-level AR schedule, and it is not bank matching. Version 0.24 adds source-accrual-grain AP evidence, reconciling to supplier aging without claiming supplier invoice or remittance matching. Version 0.25 connects posted CAPEX project events through CIP, non-cash go-live, PPE and modeled depreciation without fabricating asset-level journal IDs.
 

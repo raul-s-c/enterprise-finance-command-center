@@ -150,7 +150,7 @@ def build_accounting(config: dict, months: pd.PeriodIndex, macro: pd.DataFrame, 
         for idx, r in month_ops.reset_index(drop=True).iterrows():
             entity, division = str(r.entity), str(r.division)
             rev = float(r.revenue)
-            product, customer = str(r.product), str(r.customer)
+            product, customer = str(r["product"]), str(r["customer"])
             jid = f"SALE-{month}-{idx:05d}-{entity}"
             _add(rows, month=month, entity=entity, division=division, journal_id=jid, journal_type="sale", account="1100_AR", debit=rev, description="External customer invoice", product=product, customer=customer)
             _add(rows, month=month, entity=entity, division=division, journal_id=jid, journal_type="sale", account="4000_EXTERNAL_REVENUE", credit=rev, description="External customer invoice", product=product, customer=customer)

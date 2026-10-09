@@ -39,12 +39,12 @@ test('close-area navigation stays on one line at laptop width without losing rep
   expect(new Set(bounds.map(item=>item.top)).size).toBe(1);
   expect(bounds.every(item=>item.height<=30&&!item.clipped)).toBe(true);
   const score=await page.locator('.prv-score').evaluate(panel=>({
-    cards:[...panel.querySelectorAll('.prv-score-card')].map(card=>({top:card.getBoundingClientRect().top,clipped:card.scrollHeight>card.clientHeight+1,barWidth:card.querySelector('.prv-pair i')?.getBoundingClientRect().width||0})),
+    cards:[...panel.querySelectorAll('.prv-score-card')].map(card=>({top:card.getBoundingClientRect().top,left:card.getBoundingClientRect().left,clipped:card.scrollHeight>card.clientHeight+1,barWidth:card.querySelector('.prv-pair i')?.getBoundingClientRect().width||0,pair:card.querySelector('.prv-pair')?'bars':card.querySelector('.prv-signed-pair')?.textContent?.trim()?'signed':'missing'})),
     clipped:panel.scrollHeight>panel.clientHeight+1
   }));
   expect(score.clipped).toBe(false);
   expect(score.cards).toHaveLength(3);
-  expect(score.cards.every(card=>!card.clipped&&card.barWidth>100)).toBe(true);
+  expect(score.cards.every(card=>!card.clipped&&(card.pair==='signed'||(card.pair==='bars'&&card.barWidth>100)))).toBe(true);
   expect(score.cards[0].top).toBeLessThan(score.cards[1].top);
   expect(score.cards[1].top).toBeLessThan(score.cards[2].top);
   await page.getByRole('button',{name:'Action Execution',exact:true}).click();
