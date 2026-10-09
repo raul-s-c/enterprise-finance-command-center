@@ -31,9 +31,10 @@ test('CAPEX project register traces cash, CIP, PPE and modeled depreciation on m
   await page.evaluate(()=>{data.meta.version='0.25.0';data.meta.fixed_asset_project_count=1;state.view='operations-capex';reportState.page=0;render();});
   const workspace=page.locator('.statement-workspace');
   await expect(workspace).toBeVisible();
-  console.log('CAPEX_REPORT_DIAGNOSTIC',JSON.stringify(await page.evaluate(()=>{const button=document.querySelector('[data-sw-fixed-assets]');return {version:data.meta.version,projectCount:data.meta.fixed_asset_project_count,view:state.view,page:reportState.page,title:reportState.pages[reportState.page]?.title,pageHasButton:reportState.pages[reportState.page]?.html.includes('Project asset register'),contentHasButton:document.querySelector('#content')?.innerHTML.includes('Project asset register'),button:button?.outerHTML,ancestors:button?[button,button.parentElement,button.parentElement?.parentElement,button.closest('.statement-workspace')].map(node=>node?{tag:node.tagName,className:node.className,hidden:node.hidden,ariaHidden:node.getAttribute('aria-hidden'),display:getComputedStyle(node).display,visibility:getComputedStyle(node).visibility}:null):[]};})));
-  await expect(workspace.getByRole('button',{name:'Project asset register'})).toBeVisible();
-  await workspace.getByRole('button',{name:'Project asset register'}).click();
+  const assetRegister=workspace.locator('[data-sw-fixed-assets]');
+  await expect(assetRegister).toBeVisible();
+  await expect(assetRegister).toHaveAttribute('aria-label','Project asset register');
+  await assetRegister.click();
   const dialog=page.locator('#reportDialog');
   await expect(dialog.locator('#reportDialogTitle')).toHaveText('CAPEX · project-to-asset lifecycle');
   await expect(dialog).toContainText('Opening PPE remains an entity-level pool');
