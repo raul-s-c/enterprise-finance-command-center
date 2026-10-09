@@ -1,6 +1,6 @@
 # Interactive reporting workspace
 
-The dashboard is a code-native HTML/CSS/SVG reporting application over the version 0.24.0 finance dataset. It does not require Power BI hosting or a paid visualization dependency. AR invoice evidence and AP source-accrual evidence are generated from the published journal without changing financial postings or balances. Cash collections and AP reductions are explicitly modeled allocations, not bank or supplier remittance matches; supplier accrual IDs are not supplier invoice numbers.
+The dashboard is a code-native HTML/CSS/SVG reporting application over the version 0.25.0 finance dataset. It does not require Power BI hosting or a paid visualization dependency. AR invoice evidence, AP source-accrual evidence and the CAPEX project-to-asset register are generated from the published model without changing financial postings or balances. Cash collections and AP reductions are explicitly modeled allocations, not bank or supplier remittance matches; supplier accrual IDs are not supplier invoice numbers. Project depreciation is reconstructed from approved lives because the source journal posts depreciation at entity grain; depreciation on opening PPE remains an entity-level GL residual rather than an assumed useful-life schedule.
 
 ## Guided close journey
 

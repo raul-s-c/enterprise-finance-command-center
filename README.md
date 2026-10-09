@@ -55,17 +55,19 @@ CFO analytics
 
 P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.24.0
+## Current release: v0.25.0
 
-Version 0.22 extends the rolling forecast to 24 months across Base, Upside and Downside scenarios, workforce, liquidity and the integrated three statements. Existing 12-month summaries remain separately labelled; the release also exposes 24-month flow and ending-balance measures. Close controls cover the complete forecast horizon. Patch 0.22.1 fixes mobile P&L evidence-table fit and rotates static asset cache keys; it does not alter financial balances or controls. Version 0.23 adds a reconciled invoice-grain AR evidence schedule and explicit modeled allocations of posted collection credits; it does not change journal entries, cash or the customer-level AR schedule, and it is not bank matching. Version 0.24 adds source-accrual-grain AP evidence, reconciling to supplier aging without claiming supplier invoice or remittance matching.
+Version 0.22 extends the rolling forecast to 24 months across Base, Upside and Downside scenarios, workforce, liquidity and the integrated three statements. Existing 12-month summaries remain separately labelled; the release also exposes 24-month flow and ending-balance measures. Close controls cover the complete forecast horizon. Patch 0.22.1 fixes mobile P&L evidence-table fit and rotates static asset cache keys; it does not alter financial balances or controls. Version 0.23 adds a reconciled invoice-grain AR evidence schedule and explicit modeled allocations of posted collection credits; it does not change journal entries, cash or the customer-level AR schedule, and it is not bank matching. Version 0.24 adds source-accrual-grain AP evidence, reconciling to supplier aging without claiming supplier invoice or remittance matching. Version 0.25 connects posted CAPEX project events through CIP, non-cash go-live, PPE and modeled depreciation without fabricating asset-level journal IDs.
 
 Version 0.21 added **FX Integrity & Close Continuity**. Transaction FX summaries reconcile every measure and key to document snapshots; lifecycle snapshots reconcile to source documents and official/fallback rates; documents reconcile to the authoritative journal. Missing, duplicate, orphaned and non-finite data block release.
 
 Intercompany contracts now retain both reciprocal journal references with one seller-functional contract currency and one deterministic settlement month. The seller's domestic-currency leg stays in the contract register, not the foreign-currency exposure population. The v0.20 analytical population is rebuilt under this corrected policy; transaction FX totals are therefore not directly comparable across the policy change. Historical GL statements are unchanged.
 
-Executive explicitly distinguishes filtered operating measures from consolidated group measures. Mobile charts retain all observations with at most five visible date labels. CI runs frontend regression tests and two consecutive offline closes through the complete v0.24 wrapper in an isolated 24-month actual / 24-month forecast fixture.
+Executive explicitly distinguishes filtered operating measures from consolidated group measures. Mobile charts retain all observations with at most five visible date labels. CI runs frontend regression tests and two consecutive offline closes through the complete v0.25 wrapper in an isolated 24-month actual / 24-month forecast fixture.
 
-See `docs/v0.24-status.md`, `docs/v0.23-status.md`, `docs/v0.22-status.md`, `docs/v0.21-status.md` and `docs/fx-integrity-and-close-continuity.md`.
+Version 0.25 adds a project-level fixed-asset register that traces posted cash spend through CIP and non-cash commissioning to PPE and modeled depreciation, with release controls against the GL. It preserves the evidence boundary: depreciation journals are entity-aggregated, opening-pool depreciation remains a ledger residual, and opening PPE is not falsely split into individual assets.
+
+See `docs/v0.25-status.md`, `docs/v0.24-status.md`, `docs/v0.23-status.md`, `docs/v0.22-status.md`, `docs/v0.21-status.md` and `docs/fx-integrity-and-close-continuity.md`.
 
 ### Transaction FX foundation
 
