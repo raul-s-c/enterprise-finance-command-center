@@ -173,5 +173,8 @@
   "fixed_asset_accumulated_depreciation_max_gap": 0.0,
   "fixed_asset_depreciation_max_gap": 0.0,
   "fixed_asset_project_rows": 4,
-  "fixed_asset_event_rows": 38
+  "fixed_asset_event_rows": 38,
+  "ar_invoice_ecl_max_gap": 0.0,
+  "ar_invoice_ecl_unmatched_customers": 0,
+  "ar_invoice_ecl_rows": 2735
 }

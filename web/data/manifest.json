@@ -197,9 +197,12 @@
     "fixed_asset_accumulated_depreciation_max_gap": 0.0,
     "fixed_asset_depreciation_max_gap": 0.0,
     "fixed_asset_project_rows": 4,
-    "fixed_asset_event_rows": 38
+    "fixed_asset_event_rows": 38,
+    "ar_invoice_ecl_max_gap": 0.0,
+    "ar_invoice_ecl_unmatched_customers": 0,
+    "ar_invoice_ecl_rows": 2735
   },
-  "version": "0.25.0",
+  "version": "0.26.0",
   "latest_factory_absorption_variance": -914870.43,
   "latest_factory_under_absorption": 0.0,
   "latest_factory_over_absorption": 914870.43,
@@ -354,11 +357,12 @@
   "working_capital_rollforward_rows": 1152,
   "ar_invoice_rows": 2735,
   "ar_invoice_application_rows": 73820,
-  "ar_invoice_detail_bytes": 9039800,
+  "ar_invoice_detail_bytes": 9947067,
   "ap_item_rows": 7037,
   "ap_item_application_rows": 148454,
   "ap_item_detail_bytes": 4703375,
   "fixed_asset_project_rows": 4,
   "fixed_asset_event_rows": 38,
-  "fixed_asset_detail_bytes": 16516
+  "fixed_asset_detail_bytes": 16516,
+  "ar_invoice_ecl_rows": 2735
 }
