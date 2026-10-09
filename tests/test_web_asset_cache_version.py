@@ -37,3 +37,8 @@ def test_dashboard_data_fetch_uses_current_release_cache_key():
 def test_lazy_invoice_evidence_uses_the_published_dataset_version():
     explorer = (WEB / "contribution-explorer.js").read_text(encoding="utf-8")
     assert "data/ar_invoice_detail.json?v=${encodeURIComponent(data.meta.version)}" in explorer
+
+
+def test_lazy_payable_item_evidence_uses_the_published_dataset_version():
+    explorer = (WEB / "contribution-explorer.js").read_text(encoding="utf-8")
+    assert "data/ap_item_detail.json?v=${encodeURIComponent(data.meta.version)}" in explorer

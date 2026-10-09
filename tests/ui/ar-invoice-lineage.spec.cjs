@@ -13,7 +13,7 @@ test('AR contribution opens reconciled invoice evidence and modeled source appli
     {...scope,product:'HW-EDGE-02',invoice_id:'AR-TEST-002',invoice_month:'2026-08',invoice_amount:12000,cash_applied_ltd:0,advance_applied_ltd:2000,open_amount:10000,payment_terms_days:30,invoice_age_days:60,overdue_days:30,aging_bucket:'overdue_1_30',risk_score:2.1,evidence_basis:'Synthetic invoice source ID; modeled allocation of posted AR credits, not bank matched'},
   ];
   const dashboard=structuredClone(published);
-  dashboard.meta.version='0.23.0';
+  dashboard.meta.version='0.24.0';
   dashboard.meta.ar_invoice_count=invoices.length;
   await page.route('**/data/dashboard.json*',route=>route.fulfill({json:dashboard}));
   await page.route('**/data/ar_invoice_detail.json*',route=>route.fulfill({json:{month:published.meta.end_month,currency:'EUR',allocation_basis:'Modeled risk-aware oldest-receivable allocation of posted aggregate AR credits.',invoice_count:2,application_count:2,invoices,applications:[

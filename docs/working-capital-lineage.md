@@ -18,6 +18,9 @@ Cash collections in the ledger are not bank-matched invoice settlements. The
 published invoice-grain schedule applies aggregate cash credits using the
 documented risk-aware oldest-receivable rule; each allocation is labelled as
 modeled and is not evidence of a remittance advice or bank match.
+The supplier aging derives synthetic suppliers from AP accrual rows. Its source
+item detail keeps those journal IDs but does not reinterpret them as supplier
+invoice numbers or assert that aggregate payments match individual invoices.
 Inventory attribution remains analytical, not a physical warehouse lot register.
 
 Use **Trace ledger** in a working-capital contribution screen to inspect the
@@ -32,7 +35,14 @@ by customer and aging bucket to the customer AR schedule, and reconciles each
 modeled application to its source AR credit journal. These are analytical
 subledger allocations; no GL, cash flow or customer-level schedule is changed.
 
+Version 0.24 publishes `data/processed/ap_item_aging.csv`,
+`data/processed/ap_item_applications.csv` and the lazy-loaded
+`web/data/ap_item_detail.json`. Source-accrual balances reconcile to supplier
+AP by entity, division, supplier and aging bucket. Posted reductions use the
+existing oldest-accrual, division-preference and supplier-priority policy.
+These are controlled analytical allocations, not actual invoice or remittance
+matches.
+
 Remaining work: connect provisions and consolidation adjustments directly to
-the invoice-level net balance, and model bank-matched remittance advice only if
-source evidence exists. Current invoice allocations are a controlled analytical
-view and do not claim actual customer payment applications.
+invoice-level net AR, and model matched customer/vendor settlement only if
+remittance, invoice and bank-reference evidence becomes available.
