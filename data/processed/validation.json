@@ -165,8 +165,8 @@
   "ap_item_aging_max_gap": 0.0,
   "ap_item_application_max_gap": 0.0,
   "ap_item_unallocated_reduction": 0.0,
-  "ap_item_rows": 7037,
-  "ap_item_application_rows": 148454,
+  "ap_item_rows": 7034,
+  "ap_item_application_rows": 148457,
   "fixed_asset_event_journal_max_gap": 0.0,
   "fixed_asset_gross_ppe_max_gap": 0.02,
   "fixed_asset_cip_max_gap": 0.02,
@@ -176,5 +176,8 @@
   "fixed_asset_event_rows": 38,
   "ar_invoice_ecl_max_gap": 0.0,
   "ar_invoice_ecl_unmatched_customers": 0,
-  "ar_invoice_ecl_rows": 2735
+  "ar_invoice_ecl_rows": 2735,
+  "sale_journal_invalid_product_rows": 0,
+  "invoice_invalid_product_rows": 0,
+  "invoice_product_lineage_passed": true
 }
