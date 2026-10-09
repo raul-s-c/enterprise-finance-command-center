@@ -6,7 +6,7 @@ The design rule is simple: analytical aging must never become a second, disconne
 
 ## Accounts covered
 
-The current release creates detailed schedules for:
+Version 0.4 created detailed schedules for:
 
 - `1100_AR` Trade Receivables
 - `1200_INVENTORY` Inventory
@@ -107,7 +107,7 @@ Slow moving
 Obsolescence risk
 ```
 
-The current release treats obsolescence as a management risk indicator. It does not yet post an accounting provision. A later release can introduce a formal inventory-provision policy with P&L and balance-sheet consequences.
+In version 0.4, obsolescence was a management risk indicator and did not post an accounting provision. Version 0.7 subsequently introduced inventory provisions with P&L and balance-sheet consequences; see [Provisions and Asset Quality](provisions-and-asset-quality.md).
 
 ## Reconciliation controls
 
@@ -151,4 +151,4 @@ The Working Capital view can now answer questions such as:
 - How much stock is exposed to obsolescence risk?
 - Does the analytical schedule reconcile to the legal GL?
 
-The next logical extensions are AP aging, inventory provisions, collection-risk events and divisional operational schedules such as software ARR/churn and events backlog.
+Subsequent releases added [supplier AP aging](supplier-payables-and-concentration.md), [inventory provisions](provisions-and-asset-quality.md), and divisional operating schedules such as software ARR/churn and Events backlog (see [Divisional Operating Schedules](divisional-operating-schedules.md)). A distinct operational register of collection promises and disputes is not currently modeled: AR aging and expected credit loss quantify exposure, but do not represent a collections-event workflow.

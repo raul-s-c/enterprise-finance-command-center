@@ -126,15 +126,15 @@ data/processed/constant_currency_analysis.csv
 
 The dashboard adds an `FX & Translation` view with closing FX, historical equity translation, CTA, reported versus constant-currency Revenue and EBIT and translation-reserve trend.
 
-## Deliberate limitation
+## Version 0.15 scope and later extension
 
-Version 0.15 models a **functional-currency mirror and group translation layer** over the existing EUR economic ledger. It does not yet model transaction-level FX remeasurement where an invoice is denominated in a currency different from the legal entity's functional currency.
+Version 0.15 modeled a **functional-currency mirror and group translation layer** over the existing EUR economic ledger. Transaction-level foreign-currency remeasurement was subsequently added in version 0.20; its document population, valuation, controls and analytical limitations are described in [Transaction FX Subledger](transaction-fx-subledger.md). Transaction FX remains separate from CTA and is not represented as bank-matched settlement or as a posting to historical financial statements.
 
-Examples intentionally deferred:
+Examples deferred at the v0.15 release included:
 
 - a USD customer invoice in a JPY functional-currency entity
 - a CNY intercompany payable held by a EUR entity
 - realized FX on settlement
 - unrealized transaction FX gains/losses at month end
 
-Those effects are separate from group translation and should be added as a dedicated foreign-currency transaction subledger rather than mixed into CTA.
+Those effects are separate from group translation and must not be mixed into CTA. The later transaction FX subledger models these exposures and remeasurement separately, as documented in [Transaction FX Subledger](transaction-fx-subledger.md).

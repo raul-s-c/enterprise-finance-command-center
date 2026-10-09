@@ -1,6 +1,6 @@
 # Interactive reporting workspace
 
-The dashboard is a code-native HTML/CSS/SVG reporting application over the existing version 0.21.0 finance dataset. No financial engine, balances, tolerances or generated outputs are changed by this redesign. It does not require Power BI hosting or a paid visualization dependency.
+The dashboard is a code-native HTML/CSS/SVG reporting application over the version 0.22.1 finance dataset. No financial engine, balances, tolerances or generated outputs are changed by this redesign. It does not require Power BI hosting or a paid visualization dependency.
 
 ## Guided close journey
 
@@ -18,6 +18,8 @@ The dashboard is a code-native HTML/CSS/SVG reporting application over the exist
 ## Contextual interaction
 
 See [Contribution explorer](contribution-explorer.md) for signed attribution charts, source-record drill-down, CAPEX movement direction, and explicit coverage limits for partial WC schedules.
+
+On the P&L, selecting a statement line opens its calculation, source and contribution detail beside the statement on wide canvases (1,440 px and above). On narrower canvases the same selection opens a dialog, preserving the full statement while keeping the evidence available. Both paths link to full source evidence and CSV export; summary-level contribution is not described as transaction-level ledger detail.
 
 `web/report-context.js` defines the dimensions and published source for each report subpage. Entity and division choices depend on the current page and on one another. Unsupported controls are hidden; consolidated and fixed-scope reports explicitly explain their scope while retaining the operating selection for the next applicable page. An unavailable selection is broadened to All with a visible notice, never silently changed to another entity.
 

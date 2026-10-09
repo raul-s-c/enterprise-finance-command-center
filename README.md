@@ -55,13 +55,11 @@ CFO analytics
 
 P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.22
+## Current release: v0.22.1
 
-Version 0.22 extends the rolling forecast to 24 months across Base, Upside and Downside scenarios, workforce, liquidity and the integrated three statements. Existing 12-month summaries remain separately labelled; the release also exposes 24-month flow and ending-balance measures. Close controls cover the complete forecast horizon.
+Version 0.22 extends the rolling forecast to 24 months across Base, Upside and Downside scenarios, workforce, liquidity and the integrated three statements. Existing 12-month summaries remain separately labelled; the release also exposes 24-month flow and ending-balance measures. Close controls cover the complete forecast horizon. Patch 0.22.1 fixes mobile P&L evidence-table fit and rotates static asset cache keys; it does not alter financial balances or controls.
 
 Version 0.21 added **FX Integrity & Close Continuity**. Transaction FX summaries reconcile every measure and key to document snapshots; lifecycle snapshots reconcile to source documents and official/fallback rates; documents reconcile to the authoritative journal. Missing, duplicate, orphaned and non-finite data block release.
-
-Version 0.21 adds **FX Integrity & Close Continuity**. Transaction FX summaries now reconcile every measure and key to document snapshots; lifecycle snapshots reconcile to source documents and official/fallback rates; documents reconcile to the authoritative journal. Missing, duplicate, orphaned and non-finite data block release.
 
 Intercompany contracts now retain both reciprocal journal references with one seller-functional contract currency and one deterministic settlement month. The seller's domestic-currency leg stays in the contract register, not the foreign-currency exposure population. The v0.20 analytical population is rebuilt under this corrected policy; transaction FX totals are therefore not directly comparable across the policy change. Historical GL statements are unchanged.
 

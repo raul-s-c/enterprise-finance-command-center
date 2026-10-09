@@ -106,9 +106,9 @@ The product mix schedule adds:
 
 Factory utilization is recalculated independently from produced units and capacity and compared to the accounting-engine factory output.
 
-### Accounting integration roadmap
+### Accounting integration — delivered
 
-Version 0.5 treats fixed-cost absorption as a management schedule. A future release should post explicit absorbed and under-absorbed production cost so the factory-capacity schedule also becomes a direct P&L bridge instead of only an operational explanation.
+The version 0.5 roadmap proposed accounting entries for fixed-cost absorption. This was delivered in version 0.6: absorbed fixed cost and over-/under-absorption are posted through the factory absorption variance account and reconciled to the operating schedule. See [Factory Absorption Accounting](factory-absorption-accounting.md).
 
 ## Spare Parts
 
