@@ -35,3 +35,25 @@ test('inline P&L inspector preserves negative signs and names its management-sum
  assert.match(html,/not individual ledger postings/);
  assert.doesNotMatch(html,/NaN|undefined|Source-to-scope difference/);
 });
+
+test('source detail hides only zero-to-zero activity and preserves it in the full CSV export',()=>{
+ const data={meta:{end_month:'2026-08'},management_detail:[
+  {...record,month:'2026-08',entity:'US01'},
+  {...record,month:'2025-08',entity:'US01',revenue:100000},
+  {...record,month:'2026-08',entity:'CN01',revenue:0,marginal_contribution:0,gross_profit:0,opex:0,depreciation:0,ebit:0,net_income:0},
+  {...record,month:'2025-08',entity:'CN01',revenue:0,marginal_contribution:0,gross_profit:0,opex:0,depreciation:0,ebit:0,net_income:0},
+ ]};
+ const detail=P.detail(data,{entity:'all',division:'all'},'revenue');
+ assert.match(detail,/US01 \/ Hardware/);
+ assert.doesNotMatch(detail,/CN01 \/ Hardware/);
+ assert.match(detail,/1 zero-activity combination omitted from this view and retained in CSV export/);
+ const csv=P.csv(data,{entity:'all',division:'all'},'revenue',M);
+ assert.match(csv,/"CN01","Hardware",0,0,0,/);
+});
+test('source detail explains when a selection has only zero activity',()=>{
+ const zero={...record,entity:'CN01',revenue:0,marginal_contribution:0,gross_profit:0,opex:0,depreciation:0,ebit:0,net_income:0};
+ const data={meta:{end_month:'2026-08'},management_detail:[zero,{...zero,month:'2025-08'}]};
+ const detail=P.detail(data,{entity:'all',division:'all'},'revenue');
+ assert.match(detail,/No current or prior-year activity for this line in the selected scope/);
+ assert.match(detail,/1 zero-activity combination omitted/);
+});
