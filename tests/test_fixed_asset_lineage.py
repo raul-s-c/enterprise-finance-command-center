@@ -106,3 +106,17 @@ def test_opening_pool_depreciation_uses_gl_residual_not_an_assumed_useful_life()
     # Project depreciation remains budget / useful life; the opening pool's
     # additional EUR 5 is source-tied but is not falsely assigned an asset life.
     assert register.iloc[0].depreciation_ltd_modeled == pytest.approx(10.0)
+
+
+def test_pnl_closing_entries_do_not_reverse_monthly_depreciation_control():
+    journal, events, config = fixture()
+    journal.loc[len(journal)] = {
+        "month": "2026-03", "entity": "CZ01", "division": "Corporate", "journal_id": "CLOSE-2026-03-CZ01",
+        "journal_type": "closing", "account": "6100_DEPRECIATION", "debit": 0.0, "credit": 10.0,
+    }
+
+    _, _, checks = build_fixed_asset_lineage(journal, events, config, "2026-03")
+
+    assert checks["passed"]
+    assert checks["fixed_asset_accumulated_depreciation_max_gap"] == pytest.approx(0.0)
+    assert checks["fixed_asset_depreciation_max_gap"] == pytest.approx(0.0)

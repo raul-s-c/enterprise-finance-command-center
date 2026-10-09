@@ -139,15 +139,19 @@ def build_fixed_asset_lineage(
         expected_ppe = float(opening_ppe.get(entity, 0.0)) + float(project_rows.gross_ppe.sum() if not project_rows.empty else 0.0)
         expected_cip = float(project_rows.cip_closing.sum() if not project_rows.empty else 0.0)
         project_dep = float(project_rows.depreciation_ltd_modeled.sum() if not project_rows.empty else 0.0)
-        entity_depreciation = journal.loc[
-            journal.entity.astype(str).eq(entity) & journal.account.eq("6100_DEPRECIATION")
-        ].assign(actual=lambda frame: frame.debit - frame.credit).groupby("month").actual.sum()
-        expected_accum = float(opening_accum_dep.get(entity, 0.0)) + float(entity_depreciation.sum())
+        entity_accumulated_movement = journal.loc[
+            journal.entity.astype(str).eq(entity)
+            & journal.account.eq("1590_ACCUM_DEP")
+            & journal.journal_type.ne("opening")
+        ].assign(actual=lambda frame: frame.credit - frame.debit).groupby("month").actual.sum()
+        expected_accum = float(opening_accum_dep.get(entity, 0.0)) + float(entity_accumulated_movement.sum())
         gross_gap = max(gross_gap, abs(expected_ppe - float(actual_ppe.get(entity, 0.0))))
         cip_gap = max(cip_gap, abs(expected_cip - float(actual_cip.get(entity, 0.0))))
         accum_dep_residual = max(accum_dep_residual, abs(expected_accum - float(actual_accum_dep.get(entity, 0.0))))
 
-    depreciation_actual = journal.loc[journal.account.eq("6100_DEPRECIATION")].assign(
+    depreciation_actual = journal.loc[
+        journal.account.eq("6100_DEPRECIATION") & journal.journal_type.ne("closing")
+    ].assign(
         actual=lambda frame: frame.debit - frame.credit
     ).groupby(["month", "entity"]).actual.sum().to_dict()
     accumulated_depreciation_movement = journal.loc[

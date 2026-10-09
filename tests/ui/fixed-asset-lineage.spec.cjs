@@ -2,6 +2,12 @@ const {test,expect}=require('@playwright/test');
 const published=require('../../web/data/dashboard.json');
 
 test('CAPEX project register traces cash, CIP, PPE and modeled depreciation on mobile',async({page})=>{
+  await page.route('**/data/dashboard.json*',route=>{
+    const fixture=JSON.parse(JSON.stringify(published));
+    fixture.meta.version='0.25.0';
+    fixture.meta.fixed_asset_project_count=1;
+    return route.fulfill({json:fixture});
+  });
   await page.route('**/data/fixed_asset_detail.json*',route=>route.fulfill({json:{
     month:published.meta.end_month,currency:'EUR',
     evidence_basis:'Project spend and CIP-to-PPE transfer tie to posted journal IDs. Project depreciation is reconstructed from approved budget and useful life because depreciation posts in one aggregate entity journal; opening PPE remains an entity-level pool.',
@@ -21,15 +27,6 @@ test('CAPEX project register traces cash, CIP, PPE and modeled depreciation on m
   }}));
   await page.setViewportSize({width:390,height:844});
   await page.goto('/#view=operations-capex&page=0');
-  await page.evaluate(()=>{
-    const fixtureData=JSON.parse(JSON.stringify(data));
-    fixtureData.meta.version='0.25.0';
-    fixtureData.meta.fixed_asset_project_count=1;
-    const [operation]=StatementWorkspace.pages('operations-capex',fixtureData,state);
-    if(!operation.html.includes('Project asset register'))throw new Error('CAPEX renderer did not expose the v0.25 asset register');
-    document.querySelector('#content').innerHTML=operation.html;
-    StatementWorkspace.mount();
-  });
   const workspace=page.locator('.statement-workspace');
   await expect(workspace).toBeVisible();
   await expect(workspace.getByRole('button',{name:'Project asset register'})).toBeVisible();
