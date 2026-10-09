@@ -54,7 +54,7 @@
     const action=activeActions[0];
     const scopeLabel=`${entity==='all'?'All entities':entity} · ${division==='all'?'All divisions':division}`;
     const result=`Revenue ${C().percent(rv.relative)} vs PY · EBIT ${C().percent(ev.relative)} vs PY`;
-    const evidence=driverSource?`Review source · ${driverSource.source_dataset} · ${driverSource.source_key}`:'Source · performance_review';
+    const evidence=effects.length===3?'Evidence · published price, volume and mix analysis · prior year':driverFallback?'Evidence · published monthly performance review':'Evidence unavailable for this scope';
     const actionText=action?`${action.priority} action · ${action.trigger_metric} · ${action.owner_role} · due ${action.due_month}`:'No active action is assigned to this exact scope.';
     return `<section class="story-narrative" aria-label="Executive narrative"><div class="story-narrative-result"><span>RESULT · ${esc(data.meta.end_month)} close</span><h2>${esc(result)}</h2><p>Selected scope · ${esc(scopeLabel)}</p></div><div class="story-narrative-step"><span>WHY IT MOVED · ${esc(scopeLabel)}</span><strong>${esc(driverText)}</strong><small>${esc(evidence)}</small><button data-story-view="performance-review">Open monthly review →</button></div><div class="story-narrative-step"><span>OUTLOOK &amp; RESPONSE · GROUP OUTLOOK</span><strong>${esc(groupOutlook?.headline||'Group full-year EBIT outlook is unavailable for this close.')}</strong><small>${esc(actionText)}</small><button data-story-view="action-execution">Open action register →</button></div></section>`;
   }
