@@ -56,6 +56,17 @@ entity pool; its depreciation is the source-ledger residual after modeled
 project depreciation, not an assumed useful-life calculation. The register
 does not invent individual legacy asset IDs.
 
-Remaining work: connect provisions and consolidation adjustments directly to
+Remaining work: connect group consolidation adjustments directly to
 invoice-level net AR, and model matched customer/vendor settlement only if
 remittance, invoice and bank-reference evidence becomes available.
+
+## Invoice-level credit-loss analysis (v0.26)
+
+The v0.26 close applies the existing configured ECL aging rates and customer
+risk multiplier to each open invoice as an analytical allocation. Invoice gross
+AR, ECL and net AR reconcile by customer to the existing allowance schedule.
+The allocation is published in `ar_invoice_aging.csv` and
+`ar_invoice_detail.json`, with a clear evidence-basis label. It does not create
+or imply invoice-specific GL postings; posted allowance and its control remain
+at the existing entity/division grain. No customer/vendor cash matching is
+inferred.
