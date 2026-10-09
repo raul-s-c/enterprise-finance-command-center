@@ -21,9 +21,16 @@ test('CAPEX project register traces cash, CIP, PPE and modeled depreciation on m
   }}));
   await page.setViewportSize({width:390,height:844});
   await page.goto('/#view=operations-capex&page=0');
+  await page.evaluate(()=>{
+    data.meta.version='0.25.0';
+    data.meta.fixed_asset_project_count=1;
+    const [operation]=StatementWorkspace.pages('operations-capex',data,state);
+    document.querySelector('#content').innerHTML=operation.html;
+    StatementWorkspace.mount();
+  });
   const workspace=page.locator('.statement-workspace');
   await expect(workspace).toBeVisible();
-  await page.evaluate(()=>{data.meta.version='0.25.0';data.meta.fixed_asset_project_count=1;render();});
+  await expect(workspace.getByRole('button',{name:'Project asset register'})).toBeVisible();
   await workspace.getByRole('button',{name:'Project asset register'}).click();
   const dialog=page.locator('#reportDialog');
   await expect(dialog.locator('#reportDialogTitle')).toHaveText('CAPEX · project-to-asset lifecycle');
