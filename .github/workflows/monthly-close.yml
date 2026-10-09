@@ -78,6 +78,7 @@ jobs:
           path: |
             data/processed
             web
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 3
 
