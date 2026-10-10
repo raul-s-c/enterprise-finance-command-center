@@ -4,7 +4,7 @@
 
 The Cash Flow contribution page now explains the latest published close from legal-entity cash-flow totals down to cash-account journals and the available supporting source schedules.
 
-The dashboard publishes `cash_movement_lineage` for the current close only. Earlier periods remain at entity/month cash-flow summary grain; the interface says so explicitly when an earlier month is selected.
+The dashboard publishes `cash_movement_lineage` for the current close only. The Division breakdown is offered only when the selected current-close metric and entity scope contain matching lineage rows; otherwise the report stays at entity grain instead of presenting an empty division view. Earlier periods remain at entity/month cash-flow summary grain; the interface says so explicitly when an earlier month is selected.
 
 ## Evidence grain and limits
 
