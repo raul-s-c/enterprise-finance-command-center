@@ -11,7 +11,7 @@ The dashboard publishes `cash_movement_lineage` for the current close only. Earl
 - Customer collections are allocated from aggregate cash journal IDs to source invoice IDs using the existing risk-aware oldest-receivable policy.
 - Supplier payments are allocated from aggregate AP reduction journal IDs to supplier accrual journal IDs using the modeled oldest-accrual policy. Accrual IDs are not supplier invoice numbers.
 - CAPEX cash spend ties directly to project SPEND journal IDs. GO_LIVE is a non-cash CIP-to-PPE transfer and is never presented as cash spending.
-- Interest, tax, debt, and intercompany cash postings remain at journal grain when no more detailed subledger schedule is published.
+- Interest, tax, debt, opening cash, and both intercompany cash categories remain at journal grain when no more detailed subledger schedule is published.
 
 The AR and AP invoice/accrual links are analytical allocations, not bank-matched receipts, remittances, or invoice settlements. The dashboard preserves this limitation in each row's allocation basis and in the report note. It does not fabricate remittance IDs, supplier invoices, or bank statements.
 
