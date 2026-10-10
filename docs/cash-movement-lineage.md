@@ -4,7 +4,7 @@
 
 The Cash Flow contribution page now explains the latest published close from legal-entity cash-flow totals down to cash-account journals and the available supporting source schedules.
 
-The dashboard publishes `cash_movement_lineage` for the current close only. The Division breakdown is offered only when the selected current-close metric and entity scope contain matching lineage rows; otherwise the report stays at entity grain instead of presenting an empty division view. Earlier periods remain at entity/month cash-flow summary grain; the interface says so explicitly when an earlier month is selected.
+The dashboard publishes `cash_movement_lineage` for the current close only. Division and cash-flow-category breakdowns are offered only when the selected current-close metric and entity scope contain matching lineage rows; otherwise the report stays at entity/month summary grain instead of presenting an empty detail view. Category totals are signed and reconcile to the selected cash-flow measure. Earlier periods remain at entity/month summary grain; the interface says so explicitly when an earlier month is selected.
 
 ## Evidence grain and limits
 
@@ -29,4 +29,4 @@ No ledger balances, financial statement values, or tolerance levels are changed 
 
 ## Where to explore
 
-Open **Cash & Balance → Cash Flow → Contribution analysis**. Select an entity and the Free cash flow measure. The evidence table shows the line categories, division, counterparty or project, source record, and source journal ID. Click a row to inspect its complete allocation basis and identifiers.
+Open **Cash & Balance → Cash Flow → Contribution analysis**. Select an entity and the Free cash flow measure, then explore **Division** and **Cash flow category**. The category contribution sums to the entity's published FCF; selecting a category filters the evidence table to its source movements, divisions, counterparties or projects, source-record IDs and source-journal IDs. Click a row to inspect its complete allocation basis and identifiers.

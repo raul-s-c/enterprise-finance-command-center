@@ -57,3 +57,44 @@ test('cash contribution drill path does not repeat the selected entity',async({p
   expect(drillPath).toBe('US01');
   await expect(explorer.locator('.cx-flow')).toContainText('Value flow · US01');
 });
+
+test('cash contribution explains free cash flow by source category and retains its reconciliation',async({page},testInfo)=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=cash-flow&page=3&section=Cash+contribution&entity=US01&division=all&metric=revenue');
+  const explorer=page.locator('.contribution-explorer[data-contribution="cash"]');
+  await expect(explorer).toBeVisible();
+  await expect(explorer.getByRole('button',{name:'Drill to Division'})).toBeVisible();
+  await explorer.getByRole('button',{name:'Drill to Division'}).click();
+  await expect(explorer.getByRole('heading',{name:'Contribution by division'})).toBeVisible();
+  await explorer.getByRole('button',{name:'Cash flow category',exact:true}).click();
+  await expect(explorer.getByRole('heading',{name:'Contribution by cash flow category'})).toBeVisible();
+  const publishedFcf=await page.evaluate(async()=>{
+    const data=await(await fetch('/data/dashboard.json')).json();
+    return data.cash_flow_detail.find(row=>row.month===data.meta.end_month&&row.entity==='US01')?.free_cash_flow;
+  });
+  expect(Number.isFinite(publishedFcf)).toBeTruthy();
+  const expectedFcf=new Intl.NumberFormat('en-US',{style:'currency',currency:'EUR',minimumFractionDigits:2,maximumFractionDigits:2}).format(publishedFcf);
+  await expect(explorer.locator('.cx-summary > div:first-child > strong')).toHaveText(expectedFcf);
+  await expect(explorer.locator('.cx-ranking')).toContainText('Customer collections');
+  await expect(explorer.locator('.cx-ranking')).toContainText('Supplier payments');
+  await expect(explorer.getByRole('heading',{name:'Cash movement lineage · Customer collections'})).toBeVisible();
+  await expect(explorer.locator('.cx-evidence thead')).toContainText('Source journal id');
+  const screenshot=testInfo.outputPath('cash-flow-category-contribution-1280x720.png');
+  await page.screenshot({path:screenshot});
+  await testInfo.attach('cash-flow-category-contribution-1280x720',{path:screenshot,contentType:'image/png'});
+});
+
+test('single-category cash measures do not offer a redundant category breakdown',async({page})=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=cash-flow&page=3&section=Cash+contribution&entity=US01&division=all&metric=revenue');
+  const explorer=page.locator('.contribution-explorer[data-contribution="cash"]');
+  await expect(explorer).toBeVisible();
+  await explorer.locator('#cx-metric').selectOption('customer_collections');
+  await expect(explorer.getByRole('button',{name:'Division',exact:true})).toBeVisible();
+  await expect(explorer.getByRole('button',{name:'Cash flow category',exact:true})).toHaveCount(0);
+  await explorer.locator('#cx-metric').selectOption('capex');
+  await expect(explorer.getByRole('button',{name:'Division',exact:true})).toHaveCount(0);
+  await expect(explorer.getByRole('button',{name:'Lowest published level'})).toBeDisabled();
+  await expect(explorer.getByRole('heading',{name:'Underlying evidence · US01'})).toBeVisible();
+  await expect(explorer.locator('.cx-evidence tbody tr')).toHaveCount(1);
+});
