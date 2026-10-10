@@ -6,7 +6,7 @@ import pandas as pd
 import pytest
 import yaml
 
-from enterprise_finance.engine_v26 import build
+from enterprise_finance.engine_v28 import build
 
 
 @pytest.mark.integration
@@ -83,3 +83,17 @@ def test_consecutive_closes_preserve_history_forecast_and_working_capital_lineag
     assert Path("data/processed/ap_item_applications.csv").exists()
     assert Path("data/processed/fixed_asset_project_register.csv").exists()
     assert Path("data/processed/fixed_asset_project_events.csv").exists()
+
+    cash_lineage = dashboard["cash_movement_lineage"]
+    assert manifest["cash_movement_lineage_rows"] == dashboard["meta"]["cash_movement_lineage_count"] == len(cash_lineage)
+    assert dashboard["meta"]["cash_movement_lineage_month"] == "2026-09"
+    assert manifest["cash_movement_detail_bytes"] > 0
+    assert manifest["validation"]["cash_movement_lineage_max_gap"] <= 0.05
+    assert manifest["validation"]["cash_movement_journal_max_gap"] <= 0.05
+    assert manifest["validation"]["cash_movement_cashflow_max_gap"] <= 0.05
+    assert manifest["validation"]["cash_movement_unlinked_collection_journals"] == 0
+    assert manifest["validation"]["cash_movement_unlinked_supplier_journals"] == 0
+    assert manifest["validation"]["cash_movement_unlinked_capex_journals"] == 0
+    assert all(row["month"] == "2026-09" for row in cash_lineage)
+    assert "not bank-matched" in dashboard["cash_movement_evidence_basis"]
+    assert Path("data/processed/cash_movement_lineage.csv").exists()
