@@ -67,10 +67,10 @@ test('P&L source bars show signed earnings impact versus PY, including cost pola
   entry('2026-08','JP01',{opex:5000000}),entry('2025-08','JP01',{opex:10000000}),
  ]};
  const revenue=P.detail(data,{entity:'all',division:'all'},'revenue');
- assert.match(revenue,/Variance contribution \\(profit impact\\)/);
- assert.match(revenue,/Negative earnings impact: -20\\.000000 EUR m/);
- assert.match(revenue,/Positive earnings impact: \\+20\\.000000 EUR m/);
+ assert.ok(revenue.includes('Variance contribution (profit impact)'));
+ assert.ok(revenue.includes('Negative earnings impact: -20.000000 EUR m'));
+ assert.ok(revenue.includes('Positive earnings impact: +20.000000 EUR m'));
  const costs=P.detail(data,{entity:'all',division:'all'},'opex');
- assert.match(costs,/Negative earnings impact: -5\\.000000 EUR m/);
- assert.match(costs,/Positive earnings impact: \\+5\\.000000 EUR m/);
+ assert.ok(costs.includes('Negative earnings impact: -5.000000 EUR m'));
+ assert.ok(costs.includes('Positive earnings impact: +5.000000 EUR m'));
 });
