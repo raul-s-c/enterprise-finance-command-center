@@ -1009,4 +1009,8 @@ test('Cash Flow entity contribution opens the selected entity contribution page'
   await expect(page.locator('#content')).toContainText('Contribution');
   await expect(page.locator('#cx-metric')).toHaveValue('free_cash_flow');
   await expect(page.locator('#content')).toContainText('Contribution analysis · Free cash flow');
+  const sourceNode=page.locator('.cx-flow-map button').first();
+  await expect(sourceNode.locator('strong')).toHaveText('Cash Flow Detail');
+  await expect(sourceNode).toHaveAttribute('title','Source table: cash_flow_detail');
+  await expect(page.locator('.cx-inspector')).toContainText('cash_flow_detail');
 });
