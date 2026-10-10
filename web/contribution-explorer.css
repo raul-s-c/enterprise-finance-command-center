@@ -147,5 +147,5 @@
   .cx-invoice-table-wrap td[colspan]:before{content:none}
 }
 
-.cx-crosslink{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:7px 0;padding:9px 12px;border:1px solid #cfe0f5;border-left:3px solid #0869e1;border-radius:3px;background:linear-gradient(100deg,#f2f7fe,#fff);flex:none}.cx-crosslink strong{font-size:11px;color:#172238}.cx-crosslink p{margin:3px 0 0;font-size:9px;line-height:1.4;color:#566579}.report-mode .cx-crosslink button{flex:none;min-height:30px;padding:5px 10px;border:1px solid #0869e1;background:#0869e1;color:#fff;font-size:10px;font-weight:650;white-space:nowrap}.report-mode .cx-crosslink button:hover{background:#0758bf;border-color:#0758bf}
-@media(max-width:760px){.cx-crosslink{align-items:stretch;flex-direction:column;gap:7px}.report-mode .cx-crosslink button{width:100%;white-space:normal}}
+.report-mode .cx-commands button#cx-open-products{border-color:#b8d3f2;background:#eaf3ff;color:#0759bd;box-shadow:none}.report-mode .cx-commands button#cx-open-products:hover{background:#dcecff;border-color:#8cb8ea}
+@media(max-width:700px){.report-mode .cx-commands button#cx-open-products{font-size:8px;padding:4px 6px}}
