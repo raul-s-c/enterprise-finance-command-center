@@ -61,3 +61,40 @@ test('cash contribution hides division for a metric with no current-close moveme
   await expect(explorer.locator('[data-dimension="division"]')).toHaveCount(0);
   await expect(explorer.locator('.cx-ranking .contribution-row')).not.toHaveCount(0);
 });
+
+
+test('P&L contribution opens product economics with explicit scope and reporting-basis context',async({page})=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=pnl&page=5&section=P%26L+contribution&entity=all&division=all&metric=revenue');
+  const pnl=page.locator('.contribution-explorer[data-contribution="pnl"]');
+  await expect(pnl).toBeVisible();
+  const link=pnl.locator('#cx-open-products');
+  await expect(link).toBeVisible();
+  await expect(pnl.locator('.cx-crosslink')).toContainText('trailing 12 months');
+  await expect(pnl.locator('.cx-crosslink')).toContainText('not a reconciliation');
+
+  await page.setViewportSize({width:390,height:844});
+  const card=await pnl.locator('.cx-crosslink').boundingBox();
+  expect(card).not.toBeNull();
+  expect(card.x).toBeGreaterThanOrEqual(0);
+  expect(card.x+card.width).toBeLessThanOrEqual(391);
+  await page.setViewportSize({width:1280,height:720});
+
+  await pnl.locator('.contribution-row').first().click();
+  const selectedEntity=await pnl.locator('.contribution-row[aria-pressed="true"] span').first().textContent();
+  await link.click();
+
+  await expect(page).toHaveURL(/view=profitability/);
+  await expect(page).toHaveURL(new RegExp('productEntity='+encodeURIComponent(selectedEntity.trim())));
+  const products=page.locator('.contribution-explorer[data-contribution="products"]');
+  await expect(products).toBeVisible();
+  await expect(products.locator('.cx-head p')).toContainText('Entity: '+selectedEntity.trim());
+  await expect(products.locator('.cx-toolbar [data-dimension="product"]')).toHaveAttribute('aria-pressed','true');
+  await expect(products.locator('.contribution-note')).toContainText('not product EBIT');
+  await expect(products.locator('.contribution-row')).not.toHaveCount(0);
+
+  await page.reload();
+  await expect(page.locator('.contribution-explorer[data-contribution="products"] .cx-head p')).toContainText('Entity: '+selectedEntity.trim());
+  await page.goBack();
+  await expect(page.locator('.contribution-explorer[data-contribution="pnl"]')).toBeVisible();
+});
