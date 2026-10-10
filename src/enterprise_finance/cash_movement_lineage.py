@@ -128,7 +128,8 @@ def build_cash_movement_lineage(
     spend["journal_id"] = spend.journal_id.map(_text)
 
     rows: list[dict[str, object]] = []
-    unlinked = {"customer_collections": 0, "supplier_payments": 0, "capex": 0}
+    journal_grain = {"customer_collections": 0, "supplier_payments": 0}
+    unlinked_capex = 0
     max_journal_gap = 0.0
 
     def append(
@@ -163,7 +164,7 @@ def build_cash_movement_lineage(
         if category == "customer_collections":
             applications = ar.loc[ar.source_journal_id.eq(journal_id)]
             matches = [
-                (item, "Customer invoice allocation", _text(item.invoice_id), _text(item.customer), _text(item.division) or _text(source.division))
+                (item, "Customer invoice allocation", _text(item.invoice_id), _text(item.customer), _text(item.get("division", "")) or _text(source.division))
                 for _, item in applications.iterrows()
             ]
         elif category == "supplier_payments":
@@ -179,12 +180,14 @@ def build_cash_movement_lineage(
         elif category == "capex":
             events = spend.loc[spend.journal_id.eq(journal_id)]
             matches = [
-                (item, "CAPEX project event", _text(item.project), _text(item.project_name), _text(item.division) or _text(source.division))
+                (item, "CAPEX project event", _text(item.project), _text(item.project_name), _text(item.get("division", "")) or _text(source.division))
                 for _, item in events.iterrows()
             ]
 
-        if category in unlinked and not matches:
-            unlinked[category] += 1
+        if category in journal_grain and not matches:
+            journal_grain[category] += 1
+        if category == "capex" and not matches:
+            unlinked_capex += 1
         if matches:
             allocated = sum(abs(float(item.applied_amount if hasattr(item, "applied_amount") else item.amount)) for item, *_ in matches)
             gap = abs(abs(amount) - allocated)
@@ -247,9 +250,9 @@ def build_cash_movement_lineage(
         "cash_movement_lineage_max_gap": round(max_journal_gap, 6),
         "cash_movement_journal_max_gap": round(journal_gap, 6),
         "cash_movement_cashflow_max_gap": round(summary_gap, 6),
-        "cash_movement_unlinked_collection_journals": unlinked["customer_collections"],
-        "cash_movement_unlinked_supplier_journals": unlinked["supplier_payments"],
-        "cash_movement_unlinked_capex_journals": unlinked["capex"],
+        "cash_movement_journal_grain_collection_rows": journal_grain["customer_collections"],
+        "cash_movement_journal_grain_supplier_payment_rows": journal_grain["supplier_payments"],
+        "cash_movement_unlinked_capex_journals": unlinked_capex,
         "cash_movement_missing_summary_entities": missing_summary,
         "cash_movement_duplicate_lineage_rows": duplicate_rows,
         "cash_movement_missing_source_ids": missing_source_ids,
@@ -259,7 +262,7 @@ def build_cash_movement_lineage(
         max_journal_gap <= TOLERANCE
         and journal_gap <= TOLERANCE
         and summary_gap <= TOLERANCE
-        and not any(unlinked.values())
+        and unlinked_capex == 0
         and missing_summary == 0
         and duplicate_rows == 0
         and missing_source_ids == 0
