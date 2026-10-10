@@ -86,7 +86,7 @@
     document.getElementById('reportContext').textContent=`Contribution analysis · ${sourceName} · every displayed total is recomputed from published records`;
     document.getElementById('viewSubtitle').textContent=`${data.meta.end_month} published close · EUR · signed contributions and source lineage`;
     const months=[...new Set(preparedRows(data,key).map(r=>r.month).filter(Boolean))].sort();
-    const s=settings[key]||={metric:availableMetrics[0],dimension:availableDimensions[0],month:months.at(-1)||data.meta.end_month,event:'SPEND',filters:{},page:0,selected:null,display:'value',query:''};
+    const s=settings[key]||={metric:key==='cash'&&availableMetrics.includes('free_cash_flow')?'free_cash_flow':availableMetrics[0],dimension:availableDimensions[0],month:months.at(-1)||data.meta.end_month,event:'SPEND',filters:{},page:0,selected:null,display:'value',query:''};
     if(!availableMetrics.includes(s.metric))s.metric=availableMetrics[0];if(!availableDimensions.includes(s.dimension))s.dimension=availableDimensions[0];
     const select=(id,title,values,current)=>values.length>1?`<label>${e(title)}<select id="cx-${id}">${values.map(v=>`<option value="${e(v)}" ${v===current?'selected':''}>${e(label(v))}</option>`).join('')}</select></label>`:'';
     function formula(rows,priorRows=[]){
