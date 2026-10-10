@@ -58,6 +58,17 @@ test('source detail explains when a selection has only zero activity',()=>{
  assert.match(detail,/1 zero-activity combination omitted/);
 });
 
+test('P&L contribution table prioritizes scan-friendly EUR millions and retains exact euro evidence',()=>{
+ const data={meta:{end_month:'2026-08'},management_detail:[
+  {...record,month:'2026-08',revenue:4042369.37},
+  {...record,month:'2025-08',revenue:2098177.37},
+ ]};
+ const detail=P.detail(data,{entity:'all',division:'all'},'revenue');
+ assert.match(detail,/<td title="Exact: €4,042,369\.37" aria-label="Actual: €4,042,369\.37">4\.0<\/td>/);
+ assert.match(detail,/<td title="Exact: €2,098,177\.37" aria-label="Prior year: €2,098,177\.37">2\.1<\/td>/);
+ assert.match(detail,/<td title="Exact: €1,944,192\.00" aria-label="Variance: €1,944,192\.00">\+1\.9<\/td>/);
+ assert.doesNotMatch(detail,/>4\.042369<\/td>/);
+});
 test('P&L source bars show signed earnings impact versus PY, including cost polarity',()=>{
  const entry=(month,entity,values={})=>({...record,month,entity,division:'Hardware',...values});
  const data={meta:{end_month:'2026-08'},management_detail:[
