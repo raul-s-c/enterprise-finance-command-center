@@ -1011,7 +1011,7 @@ test('Cash Flow entity drill applies the selected entity to contribution and res
   await expect(page.locator('#content')).toContainText('Contribution analysis · Free cash flow');
   await expect(page.locator('.cx-head p')).toHaveText('Entity: US01');
   await expect(page.locator('.cx-inspector .cx-region-title>span')).toHaveText('US01');
-  const scopedTotal=(await page.locator('.cx-summary > div > strong').innerText()).trim();
+  const scopedTotal=(await page.locator('.cx-summary > div').first().locator('strong').innerText()).trim();
   const selectedValue=(await page.locator('.cx-inspector dl dd').first().innerText()).trim();
   expect(scopedTotal).toBe(selectedValue);
   const sourceNode=page.locator('.cx-flow-map button').first();
