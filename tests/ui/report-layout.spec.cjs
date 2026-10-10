@@ -1007,4 +1007,6 @@ test('Cash Flow entity contribution opens the selected entity contribution page'
   await expect.poll(()=>new URLSearchParams(new URL(page.url()).hash.slice(1)).get('entity')).toBe(entity);
   await expect.poll(()=>new URLSearchParams(new URL(page.url()).hash.slice(1)).get('page')).toBe('3');
   await expect(page.locator('#content')).toContainText('Contribution');
+  await expect(page.locator('#cx-metric')).toHaveValue('free_cash_flow');
+  await expect(page.locator('#content')).toContainText('Contribution analysis · Free cash flow');
 });
