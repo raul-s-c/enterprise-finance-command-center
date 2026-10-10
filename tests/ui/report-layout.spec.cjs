@@ -1004,7 +1004,7 @@ test('Cash Flow entity contribution opens the selected entity contribution page'
   await expect(row).toBeVisible();
   const entity=await row.getAttribute('data-sw-row');
   await row.click();
-  await expect(page.locator('#entityFilter')).toHaveValue(entity);
-  await expect.poll(()=>new URL(page.url()).hash).toContain('page=3');
+  await expect.poll(()=>new URLSearchParams(new URL(page.url()).hash.slice(1)).get('entity')).toBe(entity);
+  await expect.poll(()=>new URLSearchParams(new URL(page.url()).hash.slice(1)).get('page')).toBe('3');
   await expect(page.locator('#content')).toContainText('Contribution');
 });
