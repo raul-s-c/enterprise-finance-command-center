@@ -57,3 +57,26 @@ test('source detail explains when a selection has only zero activity',()=>{
  assert.match(detail,/No current or prior-year activity for this line in the selected scope/);
  assert.match(detail,/1 zero-activity combination omitted/);
 });
+
+test('P&L source bars show signed earnings impact versus PY, including cost polarity',()=>{
+ const entry=(month,entity,values={})=>({...record,month,entity,division:'Hardware',...values});
+ const data={meta:{end_month:'2026-08'},management_detail:[
+  entry('2026-08','US01',{revenue:80000000}),entry('2025-08','US01',{revenue:100000000}),
+  entry('2026-08','DE01',{revenue:120000000}),entry('2025-08','DE01',{revenue:100000000}),
+  entry('2026-08','CN01',{opex:15000000}),entry('2025-08','CN01',{opex:10000000}),
+  entry('2026-08','JP01',{opex:5000000}),entry('2025-08','JP01',{opex:10000000}),
+ ]};
+ const revenue=P.detail(data,{entity:'all',division:'all'},'revenue');
+ assert.ok(revenue.includes('Variance contribution (profit impact)'));
+ assert.ok(revenue.includes('Negative earnings impact: -20.000 EUR m'));
+ assert.ok(revenue.includes('Positive earnings impact: +20.000 EUR m'));
+ const revenueInspector=P.inspector(data,{entity:'all',division:'all'},'revenue');
+ assert.ok(revenueInspector.includes('-€20.0m vs PY'));
+ assert.ok(revenueInspector.includes('+€20.0m vs PY'));
+ const costs=P.detail(data,{entity:'all',division:'all'},'opex');
+ assert.ok(costs.includes('Negative earnings impact: -5.000 EUR m'));
+ assert.ok(costs.includes('Positive earnings impact: +5.000 EUR m'));
+ const costInspector=P.inspector(data,{entity:'all',division:'all'},'opex');
+ assert.ok(costInspector.includes('-€5.0m vs PY'));
+ assert.ok(costInspector.includes('+€5.0m vs PY'));
+});
