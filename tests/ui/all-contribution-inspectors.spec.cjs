@@ -86,4 +86,7 @@ test('single-category cash measures do not offer a redundant category breakdown'
   await explorer.locator('#cx-metric').selectOption('customer_collections');
   await expect(explorer.getByRole('button',{name:'Division',exact:true})).toBeVisible();
   await expect(explorer.getByRole('button',{name:'Cash flow category',exact:true})).toHaveCount(0);
+  await explorer.locator('#cx-metric').selectOption('capex');
+  await expect(explorer.getByRole('heading',{name:'Underlying evidence · US01'})).toBeVisible();
+  await expect(explorer.locator('.cx-evidence tbody tr')).toHaveCount(1);
 });
