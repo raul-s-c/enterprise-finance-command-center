@@ -66,7 +66,7 @@ test('cash contribution explains free cash flow by source category and retains i
   await expect(explorer.getByRole('button',{name:'Drill to Division'})).toBeVisible();
   await explorer.getByRole('button',{name:'Drill to Division'}).click();
   await expect(explorer.getByRole('heading',{name:'Contribution by division'})).toBeVisible();
-  await explorer.getByRole('button',{name:'Cash flow category'}).click();
+  await explorer.getByRole('button',{name:'Cash flow category',exact:true}).click();
   await expect(explorer.getByRole('heading',{name:'Contribution by cash flow category'})).toBeVisible();
   await expect(explorer.locator('.cx-summary > div:first-child > strong')).toHaveText('€3,467,504.18');
   await expect(explorer.locator('.cx-ranking')).toContainText('Customer collections');
