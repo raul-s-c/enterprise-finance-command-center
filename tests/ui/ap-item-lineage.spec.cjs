@@ -2,7 +2,10 @@ const {test,expect}=require('@playwright/test');
 const published=require('../../web/data/dashboard.json');
 
 test('AP contribution opens source-accrual evidence and modeled reductions on mobile',async({page})=>{
-  const supplier=(published.ap_supplier_aging||[]).find(row=>Number(row.total_ap)>0);
+  const entityTotals=new Map();
+  for(const row of published.ap_supplier_aging||[])entityTotals.set(row.entity,(entityTotals.get(row.entity)||0)+Number(row.total_ap||0));
+  const selectedEntity=[...entityTotals].sort((a,b)=>Math.abs(b[1])-Math.abs(a[1]))[0]?.[0];
+  const supplier=(published.ap_supplier_aging||[]).find(row=>row.entity===selectedEntity&&Number(row.total_ap)>0);
   expect(supplier).toBeTruthy();
   const scope={month:published.meta.end_month,entity:supplier.entity,division:supplier.division,supplier:supplier.supplier,supplier_name:supplier.supplier_name,supplier_category:supplier.supplier_category};
   const items=[{
