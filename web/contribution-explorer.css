@@ -146,3 +146,6 @@
   .cx-invoice-table-wrap td:before{content:attr(data-label);font-weight:600;color:#687487;text-align:left}
   .cx-invoice-table-wrap td[colspan]:before{content:none}
 }
+
+.report-mode .cx-commands button#cx-open-products{border-color:#b8d3f2;background:#eaf3ff;color:#0759bd;box-shadow:none}.report-mode .cx-commands button#cx-open-products:hover{background:#dcecff;border-color:#8cb8ea}
+@media(max-width:700px){.report-mode .cx-commands button#cx-open-products{font-size:8px;padding:4px 6px}}

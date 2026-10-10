@@ -121,9 +121,26 @@ function reportReadRoute(){
   reportState.page=RM.pageIndex(params.get('page'));
   reportState.section=params.get('section');
   reportState.metric=params.get('metric')==='ebit'?'ebit':'revenue';
+  reportState.productEntity=params.get('productEntity')||'';
+  reportState.productDivision=params.get('productDivision')||'';
   reportState.view=state.view;
 }
 function reportNavigate(page){reportState.page=RM.pageIndex(page);render();}
+globalThis.reportOpenProductEconomics=({entity,division}={})=>{
+  const previousView=state.view;state.view='profitability';
+  const pages=reportPages(),page=pages.findIndex(item=>item.title==='Products contribution');
+  if(page<0){state.view=previousView;return false;}
+  reportState.page=page;reportState.section=pages[page].title;
+  reportState.productEntity=entity||'';reportState.productDivision=division||'';
+  render();return true;
+};
+globalThis.reportSetProductScope=({entity,division}={})=>{
+  reportState.productEntity=entity||'';reportState.productDivision=division||'';
+  if(state.view!=='profitability'||reportState.pages?.[reportState.page]?.title!=='Products contribution')return;
+  const params=new URLSearchParams(location.hash.slice(1));
+  for(const [key,value] of [['productEntity',reportState.productEntity],['productDivision',reportState.productDivision]]){if(value)params.set(key,value);else params.delete(key);}
+  history.replaceState(history.state,'',`${location.pathname}${location.search}#${params.toString()}`);
+};
 function reportBack(){
   const depth=Number(history.state?.reportDepth)||0;
   if(depth>0){history.back();return;}
@@ -265,6 +282,10 @@ function render(restoring=false){
   document.getElementById('reportPrevious').disabled=reportState.page===0;
   document.getElementById('reportNext').disabled=reportState.page===pages.length-1;
   const hash=new URLSearchParams({view:state.view,page:reportState.page,section:pages[reportState.page].title,entity:state.entity,division:state.division,metric:reportState.metric});
+  if(state.view==='profitability'&&pages[reportState.page].title==='Products contribution'){
+    if(reportState.productEntity)hash.set('productEntity',reportState.productEntity);
+    if(reportState.productDivision)hash.set('productDivision',reportState.productDivision);
+  }
   const depth=Number(history.state?.reportDepth)||0;
   if(location.hash!==`#${hash}`)history[restoring?'replaceState':'pushState']({...history.state,reportApp:true,reportDepth:restoring?depth:depth+1},'',`#${hash}`);
   document.getElementById('reportBack').disabled=false;
