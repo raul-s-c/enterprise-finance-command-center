@@ -57,3 +57,23 @@ test('cash contribution drill path does not repeat the selected entity',async({p
   expect(drillPath).toBe('US01');
   await expect(explorer.locator('.cx-flow')).toContainText('Value flow · US01');
 });
+
+test('cash contribution explains free cash flow by source category and retains its reconciliation',async({page},testInfo)=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=cash-flow&page=3&section=Cash+contribution&entity=US01&division=all&metric=revenue');
+  const explorer=page.locator('.contribution-explorer[data-contribution="cash"]');
+  await expect(explorer).toBeVisible();
+  await expect(explorer.getByRole('button',{name:'Drill to Division'})).toBeVisible();
+  await explorer.getByRole('button',{name:'Drill to Division'}).click();
+  await expect(explorer.getByRole('heading',{name:'Contribution by division'})).toBeVisible();
+  await explorer.getByRole('button',{name:'Cash flow category'}).click();
+  await expect(explorer.getByRole('heading',{name:'Contribution by cash flow category'})).toBeVisible();
+  await expect(explorer.locator('.cx-summary > div:first-child > strong')).toHaveText('€3,467,504.18');
+  await expect(explorer.locator('.cx-ranking')).toContainText('Customer collections');
+  await expect(explorer.locator('.cx-ranking')).toContainText('Supplier payments');
+  await expect(explorer.getByRole('heading',{name:'Cash movement lineage · Customer collections'})).toBeVisible();
+  await expect(explorer.locator('.cx-evidence thead')).toContainText('Source journal id');
+  const screenshot=testInfo.outputPath('cash-flow-category-contribution-1280x720.png');
+  await page.screenshot({path:screenshot});
+  await testInfo.attach('cash-flow-category-contribution-1280x720',{path:screenshot,contentType:'image/png'});
+});
