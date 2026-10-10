@@ -994,3 +994,17 @@ test('statement analysis survives live resize without an overlapping inspector',
   await page.locator('#reportDialogClose').click();
   await expect(page.locator('#reportDialog')).toBeHidden();
 });
+
+
+test('Cash Flow entity contribution opens the selected entity contribution page',async({page})=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=cash-flow&page=0');
+  await page.getByRole('button',{name:'Contribution & detail'}).click();
+  const row=page.locator('.sw-detail [data-sw-filter="entity"]').first();
+  await expect(row).toBeVisible();
+  const entity=await row.getAttribute('data-sw-row');
+  await row.click();
+  await expect.poll(()=>new URLSearchParams(new URL(page.url()).hash.slice(1)).get('entity')).toBe(entity);
+  await expect.poll(()=>new URLSearchParams(new URL(page.url()).hash.slice(1)).get('page')).toBe('3');
+  await expect(page.locator('#content')).toContainText('Contribution');
+});
