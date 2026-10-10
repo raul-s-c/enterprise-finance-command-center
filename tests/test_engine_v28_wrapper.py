@@ -31,7 +31,7 @@ def _prepare_close(tmp_path, monkeypatch):
     cash_flow = [{
         "month":"2026-09","entity":"US01","customer_collections":100,
         "supplier_payments":-70,"capex":-20,"interest":0,"tax":0,
-        "debt_repayment":0,"intercompany_settlement":0,"opening":0,
+        "debt_repayment":0,"intercompany_settlement":0,"intercompany_treasury":0,"opening":0,
         "operating_cash_flow":30,"investing_cash_flow":-20,
         "financing_cash_flow":0,"net_cash_movement":10,"free_cash_flow":10,
     }]
