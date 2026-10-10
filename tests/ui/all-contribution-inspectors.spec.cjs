@@ -44,3 +44,16 @@ test('all eight contribution explorers show complete details beside evidence on 
     }
   }
 });
+
+test('cash contribution drill path does not repeat the selected entity',async({page})=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=cash-flow&page=3&section=Cash+contribution&entity=US01&division=all&metric=revenue');
+  const explorer=page.locator('.contribution-explorer[data-contribution="cash"]');
+  await expect(explorer).toBeVisible();
+  await expect(explorer.locator('.cx-head p')).toHaveText('Entity: US01');
+  const drillPath=await explorer.locator('.cx-inspector dl div').evaluateAll(nodes=>
+    nodes.find(node=>node.querySelector('dt')?.textContent?.trim()==='Drill path')
+      ?.querySelector('dd')?.textContent?.trim());
+  expect(drillPath).toBe('US01');
+  await expect(explorer.locator('.cx-flow')).toContainText('Value flow · US01');
+});
