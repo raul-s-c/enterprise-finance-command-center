@@ -47,3 +47,11 @@ def test_lazy_payable_item_evidence_uses_the_published_dataset_version():
 def test_lazy_fixed_asset_register_uses_the_published_dataset_version():
     statement = (WEB / "statement-workspace.js").read_text(encoding="utf-8")
     assert "data/fixed_asset_detail.json?v=${encodeURIComponent(button.dataset.version||'')}" in statement
+
+
+def test_engine_version_matches_current_release():
+    engine = (ROOT / "src" / "enterprise_finance" / "engine_v27.py").read_text(encoding="utf-8")
+    match = re.search(r'^VERSION\\s*=\\s*"([^"]+)"$', engine, re.MULTILINE)
+
+    assert match, "The active engine must declare its release version."
+    assert match.group(1) == VERSION
