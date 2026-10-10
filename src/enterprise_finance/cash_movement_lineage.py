@@ -136,11 +136,12 @@ def build_cash_movement_lineage(
         record_id: str,
         counterparty: str,
         basis: str,
+        division: str | None = None,
     ) -> None:
         rows.append({
             "month": close,
             "entity": _text(source.entity),
-            "division": _text(source.division),
+            "division": division or _text(source.division),
             "cash_flow_category": _text(source.cash_flow_category),
             "source_journal_id": _text(source.journal_id),
             "source_record_type": record_type,
@@ -156,11 +157,11 @@ def build_cash_movement_lineage(
         amount = float(source.cash_amount)
         if abs(amount) <= 0.005:
             continue
-        matches: list[tuple[pd.Series, str, str, str]] = []
+        matches: list[tuple[pd.Series, str, str, str, str]] = []
         if category == "customer_collections":
             applications = ar.loc[ar.source_journal_id.eq(journal_id)]
             matches = [
-                (item, "Customer invoice allocation", _text(item.invoice_id), _text(item.customer))
+                (item, "Customer invoice allocation", _text(item.invoice_id), _text(item.customer), _text(item.division) or _text(source.division))
                 for _, item in applications.iterrows()
             ]
         elif category == "supplier_payments":
@@ -169,13 +170,14 @@ def build_cash_movement_lineage(
                 (
                     item, "Supplier accrual allocation", _text(item.accrual_journal_id),
                     _text(item.supplier_name) or _text(item.supplier),
+                    _text(item.posted_division) or _text(source.division),
                 )
                 for _, item in applications.iterrows()
             ]
         elif category == "capex":
             events = spend.loc[spend.journal_id.eq(journal_id)]
             matches = [
-                (item, "CAPEX project event", _text(item.project), _text(item.project_name))
+                (item, "CAPEX project event", _text(item.project), _text(item.project_name), _text(item.division) or _text(source.division))
                 for _, item in events.iterrows()
             ]
 
@@ -187,11 +189,11 @@ def build_cash_movement_lineage(
             max_journal_gap = max(max_journal_gap, gap)
             if gap > TOLERANCE:
                 continue
-            for item, record_type, record_id, counterparty in matches:
+            for item, record_type, record_id, counterparty, movement_division in matches:
                 raw_amount = float(item.applied_amount if hasattr(item, "applied_amount") else item.amount)
                 append(
                     source, np.copysign(abs(raw_amount), amount), record_type, record_id,
-                    counterparty, ALLOCATION_BASIS[category],
+                    counterparty, ALLOCATION_BASIS[category], movement_division,
                 )
         else:
             append(
