@@ -127,9 +127,10 @@ function reportReadRoute(){
 }
 function reportNavigate(page){reportState.page=RM.pageIndex(page);render();}
 globalThis.reportOpenProductEconomics=({entity,division}={})=>{
+  const previousView=state.view;state.view='profitability';
   const pages=reportPages(),page=pages.findIndex(item=>item.title==='Products contribution');
-  if(page<0)return false;
-  state.view='profitability';reportState.page=page;reportState.section=pages[page].title;
+  if(page<0){state.view=previousView;return false;}
+  reportState.page=page;reportState.section=pages[page].title;
   reportState.productEntity=entity||'';reportState.productDivision=division||'';
   render();return true;
 };
