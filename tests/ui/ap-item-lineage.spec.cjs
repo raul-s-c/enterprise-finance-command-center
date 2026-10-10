@@ -2,11 +2,14 @@ const {test,expect}=require('@playwright/test');
 const published=require('../../web/data/dashboard.json');
 
 test('AP contribution opens source-accrual evidence and modeled reductions on mobile',async({page})=>{
-  const supplier=(published.ap_supplier_aging||[]).find(row=>Number(row.total_ap)>0);
+  const entityTotals=new Map();
+  for(const row of published.ap_supplier_aging||[])entityTotals.set(row.entity,(entityTotals.get(row.entity)||0)+Number(row.total_ap||0));
+  const selectedEntity=[...entityTotals].sort((a,b)=>Math.abs(b[1])-Math.abs(a[1]))[0]?.[0];
+  const supplier=(published.ap_supplier_aging||[]).find(row=>row.entity===selectedEntity&&Number(row.total_ap)>0);
   expect(supplier).toBeTruthy();
   const scope={month:published.meta.end_month,entity:supplier.entity,division:supplier.division,supplier:supplier.supplier,supplier_name:supplier.supplier_name,supplier_category:supplier.supplier_category};
   const items=[{
-    ...scope,source_item_id:'ACCRUAL-TEST-001',accrual_journal_id:'ACCRUAL-TEST-001',accrual_type:'factory cost',accrual_month:'2026-08',
+    ...scope,month:published.meta.end_month,source_item_id:'ACCRUAL-TEST-001',accrual_journal_id:'ACCRUAL-TEST-001',accrual_type:'factory cost',accrual_month:'2026-08',
     accrual_amount:15000,reductions_applied_ltd:5000,open_amount:10000,payment_terms_days:45,age_days:60,overdue_days:15,
     aging_bucket:'overdue_1_30',supplier_criticality:4,single_source:false,evidence_basis:'Synthetic source accrual journal ID; reductions modeled from aggregate AP postings, not supplier invoice or remittance evidence',
   }];

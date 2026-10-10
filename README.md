@@ -8,6 +8,8 @@ Live application: https://raul-s-c.github.io/enterprise-finance-command-center/
 
 Working-capital contribution screens connect to [legal ledger evidence](docs/working-capital-lineage.md): source journal postings and monthly account rollforwards, with explicit separation from analytical invoice allocations and consolidation adjustments.
 
+Cash Flow contribution screens connect to [cash movement lineage](docs/cash-movement-lineage.md): source cash journals, invoice/accrual allocations and CAPEX project evidence, with explicit disclosure that AR/AP allocations are not bank-matched remittances.
+
 ## Synthetic group
 
 The fictional company is **Aureon Systems Group** with four deliberately different business models:
@@ -55,9 +57,9 @@ CFO analytics
 
 P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.27.1
+## Current release: v0.28.0
 
-Version 0.27.1 aligns the published engine wrapper with the package version, improves Executive reading density on wide screens, and balances the Close Journey evidence panels at common laptop heights. A 1280 × 800 regression test protects the Close Journey layout; these changes do not alter financial balances or control tolerances.
+Version 0.28.0 adds current-close cash movement lineage from cash-account journals to modeled customer invoice allocations, supplier accrual allocations and CAPEX project spend. Each line reconciles to its cash journal and cash-flow category; non-cash GO_LIVE transfers stay outside cash spend. AR/AP allocations are explicitly not bank-matched remittances. No ledger values or financial control tolerances change.
 
 Version 0.22 extends the rolling forecast to 24 months across Base, Upside and Downside scenarios, workforce, liquidity and the integrated three statements. Existing 12-month summaries remain separately labelled; the release also exposes 24-month flow and ending-balance measures. Close controls cover the complete forecast horizon. Patch 0.22.1 fixes mobile P&L evidence-table fit and rotates static asset cache keys; it does not alter financial balances or controls. Version 0.23 adds a reconciled invoice-grain AR evidence schedule and explicit modeled allocations of posted collection credits; it does not change journal entries, cash or the customer-level AR schedule, and it is not bank matching. Version 0.24 adds source-accrual-grain AP evidence, reconciling to supplier aging without claiming supplier invoice or remittance matching. Version 0.25 connects posted CAPEX project events through CIP, non-cash go-live, PPE and modeled depreciation without fabricating asset-level journal IDs.
 
