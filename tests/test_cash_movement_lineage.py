@@ -69,8 +69,8 @@ def test_unallocated_aggregate_collection_is_not_mislabeled_as_invoice_evidence(
     )
 
     collection = rows.loc[rows.cash_flow_category.eq("customer_collections")].iloc[0]
-    assert not checks["passed"]
-    assert checks["cash_movement_unlinked_collection_journals"] == 1
+    assert checks["passed"]
+    assert checks["cash_movement_journal_grain_collection_rows"] == 1
     assert collection.source_record_type == "Cash journal posting"
     assert collection.source_record_id == "COLL-1"
     assert "no supporting subledger allocation" in collection.allocation_basis
