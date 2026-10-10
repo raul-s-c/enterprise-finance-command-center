@@ -252,7 +252,7 @@ function render(restoring=false){
   globalThis.CloseJourney?.mount(data);
   globalThis.DataJourneyCockpit?.mount(data);
   globalThis.StatementWorkspace?.mount();
-  ContributionExplorer.mount(data);
+  ContributionExplorer.mount(data,state);
   reportStoryBoards();
   document.querySelectorAll('[data-story-view]').forEach(button=>button.onclick=()=>{state.view=button.dataset.storyView;reportState.page=0;render();});
   ManagementBook.mount();
