@@ -79,7 +79,7 @@
   const compactMoney=v=>new Intl.NumberFormat('en-GB',{style:'currency',currency:'EUR',notation:'compact',maximumFractionDigits:1}).format(v);
   const sum=(rows,key)=>rows.reduce((total,row)=>total+(Number.isFinite(row[key])?row[key]:0),0);
   api.pages=view=>({pnl:['pnl'],profitability:['products'],'working-capital':['nwc','ar','inventory','ap'],'operations-capex':['capex'],'cash-flow':['cash']}[view]||[]).map(key=>({title:`${key==='nwc'?'Net working capital':label(key)} contribution`,policy:ReportContext.group,custom:true,contribution:true,html:`<section class="contribution-explorer" data-contribution="${key}"></section>`}));
-  api.mount=data=>{
+  api.mount=(data,scope={})=>{
     const host=document.querySelector('[data-contribution]');if(!host)return;
     const key=host.dataset.contribution,def=definitions[key],availableDimensions=dimensions(data,key),availableMetrics=metrics(data,key),sourceName=source(data,key);
     const sourceLabel=sourceName.replaceAll('_',' ').replace(/\b[a-z]/g,letter=>letter.toUpperCase());
@@ -89,9 +89,9 @@
     const months=[...new Set(preparedRows(data,key).map(r=>r.month).filter(Boolean))].sort();
     const s=settings[key]||={metric:key==='cash'&&availableMetrics.includes('free_cash_flow')?'free_cash_flow':availableMetrics[0],dimension:availableDimensions[0],month:months.at(-1)||data.meta.end_month,event:'SPEND',filters:{},page:0,selected:null,display:'value',query:''};
     if(!availableMetrics.includes(s.metric))s.metric=availableMetrics[0];if(!availableDimensions.includes(s.dimension))s.dimension=availableDimensions[0];
-    if(key==='cash'&&root.location?.hash){
-      const routeEntity=new URLSearchParams(root.location.hash.slice(1)).get('entity');
-      if(routeEntity!==null){
+    if(key==='cash'){
+      const routeEntity=scope.entity??(root.location?.hash?new URLSearchParams(root.location.hash.slice(1)).get('entity'):null);
+      if(routeEntity!==null&&routeEntity!==undefined){
         const publishedEntities=new Set(preparedRows(data,key).map(row=>row.entity).filter(Boolean));
         if(routeEntity==='all'||!publishedEntities.has(routeEntity)){delete s.filters.entity;s.selected=null;}
         else{s.filters.entity=routeEntity;s.dimension='entity';s.selected=routeEntity;}
@@ -99,9 +99,11 @@
     }
     const setCashEntityRoute=value=>{
       if(key!=='cash'||!root.location||!root.history)return;
+      const entity=value||'all';
+      scope.entity=entity;
       const params=new URLSearchParams(root.location.hash.slice(1));
-      params.set('entity',value||'all');
-      root.history.replaceState(null,'',`${root.location.pathname}${root.location.search}#${params.toString()}`);
+      params.set('entity',entity);
+      root.history.replaceState(root.history.state,'',`${root.location.pathname}${root.location.search}#${params.toString()}`);
     };
     const select=(id,title,values,current)=>values.length>1?`<label>${e(title)}<select id="cx-${id}">${values.map(v=>`<option value="${e(v)}" ${v===current?'selected':''}>${e(label(v))}</option>`).join('')}</select></label>`:'';
     function formula(rows,priorRows=[]){
