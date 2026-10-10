@@ -21,7 +21,7 @@ The close fails if any of these conditions fail:
 
 - Cash-line allocations do not add back to the source cash journal ID within €0.05.
 - Detail totals do not reconcile to cash-flow category totals by entity within €0.05.
-- A current-close customer collection, supplier payment, or CAPEX spend has no corresponding supported source allocation.
+- A current-close CAPEX SPEND has no corresponding project event. Collections and supplier payments without detailed subledger applications remain visibly at cash-journal grain; they are not treated as missing posted cash evidence.
 - A movement row has a missing source ID or duplicates a source-line identity.
 - A non-cash project GO_LIVE transfer is included as a cash CAPEX event.
 
