@@ -85,3 +85,18 @@ test('enhanced product lineage activates only when entity-product records are pu
   assert.equal(C.records(enhanced,'products','2026-08').length,1);
   assert.equal(C.source({product_profitability:data.product_profitability},'products'),'product_profitability');
 });
+
+test('current-close cash contributions can reconcile by source cash-flow category',()=>{
+  const month=data.meta.end_month,entity='US01';
+  const categories=['customer_collections','supplier_payments','capex','interest','tax'];
+  const lineage=(data.cash_movement_lineage||[]).filter(row=>row.month===month&&row.entity===entity&&categories.includes(row.cash_flow_category));
+  const published=(data.cash_flow_detail||[]).find(row=>row.month===month&&row.entity===entity);
+  assert.ok(published,'published entity cash-flow summary exists');
+  assert.ok(lineage.length,'current-close source lineage exists for the selected entity');
+  assert.ok(C.dimensions(data,'cash').includes('cash_flow_category'));
+  const breakdown=C.aggregate(lineage,'movement_amount','cash_flow_category');
+  assert.ok(breakdown.groups.length>1,'category mix is more informative than one entity total');
+  assert.ok(Math.abs(breakdown.total-published.free_cash_flow)<0.05,'category total reconciles to published FCF');
+  const summaryOnly={meta:data.meta,cash_flow_detail:data.cash_flow_detail,cash_movement_lineage:[]};
+  assert.ok(!C.dimensions(summaryOnly,'cash').includes('cash_flow_category'),'categories stay hidden without source lineage');
+});
