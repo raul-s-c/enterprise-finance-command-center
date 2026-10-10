@@ -79,7 +79,7 @@
   const compactMoney=v=>new Intl.NumberFormat('en-GB',{style:'currency',currency:'EUR',notation:'compact',maximumFractionDigits:1}).format(v);
   const sum=(rows,key)=>rows.reduce((total,row)=>total+(Number.isFinite(row[key])?row[key]:0),0);
   api.pages=view=>({pnl:['pnl'],profitability:['products'],'working-capital':['nwc','ar','inventory','ap'],'operations-capex':['capex'],'cash-flow':['cash']}[view]||[]).map(key=>({title:`${key==='nwc'?'Net working capital':label(key)} contribution`,policy:ReportContext.group,custom:true,contribution:true,html:`<section class="contribution-explorer" data-contribution="${key}"></section>`}));
-  api.mount=data=>{
+  api.mount=(data,scope={})=>{
     const host=document.querySelector('[data-contribution]');if(!host)return;
     const key=host.dataset.contribution,def=definitions[key],availableDimensions=dimensions(data,key),availableMetrics=metrics(data,key),sourceName=source(data,key);
     const sourceLabel=sourceName.replaceAll('_',' ').replace(/\b[a-z]/g,letter=>letter.toUpperCase());
@@ -89,6 +89,22 @@
     const months=[...new Set(preparedRows(data,key).map(r=>r.month).filter(Boolean))].sort();
     const s=settings[key]||={metric:key==='cash'&&availableMetrics.includes('free_cash_flow')?'free_cash_flow':availableMetrics[0],dimension:availableDimensions[0],month:months.at(-1)||data.meta.end_month,event:'SPEND',filters:{},page:0,selected:null,display:'value',query:''};
     if(!availableMetrics.includes(s.metric))s.metric=availableMetrics[0];if(!availableDimensions.includes(s.dimension))s.dimension=availableDimensions[0];
+    if(key==='cash'){
+      const routeEntity=scope.entity??(root.location?.hash?new URLSearchParams(root.location.hash.slice(1)).get('entity'):null);
+      if(routeEntity!==null&&routeEntity!==undefined){
+        const publishedEntities=new Set(preparedRows(data,key).map(row=>row.entity).filter(Boolean));
+        if(routeEntity==='all'||!publishedEntities.has(routeEntity)){delete s.filters.entity;s.selected=null;}
+        else{s.filters.entity=routeEntity;s.dimension='entity';s.selected=routeEntity;}
+      }
+    }
+    const setCashEntityRoute=value=>{
+      if(key!=='cash'||!root.location||!root.history)return;
+      const entity=value||'all';
+      scope.entity=entity;
+      const params=new URLSearchParams(root.location.hash.slice(1));
+      params.set('entity',entity);
+      root.history.replaceState(root.history.state,'',`${root.location.pathname}${root.location.search}#${params.toString()}`);
+    };
     const select=(id,title,values,current)=>values.length>1?`<label>${e(title)}<select id="cx-${id}">${values.map(v=>`<option value="${e(v)}" ${v===current?'selected':''}>${e(label(v))}</option>`).join('')}</select></label>`:'';
     function formula(rows,priorRows=[]){
       if(key==='pnl'&&!rows.length)return [[`Actual · ${s.month}`,'Unavailable'],[`Prior year · ${FinanceReport.priorMonth(s.month)}`,priorRows.length?sum(priorRows,s.metric):'Unavailable'],['Δ vs PY','Unavailable']];
@@ -220,7 +236,7 @@
       for(const field of ['metric','month','event']){const control=document.getElementById('cx-'+field);if(control)control.onchange=()=>{s[field]=control.value;s.page=0;s.selected=null;if(field!=='metric')s.filters={};paint();document.getElementById('cx-'+field)?.focus();};}
       host.querySelectorAll('[data-dimension]').forEach(button=>button.onclick=()=>{s.dimension=button.dataset.dimension;s.page=0;s.selected=null;paint();});host.querySelectorAll('[data-display]').forEach(button=>button.onclick=()=>{s.display=button.dataset.display;paint();});
       host.querySelectorAll('[data-contributor]').forEach(button=>{button.onclick=()=>{s.selected=visible[Number(button.dataset.contributor)].name;paint();};button.ondblclick=()=>{s.selected=visible[Number(button.dataset.contributor)].name;if(next){s.filters[s.dimension]=s.selected;s.dimension=next;s.page=0;s.selected=null;paint();}};});
-      document.getElementById('cx-drill').onclick=()=>{if(next&&s.selected){s.filters[s.dimension]=s.selected;s.dimension=next;s.page=0;s.selected=null;paint();}};document.getElementById('cx-up').onclick=()=>{const dimension=Object.keys(s.filters).at(-1);delete s.filters[dimension];s.dimension=dimension;s.page=0;s.selected=null;paint();};document.getElementById('cx-reset').onclick=()=>{s.filters={};s.page=0;s.selected=null;paint();};
+      document.getElementById('cx-drill').onclick=()=>{if(next&&s.selected){s.filters[s.dimension]=s.selected;s.dimension=next;s.page=0;s.selected=null;paint();}};document.getElementById('cx-up').onclick=()=>{const dimension=Object.keys(s.filters).at(-1);delete s.filters[dimension];s.dimension=dimension;s.page=0;s.selected=null;paint();};document.getElementById('cx-reset').onclick=()=>{s.filters={};s.page=0;s.selected=null;setCashEntityRoute('all');paint();};
       document.getElementById('cx-prev').onclick=()=>{s.page--;s.selected=null;paint();};document.getElementById('cx-next').onclick=()=>{s.page++;s.selected=null;paint();};document.getElementById('cx-search').oninput=event=>{s.query=event.target.value.toLowerCase();paint();document.getElementById('cx-search').focus();};
       document.getElementById('cx-method').onclick=()=>reportDialog(key==='nwc'?'Variance, calculation & coverage':'Calculation, source & coverage',`<div class="help-pages"><p>Source: dashboard.json → ${e(sourceName)}. ${e(def.period)} ending ${e(s.month)}. The displayed total is the exact signed sum of ${e(s.metric)} grouped by ${e(s.dimension)}.</p><p>${e(note(data,key))} Missing dimensions and measures are never allocated, replaced or balanced.</p></div>`);document.getElementById('cx-trace').onclick=()=>showRecords(selectedRows.length?selectedRows:rows);document.getElementById('cx-change').onclick=()=>{s.dimension=availableDimensions[(availableDimensions.indexOf(s.dimension)+1)%availableDimensions.length];s.page=0;s.selected=null;paint();};document.getElementById('cx-export').onclick=()=>document.getElementById('globalExport')?.click();
     }
