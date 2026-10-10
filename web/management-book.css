@@ -46,3 +46,19 @@
   .report-mode .management-book.story-board{grid-template-columns:repeat(2,minmax(0,1fr));overflow:hidden;grid-auto-rows:auto}
   .report-mode .management-book.story-board:has(>.story-wide){grid-template-rows:minmax(0,1.55fr) minmax(0,.8fr)}
 }
+
+/* Give the executive close history and actions enough room to be read at presentation scale. */
+@media(min-width:1440px) and (min-height:1000px){
+  .report-mode .control-tower .tower-bottom{height:196px}
+  .report-mode .control-tower .story-action{min-height:42px!important;padding:4px 0!important}
+  .report-mode .control-tower .story-action span{grid-template-columns:125px minmax(0,1fr);gap:2px 8px}
+  .report-mode .control-tower .story-action span strong{font-size:11px}
+  .report-mode .control-tower .story-action span small{font-size:10px}
+  .report-mode .control-tower .story-action span em{font-size:9px}
+  .report-mode .control-tower .story-action>i{font-size:9px}
+  .report-mode .control-tower .story-timeline svg{height:56px}
+  .report-mode .control-tower .story-milestones{gap:12px;padding-top:6px}
+  .report-mode .control-tower .story-milestones span{font-size:10px}
+  .report-mode .control-tower .story-region-head h3{font-size:13px}
+  .report-mode .control-tower .story-region-head small{font-size:11px}
+}
