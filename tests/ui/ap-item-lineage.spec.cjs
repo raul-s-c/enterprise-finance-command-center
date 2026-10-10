@@ -6,7 +6,7 @@ test('AP contribution opens source-accrual evidence and modeled reductions on mo
   expect(supplier).toBeTruthy();
   const scope={month:published.meta.end_month,entity:supplier.entity,division:supplier.division,supplier:supplier.supplier,supplier_name:supplier.supplier_name,supplier_category:supplier.supplier_category};
   const items=[{
-    ...scope,source_item_id:'ACCRUAL-TEST-001',accrual_journal_id:'ACCRUAL-TEST-001',accrual_type:'factory cost',accrual_month:'2026-08',
+    ...scope,month:published.meta.end_month,source_item_id:'ACCRUAL-TEST-001',accrual_journal_id:'ACCRUAL-TEST-001',accrual_type:'factory cost',accrual_month:'2026-08',
     accrual_amount:15000,reductions_applied_ltd:5000,open_amount:10000,payment_terms_days:45,age_days:60,overdue_days:15,
     aging_bucket:'overdue_1_30',supplier_criticality:4,single_source:false,evidence_basis:'Synthetic source accrual journal ID; reductions modeled from aggregate AP postings, not supplier invoice or remittance evidence',
   }];
