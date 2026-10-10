@@ -999,6 +999,7 @@ test('statement analysis survives live resize without an overlapping inspector',
 test('Cash Flow entity contribution opens the selected entity contribution page',async({page})=>{
   await page.setViewportSize({width:1280,height:720});
   await page.goto('/#view=cash-flow&page=0');
+  await page.getByRole('button',{name:'Contribution & detail'}).click();
   const row=page.locator('.sw-detail [data-sw-filter="entity"]').first();
   await expect(row).toBeVisible();
   const entity=await row.getAttribute('data-sw-row');
