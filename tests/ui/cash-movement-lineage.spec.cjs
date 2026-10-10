@@ -11,6 +11,9 @@ test('cash contribution traces free cash flow to invoice and accrual allocation 
   await expect(explorer.locator('.cx-evidence table thead')).toContainText('Cash flow category');
   await expect(explorer.locator('.cx-evidence table thead')).toContainText('Source journal id');
   await expect(explorer.locator('.cx-evidence table tbody tr').first()).toBeVisible();
+  await explorer.locator('[data-dimension="division"]').click();
+  await expect(explorer.locator('.cx-evidence table tbody tr')).not.toHaveCount(0);
+  await expect(explorer.locator('.cx-inspector')).toContainText('Lineage rows');
   await expect(explorer.locator('.contribution-note')).toContainText('not bank-matched remittances');
 
   const reconciliation=await page.evaluate(async()=>{
