@@ -89,6 +89,20 @@
     const months=[...new Set(preparedRows(data,key).map(r=>r.month).filter(Boolean))].sort();
     const s=settings[key]||={metric:key==='cash'&&availableMetrics.includes('free_cash_flow')?'free_cash_flow':availableMetrics[0],dimension:availableDimensions[0],month:months.at(-1)||data.meta.end_month,event:'SPEND',filters:{},page:0,selected:null,display:'value',query:''};
     if(!availableMetrics.includes(s.metric))s.metric=availableMetrics[0];if(!availableDimensions.includes(s.dimension))s.dimension=availableDimensions[0];
+    if(key==='cash'&&root.location?.hash){
+      const routeEntity=new URLSearchParams(root.location.hash.slice(1)).get('entity');
+      if(routeEntity!==null){
+        const publishedEntities=new Set(preparedRows(data,key).map(row=>row.entity).filter(Boolean));
+        if(routeEntity==='all'||!publishedEntities.has(routeEntity)){delete s.filters.entity;s.selected=null;}
+        else{s.filters.entity=routeEntity;s.dimension='entity';s.selected=routeEntity;}
+      }
+    }
+    const setCashEntityRoute=value=>{
+      if(key!=='cash'||!root.location||!root.history)return;
+      const params=new URLSearchParams(root.location.hash.slice(1));
+      params.set('entity',value||'all');
+      root.history.replaceState(null,'',`${root.location.pathname}${root.location.search}#${params.toString()}`);
+    };
     const select=(id,title,values,current)=>values.length>1?`<label>${e(title)}<select id="cx-${id}">${values.map(v=>`<option value="${e(v)}" ${v===current?'selected':''}>${e(label(v))}</option>`).join('')}</select></label>`:'';
     function formula(rows,priorRows=[]){
       if(key==='pnl'&&!rows.length)return [[`Actual · ${s.month}`,'Unavailable'],[`Prior year · ${FinanceReport.priorMonth(s.month)}`,priorRows.length?sum(priorRows,s.metric):'Unavailable'],['Δ vs PY','Unavailable']];
@@ -220,7 +234,7 @@
       for(const field of ['metric','month','event']){const control=document.getElementById('cx-'+field);if(control)control.onchange=()=>{s[field]=control.value;s.page=0;s.selected=null;if(field!=='metric')s.filters={};paint();document.getElementById('cx-'+field)?.focus();};}
       host.querySelectorAll('[data-dimension]').forEach(button=>button.onclick=()=>{s.dimension=button.dataset.dimension;s.page=0;s.selected=null;paint();});host.querySelectorAll('[data-display]').forEach(button=>button.onclick=()=>{s.display=button.dataset.display;paint();});
       host.querySelectorAll('[data-contributor]').forEach(button=>{button.onclick=()=>{s.selected=visible[Number(button.dataset.contributor)].name;paint();};button.ondblclick=()=>{s.selected=visible[Number(button.dataset.contributor)].name;if(next){s.filters[s.dimension]=s.selected;s.dimension=next;s.page=0;s.selected=null;paint();}};});
-      document.getElementById('cx-drill').onclick=()=>{if(next&&s.selected){s.filters[s.dimension]=s.selected;s.dimension=next;s.page=0;s.selected=null;paint();}};document.getElementById('cx-up').onclick=()=>{const dimension=Object.keys(s.filters).at(-1);delete s.filters[dimension];s.dimension=dimension;s.page=0;s.selected=null;paint();};document.getElementById('cx-reset').onclick=()=>{s.filters={};s.page=0;s.selected=null;paint();};
+      document.getElementById('cx-drill').onclick=()=>{if(next&&s.selected){s.filters[s.dimension]=s.selected;s.dimension=next;s.page=0;s.selected=null;paint();}};document.getElementById('cx-up').onclick=()=>{const dimension=Object.keys(s.filters).at(-1);delete s.filters[dimension];s.dimension=dimension;s.page=0;s.selected=null;paint();};document.getElementById('cx-reset').onclick=()=>{s.filters={};s.page=0;s.selected=null;setCashEntityRoute('all');paint();};
       document.getElementById('cx-prev').onclick=()=>{s.page--;s.selected=null;paint();};document.getElementById('cx-next').onclick=()=>{s.page++;s.selected=null;paint();};document.getElementById('cx-search').oninput=event=>{s.query=event.target.value.toLowerCase();paint();document.getElementById('cx-search').focus();};
       document.getElementById('cx-method').onclick=()=>reportDialog(key==='nwc'?'Variance, calculation & coverage':'Calculation, source & coverage',`<div class="help-pages"><p>Source: dashboard.json → ${e(sourceName)}. ${e(def.period)} ending ${e(s.month)}. The displayed total is the exact signed sum of ${e(s.metric)} grouped by ${e(s.dimension)}.</p><p>${e(note(data,key))} Missing dimensions and measures are never allocated, replaced or balanced.</p></div>`);document.getElementById('cx-trace').onclick=()=>showRecords(selectedRows.length?selectedRows:rows);document.getElementById('cx-change').onclick=()=>{s.dimension=availableDimensions[(availableDimensions.indexOf(s.dimension)+1)%availableDimensions.length];s.page=0;s.selected=null;paint();};document.getElementById('cx-export').onclick=()=>document.getElementById('globalExport')?.click();
     }
