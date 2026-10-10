@@ -77,3 +77,13 @@ test('cash contribution explains free cash flow by source category and retains i
   await page.screenshot({path:screenshot});
   await testInfo.attach('cash-flow-category-contribution-1280x720',{path:screenshot,contentType:'image/png'});
 });
+
+test('single-category cash measures do not offer a redundant category breakdown',async({page})=>{
+  await page.setViewportSize({width:1280,height:720});
+  await page.goto('/#view=cash-flow&page=3&section=Cash+contribution&entity=US01&division=all&metric=revenue');
+  const explorer=page.locator('.contribution-explorer[data-contribution="cash"]');
+  await expect(explorer).toBeVisible();
+  await explorer.locator('#cx-metric').selectOption('customer_collections');
+  await expect(explorer.getByRole('button',{name:'Division',exact:true})).toBeVisible();
+  await expect(explorer.getByRole('button',{name:'Cash flow category',exact:true})).toHaveCount(0);
+});
