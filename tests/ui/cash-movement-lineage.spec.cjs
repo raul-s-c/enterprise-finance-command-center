@@ -39,7 +39,6 @@ test('cash contribution traces free cash flow to invoice and accrual allocation 
   await dialog.getByRole('button',{name:'Close'}).click();
 });
 
-
 test('cash contribution hides division for a metric with no current-close movements',async({page})=>{
   const dashboard=JSON.parse(JSON.stringify(require('../../web/data/dashboard.json')));
   const month=dashboard.meta.end_month;
