@@ -26,6 +26,7 @@ test('cash contribution traces free cash flow to invoice and accrual allocation 
 
   await explorer.locator('.cx-evidence table tbody tr').first().click();
   const dialog=page.locator('#reportDialog');
+  await expect(dialog).toContainText('Cash movement lineage detail');
   await expect(dialog).toContainText('Source journal id');
   await dialog.getByRole('button',{name:'More fields'}).click();
   await expect(dialog).toContainText('Allocation basis');
