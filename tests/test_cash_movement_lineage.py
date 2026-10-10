@@ -11,6 +11,8 @@ def _journal():
         {"month":"2026-09","entity":"US01","division":"Corporate","journal_id":"INT-1","account":"1000_CASH","debit":0,"credit":5,"cash_flow_category":"interest","counterparty":"Lender","description":"Interest"},
         {"month":"2026-09","entity":"US01","division":"Corporate","journal_id":"TAX-1","account":"1000_CASH","debit":0,"credit":2,"cash_flow_category":"tax","counterparty":"Tax authority","description":"Tax"},
         {"month":"2026-09","entity":"US01","division":"Corporate","journal_id":"IC-1","account":"1000_CASH","debit":3,"credit":0,"cash_flow_category":"intercompany_settlement","counterparty":"ES01","description":"Intercompany settlement"},
+        {"month":"2026-09","entity":"US01","division":"Corporate","journal_id":"ICT-1","account":"1000_CASH","debit":0,"credit":4,"cash_flow_category":"intercompany_treasury","counterparty":"ES01","description":"Intercompany treasury"},
+        {"month":"2026-09","entity":"US01","division":"Corporate","journal_id":"OPEN-1","account":"1000_CASH","debit":200,"credit":0,"cash_flow_category":"opening","counterparty":"Opening balance","description":"Opening cash"},
     ])
 
 
@@ -40,7 +42,7 @@ def _expected():
         "month":"2026-09","entity":"US01",
         "customer_collections":100,"supplier_payments":-70,"capex":-20,
         "interest":-5,"tax":-2,"debt_repayment":0,
-        "intercompany_settlement":3,
+        "intercompany_settlement":3,"intercompany_treasury":-4,"opening":200,
     }])
 
 
@@ -51,7 +53,7 @@ def test_current_close_cash_allocations_reconcile_to_journal_and_cash_flow():
     assert checks["cash_movement_lineage_max_gap"] == 0
     assert checks["cash_movement_journal_max_gap"] == 0
     assert checks["cash_movement_cashflow_max_gap"] == 0
-    assert checks["cash_movement_lineage_rows"] == 8
+    assert checks["cash_movement_lineage_rows"] == 10
     assert rows.loc[rows.cash_flow_category.eq("customer_collections"), "movement_amount"].sum() == 100
     assert rows.loc[rows.cash_flow_category.eq("supplier_payments"), "movement_amount"].sum() == -70
     assert rows.loc[rows.cash_flow_category.eq("capex"), "movement_amount"].tolist() == [-20]
