@@ -18,6 +18,8 @@ CATEGORIES = {
     "tax": "tax",
     "debt_repayment": "debt_repayment",
     "intercompany_settlement": "intercompany_settlement",
+    "intercompany_treasury": "intercompany_treasury",
+    "opening": "opening",
 }
 ALLOCATION_BASIS = {
     "customer_collections": (
