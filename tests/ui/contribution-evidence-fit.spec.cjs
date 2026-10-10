@@ -2,7 +2,7 @@ const {test,expect}=require('@playwright/test');
 
 test('every contribution page exposes its paged evidence on a laptop canvas',async({page})=>{
   await page.setViewportSize({width:1280,height:720});
-  const routes=[['pnl',5,2],['profitability',4,2],['working-capital',0,2],['working-capital',1,2],['working-capital',2,2],['working-capital',3,2],['operations-capex',3,1],['cash-flow',3,1]];
+  const routes=[['pnl',5,2],['profitability',4,2],['working-capital',0,2],['working-capital',1,2],['working-capital',2,2],['working-capital',3,2],['operations-capex',3,1],['cash-flow',3,2]];
   for(const [view,index,count] of routes){
     await page.goto(`/#view=${view}&page=${index}`);
     const panel=page.locator('.cx-evidence');
