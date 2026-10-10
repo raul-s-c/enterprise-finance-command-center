@@ -996,21 +996,29 @@ test('statement analysis survives live resize without an overlapping inspector',
 });
 
 
-test('Cash Flow entity contribution opens the selected entity contribution page',async({page})=>{
+test('Cash Flow entity drill applies the selected entity to contribution and reset clears the route scope',async({page})=>{
   await page.setViewportSize({width:1280,height:720});
   await page.goto('/#view=cash-flow&page=0');
   await page.getByRole('button',{name:'Contribution & detail'}).click();
-  const row=page.locator('.sw-detail [data-sw-filter="entity"]').first();
+  const row=page.locator('.sw-detail [data-sw-filter="entity"][data-sw-row="US01"]');
   await expect(row).toBeVisible();
-  const entity=await row.getAttribute('data-sw-row');
   await row.click();
-  await expect.poll(()=>new URLSearchParams(new URL(page.url()).hash.slice(1)).get('entity')).toBe(entity);
-  await expect.poll(()=>new URLSearchParams(new URL(page.url()).hash.slice(1)).get('page')).toBe('3');
+  const route=()=>new URLSearchParams(new URL(page.url()).hash.slice(1));
+  await expect.poll(()=>route().get('entity')).toBe('US01');
+  await expect.poll(()=>route().get('page')).toBe('3');
   await expect(page.locator('#content')).toContainText('Contribution');
   await expect(page.locator('#cx-metric')).toHaveValue('free_cash_flow');
   await expect(page.locator('#content')).toContainText('Contribution analysis · Free cash flow');
+  await expect(page.locator('.cx-head p')).toHaveText('Entity: US01');
+  await expect(page.locator('.cx-inspector .cx-region-title>span')).toHaveText('US01');
+  const scopedTotal=(await page.locator('.cx-summary > div').first().locator('strong').innerText()).trim();
+  const selectedValue=(await page.locator('.cx-inspector dl dd').first().innerText()).trim();
+  expect(scopedTotal).toBe(selectedValue);
   const sourceNode=page.locator('.cx-flow-map button').first();
   await expect(sourceNode.locator('strong')).toHaveText('Cash Flow Detail');
   await expect(sourceNode).toHaveAttribute('title','Source table: cash_flow_detail');
   await expect(page.locator('.cx-inspector')).toContainText('cash_flow_detail');
+  await page.locator('#cx-reset').click();
+  await expect(page.locator('.cx-head p')).toHaveText('All published contributors');
+  await expect.poll(()=>route().get('entity')).toBe('all');
 });
