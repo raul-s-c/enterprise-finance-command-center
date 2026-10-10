@@ -37,7 +37,7 @@ def test_v27_wrapper_publishes_sku_lineage_controls(tmp_path, monkeypatch):
     assert validation["sale_journal_invalid_product_rows"] == 0
     assert validation["invoice_invalid_product_rows"] == 0
     assert validation["invoice_product_lineage_passed"]
-    assert manifest["version"] == dashboard["meta"]["version"] == "0.27.0"
+    assert manifest["version"] == dashboard["meta"]["version"] == engine_v27.VERSION
     assert manifest["invoice_product_lineage_rows"] == dashboard["meta"]["invoice_product_lineage_rows"] == 1
 
 
