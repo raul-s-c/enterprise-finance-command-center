@@ -148,7 +148,7 @@
         row.tabIndex=0;
         row.title=cashLineageAvailable?'Open cash movement lineage detail':'Open complete published source record';
         row.setAttribute('aria-label',cashLineageAvailable?`Open cash movement lineage row ${s.evidencePage*evidenceSize+index+1}`:`Open published source record ${s.evidencePage*evidenceSize+index+1}`);
-        const open=()=>showRecords([evidence[index]]);
+        const open=()=>showRecords([evidence[index]],cashLineageAvailable?'Cash movement lineage detail':'Published source record');
         row.onclick=open;
         row.onkeydown=event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();open();}};
       });
@@ -288,7 +288,7 @@
       };
       draw();
     }
-    function showRecords(rows){let index=0,fieldPage=0;const draw=()=>{const entries=Object.entries(rows[index]||{}),n=innerWidth<700?3:6,part=entries.slice(fieldPage*n,(fieldPage+1)*n);reportDialog('Published source record',`<div class="row-detail">${part.map(([field,value])=>`<div><dt>${e(label(field))}</dt><dd>${e(value)}</dd></div>`).join('')}</div><p>Record ${index+1} / ${rows.length} · Fields ${fieldPage+1} / ${Math.max(1,Math.ceil(entries.length/n))}</p><button id="cx-record-prev" ${index?'':'disabled'}>Previous record</button> <button id="cx-record-next" ${index+1<rows.length?'':'disabled'}>Next record</button> <button id="cx-fields" ${entries.length>n?'':'disabled'}>More fields</button>`);document.getElementById('cx-record-prev').onclick=()=>{index--;fieldPage=0;draw();};document.getElementById('cx-record-next').onclick=()=>{index++;fieldPage=0;draw();};document.getElementById('cx-fields').onclick=()=>{fieldPage=(fieldPage+1)%Math.ceil(entries.length/n);draw();};};draw();}
+    function showRecords(rows,title='Published source record'){let index=0,fieldPage=0;const draw=()=>{const entries=Object.entries(rows[index]||{}),n=innerWidth<700?3:6,part=entries.slice(fieldPage*n,(fieldPage+1)*n);reportDialog(title,`<div class="row-detail">${part.map(([field,value])=>`<div><dt>${e(label(field))}</dt><dd>${e(value)}</dd></div>`).join('')}</div><p>Record ${index+1} / ${rows.length} · Fields ${fieldPage+1} / ${Math.max(1,Math.ceil(entries.length/n))}</p><button id="cx-record-prev" ${index?'':'disabled'}>Previous record</button> <button id="cx-record-next" ${index+1<rows.length?'':'disabled'}>Next record</button> <button id="cx-fields" ${entries.length>n?'':'disabled'}>More fields</button>`);document.getElementById('cx-record-prev').onclick=()=>{index--;fieldPage=0;draw();};document.getElementById('cx-record-next').onclick=()=>{index++;fieldPage=0;draw();};document.getElementById('cx-fields').onclick=()=>{fieldPage=(fieldPage+1)%Math.ceil(entries.length/n);draw();};};draw();}
     paint();
   };
 })(globalThis);
