@@ -68,7 +68,13 @@ test('cash contribution explains free cash flow by source category and retains i
   await expect(explorer.getByRole('heading',{name:'Contribution by division'})).toBeVisible();
   await explorer.getByRole('button',{name:'Cash flow category',exact:true}).click();
   await expect(explorer.getByRole('heading',{name:'Contribution by cash flow category'})).toBeVisible();
-  await expect(explorer.locator('.cx-summary > div:first-child > strong')).toHaveText('€3,467,504.18');
+  const publishedFcf=await page.evaluate(async()=>{
+    const data=await(await fetch('/data/dashboard.json')).json();
+    return data.cash_flow_detail.find(row=>row.month===data.meta.end_month&&row.entity==='US01')?.free_cash_flow;
+  });
+  expect(Number.isFinite(publishedFcf)).toBeTruthy();
+  const expectedFcf=new Intl.NumberFormat('en-US',{style:'currency',currency:'EUR',minimumFractionDigits:2,maximumFractionDigits:2}).format(publishedFcf);
+  await expect(explorer.locator('.cx-summary > div:first-child > strong')).toHaveText(expectedFcf);
   await expect(explorer.locator('.cx-ranking')).toContainText('Customer collections');
   await expect(explorer.locator('.cx-ranking')).toContainText('Supplier payments');
   await expect(explorer.getByRole('heading',{name:'Cash movement lineage · Customer collections'})).toBeVisible();
