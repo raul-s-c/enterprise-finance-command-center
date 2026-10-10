@@ -10,7 +10,7 @@ from .engine_v21 import _dump_json
 from .engine_v27 import build as build_v27
 from .cash_movement_lineage import build_cash_movement_lineage
 
-VERSION = "0.28.3"
+VERSION = "0.28.4"
 EVIDENCE_BASIS = (
     "Current-close cash-account journal rows are reconciled to the published cash-flow summary. "
     "Customer invoices and supplier accruals are analytical allocations of aggregate posted cash "
