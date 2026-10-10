@@ -70,11 +70,11 @@ test('P&L contribution opens product economics with explicit scope and reporting
   await expect(pnl).toBeVisible();
   const link=pnl.locator('#cx-open-products');
   await expect(link).toBeVisible();
-  await expect(pnl.locator('.cx-crosslink')).toContainText('trailing 12 months');
-  await expect(pnl.locator('.cx-crosslink')).toContainText('not a reconciliation');
+  await expect(link).toHaveText('Products · TTM');
+  await expect(link).toHaveAttribute('title',/not a reconciliation to the selected monthly P&L/);
 
   await page.setViewportSize({width:390,height:844});
-  const card=await pnl.locator('.cx-crosslink').boundingBox();
+  const card=await link.boundingBox();
   expect(card).not.toBeNull();
   expect(card.x).toBeGreaterThanOrEqual(0);
   expect(card.x+card.width).toBeLessThanOrEqual(391);
