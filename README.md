@@ -57,7 +57,7 @@ CFO analytics
 
 P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.28.9
+## Current release: v0.28.10
 
 Version 0.28.9 adds two pre-publication CAPEX controls: project spend cannot exceed approved budget, and every event must match its configured legal entity, division, go-live month and useful life. The statement values and existing reconciliation tolerances are unchanged.
 
