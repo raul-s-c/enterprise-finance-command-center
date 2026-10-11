@@ -56,3 +56,11 @@ test('Executive narrative explains scoped commercial drivers without leaking sou
   assert.match(unsupported,/No active action is assigned to this exact scope/);
   assert.match(unsupported,/GROUP OUTLOOK/);
 });
+
+
+test('executive laptop layout keeps management actions and company history visible',()=>{
+  const css=require('fs').readFileSync(require('path').join(__dirname,'../web/executive-cockpit.css'),'utf8');
+  assert.match(css,/@media\(min-width:901px\) and \(max-width:1250px\) and \(min-height:651px\)[\s\S]*?\.tower-bottom\{display:grid/);
+  assert.doesNotMatch(css,/\.tower-bottom\{display:none\}/);
+  assert.match(css,/\.tower-canvas\{grid-template-rows:minmax\(0,1fr\) minmax\(92px,18vh\)\}/);
+});
