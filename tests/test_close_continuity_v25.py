@@ -1,5 +1,6 @@
 """Two real, offline latest-release builds in an isolated directory; no production data writes."""
 import json
+import tomllib
 from pathlib import Path
 
 import pandas as pd
@@ -50,7 +51,8 @@ def test_consecutive_closes_preserve_history_forecast_and_working_capital_lineag
     invoice_detail = json.loads(Path("web/data/ar_invoice_detail.json").read_text())
     ap_detail = json.loads(Path("web/data/ap_item_detail.json").read_text())
     fixed_asset_detail = json.loads(Path("web/data/fixed_asset_detail.json").read_text())
-    assert manifest["version"] == dashboard["meta"]["version"] == "0.28.5"
+    release = tomllib.loads((Path(__file__).resolve().parents[1] / "pyproject.toml").read_text(encoding="utf-8"))["project"]["version"]
+    assert manifest["version"] == dashboard["meta"]["version"] == release
     assert manifest["ar_invoice_rows"] == dashboard["meta"]["ar_invoice_count"] == invoice_detail["invoice_count"]
     assert manifest["ap_item_rows"] == dashboard["meta"]["ap_item_count"] == ap_detail["item_count"]
     assert manifest["ar_invoice_application_rows"] > 0
