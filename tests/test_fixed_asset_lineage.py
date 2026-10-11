@@ -143,3 +143,15 @@ def test_project_event_with_wrong_entity_fails_close_control():
 
     assert not checks["passed"]
     assert checks["fixed_asset_project_scope_mismatches"] == 1
+
+
+def test_negative_project_cip_fails_even_when_it_is_below_gl_reconciliation_tolerance():
+    journal, events, config = fixture()
+    events.loc[events.event.eq("GO_LIVE"), "amount"] = 100.01
+    journal.loc[journal.account.eq("1500_PPE"), "debit"] = 100.01
+    journal.loc[journal.account.eq("1510_CIP") & journal.journal_type.eq("capex_transfer"), "credit"] = 100.01
+
+    _, _, checks = build_fixed_asset_lineage(journal, events, config, "2026-03")
+
+    assert not checks["passed"]
+    assert checks["fixed_asset_project_min_balance"] == pytest.approx(-0.01)
