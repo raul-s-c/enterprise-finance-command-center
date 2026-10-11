@@ -258,4 +258,5 @@
 @media (min-width:2400px){
   .report-mode .pnl-analysis-layout{grid-template-columns:minmax(0,min(1800px,calc(100% - 312px))) 300px;justify-content:center}
   .report-mode .pnl-heading,.report-mode button.pnl-row{grid-template-columns:minmax(260px,1.15fr) 72px minmax(300px,1.3fr) minmax(160px,.75fr) minmax(145px,.7fr);gap:10px}
+  .report-mode button.pnl-row,.report-mode .pnl-track b,.report-mode .pnl-delta b,.report-mode .pnl-percent b{font-size:14px}
 }
