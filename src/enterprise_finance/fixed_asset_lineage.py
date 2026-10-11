@@ -71,13 +71,13 @@ def build_fixed_asset_lineage(
         .sum()
         .to_dict()
     )
-    budget_max_overrun = max(
+    budget_max_overrun = round(max(
         (
             max(float(spend) - float(project_config[str(project)]["budget"]), 0.0)
             for project, spend in project_spend.items()
         ),
         default=0.0,
-    )
+    ), 2)
 
     event_rows: list[dict] = []
     for event in events.sort_values(["month", "project", "event"], kind="stable").itertuples(index=False):
@@ -116,6 +116,7 @@ def build_fixed_asset_lineage(
         raise ValueError("Fixed-asset close journal must contain a contiguous monthly history")
 
     register_rows: list[dict] = []
+    project_balance_values: list[float] = []
     for project_id, project in sorted(project_config.items()):
         start = pd.Period(str(project["start"]), freq="M")
         live = start + int(project["build_months"]) - 1
@@ -133,8 +134,7 @@ def build_fixed_asset_lineage(
         depreciation_ltd = depreciation_monthly * in_service_months
         depreciation_current = depreciation_monthly if live < close else 0.0
         net_book_value = gross_ppe - depreciation_ltd
-        if min(cip, gross_ppe, depreciation_ltd, net_book_value) < -TOLERANCE:
-            raise RuntimeError(f"Negative project asset balance for {project_id}")
+        project_balance_values.extend([cip, gross_ppe, depreciation_ltd, net_book_value])
         state = "In service" if live <= close else ("Construction in progress" if spend > 0.0 else "Planned")
         depreciation_journal_id = f"DEP-{end_month}-{project['entity']}"
         register_rows.append({
@@ -214,6 +214,7 @@ def build_fixed_asset_lineage(
             ])
     depreciation_gap = max(depreciation_gaps, default=0.0)
 
+    project_min_balance = min(project_balance_values, default=0.0)
     checks = {
         "fixed_asset_event_journal_max_gap": 0.0,
         "fixed_asset_gross_ppe_max_gap": round(gross_gap, 2),
@@ -224,8 +225,11 @@ def build_fixed_asset_lineage(
         "fixed_asset_event_rows": int(len(event_detail)),
         "fixed_asset_budget_max_overrun": round(budget_max_overrun, 2),
         "fixed_asset_project_scope_mismatches": int(project_scope_mismatches),
+        "fixed_asset_project_min_balance": round(project_min_balance, 2),
         "passed": bool(
-            max(gross_gap, cip_gap, accum_dep_residual, depreciation_gap, budget_max_overrun) <= TOLERANCE
+            max(gross_gap, cip_gap, accum_dep_residual, depreciation_gap) <= TOLERANCE
+            and budget_max_overrun == 0.0
+            and round(project_min_balance, 2) >= 0.0
             and project_scope_mismatches == 0
         ),
     }
