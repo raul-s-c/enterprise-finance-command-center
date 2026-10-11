@@ -13,7 +13,19 @@ test('all eight contribution explorers show complete details beside evidence on 
     await page.goto(`/#view=${view}&page=${index}`);
     const explorer=page.locator(`.contribution-explorer[data-contribution="${key}"]`);
     await expect(explorer).toBeVisible();
-    if(key==='nwc')await page.screenshot({path:testInfo.outputPath('nwc-inspector-1280x720.png')});
+    if(key==='nwc'){
+      const evidenceColumns=await explorer.locator('.cx-evidence').evaluate(section=>{
+        const headers=[...section.querySelectorAll('thead th')].map(cell=>cell.textContent.trim());
+        const body=[...section.querySelectorAll('tbody tr')].map(row=>[...row.querySelectorAll('td')].map(cell=>cell.textContent.trim()));
+        return {headers,body,blankColumns:headers.map((_,index)=>index).filter(index=>body.every(row=>!row[index]))};
+      });
+      expect(evidenceColumns.headers).toContain('Contributor');
+      expect(evidenceColumns.headers).not.toContain('Customer name');
+      expect(evidenceColumns.headers).not.toContain('Supplier name');
+      expect(evidenceColumns.blankColumns).toEqual([]);
+      expect(new Set(evidenceColumns.headers).size).toBe(evidenceColumns.headers.length);
+      await page.screenshot({path:testInfo.outputPath('nwc-inspector-1280x720.png')});
+    }
     const geometry=await explorer.evaluate(element=>{
       const inspector=element.querySelector('.cx-inspector'),details=inspector.querySelector('dl');
       const side=inspector.getBoundingClientRect(),evidence=element.querySelector('.cx-evidence').getBoundingClientRect();

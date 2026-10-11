@@ -149,3 +149,17 @@
 
 .report-mode .cx-commands button#cx-open-products{border-color:#b8d3f2;background:#eaf3ff;color:#0759bd;box-shadow:none}.report-mode .cx-commands button#cx-open-products:hover{background:#dcecff;border-color:#8cb8ea}
 @media(max-width:700px){.report-mode .cx-commands button#cx-open-products{font-size:8px;padding:4px 6px}}
+
+
+/* Keep cash source identifiers readable inside their own evidence panel. */
+.cx-evidence.cash-lineage-evidence .cx-table-wrap{overflow:auto;overscroll-behavior-inline:contain}
+.cx-evidence.cash-lineage-evidence table{min-width:1080px}
+.cx-evidence.cash-lineage-evidence th:nth-child(1),.cx-evidence.cash-lineage-evidence td:nth-child(1){width:9%}
+.cx-evidence.cash-lineage-evidence th:nth-child(2),.cx-evidence.cash-lineage-evidence td:nth-child(2){width:16%}
+.cx-evidence.cash-lineage-evidence th:nth-child(3),.cx-evidence.cash-lineage-evidence td:nth-child(3){width:18%}
+.cx-evidence.cash-lineage-evidence th:nth-child(4),.cx-evidence.cash-lineage-evidence td:nth-child(4){width:17%}
+.cx-evidence.cash-lineage-evidence th:nth-child(5),.cx-evidence.cash-lineage-evidence td:nth-child(5){width:14%}
+.cx-evidence.cash-lineage-evidence th:nth-child(6),.cx-evidence.cash-lineage-evidence td:nth-child(6){width:17%}
+.cx-evidence.cash-lineage-evidence th:nth-child(7),.cx-evidence.cash-lineage-evidence td:nth-child(7){width:9%}
+.cx-evidence.cash-lineage-evidence th:nth-child(5),.cx-evidence.cash-lineage-evidence th:nth-child(6){white-space:normal;overflow-wrap:anywhere;text-overflow:clip;line-height:1.15}
+.cx-evidence.cash-lineage-evidence td:nth-child(5),.cx-evidence.cash-lineage-evidence td:nth-child(6){height:auto;min-height:30px;white-space:normal;overflow-wrap:anywhere;text-overflow:clip;line-height:1.2;font-variant-numeric:tabular-nums}
