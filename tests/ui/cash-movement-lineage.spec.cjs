@@ -20,6 +20,14 @@ test('cash contribution traces free cash flow to invoice and accrual allocation 
   expect(lineageLayout.overflowWrap).toBe('anywhere');
   expect(lineageLayout.recordId).not.toBe('');
   expect(lineageLayout.journalId).not.toBe('');
+  const evidenceRegion=explorer.locator('.cx-evidence.cash-lineage-evidence .cx-table-wrap');
+  await expect(evidenceRegion).toHaveAttribute('tabindex','0');
+  await expect(evidenceRegion).toHaveAttribute('role','region');
+  await expect(evidenceRegion).toHaveAttribute('aria-label',/arrow keys or horizontal scrollbar/);
+  const beforeKeyboardScroll=await evidenceRegion.evaluate(element=>element.scrollLeft);
+  await evidenceRegion.press('ArrowRight');
+  const afterKeyboardScroll=await evidenceRegion.evaluate(element=>element.scrollLeft);
+  expect(afterKeyboardScroll).toBeGreaterThan(beforeKeyboardScroll);
   await expect(explorer.locator('.cx-evidence table tbody tr').first()).toBeVisible();
   await expect(explorer.locator('[data-dimension="division"]')).toBeVisible();
   await explorer.locator('[data-dimension="division"]').click();
