@@ -28,6 +28,9 @@ test('cash contribution traces free cash flow to invoice and accrual allocation 
   await evidenceRegion.press('ArrowRight');
   const afterKeyboardScroll=await evidenceRegion.evaluate(element=>element.scrollLeft);
   expect(afterKeyboardScroll).toBeGreaterThan(beforeKeyboardScroll);
+  await evidenceRegion.press('ArrowLeft');
+  const afterKeyboardReverse=await evidenceRegion.evaluate(element=>element.scrollLeft);
+  expect(afterKeyboardReverse).toBeLessThan(afterKeyboardScroll);
   await expect(explorer.locator('.cx-evidence table tbody tr').first()).toBeVisible();
   await expect(explorer.locator('[data-dimension="division"]')).toBeVisible();
   await explorer.locator('[data-dimension="division"]').click();
