@@ -30,7 +30,7 @@ test('ultrawide P&L keeps the statement and evidence inspector visually grouped'
   expect(geometry.gap).toBeLessThanOrEqual(13);
   expect(geometry.documentOverflow).toBe(false);
   expect(geometry.labelFont).toBeGreaterThanOrEqual(14);
-  expect(geometry.varianceFont).toBeGreaterThanOrEqual(13);
+  expect(geometry.varianceFont).toBeGreaterThanOrEqual(14);
 
   await page.locator('[data-pnl-key="opex"]').click();
   await expect(layout.locator('.pnl-inline-inspector')).toContainText('Sum of OPEX');
