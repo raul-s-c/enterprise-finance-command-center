@@ -58,9 +58,9 @@ test('Executive narrative explains scoped commercial drivers without leaking sou
 });
 
 
-test('executive laptop layout keeps management actions and company history visible',()=>{
+test('executive laptop layout protects primary visuals at short heights and retains story on taller screens',()=>{
   const css=require('fs').readFileSync(require('path').join(__dirname,'../web/executive-cockpit.css'),'utf8');
-  assert.match(css,/@media\(min-width:901px\) and \(max-width:1250px\) and \(min-height:651px\)[\s\S]*?\.tower-bottom\{display:grid/);
-  assert.doesNotMatch(css,/\.tower-bottom\{display:none\}/);
-  assert.match(css,/\.tower-canvas\{grid-template-rows:minmax\(0,1fr\) minmax\(92px,18vh\)\}/);
+  assert.match(css,/@media\(min-width:901px\) and \(max-width:1250px\) and \(min-height:651px\), \(min-width:901px\) and \(min-height:651px\) and \(max-height:879px\)[\s\S]*?\.tower-bottom\{display:none\}/);
+  assert.match(css,/@media\(min-width:901px\) and \(max-width:1250px\) and \(min-height:880px\)[\s\S]*?\.tower-bottom\{display:grid/);
+  assert.match(css,/\.tower-canvas\{grid-template-rows:minmax\(0,1fr\) minmax\(124px,14vh\)\}/);
 });
