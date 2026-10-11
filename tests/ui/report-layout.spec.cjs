@@ -1022,3 +1022,16 @@ test('Cash Flow entity drill applies the selected entity to contribution and res
   await expect(page.locator('.cx-head p')).toHaveText('All published contributors');
   await expect.poll(()=>route().get('entity')).toBe('all');
 });
+
+
+test('Executive laptop story rail appears when viewport height can support it',async({page})=>{
+  await page.setViewportSize({width:1200,height:900});
+  await page.goto('/#view=executive&page=0&entity=all&division=all');
+  const rail=page.locator('.tower-bottom');
+  await expect(rail).toBeVisible();
+  await expect(rail.locator('.tower-actions')).toContainText('Management priorities');
+  await expect(rail.locator('.story-timeline')).toContainText('36-month company story');
+  const fit=await rail.evaluate(element=>({bottom:element.getBoundingClientRect().bottom,viewport:innerHeight,scroll:element.scrollHeight,height:element.clientHeight}));
+  expect(fit.bottom).toBeLessThanOrEqual(fit.viewport);
+  expect(fit.scroll).toBeLessThanOrEqual(fit.height+1);
+});
