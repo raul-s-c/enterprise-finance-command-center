@@ -45,6 +45,40 @@ def build_fixed_asset_lineage(
     if set(events.project.astype(str)) - set(project_config):
         raise ValueError("CAPEX events contain project IDs absent from configuration")
 
+    # Each event must remain inside the approved project master-data scope.
+    # This prevents a valid journal amount from being attributed to the wrong
+    # legal entity, division, go-live date or depreciation life.
+    project_scope_mismatches = 0
+    for event in events.itertuples(index=False):
+        project = project_config[str(event.project)]
+        expected_go_live = (
+            pd.Period(str(project["start"]), freq="M")
+            + int(project["build_months"])
+            - 1
+        ).strftime("%Y-%m")
+        actual_go_live = str(event.go_live)[:7]
+        if (
+            str(event.entity) != str(project["entity"])
+            or str(event.division) != str(project["division"])
+            or actual_go_live != expected_go_live
+            or int(event.useful_life_months) != int(project["useful_life_months"])
+        ):
+            project_scope_mismatches += 1
+
+    project_spend = (
+        events.loc[events.event.eq("SPEND")]
+        .groupby(events.loc[events.event.eq("SPEND"), "project"].astype(str))["amount"]
+        .sum()
+        .to_dict()
+    )
+    budget_max_overrun = max(
+        (
+            max(float(spend) - float(project_config[str(project)]["budget"]), 0.0)
+            for project, spend in project_spend.items()
+        ),
+        default=0.0,
+    )
+
     event_rows: list[dict] = []
     for event in events.sort_values(["month", "project", "event"], kind="stable").itertuples(index=False):
         project = str(event.project)
@@ -188,6 +222,11 @@ def build_fixed_asset_lineage(
         "fixed_asset_depreciation_max_gap": round(depreciation_gap, 2),
         "fixed_asset_project_rows": int(len(register)),
         "fixed_asset_event_rows": int(len(event_detail)),
-        "passed": bool(max(gross_gap, cip_gap, accum_dep_residual, depreciation_gap) <= TOLERANCE),
+        "fixed_asset_budget_max_overrun": round(budget_max_overrun, 2),
+        "fixed_asset_project_scope_mismatches": int(project_scope_mismatches),
+        "passed": bool(
+            max(gross_gap, cip_gap, accum_dep_residual, depreciation_gap, budget_max_overrun) <= TOLERANCE
+            and project_scope_mismatches == 0
+        ),
     }
     return register, event_detail, checks

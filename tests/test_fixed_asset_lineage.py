@@ -120,3 +120,26 @@ def test_pnl_closing_entries_do_not_reverse_monthly_depreciation_control():
     assert checks["passed"]
     assert checks["fixed_asset_accumulated_depreciation_max_gap"] == pytest.approx(0.0)
     assert checks["fixed_asset_depreciation_max_gap"] == pytest.approx(0.0)
+
+
+def test_project_spend_over_approved_budget_fails_close_control():
+    journal, events, config = fixture()
+    journal_id = "CAPEX-2026-01-CAPEX-TEST-01"
+    journal.loc[journal.journal_id.eq(journal_id) & journal.account.eq("1510_CIP"), "debit"] = 41.0
+    journal.loc[journal.journal_id.eq(journal_id) & journal.account.eq("1000_CASH"), "credit"] = 41.0
+    events.loc[events.month.eq("2026-01") & events.event.eq("SPEND"), "amount"] = 41.0
+
+    _, _, checks = build_fixed_asset_lineage(journal, events, config, "2026-03")
+
+    assert not checks["passed"]
+    assert checks["fixed_asset_budget_max_overrun"] == pytest.approx(1.0)
+
+
+def test_project_event_with_wrong_entity_fails_close_control():
+    journal, events, config = fixture()
+    events.loc[events.month.eq("2026-01"), "entity"] = "DE01"
+
+    _, _, checks = build_fixed_asset_lineage(journal, events, config, "2026-03")
+
+    assert not checks["passed"]
+    assert checks["fixed_asset_project_scope_mismatches"] == 1
