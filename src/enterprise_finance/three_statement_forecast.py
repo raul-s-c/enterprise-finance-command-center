@@ -5,6 +5,8 @@ from collections import defaultdict
 import numpy as np
 import pandas as pd
 
+from .capex import capex_spend_schedule
+
 
 def _money(value: float) -> float:
     """Materialize monetary state at ledger precision."""
@@ -21,13 +23,10 @@ def _capex_project_schedules(config: dict, end_month: str, opening_cip: float) -
         start = pd.Period(project["start"], freq="M")
         build_months = int(project["build_months"])
         spend_months = pd.period_range(start=start, periods=build_months, freq="M")
-        x = np.linspace(0.25, np.pi - 0.25, build_months)
-        weights = np.sin(x)
-        weights = weights / weights.sum()
         go_live = start + build_months - 1
         if go_live <= end:
             continue
-        spends = {str(month): _money(float(project["budget"]) * float(weights[idx])) for idx, month in enumerate(spend_months)}
+        spends = capex_spend_schedule(project)
         raw = _money(sum(amount for month, amount in spends.items() if pd.Period(month, freq="M") <= end))
         raw_opening[str(project["id"])] = raw
         projects[str(project["id"])] = {
