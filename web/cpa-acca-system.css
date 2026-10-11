@@ -252,3 +252,10 @@
   .report-mode .pnl-visual[data-mobile-view=variance] .pnl-row>span:nth-child(2),
   .report-mode .pnl-visual[data-mobile-view=variance] .pnl-row>span:nth-child(3){display:none}
 }
+
+
+/* Keep the IBCS comparison columns legible on ultrawide canvases. */
+@media (min-width:2400px){
+  .report-mode .pnl-analysis-layout{grid-template-columns:minmax(0,min(1800px,calc(100% - 312px))) 300px;justify-content:center}
+  .report-mode .pnl-heading,.report-mode button.pnl-row{grid-template-columns:minmax(260px,1.15fr) 72px minmax(300px,1.3fr) minmax(160px,.75fr) minmax(145px,.7fr);gap:10px}
+}
