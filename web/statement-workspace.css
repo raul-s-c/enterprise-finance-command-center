@@ -50,3 +50,5 @@
 /* A toned note or check value without a sign must not rely on colour alone (WCAG 1.4.1). */
 .report-mode [data-tone-mark].favorable::before,.report-mode [data-tone-mark].good::before{content:"\2713\00a0"}
 .report-mode [data-tone-mark].unfavorable::before{content:"!\00a0";font-weight:800}
+/* Phones: cockpit actions wrap below the title instead of running off-screen. */
+@media(max-width:600px){.report-mode .sw-head{flex-wrap:wrap;row-gap:8px}.report-mode .sw-head>div:last-child{flex:1 1 100%;flex-wrap:wrap;min-width:0}}
