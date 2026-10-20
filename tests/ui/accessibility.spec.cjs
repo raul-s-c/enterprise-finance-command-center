@@ -17,6 +17,39 @@ async function goToPage(page,index){
   await page.evaluate(i=>reportNavigate(i),index);
   await page.waitForFunction(i=>reportState.page===i&&document.querySelector('#content').children.length,index);
 }
+// Tone classes chosen by the month's data. The published close shows one side of each pair, so
+// the audit also re-runs colour contrast with every element switched to each other variant of its
+// group (same text, layout and container), e.g. under- vs over-absorbed factory cost.
+const TONE_VARIANTS=[
+  ['favorable','unfavorable'],['good','bad'],['positive','negative'],['value-pos','value-neg'],
+  ['is-favorable','is-adverse'],['is-positive','is-negative'],['po-favorable','po-adverse'],['ox-favorable','ox-adverse'],
+  ['fa-good','fa-alert'],['ct-pass','ct-fail'],['fs-pass','fs-fail'],['pm-pass','pm-fail'],['ox-pass','ox-fail'],
+  ['dj-passed','dj-review'],['control-pass','control-fail'],['passed','failed'],
+  ['fv-positive','fv-negative'],['fv-positive-label','fv-negative-label'],['aev-bar-positive','aev-bar-negative'],
+  ['success','warn'],['base','upside','downside'],
+  ['severity-low','severity-medium','severity-high','severity-critical'],['priority-p1','priority-p2']
+];
+async function toneVariantViolations(page){
+  const phases=await page.evaluate(groups=>{
+    const present=groups.filter(group=>group.some(name=>document.getElementsByClassName(name).length));
+    return Math.max(0,...present.map(group=>group.length-1));
+  },TONE_VARIANTS);
+  const found=[];
+  for(let phase=1;phase<=phases;phase++){
+    await page.evaluate(({groups,phase})=>{
+      const lookup=new Map(groups.flatMap(group=>group.map((name,index)=>[name,[group,index]])));
+      window.__toneOriginal=new Map();
+      for(const el of document.querySelectorAll(groups.flat().map(name=>`.${name}`).join(','))){
+        const original=el.getAttribute('class');window.__toneOriginal.set(el,original);
+        el.setAttribute('class',original.split(/\s+/).map(name=>{const hit=lookup.get(name);return hit?hit[0][(hit[1]+phase)%hit[0].length]:name;}).join(' '));
+      }
+    },{groups:TONE_VARIANTS,phase});
+    const {violations}=await new AxeBuilder({page}).withRules(['color-contrast']).analyze();
+    found.push(...violations.filter(v=>v.impact==='serious'||v.impact==='critical'));
+    await page.evaluate(()=>{for(const [el,original] of window.__toneOriginal)el.setAttribute('class',original);window.__toneOriginal=null;});
+  }
+  return found;
+}
 const describe=violations=>violations.map(v=>`${v.impact} ${v.id}: ${v.help}\n${v.nodes.slice(0,5).map(node=>`  ${node.target.join(' ')} · ${(node.failureSummary||'').split('\n').slice(1).join(' ').trim()}`).join('\n')}`).join('\n');
 
 test('every report view is part of the audit',()=>{
@@ -36,6 +69,8 @@ for(const viewport of VIEWPORTS)test.describe(`axe WCAG 2.1 AA · ${viewport.nam
       const {violations}=await new AxeBuilder({page}).withTags(WCAG_TAGS).analyze();
       const blocking=violations.filter(v=>v.impact==='serious'||v.impact==='critical');
       if(blocking.length)failures.push(`${view} · ${index+1}. ${pages[index]}\n${describe(blocking)}`);
+      const variants=await toneVariantViolations(page);
+      if(variants.length)failures.push(`${view} · ${index+1}. ${pages[index]} · alternate tone variant\n${describe(variants)}`);
     }
     expect(failures,failures.join('\n\n')).toEqual([]);
   });
@@ -166,4 +201,25 @@ test('every chart or SVG exposed with a role has an accessible name, and varianc
     }
   }
   expect(problems,problems.join('\n')).toEqual([]);
+});
+
+// The published close shows either under- or over-absorption; audit both with routed data.
+for(const [label,sign] of [['under-absorbed',1],['over-absorbed',-1]])test(`factory absorption equation passes axe when the close is ${label}`,async({page})=>{
+  const dashboard=await (await page.request.get('/data/dashboard.json')).json();
+  for(const row of dashboard.hardware_factory_economics.filter(item=>item.month===dashboard.meta.end_month)){
+    const variance=sign*Math.max(Math.abs(Number(row.absorption_variance)||0),1000);
+    row.absorption_variance=variance;row.absorbed_fixed_cost=Number(row.actual_fixed_factory_cost)-variance;
+  }
+  await page.route('**/data/dashboard.json*',route=>route.fulfill({json:dashboard}));
+  for(const viewport of VIEWPORTS){
+    await page.setViewportSize({width:viewport.width,height:viewport.height});
+    await open(page,'business-drivers');
+    const index=await page.evaluate(()=>reportState.pages.findIndex(item=>/Factory absorption/.test(item.title)));
+    expect(index,'factory absorption page').toBeGreaterThanOrEqual(0);
+    await goToPage(page,index);
+    await expect(page.locator(`.fa-equation .${sign>0?'fa-alert':'fa-good'}`)).toBeVisible();
+    const {violations}=await new AxeBuilder({page}).include('.fa-panel').withTags(WCAG_TAGS).analyze();
+    const blocking=violations.filter(v=>v.impact==='serious'||v.impact==='critical');
+    expect(blocking,`${viewport.name}: ${describe(blocking)}`).toEqual([]);
+  }
 });
