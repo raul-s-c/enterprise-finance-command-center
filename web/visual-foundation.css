@@ -398,3 +398,5 @@
   .report-mode .statement-story-indicators>.statement-story-all summary{min-height:21px}
 }
 @media(max-width:360px){.report-mode .statement-story-indicators{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* Below 900px trend charts render near 1:1 (full-width or fixed-width scroll regions), so viewBox text sized for ~0.5x desktop scaling would read at 22-24px. */
+@media(max-width:900px){.report-mode .story-trend .report-svg text,.report-mode .statement-workspace .sw-primary .report-svg text,.report-mode .report-chart-scroll .report-svg text{font-size:14px}.report-mode .story-trend .report-svg .axis-text,.report-mode .statement-workspace .sw-primary .report-svg .axis-text,.report-mode .report-chart-scroll .report-svg .axis-text{font-size:12px}}
