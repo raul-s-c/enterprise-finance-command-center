@@ -4,7 +4,7 @@ globalThis.SkuProfitabilityWatch=(()=>{
   const esc=value=>FinanceReport.escape(String(value??''));
   const key=row=>`${row.division}|${row.product}`;
   const money=value=>{const n=Number(value)||0,a=Math.abs(n);return `${n<0?'−':''}€${a>=1e6?(a/1e6).toFixed(2)+'m':a>=1e3?(a/1e3).toFixed(1)+'k':a.toFixed(0)}`;};
-  const exact=value=>new Intl.NumberFormat('en-US',{style:'currency',currency:'EUR'}).format(Number(value)||0);
+  const exact=value=>new Intl.NumberFormat('en-US',{style:'currency',currency:'EUR'}).format(Number(value)||0).replace(/^-/,'−');
   const pct=value=>`${(100*(Number(value)||0)).toFixed(1)}%`;
   const residuals=row=>({
     mc:row.revenue-row.variable_production_cost-row.variable_selling_cost-row.marginal_contribution,

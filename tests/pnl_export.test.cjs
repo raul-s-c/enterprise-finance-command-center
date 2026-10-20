@@ -30,7 +30,7 @@ test('negative percentage changes use the left endpoint independently of favorab
 test('inline P&L inspector preserves negative signs and names its management-summary source',()=>{
  const data={meta:{end_month:'2026-08'},management_detail:[{...record,ebit:-1250000}]};
  const html=P.inspector(data,{entity:'all',division:'all'},'ebit');
- assert.match(html,/-€1\.3m/);
+ assert.match(html,/−€1\.3m/);
  assert.match(html,/management_detail · management summary/);
  assert.match(html,/not individual ledger postings/);
  assert.doesNotMatch(html,/NaN|undefined|Source-to-scope difference/);
@@ -82,12 +82,12 @@ test('P&L source bars show signed earnings impact versus PY, including cost pola
  assert.ok(revenue.includes('Negative earnings impact: -20.000 EUR m'));
  assert.ok(revenue.includes('Positive earnings impact: +20.000 EUR m'));
  const revenueInspector=P.inspector(data,{entity:'all',division:'all'},'revenue');
- assert.ok(revenueInspector.includes('-€20.0m vs PY'));
+ assert.ok(revenueInspector.includes('−€20.0m vs PY'));
  assert.ok(revenueInspector.includes('+€20.0m vs PY'));
  const costs=P.detail(data,{entity:'all',division:'all'},'opex');
  assert.ok(costs.includes('Negative earnings impact: -5.000 EUR m'));
  assert.ok(costs.includes('Positive earnings impact: +5.000 EUR m'));
  const costInspector=P.inspector(data,{entity:'all',division:'all'},'opex');
- assert.ok(costInspector.includes('-€5.0m vs PY'));
+ assert.ok(costInspector.includes('−€5.0m vs PY'));
  assert.ok(costInspector.includes('+€5.0m vs PY'));
 });
