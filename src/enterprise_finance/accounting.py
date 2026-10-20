@@ -6,6 +6,8 @@ from dataclasses import dataclass
 import numpy as np
 import pandas as pd
 
+from .capex import capex_spend_schedule
+
 
 ACCOUNT_META = {
     "1000_CASH": ("Balance Sheet", "Cash", "Asset"),
@@ -93,16 +95,14 @@ def _capex_schedule(config: dict, months: pd.PeriodIndex) -> tuple[pd.DataFrame,
         start = pd.Period(project["start"], freq="M")
         build_months = int(project["build_months"])
         spend_months = pd.period_range(start=start, periods=build_months, freq="M")
-        x = np.linspace(0.25, np.pi - 0.25, build_months)
-        weights = np.sin(x)
-        weights = weights / weights.sum()
+        spend_by_month = capex_spend_schedule(project)
         go_live = start + build_months - 1
-        for idx, period in enumerate(spend_months):
+        for period in spend_months:
             if period in month_set:
                 rows.append({
                     "month": str(period), "project": project["id"], "project_name": project["name"],
                     "entity": project["entity"], "division": project["division"], "event": "SPEND",
-                    "amount": round(float(project["budget"]) * float(weights[idx]), 2), "go_live": str(go_live),
+                    "amount": spend_by_month[str(period)], "go_live": str(go_live),
                     "useful_life_months": int(project["useful_life_months"]), "capacity_increase_pct": float(project["capacity_increase_pct"]),
                 })
         if go_live in month_set:

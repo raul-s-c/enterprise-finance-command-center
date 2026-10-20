@@ -5,6 +5,8 @@ from collections import deque
 import numpy as np
 import pandas as pd
 
+from .capex import capex_spend_schedule
+
 
 PHYSICAL_DIVISIONS = {"Hardware", "Spare Parts"}
 
@@ -67,10 +69,8 @@ def future_capex(config: dict, start_month: str, horizon: int = 12) -> pd.DataFr
         project_start = pd.Period(project["start"], freq="M")
         build_months = int(project["build_months"])
         spend_months = pd.period_range(start=project_start, periods=build_months, freq="M")
-        x = np.linspace(0.25, np.pi - 0.25, build_months)
-        weights = np.sin(x)
-        weights = weights / weights.sum()
-        for idx, month in enumerate(spend_months):
+        spend_by_month = capex_spend_schedule(project)
+        for month in spend_months:
             if month not in target_months:
                 continue
             rows.append({
@@ -79,7 +79,7 @@ def future_capex(config: dict, start_month: str, horizon: int = 12) -> pd.DataFr
                 "project_name": str(project["name"]),
                 "entity": str(project["entity"]),
                 "division": str(project["division"]),
-                "capex": round(float(project["budget"]) * float(weights[idx]), 2),
+                "capex": spend_by_month[str(month)],
             })
     return pd.DataFrame(rows)
 

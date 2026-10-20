@@ -57,7 +57,9 @@ CFO analytics
 
 P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.28.9
+## Current release: v0.28.10
+
+Version 0.28.10 makes CAPEX installment schedules tie exactly to approved budgets. One shared schedule, used by the actual ledger, the liquidity forecast and the integrated three-statement forecast, rounds each weighted installment to ledger cents and sets the final installment to the remaining approved budget. This removes cent-level rounding differences between project spend and budget; it is an arithmetic allocation of the approved plan, not a balancing entry. The budget-overrun control is now exact (zero overrun allowed) and a new control fails the close if any project CIP, PPE, accumulated depreciation or net book value is negative, even below the GL reconciliation tolerance.
 
 Version 0.28.9 adds two pre-publication CAPEX controls: project spend cannot exceed approved budget, and every event must match its configured legal entity, division, go-live month and useful life. The statement values and existing reconciliation tolerances are unchanged.
 

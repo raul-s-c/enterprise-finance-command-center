@@ -14,3 +14,9 @@ The report shows cumulative cash spend, noncash transfers to PPE, and remaining 
 The calculated remaining CIP also reconciles to the published Group Balance Sheet `cip` line at the close. This separate cross-statement check is shown beside the project-event roll-forward.
 
 The paired factory panel replaces a sparse capacity table with the capacity-weighted utilization formula, site-level production/capacity bars and published capacity additions. It does not equate factory output with sales.
+
+## Installment schedule and budget controls
+
+Project `SPEND` installments come from one shared schedule (`enterprise_finance.capex.capex_spend_schedule`) used by the actual ledger, the liquidity forecast and the integrated three-statement forecast. Each weighted installment is rounded to ledger cents and the final installment is the remaining approved budget, so installments sum exactly to the approved budget. This is an arithmetic allocation of the approved plan, not an accounting balancing entry.
+
+Release controls fail the close when cumulative project spend exceeds approved budget by any amount (`fixed_asset_budget_max_overrun` must be exactly 0.00) or when any project CIP, gross PPE, accumulated depreciation or net book value is negative (`fixed_asset_project_min_balance` must be at least 0.00), independently of the GL reconciliation tolerance.
