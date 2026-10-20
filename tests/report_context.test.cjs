@@ -100,3 +100,10 @@ test('display sorting reads typographic minus signs and lowercase scale suffixes
   assert.ok(model.compareDisplay('−92.2k','−1.2m',true)>0);
   assert.equal(model.compareDisplay('€1.5m','1500k',true),0);
 });
+
+test('Action Execution sections keep the group scope their renderer applies',()=>{
+  for(const title of ['Execution portfolio','Base forecast action bridge','Directional benefit tracking','Actual additive impact']){
+    assert.equal(context.panel('action-execution',title),context.group,title);
+    assert.notEqual(context.panel('performance-review',title),context.group,title);
+  }
+});

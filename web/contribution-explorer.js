@@ -87,7 +87,8 @@
     const key=host.dataset.contribution,def=definitions[key],availableDimensions=dimensions(data,key),availableMetrics=metrics(data,key),sourceName=source(data,key);
     const sourceLabel=sourceName.replaceAll('_',' ').replace(/\b[a-z]/g,letter=>letter.toUpperCase());
     activeContributionKey=key;
-    document.getElementById('reportContext').textContent=`Contribution analysis · ${sourceName} · every displayed total is recomputed from published records`;
+    const contextNote=document.getElementById('reportContextNote');
+    if(contextNote)contextNote.textContent=`Contribution analysis · ${sourceName} · every displayed total is recomputed from published records`;
     document.getElementById('viewSubtitle').textContent=`${data.meta.end_month} published close · EUR · signed contributions and source lineage`;
     const months=[...new Set(preparedRows(data,key).map(r=>r.month).filter(Boolean))].sort();
     const hadSettings=Boolean(settings[key]);

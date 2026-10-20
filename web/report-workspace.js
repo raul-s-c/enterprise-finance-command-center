@@ -124,8 +124,27 @@ function reportReadRoute(){
   reportState.productEntity=params.get('productEntity')||'';
   reportState.productDivision=params.get('productDivision')||'';
   reportState.view=state.view;
+  reportState.requested=null;
+}
+// Composed screens can pair sections with different filter policies: every filtered section must resolve.
+function reportResolve(policy,selection=state){
+  let resolved=ReportContext.resolve(data,policy,selection);
+  for(const companion of policy.companions||[]){
+    const next=ReportContext.resolve(data,companion,resolved.scope);
+    if(next.adjusted.length)resolved={...resolved,scope:next.scope,adjusted:[...new Set([...resolved.adjusted,...next.adjusted])]};
+  }
+  return resolved;
 }
 function reportNavigate(page){reportState.page=RM.pageIndex(page);render();}
+// Drill controls share one route: another view opens at its first screen; the
+// current view advances to its supporting screen instead of re-rendering itself.
+function reportOpenView(view){
+  if(view===state.view){const count=reportState.pages?.length||1;reportNavigate(reportState.page<count-1?reportState.page+1:0);return;}
+  state.view=view;reportState.page=0;render();
+}
+globalThis.reportOpenView=reportOpenView;
+// The scope written to the URL: a selection broadened for one screen stays the operating selection.
+const reportRouteScope=()=>reportState.requested||state;
 globalThis.reportOpenProductEconomics=({entity,division}={})=>{
   const previousView=state.view;state.view='profitability';
   const pages=reportPages(),page=pages.findIndex(item=>item.title==='Products contribution');
@@ -145,7 +164,7 @@ function reportBack(){
   const depth=Number(history.state?.reportDepth)||0;
   if(depth>0){history.back();return;}
   state.view='executive';reportState.page=0;reportState.section='Overview';
-  const hash=new URLSearchParams({view:'executive',page:0,section:'Overview',entity:state.entity,division:state.division,metric:reportState.metric});
+  const hash=new URLSearchParams({view:'executive',page:0,section:'Overview',entity:reportRouteScope().entity,division:reportRouteScope().division,metric:reportState.metric});
   history.replaceState({reportApp:true,reportDepth:0},'',`#${hash}`);
   reportReadRoute();render(true);
 }
@@ -153,7 +172,7 @@ function setupFilters(){
   for(const [key,id] of [['entity','entityFilter'],['division','divisionFilter']]){
     document.getElementById(id).onchange=event=>{
       reportState.section=reportState.pages[reportState.page]?.title;
-      state[key]=event.target.value;render();
+      reportState.requested=null;state[key]=event.target.value;render();
     };
   }
 }
@@ -167,9 +186,21 @@ function reportFilterControls(page,resolved){
   }
   const reset=document.getElementById('reportReset');
   reset.hidden=policy.dimensions.length===0||resolved.empty;
-  reset.disabled=policy.dimensions.every(key=>state[key]==='all');
-  const scope=policy.dimensions.length?policy.dimensions.map(key=>`${key==='entity'?'Entity':'Division'}: ${state[key]==='all'?'All':state[key]}`).join(' · '):'Group / fixed report scope · no entity or division filter applies';
-  document.getElementById('reportContext').innerHTML=`<span>${RM.escape(scope)}${resolved.adjusted.length?' · Selection adjusted':''}</span><span>${resolved.adjusted.length?`Selection broadened: ${RM.escape(resolved.adjusted.join(' and '))} had no records here.`:policy.dimensions.length?'Only available combinations are offered.':'Your operating selection is retained for other pages.'}</span>`;
+  reset.disabled=policy.dimensions.every(key=>state[key]==='all')&&!reportState.requested;
+  const label=key=>key==='entity'?'Entity':'Division',value=(scope,key)=>scope[key]==='all'?'All':scope[key];
+  const operating=reportRouteScope(),selected=`${value(operating,'entity')} / ${value(operating,'division')}`;
+  let scope;
+  if(page.contribution)scope=`Group / fixed report scope · contribution filters on this page apply${operating.entity==='all'&&operating.division==='all'?'':` · ${selected} kept for other pages`}`;
+  else if(!policy.dimensions.length)scope='Group / fixed report scope · no entity or division filter applies';
+  else scope=[
+    ...policy.dimensions.map(key=>`${label(key)}: ${value(state,key)}`),
+    ...['entity','division'].filter(key=>!policy.dimensions.includes(key)&&state[key]!=='all').map(key=>`${label(key)} ${state[key]} not applicable here`),
+    ...(policy.fixedSections?.length?[`Group / fixed: ${policy.fixedSections.join(', ')}`]:[])
+  ].join(' · ');
+  const area=RN.areaFor(state.view),report=(views.find(v=>v[0]===state.view)||views[0])[1];
+  const trail=[area.label,...(report===area.label?[]:[report]),page.title].map(RM.escape).join(' › ');
+  const note=resolved.adjusted.length?`Selection broadened: ${resolved.adjusted.join(' and ')} had no records here · ${selected} is kept for other pages.`:policy.dimensions.length?'Only available combinations are offered.':operating.entity==='all'&&operating.division==='all'?'Your operating selection is retained for other pages.':`Your operating selection (${selected}) is retained for other pages.`;
+  document.getElementById('reportContext').innerHTML=`<span title="${RM.escape(`${scope}${resolved.adjusted.length?' · Selection adjusted':''}`)}"><span class="report-breadcrumb">${trail}</span><span class="report-scope">${RM.escape(scope)}${resolved.adjusted.length?' · Selection adjusted':''}</span></span><span id="reportContextNote">${RM.escape(note)}</span>`;
   document.getElementById('reportContext').setAttribute('aria-live','polite');
 }
 function setupNav(){
@@ -188,7 +219,7 @@ function setupNav(){
   document.body.insertAdjacentHTML('beforeend','<dialog id="reportDialog" aria-labelledby="reportDialogTitle"><div class="dialog-heading"><h2 id="reportDialogTitle"></h2><button id="reportDialogClose">Close</button></div><div id="reportDialogBody"></div></dialog>');
   document.getElementById('reportDialogClose').onclick=()=>document.getElementById('reportDialog').close();
   document.getElementById('reportHelp').onclick=()=>reportDialog('How to read this report',`<div class="help-pages"><p><strong>Navigate.</strong> Start with one of six decision areas on the left, then choose a related report under the page title. Previous / Next visits every report block; the Subpage selector lists them all.</p><p><strong>Filter.</strong> Entity and division control supported operating detail. Group cash, working capital and other consolidated measures stay at group scope. Read each panel subtitle; no artificial allocation is made.</p><p><strong>Compare.</strong> AC is solid charcoal, PY gray. Green means favorable variance, red unfavorable. Negative amounts are not automatically unfavorable. Costs use lower-is-favorable logic. Missing comparisons show —, not zero.</p><p><strong>Explore.</strong> Select a month for values, click a division to filter, switch Revenue / EBIT, or open the P&L bridge. Tables have search, row pages and column pages; selecting a row opens its full detail.</p><p><strong>Trust.</strong> Data is from the synthetic company’s published close. FX remeasurement is analytical, not bank-matched. IBCS-inspired notation and custom visuals; not official or certified Zebra BI components.</p></div>`);
-  document.getElementById('reportReset').onclick=()=>{state.entity=state.division='all';document.getElementById('entityFilter').value='all';document.getElementById('divisionFilter').value='all';render();};
+  document.getElementById('reportReset').onclick=()=>{reportState.requested=null;state.entity=state.division='all';document.getElementById('entityFilter').value='all';document.getElementById('divisionFilter').value='all';render();};
   document.getElementById('reportArea').onchange=event=>{const area=RN.areas.find(item=>item.id===event.target.value);state.view=area.landing;reportState.page=0;render();};
   document.getElementById('reportModule').onchange=event=>{state.view=event.target.value;render();};
   document.getElementById('reportModules').onclick=event=>{const button=event.target.closest('[data-view]');if(button){state.view=button.dataset.view;reportState.page=0;render();}};
@@ -219,12 +250,16 @@ function render(restoring=false){
   const focusValue=focusKey?focused.dataset[focusKey]:null;
   if(!reportState.initialized){reportReadRoute();reportState.initialized=true;restoring=true;}
   if(reportState.view!==state.view){reportState.page=0;reportState.view=state.view;}
+  // Restore a selection broadened by the previous screen unless the user changed scope since.
+  const requested=reportState.requested;reportState.requested=null;
+  if(requested&&['entity','division'].every(key=>state[key]===requested.effective[key]))Object.assign(state,{entity:requested.entity,division:requested.division});
   const config=views.find(v=>v[0]===state.view)||views[0];let pages=reportPages();
   if(reportState.section){const index=pages.findIndex(p=>p.title===reportState.section);if(index>=0)reportState.page=index;reportState.section=null;}
   reportState.page=Math.max(0,Math.min(pages.length-1,reportState.page));
   const currentPage=pages[reportState.page],policy=currentPage.policy||ReportContext.panel(state.view,currentPage.title);
-  const resolved=ReportContext.resolve(data,policy,state);
+  const resolved=reportResolve(policy);
   if(resolved.adjusted.length){
+    reportState.requested={entity:state.entity,division:state.division,effective:{...resolved.scope}};
     Object.assign(state,resolved.scope);pages=reportPages();
     reportState.page=Math.max(0,pages.findIndex(page=>page.title===currentPage.title));
   }
@@ -271,7 +306,7 @@ function render(restoring=false){
   globalThis.StatementWorkspace?.mount();
   ContributionExplorer.mount(data,state);
   reportStoryBoards();
-  document.querySelectorAll('[data-story-view]').forEach(button=>button.onclick=()=>{state.view=button.dataset.storyView;reportState.page=0;render();});
+  document.querySelectorAll('[data-story-view]').forEach(button=>button.onclick=()=>reportOpenView(button.dataset.storyView));
   ManagementBook.mount();
   globalThis.VisualLayout?.mount();
   document.querySelectorAll('[data-story-division]').forEach(button=>button.onclick=()=>{state.division=button.dataset.storyDivision;render();});
@@ -281,7 +316,7 @@ function render(restoring=false){
   document.getElementById('reportPageNumber').textContent=`${reportState.page+1} / ${pages.length}`;
   document.getElementById('reportPrevious').disabled=reportState.page===0;
   document.getElementById('reportNext').disabled=reportState.page===pages.length-1;
-  const hash=new URLSearchParams({view:state.view,page:reportState.page,section:pages[reportState.page].title,entity:state.entity,division:state.division,metric:reportState.metric});
+  const hash=new URLSearchParams({view:state.view,page:reportState.page,section:pages[reportState.page].title,entity:reportRouteScope().entity,division:reportRouteScope().division,metric:reportState.metric});
   if(state.view==='profitability'&&pages[reportState.page].title==='Products contribution'){
     if(reportState.productEntity)hash.set('productEntity',reportState.productEntity);
     if(reportState.productDivision)hash.set('productDivision',reportState.productDivision);
@@ -326,7 +361,8 @@ function render(restoring=false){
   reportKpiHelp();
   globalThis.PerformanceReviewVisual?.mount(data,state,reportState,render,reportDialog);
   for(const empty of document.querySelectorAll('#content .empty')){
-    empty.innerHTML=`<strong>${pages[reportState.page].title==='Overdue and escalated actions'?'No overdue actions in this close':'No records in this published report'}</strong><p>This is not a loading error. The published snapshot contains no matching detail; financial zeros remain visible elsewhere.</p><button data-return-overview>Return to Executive</button>`;
+    const section=empty.closest('[data-source-section]')?.dataset.sourceSection||pages[reportState.page].title;
+    empty.innerHTML=`<strong>${section==='Overdue and escalated actions'?'No overdue actions in this close':'No records in this published report'}</strong><p>This is not a loading error. The published snapshot contains no matching detail; financial zeros remain visible elsewhere.</p><button data-return-overview>Return to Executive</button>`;
     empty.querySelector('button').onclick=()=>{state.view='executive';render();};
   }
   if(focusKey){
@@ -441,7 +477,7 @@ function reportTable(wrap){
       const resolved=ReportContext.resolve(data,ReportContext.card('Revenue'),selection);
       const canExplore=hasScope&&!resolved.empty&&!resolved.adjusted.length;
       reportDialog('Row detail',`<dl class="row-detail">${headers.map((h,i)=>`<div><dt>${RM.escape(h.textContent)}</dt><dd>${RM.escape(row.cells[i]?.textContent)}</dd></div>`).join('')}</dl>${canExplore?'<button id="reportExploreScope">Explore this scope</button>':''}`);
-      if(canExplore)document.getElementById('reportExploreScope').onclick=()=>{document.getElementById('reportDialog').close();Object.assign(state,selection,{view:'executive'});render();};
+      if(canExplore)document.getElementById('reportExploreScope').onclick=()=>{document.getElementById('reportDialog').close();reportState.requested=null;Object.assign(state,selection,{view:'executive'});render();};
     };
     row.setAttribute('aria-label',`Open row detail: ${row.cells[0]?.textContent||'record'}`);
     row.onclick=show;row.onkeydown=event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();show();}};

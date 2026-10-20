@@ -117,6 +117,16 @@
     // Indicator bands are supporting context, never a destination on their own.
     // Distribute them alongside evidence rather than pairing two KPI-only pages.
     const bands=pages.filter(p=>p.html?.includes('class="report-indicators"'));
+    // A screen pairing filtered and group-only sections keeps the filtered policy
+    // so the selection still resolves, and names the sections that stay fixed.
+    const scopeKey=p=>p.policy?.key||'group';
+    const mixedPolicy=parts=>{
+      const filtered=parts.filter(p=>scopeKey(p)!=='group');
+      if(!filtered.length)return root.ReportContext.group;
+      const fixed=parts.filter(p=>scopeKey(p)==='group').flatMap(p=>p.policy?.fixedSections||[p.title]);
+      const companions=filtered.slice(1).flatMap(p=>[p.policy,...(p.policy.companions||[])]).filter(policy=>policy.key!==filtered[0].policy.key);
+      return {...filtered[0].policy,key:'mixed',companions:[...(filtered[0].policy.companions||[]),...companions],fixedSections:[...new Set([...(filtered[0].policy.fixedSections||[]),...fixed])]};
+    };
     // Cash-flow reporting is a published-close view. Keep its actual cash KPIs
     // with the bridge, but leave forward-horizon KPIs in Plan & Outlook.
     const contextualBands=typeof state!=='undefined'&&state.view==='cash-flow'
@@ -136,7 +146,7 @@
         if(!reviewOverview&&!statementOverview&&!executionOverview)contextualBands.forEach((band,index)=>{
           const target=targets.find(candidate=>(candidate.policy?.key||'group')===(band.policy?.key||'group'))||targets[index%targets.length];
           target.html=`<section class="report-context-band" aria-label="${esc(band.title)}">${band.html}</section>${target.html}`;
-          if((target.policy?.key||'group')!==(band.policy?.key||'group'))target.policy=root.ReportContext.group;
+          if(scopeKey(target)!==scopeKey(band))target.policy=mixedPolicy([target,band]);
         });
         pages=evidence;
       }
@@ -147,9 +157,9 @@
       if(page?.contribution||page?.fullScreen){result.push(page);i+=1;continue;}
       const next=pages[i+1];
       const pair=next&&!next.contribution&&!next.fullScreen?[page,next]:[page];
-      const sameScope=pair.length===1||pair.every(p=>(p.policy?.key||'group')===(pair[0].policy?.key||'group'));
+      const sameScope=pair.length===1||pair.every(p=>scopeKey(p)===scopeKey(pair[0]));
       const cashDetail=typeof state!=='undefined'&&state.view==='cash-flow'&&pair.some(p=>p.title==='Latest cash bridge');
-      result.push({title:pair.map(p=>p.title).join(' · '),policy:sameScope?pair[0].policy:root.ReportContext.group,custom:pair.some(p=>p.custom),html:`<div class="story-board ${pair.length===1?'story-single':''}${cashDetail?' cash-detail-board':''}">${pair.map(p=>`<section class="story-composite" data-source-section="${esc(p.title)}">${p.html}</section>`).join('')}</div>`});
+      result.push({title:pair.map(p=>p.title).join(' · '),policy:sameScope?pair[0].policy:mixedPolicy(pair),custom:pair.some(p=>p.custom),html:`<div class="story-board ${pair.length===1?'story-single':''}${cashDetail?' cash-detail-board':''}">${pair.map(p=>`<section class="story-composite" data-source-section="${esc(p.title)}">${p.html}</section>`).join('')}</div>`});
       i+=pair.length;
     }
     if(reviewOverview&&result.length){
@@ -196,7 +206,7 @@
       const body=document.getElementById('storyInspectorBody');
       reportDialog('Calculation & supporting evidence',`<div class="sw-evidence-dialog">${body.innerHTML}</div>`);
       document.querySelectorAll('#reportDialogBody [data-story-view]').forEach(button=>button.onclick=()=>{
-        document.getElementById('reportDialog').close();state.view=button.dataset.storyView;reportState.page=0;render();
+        document.getElementById('reportDialog').close();reportOpenView(button.dataset.storyView);
       });
     });
   }

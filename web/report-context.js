@@ -66,7 +66,8 @@
   cardGroup(translation,'Translation reserve');
   cardGroup(transactions,'Open FX documents|Net transaction exposure|Unrealized FX P&L|Realized FX P&L');
   const card=label=>cards[label]||(/ GM$/.test(label)?operating:group);
-  const panel=(view,title)=>view==='data-journey'||title==='Context & definitions'?group:(panels[title]||group);
+  // Action Execution renders every section at group scope (v18), whatever the source grain.
+  const panel=(view,title)=>view==='data-journey'||view==='action-execution'||title==='Context & definitions'?group:(panels[title]||group);
   function rows(data,policy){
     return policy.datasets.flatMap(key=>data[key]||[]).filter(r=>{
       if(policy.activity && (r.month!==data.meta.end_month||!['revenue','gross_profit','opex','ebit','depreciation','marginal_contribution'].some(k=>typeof r[k]==='number'&&Number.isFinite(r[k])&&r[k]!==0)))return false;
