@@ -68,7 +68,7 @@
 .report-mode .global-bar{height:46px;padding:0 18px;border-bottom:1px solid var(--acca-rule);background:#fff;gap:16px}
 .report-mode .global-search{height:30px;border-color:#cbd4df;background:#fff}
 .report-mode .global-utilities{font-size:11px;color:var(--acca-ink)}
-.report-mode .global-control{color:var(--acca-good)}
+.report-mode .global-control{color:var(--acca-good)}.report-mode .global-control.failed{color:var(--acca-bad)}.report-mode .global-control.pending{color:var(--acca-muted)}
 .report-mode .topbar{min-height:82px;padding:9px 20px;border-bottom:1px solid var(--acca-rule);background:#fff;gap:14px}
 .report-mode .topbar h1{font-size:23px;font-weight:680;line-height:1.15;letter-spacing:-.025em;color:var(--acca-ink)}
 .report-mode .topbar p{font-size:11px;line-height:1.4;color:var(--acca-muted);margin-top:4px}

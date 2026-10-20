@@ -2,6 +2,7 @@
 (function(root){
   const M=root.FinanceReport,esc=M.escape;
   const money=v=>M.finite(v)?(v/1e6).toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1}):'—';
+  const euro=v=>{if(!M.finite(v))return '—';const text=money(Math.abs(v));return `${v<0&&Number(text.replace(/,/g,''))!==0?'−':''}€${text}m`;};
   const percent=v=>M.finite(v)?`${v>0?'+':''}${(v*100).toFixed(1)}%`:'—';
   const tone=v=>v.favorable===null?'neutral':v.favorable?'favorable':'unfavorable';
   const signed=v=>M.finite(v)?`${v>0?'+':''}${money(v)}`:'—';
@@ -80,5 +81,5 @@
     }).join('')}</svg><p class="report-note">Subtotals restart from zero. Expense steps reduce the preceding subtotal; no balancing adjustments are introduced.</p>`;
     return responsiveChart(chart,900,'Revenue to EBIT bridge','start',390);
   }
-  root.ReportCharts={money,percent,tone,signed,trend,matrix,waterfall,varianceBar,series};
+  root.ReportCharts={money,euro,percent,tone,signed,trend,matrix,waterfall,varianceBar,series};
 })(globalThis);

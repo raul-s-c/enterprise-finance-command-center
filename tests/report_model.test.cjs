@@ -96,3 +96,12 @@ test('published management data reconciles the presentation bridge for every ent
     }
   }
 });
+
+test('signed euro millions place the sign before the currency and never show negative zero',()=>{
+  assert.equal(C.euro(12_100_000),'€12.1m');
+  assert.equal(C.euro(-480_000),'−€0.5m');
+  assert.equal(C.euro(-1_234_500_000),'−€1,234.5m');
+  assert.equal(C.euro(-20_000),'€0.0m');
+  assert.equal(C.euro(Number.NaN),'—');
+  assert.doesNotMatch(C.euro(-480_000),/€-/);
+});

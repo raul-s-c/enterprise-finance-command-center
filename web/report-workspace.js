@@ -44,7 +44,7 @@ function reportCurrent(){
 function reportMetric(label,value,note,delta){
   return `<div class="report-kpi"><div>${label}</div><strong>${value}</strong><small class="${delta?RC.tone(delta):''}">${note}</small></div>`;
 }
-function reportMoney(value){return RM.finite(value)?`€${RC.money(value)}m`:'—';}
+function reportMoney(value){return RC.euro(value);}
 function reportExecutive(){
   const {rows,current:l,prior:py}=reportCurrent(),v=RM.variance(l?.revenue,py?.revenue),ev=RM.variance(l?.ebit,py?.ebit);
   const cf=(data.cash_flow||[]).find(r=>r.month===data.meta.end_month),wc=(data.working_capital||[]).find(r=>r.month===data.meta.end_month);

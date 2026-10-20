@@ -3,7 +3,7 @@
   const finite=value=>value!==null&&value!==undefined&&value!==''&&Number.isFinite(Number(value));
   const percentFormatter=new Intl.NumberFormat('en-GB',{style:'percent',minimumFractionDigits:1,maximumFractionDigits:1});
   const pct=value=>percentFormatter.format(Number(value));
-  const money=value=>`€${(Number(value)/1e6).toFixed(1)}M`;
+  const money=value=>{const n=Number(value),text=(Math.abs(n)/1e6).toFixed(1);return `${n<0&&Number(text)!==0?'−':''}€${text}M`;}
   const escape=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
   const landmark=new Set([1,6,12,18]);
 
