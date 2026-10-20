@@ -242,7 +242,7 @@
   .report-mode .tower-bottom>section{flex:none;min-height:190px}
   .report-mode .tower-canvas{min-height:0;overflow:visible}
   .report-mode .story-kpis{display:flex;overflow-x:auto}
-  .report-mode button.story-kpi{flex:0 0 170px}
+  .report-mode button.story-kpi{flex:1 0 136px;min-width:136px}
 }
 @media(max-width:1500px){
   .report-mode .sw-grid{display:flex;flex-direction:column;overflow:auto}
