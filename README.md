@@ -59,7 +59,9 @@ CFO analytics
 
 P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.29.0
+## Current release: v0.29.1
+
+Version 0.29.1 is a presentation release focused on phones and accessibility. On phones the report header (area, report, title, filters, subpage and scope) folds away while the reader scrolls a report down and returns on scroll up, at the top, on keyboard focus and on every view change, giving reports about 88% of the screen. An axe-core WCAG 2.1 AA audit now runs on every subpage of all 18 reports at laptop and phone sizes, with forced favourable and adverse tone variants so the result does not depend on the month's data; it found and fixed insufficient contrast, review badges, a nested-interactive chart and a missing search focus ring, and adds a visible mark wherever colour signalled favourable or adverse without a sign. The shared favourable green is darkened to meet AA on white. Ledger values, statements and controls are unchanged.
 
 Version 0.29.0 makes factory operations economically realistic. Commercial entities now replenish inventory against trailing three-month average demand instead of a single month's sales, removing a bullwhip effect that cut January factory output to almost zero and then spiked it, and narrowing fixed-cost absorption from a 5%-164% swing to a realistic band. The liquidity and integrated three-statement forecast use the same trailing-demand inventory policy. Factory capacity is restated as practical capacity (Brno 3,200 and Suzhou 4,100 units per month), so utilization reads about 65-70% in typical months and about 92% at peak instead of 10-23%. Production, intercompany transfers, inventory, payables, absorption variance and cash are regenerated from the posted transfers with every existing control and tolerance unchanged; see `docs/factory-absorption-accounting.md`.
 
