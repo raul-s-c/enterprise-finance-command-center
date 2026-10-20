@@ -122,7 +122,7 @@
 .report-mode .pnl-scroll{flex:1 1 auto;min-height:0;max-height:100%;overflow:auto;scrollbar-gutter:stable}
 .report-mode .pnl-grid{min-width:860px}
 .report-mode .pnl-heading,.report-mode button.pnl-row{grid-template-columns:minmax(205px,1.15fr) 78px minmax(240px,1.45fr) minmax(140px,.9fr) minmax(130px,.85fr);gap:12px}
-.report-mode .pnl-heading{position:sticky;top:0;z-index:1;min-height:38px;padding:7px 9px;background:#f2f4f7;color:#445267;border-bottom:2px solid var(--acca-rule-strong);font-size:11px;font-weight:650}
+.report-mode .pnl-heading{position:sticky;top:0;z-index:3;min-height:38px;padding:7px 9px;background:#f2f4f7;color:#445267;border-bottom:2px solid var(--acca-rule-strong);font-size:11px;font-weight:650}
 .report-mode .pnl-heading span:not(:first-child){text-align:right}
 .report-mode button.pnl-row{min-height:42px;padding:4px 9px;border-bottom:1px solid #e7eaee;background:#fff;color:var(--acca-ink);font-size:13px}
 .report-mode button.pnl-row:nth-of-type(odd){background:#fbfcfd}
