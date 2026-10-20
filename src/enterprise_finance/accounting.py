@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections import defaultdict
+from collections import defaultdict, deque
 from dataclasses import dataclass
 
 import numpy as np
@@ -8,6 +8,8 @@ import pandas as pd
 
 from .capex import capex_spend_schedule
 
+
+INVENTORY_DEMAND_WINDOW_MONTHS = 3
 
 ACCOUNT_META = {
     "1000_CASH": ("Balance Sheet", "Cash", "Asset"),
@@ -130,6 +132,9 @@ def build_accounting(config: dict, months: pd.PeriodIndex, macro: pd.DataFrame, 
     ar_balance: dict[tuple[str, str], float] = defaultdict(float)
     ap_balance: dict[tuple[str, str], float] = defaultdict(float)
     inventory_balance: dict[tuple[str, str], float] = defaultdict(float)
+    # Replenishment covers trailing demand, not a single month's sales, so a
+    # seasonal drop does not stop factory production (bullwhip control).
+    demand_history: dict[tuple[str, str], deque] = defaultdict(lambda: deque(maxlen=INVENTORY_DEMAND_WINDOW_MONTHS))
     ic_balance: dict[tuple[str, str], float] = defaultdict(float)
     tax_balance: dict[str, float] = defaultdict(float)
     cip_balance: dict[str, float] = defaultdict(float)
@@ -209,7 +214,9 @@ def build_accounting(config: dict, months: pd.PeriodIndex, macro: pd.DataFrame, 
                 dio = float(config["divisions"][division]["dio"])
                 inv_key = (str(buyer), str(division))
                 opening_inv = inventory_balance[inv_key]
-                target_end = sold_tp * dio / 30.0
+                demand_history[inv_key].append(sold_tp)
+                planning_demand = sum(demand_history[inv_key]) / len(demand_history[inv_key])
+                target_end = planning_demand * dio / 30.0
                 purchase_tp = max(sold_tp + target_end - opening_inv, 0.0)
                 by_factory = grp.groupby("source_factory", as_index=False).group_cost.sum()
                 total_group_cost = float(by_factory.group_cost.sum())
