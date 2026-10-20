@@ -71,3 +71,15 @@ test('an empty workforce filter never substitutes the consolidated headcount',()
     state.entity='CZ01';state.division='Events';workforceBlock();values['Ending FTE'];`,ctx);
   assert.equal(result,vm.runInContext('num(0,1)',ctx));
 });
+
+test('legacy report money uses the dashboard EUR m/k notation with the sign before the symbol',()=>{
+  const ctx=vm.createContext({Intl,Map,Set,Number,String,Array});
+  vm.runInContext(fs.readFileSync(path.join(root,'web','app.js'),'utf8'),ctx);
+  const format=value=>vm.runInContext(`eur.format(${value})`,ctx);
+  assert.equal(format(2_000_000),'€2.0m');
+  assert.equal(format(218_700),'€218.7k');
+  assert.equal(format(-627_400),'−€627.4k');
+  assert.equal(format(-40),'−€40');
+  assert.equal(format(-0.2),'€0');
+  assert.equal(format('NaN'),'—');
+});
