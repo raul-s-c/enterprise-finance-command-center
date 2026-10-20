@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import deque
 import pandas as pd
 
+from .accounting import INVENTORY_DEMAND_WINDOW_MONTHS
 from .liquidity_forecast import PHYSICAL_DIVISIONS, _opening_state, _treasury_cfg, derive_prepayment_ratios, future_capex
 
 
@@ -19,7 +20,8 @@ def _terms(scope: pd.DataFrame, prepay: dict[str, float], config: dict) -> dict:
     difference from leaking into the linked Balance Sheet through retained earnings.
     """
     revenue = gp = personnel = non_people = 0.0
-    target_ar = target_inventory = target_ap = target_contract = external_cost = 0.0
+    target_ar = target_ap = target_contract = external_cost = 0.0
+    physical_direct: dict[str, float] = {}
     for division, grp in scope.groupby("division"):
         div = str(division)
         rev = _money(grp.revenue_forecast.sum())
@@ -41,7 +43,7 @@ def _terms(scope: pd.DataFrame, prepay: dict[str, float], config: dict) -> dict:
         target_contract = _money(target_contract + rev * ratio)
         target_ap = _money(target_ap + ext * float(config["divisions"][div]["dpo"]) / 30.0)
         if div in PHYSICAL_DIVISIONS:
-            target_inventory = _money(target_inventory + direct * float(config["divisions"][div]["dio"]) / 30.0)
+            physical_direct[div] = direct
 
     opex = _money(personnel + non_people)
     return {
@@ -52,10 +54,10 @@ def _terms(scope: pd.DataFrame, prepay: dict[str, float], config: dict) -> dict:
         "non_people": non_people,
         "ebitda": _money(gp - opex),
         "target_ar": _money(max(target_ar, 0.0)),
-        "target_inventory": _money(max(target_inventory, 0.0)),
         "target_ap": _money(max(target_ap, 0.0)),
         "target_contract": _money(max(target_contract, 0.0)),
         "external_cost": _money(max(external_cost, 0.0)),
+        "physical_direct": physical_direct,
     }
 
 
@@ -79,9 +81,17 @@ def build_liquidity_forecast(forecasts, management, balance_sheet, actual_liquid
     actual_interest = list(hist.interest_expense.tail(11).astype(float)) if "interest_expense" in hist else []
     dep = _money(management[management.month.eq(end_month)].depreciation.sum()) if "depreciation" in management.columns else 0.0
     rows = []
+    # Inventory targets use the same trailing-demand replenishment policy as the
+    # actual ledger, seeded with the latest actual physical direct cost.
+    seed_months = [str(pd.Period(end_month, freq="M") - lag) for lag in range(INVENTORY_DEMAND_WINDOW_MONTHS - 2, -1, -1)]
+    physical_actual = management[management.month.isin(seed_months) & management.division.isin(PHYSICAL_DIVISIONS)] if {"revenue", "gross_profit"}.issubset(management.columns) else pd.DataFrame()
+    demand_seed: dict[str, list[float]] = {}
+    for (month_key, division), grp in (physical_actual.groupby(["month", "division"]) if not physical_actual.empty else []):
+        demand_seed.setdefault(str(division), []).append(_money(max(float(grp.revenue.sum()) - float(grp.gross_profit.sum()), 0.0)))
 
     for scenario in sorted(current.scenario.unique()):
         state = dict(state0)
+        demand_windows = {div: deque(values, maxlen=INVENTORY_DEMAND_WINDOW_MONTHS) for div, values in demand_seed.items()}
         rcf_drawn = 0.0
         ebitda_window = deque(actual_ebitda, maxlen=12)
         interest_window = deque(actual_interest, maxlen=12)
@@ -100,7 +110,12 @@ def build_liquidity_forecast(forecasts, management, balance_sheet, actual_liquid
             opening_debt = _money(state["debt"])
 
             ending_ar = _money(t["target_ar"])
-            ending_inv = _money(t["target_inventory"])
+            planned_inventory = 0.0
+            for div, direct in t["physical_direct"].items():
+                window = demand_windows.setdefault(div, deque(maxlen=INVENTORY_DEMAND_WINDOW_MONTHS))
+                window.append(direct)
+                planned_inventory = _money(planned_inventory + sum(window) / len(window) * float(config["divisions"][div]["dio"]) / 30.0)
+            ending_inv = _money(planned_inventory)
             ending_ap = _money(t["target_ap"])
             ending_contract = _money(t["target_contract"])
             inventory_change = _money(ending_inv - opening_inv)
