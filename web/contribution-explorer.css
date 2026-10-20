@@ -165,3 +165,5 @@
 .cx-evidence.cash-lineage-evidence td:nth-child(5),.cx-evidence.cash-lineage-evidence td:nth-child(6){height:auto;min-height:30px;white-space:normal;overflow-wrap:anywhere;text-overflow:clip;line-height:1.2;font-variant-numeric:tabular-nums}
 
 .cx-evidence.cash-lineage-evidence .cx-table-wrap:focus-visible{outline:2px solid #0869e1;outline-offset:-2px}
+/* Phones and 320px reflow: dimension buttons wrap instead of clipping, and Show sits on its own row. */
+@media(max-width:700px){.cx-dimensions{flex-wrap:wrap;overflow:visible;border:0;border-radius:0;padding-left:1px}.report-mode .cx-dimensions button{margin-top:-1px}.cx-display{position:static;grid-column:1/-1;margin-left:0;justify-self:start}}

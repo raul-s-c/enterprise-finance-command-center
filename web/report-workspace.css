@@ -61,3 +61,13 @@
 .report-mode .severity-high,.report-mode .priority-p2{border-color:#c9a660;color:#7a5410;background:#fdf7ea}
 .report-mode .severity-medium{border-color:#8fa3c7;color:#2f4b80;background:#f1f5fc}
 .report-mode .severity-low{border-color:#b9c4d2;color:#55606e}
+/* 200% browser zoom and short landscape screens (<=480 CSS px tall): the fixed app frame would leave the
+   report a sliver between header and footer, so the whole page scrolls instead and the pager stays pinned. */
+@media(max-height:480px){html body.report-mode{height:auto;min-height:100dvh;overflow:visible}.report-mode .app-shell{height:auto;min-height:100dvh}.report-mode .main-shell{height:auto;min-height:100dvh;overflow:visible}.report-mode .main-shell>.content{flex:1 0 auto;overflow:visible;min-height:0}.report-mode .report-footer{position:sticky;bottom:0;z-index:20;background:#fff}}
+/* 320px reflow: Area and Report stack, and the scope filters take their own row above Back/Reset/Help,
+   so no select truncates its current value. */
+@media(max-width:340px){.mobile-module{grid-template-columns:minmax(0,1fr);gap:4px}.mobile-module label{grid-template-columns:40px minmax(0,1fr)}html .report-mode .filters{flex-wrap:wrap}html .report-mode .filters label{flex:1 1 calc(50% - 3px)}html .report-mode .filters button{flex:1 1 0}}
+@media(max-width:600px){.report-context>span:first-child,.report-context .report-scope{white-space:normal;overflow-wrap:anywhere}}
+/* Evidence dialogs taller than the screen (200% zoom, short phones) scroll instead of cutting their
+   last rows; the heading with Close stays pinned. */
+.report-mode #reportDialog{overflow-y:auto;overscroll-behavior:contain}.report-mode #reportDialog>.dialog-heading{position:sticky;top:0;z-index:3;background:#fff;box-shadow:0 -24px 0 #fff}

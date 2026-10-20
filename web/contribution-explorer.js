@@ -78,8 +78,10 @@
   const settings={};
   const e=s=>FinanceReport.escape(String(s??''));
   let activeContributionKey='';
-  const money=v=>new Intl.NumberFormat('en-GB',{style:'currency',currency:'EUR',notation:activeContributionKey==='nwc'?'compact':'standard',maximumFractionDigits:activeContributionKey==='nwc'?1:2}).format(v);
-  const compactMoney=v=>new Intl.NumberFormat('en-GB',{style:'currency',currency:'EUR',notation:'compact',maximumFractionDigits:1}).format(v);
+  // Negative amounts use the typographic minus (U+2212); compact millions keep one decimal (−€11.0m).
+  const minus=text=>text.replace(/^-/,'−');
+  const compactMoney=v=>minus(new Intl.NumberFormat('en-GB',{style:'currency',currency:'EUR',notation:'compact',minimumFractionDigits:Math.abs(Number(v))>=999.95e3?1:0,maximumFractionDigits:1}).format(v));
+  const money=v=>activeContributionKey==='nwc'?compactMoney(v):minus(new Intl.NumberFormat('en-GB',{style:'currency',currency:'EUR',maximumFractionDigits:2}).format(v));
   const sum=(rows,key)=>rows.reduce((total,row)=>total+(Number.isFinite(row[key])?row[key]:0),0);
   api.pages=view=>({pnl:['pnl'],profitability:['products'],'working-capital':['nwc','ar','inventory','ap'],'operations-capex':['capex'],'cash-flow':['cash']}[view]||[]).map(key=>({title:`${key==='nwc'?'Net working capital':label(key)} contribution`,policy:ReportContext.group,custom:true,contribution:true,html:`<section class="contribution-explorer" data-contribution="${key}"></section>`}));
   api.mount=(data,scope={})=>{
@@ -263,7 +265,7 @@
           flow.querySelectorAll('[data-component]').forEach(button=>{button.title='Inspect published component records';button.onclick=()=>showRecords(selectedRows.filter(row=>row.component===button.dataset.component));});
           flow.querySelector('.cx-flow-output').onclick=()=>showRecords(selectedRows);
         }
-        const calculation=selectedComponents.map((item,index)=>`${index&&item.value>=0?'+':''} ${compactMoney(item.value)}`).join(' ');host.querySelector('.cx-inspector dl').insertAdjacentHTML('afterbegin',`<div><dt>Calculation</dt><dd>${e(calculation)} = ${e(compactMoney(selected.value))}</dd></div>`);
+        const calculation=selectedComponents.map((item,index)=>index?`${item.value<0?'−':'+'} ${compactMoney(Math.abs(item.value))}`:compactMoney(item.value)).join(' ');host.querySelector('.cx-inspector dl').insertAdjacentHTML('afterbegin',`<div><dt>Calculation</dt><dd>${e(calculation)} = ${e(compactMoney(selected.value))}</dd></div>`);
       }
       for(const field of ['metric','month','event']){const control=document.getElementById('cx-'+field);if(control)control.onchange=()=>{s[field]=control.value;s.page=0;s.selected=null;s.selectionTouched=false;if(field!=='metric')s.filters={};if(field==='month'&&key==='cash'&&s.month!==data.meta.end_month&&s.dimension==='division')s.dimension='entity';paint();document.getElementById('cx-'+field)?.focus();};}
       host.querySelectorAll('[data-dimension]').forEach(button=>button.onclick=()=>{s.dimension=button.dataset.dimension;s.page=0;s.selected=null;s.selectionTouched=false;paint();});host.querySelectorAll('[data-display]').forEach(button=>button.onclick=()=>{s.display=button.dataset.display;paint();});
