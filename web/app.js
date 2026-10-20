@@ -1,4 +1,4 @@
-const eur=new Intl.NumberFormat('en-US',{style:'currency',currency:'EUR',notation:'compact',maximumFractionDigits:1});
+const eur={format(value){const n=Number(value);if(!Number.isFinite(n))return '—';const a=Math.abs(n),text=a>=1e6?`${(a/1e6).toFixed(1)}m`:a>=1e3?`${(a/1e3).toFixed(1)}k`:a.toFixed(0);return `${n<0&&Number(text.replace(/[mk]$/,''))!==0?'−':''}€${text}`;}};
 const pct=v=>Number.isFinite(v)?`${(v*100).toFixed(1)}%`:'-';
 const num=(v,d=1)=>Number.isFinite(v)?Number(v).toLocaleString('en-US',{maximumFractionDigits:d}):'-';
 const safe=v=>v===null||v===undefined?'':String(v);
