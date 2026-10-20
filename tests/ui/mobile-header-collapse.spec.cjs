@@ -57,13 +57,18 @@ for(const size of PHONES){
       test(`${view}: wheel collapses, scroll up restores`,async({page})=>{
         const point=await open(page,view,size);
         const before=await contentShare(page);
+        // Collapsing must never re-render the report: the rendered node keeps its identity throughout.
+        await page.evaluate(()=>{window.chromeProbe=document.getElementById('content').firstElementChild;});
+        const sameReport=()=>page.evaluate(()=>window.chromeProbe.isConnected&&document.getElementById('content').firstElementChild===window.chromeProbe);
         await wheel(page,point,500);
         expect(await collapsed(page)).toBe(true);
         await expect(page.locator('.global-bar')).toBeVisible();
         await expect(page.locator('.report-footer')).toBeVisible();
         await expect.poll(()=>contentShare(page)).toBeGreaterThan(Math.max(before,0.75));
+        expect(await sameReport()).toBe(true);
         await wheel(page,point,-600,6);
         expect(await collapsed(page)).toBe(false);
+        expect(await sameReport()).toBe(true);
         await expect(page.locator('#viewTitle')).toBeVisible();
       });
     }
@@ -123,4 +128,14 @@ test('collapsed chrome expands when the viewport widens beyond phones',async({pa
   expect(await collapsed(page)).toBe(true);
   await page.setViewportSize({width:768,height:1024});
   await expect.poll(()=>collapsed(page)).toBe(false);
+});
+
+test('entering the phone layout does not animate the chrome while the report re-renders',async({page})=>{
+  await page.setViewportSize({width:1024,height:720});
+  await page.goto('/#view=executive');
+  await expect(page.locator('#content')).not.toBeEmpty();
+  await page.setViewportSize({width:390,height:844});
+  const running=await page.evaluate(()=>[...document.querySelectorAll('.mobile-module,.topbar,.report-subnav,.report-context')].flatMap(el=>el.getAnimations()).length);
+  expect(running).toBe(0);
+  expect(await collapsed(page)).toBe(false);
 });

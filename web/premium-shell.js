@@ -98,8 +98,11 @@
     const resync=()=>{last=anchor=scroller.isConnected?scroller.scrollTop:0;direction=0;push=0;};
     const set=collapsed=>{
       if(isCollapsed()===collapsed)return;
+      // Only a phone toggle animates; leaving the phone layout snaps back so nothing is moving while reports re-render.
+      body.classList.toggle('mobile-chrome-animating',phone.matches);
       body.classList.toggle('mobile-chrome-collapsed',collapsed);
-      lockUntil=performance.now()+SETTLE;clearTimeout(settleTimer);settleTimer=setTimeout(resync,SETTLE);
+      lockUntil=performance.now()+SETTLE;clearTimeout(settleTimer);
+      settleTimer=setTimeout(()=>{body.classList.remove('mobile-chrome-animating');resync();},SETTLE);
     };
     // Browsers latch a wheel or touch gesture to the nearest scroll container, so that pane decides whether the
     // gesture still scrolls content or has run out of room.
