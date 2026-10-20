@@ -1,6 +1,11 @@
 {
   "name": "enterprise-finance-ui-checks",
   "private": true,
-  "scripts": {"test:ui": "playwright test"},
-  "devDependencies": {"@playwright/test": "1.63.0"}
+  "scripts": {
+    "test:ui": "playwright test"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@playwright/test": "1.63.0"
+  }
 }
