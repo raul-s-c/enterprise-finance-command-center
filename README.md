@@ -6,6 +6,8 @@ The project models economic activity first and derives accounting, financial sta
 
 Live application: https://raul-s-c.github.io/enterprise-finance-command-center/
 
+**Three-minute walkthrough:** [docs/recruiter-walkthrough.md](docs/recruiter-walkthrough.md) gives a nine-step route from the executive story through P&L, cash, balance sheet, working capital, CAPEX and forecast to the close controls and owned actions, with direct links and what to check at each step.
+
 Working-capital contribution screens connect to [legal ledger evidence](docs/working-capital-lineage.md): source journal postings and monthly account rollforwards, with explicit separation from analytical invoice allocations and consolidation adjustments.
 
 Cash Flow contribution screens connect to [cash movement lineage](docs/cash-movement-lineage.md): source cash journals, invoice/accrual allocations and CAPEX project evidence, with explicit disclosure that AR/AP allocations are not bank-matched remittances.
