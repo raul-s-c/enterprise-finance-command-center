@@ -301,7 +301,7 @@
   .report-mode .sw-primary,.report-mode .sw-secondary{flex:none;min-height:300px}
   .report-mode .sw-detail,.report-mode .sw-inspector{flex:none}
   .report-mode .sw-kpis{display:flex;overflow-x:auto;scroll-snap-type:x proximity}
-  .report-mode button.sw-kpi{display:grid;flex:0 0 165px;scroll-snap-align:start}
+  .report-mode button.sw-kpi{display:grid;flex:1 0 136px;scroll-snap-align:start}
   .report-mode .sw-inspector{order:4}
   .report-mode .story-board{grid-template-columns:minmax(0,1fr);overflow:auto;grid-auto-rows:minmax(300px,auto)}
   .report-mode .story-composite{overflow:visible}
