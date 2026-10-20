@@ -169,12 +169,12 @@ transfer_pricing:
 factories:
   CZ01:
     name: Brno Smart Manufacturing
-    base_monthly_capacity_units: 14500
+    base_monthly_capacity_units: 3200
     fixed_monthly_cost: 620000
     energy_sensitivity: 0.22
   CN01:
     name: Suzhou Manufacturing Hub
-    base_monthly_capacity_units: 21000
+    base_monthly_capacity_units: 4100
     fixed_monthly_cost: 760000
     energy_sensitivity: 0.28
 
