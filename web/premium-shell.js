@@ -80,10 +80,65 @@
     control.innerHTML=`<i></i> Controls ${known?(passed?'passed':'failed'):'unavailable'}`;
     control.classList.toggle('failed',known&&!passed);control.classList.toggle('pending',!known);
   }
+  /* Phone report chrome: collapse the title, module, subpage and context bars while the reader scrolls
+     the report down, restore them on upward scroll, at the top, on focus, on view/page change and above 600px.
+     Only user-driven scrolls (wheel, touch, scroll keys, scrollbar drag) count, so focus and scrollIntoView
+     moves made by the application never hide the controls a user is about to use. */
+  const CHROME='.mobile-module,.topbar,.report-subnav,.report-context';
+  function setupMobileChrome(){
+    const content=document.getElementById('content'),phone=root.matchMedia?.('(max-width:600px)');
+    if(!content||!phone||content.dataset.chromeBound)return;
+    content.dataset.chromeBound='1';
+    const body=document.body,SETTLE=250,INTENT=1000;
+    let last=content.scrollTop,anchor=last,direction=0,lockUntil=0,intentUntil=0,settleTimer=0;
+    const resync=()=>{last=anchor=content.scrollTop;direction=0;};
+    const chromeHeight=()=>[...document.querySelectorAll(CHROME)].reduce((sum,el)=>sum+el.getBoundingClientRect().height,0);
+    const set=collapsed=>{
+      if(body.classList.contains('mobile-chrome-collapsed')===collapsed)return;
+      body.classList.toggle('mobile-chrome-collapsed',collapsed);
+      lockUntil=performance.now()+SETTLE;clearTimeout(settleTimer);settleTimer=setTimeout(resync,SETTLE);
+    };
+    const markIntent=()=>{intentUntil=performance.now()+INTENT;};
+    content.addEventListener('wheel',markIntent,{passive:true});
+    content.addEventListener('touchstart',markIntent,{passive:true});
+    content.addEventListener('touchmove',markIntent,{passive:true});
+    content.addEventListener('touchend',markIntent,{passive:true});
+    content.addEventListener('pointerdown',event=>{if(event.target===content)markIntent();});
+    content.addEventListener('keydown',event=>{
+      if(event.target.closest('input,select,textarea,[contenteditable]'))return;
+      if(['PageDown','PageUp','ArrowDown','ArrowUp','Home','End',' '].includes(event.key))markIntent();
+    });
+    content.addEventListener('scroll',()=>{
+      if(!phone.matches)return;
+      const now=performance.now(),top=content.scrollTop;
+      if(now<lockUntil){last=anchor=top;return;}
+      if(top<40){set(false);last=anchor=top;return;}
+      if(now>intentUntil){last=anchor=top;return;}
+      intentUntil=Math.max(intentUntil,now+150);
+      const step=Math.sign(top-last);
+      if(step&&step!==direction){anchor=last;direction=step;}
+      last=top;
+      if(direction>0&&top>80&&top-anchor>24){
+        // Collapse only when the report keeps room to scroll afterwards; otherwise the clamp would bounce it back.
+        if(content.scrollHeight-content.clientHeight-chromeHeight()>80)set(true);
+      }else if(direction<0&&anchor-top>24)set(false);
+    },{passive:true});
+    document.addEventListener('focusin',event=>{if(event.target.closest?.(CHROME))set(false);});
+    phone.addEventListener?.('change',event=>{if(!event.matches)set(false);});
+    let routeKey='';
+    const observeRoute=()=>{
+      const key=`${state.view}|${typeof reportState==='object'?reportState.page:''}`;
+      if(key!==routeKey){routeKey=key;set(false);resync();}
+    };
+    const title=document.getElementById('viewTitle');
+    if(title)new MutationObserver(observeRoute).observe(title,{childList:true,characterData:true,subtree:true});
+    observeRoute();
+  }
   root.paintPremiumCloseStatus=paintCloseStatus;
   root.mountPremiumShell=function(){
     paintCloseStatus(data);
     setupSearch();
+    setupMobileChrome();
     document.getElementById('globalExport').onclick=exportView;document.getElementById('globalHelp').onclick=openHelp;
   };
 })(globalThis);

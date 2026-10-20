@@ -69,3 +69,10 @@
 @media(max-width:900px),(max-height:650px){.report-mode .app-shell{padding:0;grid-template-columns:1fr}.global-bar{height:40px;padding:0 12px}.global-search{width:min(440px,55vw)}.global-utilities{gap:8px}.user-avatar,.user-name,.utility-button span{display:none}}
 @media(max-width:600px){.global-search{width:48vw}.global-utilities>strong{display:none}.global-bar{gap:8px}.report-mode .topbar{padding:8px 12px;align-items:stretch;gap:8px;min-height:0}.report-mode .report-area-label{display:none}.report-mode .topbar>div:first-child{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:8px;row-gap:2px;min-width:0}.report-mode .topbar h1{font-size:19px;line-height:1.15}.report-mode .topbar>div:first-child p{margin:0}.report-mode .content{padding:8px 12px}}
 @media(max-width:600px){.global-utilities{gap:5px}.global-control{font-size:0;gap:0}.global-control i{margin:0}.report-mode .global-search input{font-size:10px}.report-mode .utility-button{padding-inline:3px}}
+@media(max-width:600px){
+  .report-mode .mobile-module,.report-mode .topbar,.report-mode .report-subnav,.report-mode .report-context{max-height:400px;overflow:hidden;transition:max-height .18s ease,padding .18s ease,opacity .14s ease,border-width .18s ease}
+  .report-mode.mobile-chrome-collapsed .mobile-module,.report-mode.mobile-chrome-collapsed .topbar,.report-mode.mobile-chrome-collapsed .report-subnav,.report-mode.mobile-chrome-collapsed .report-context{max-height:0;min-height:0;height:auto;padding-block:0;border-block-width:0;opacity:0}
+}
+@media(max-width:600px) and (prefers-reduced-motion:reduce){
+  .report-mode .mobile-module,.report-mode .topbar,.report-mode .report-subnav,.report-mode .report-context{transition:none}
+}
