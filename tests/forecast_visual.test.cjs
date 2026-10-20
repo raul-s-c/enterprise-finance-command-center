@@ -20,7 +20,7 @@ test('forecast charts preserve all published horizons and financial sign semanti
 test('liquidity bars use reported OCF, CAPEX and ending cash without inventing a reconciliation',()=>{
   const html=global.FinanceForecastVisual.liquidity(data.liquidity_forecast_summary);
   assert.equal((html.match(/class="fv-scenario"/g)||[]).length,3);
-  const money=value=>`€${(Number(value)/1e6).toFixed(1)}M`;
+  const money=value=>{const n=Number(value),text=(Math.abs(n)/1e6).toFixed(1);return `${n<0&&Number(text)!==0?'−':''}€${text}m`;};
   for(const row of data.liquidity_forecast_summary){
     for(const key of ['forecast_operating_cash_flow_12m','forecast_capex_12m','ending_cash_12m'])assert.ok(html.includes(money(row[key])),`${row.scenario} ${key}`);
   }

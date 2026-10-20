@@ -2,7 +2,7 @@
 (function(root){
   const escape=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
   const number=value=>Number.isFinite(Number(value))?Number(value):0;
-  const money=value=>`€${(number(value)/1e6).toFixed(1)}m`;
+  const money=value=>{const n=number(value),text=(Math.abs(n)/1e6).toFixed(1);return `${n<0&&Number(text)!==0?'−':''}€${text}m`;};
   const fte=value=>number(value).toFixed(0);
   const metricNames=[['revenue','Revenue'],['ebit','EBIT'],['free_cash_flow','Free cash flow'],['ending_cash','Ending cash']];
   let selectedHorizon=12,selectedMetric='ebit';

@@ -57,7 +57,9 @@ CFO analytics
 
 P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.28.10
+## Current release: v0.28.11
+
+Version 0.28.11 makes the dashboard's status and signs trustworthy. The global header no longer shows a hard-coded close month or 'Controls passed' before data loads: it reports the published close and validation result, says 'Controls unavailable' when the dataset cannot load, and a failed close is now shown in red in report mode (a later stylesheet previously painted it green). Negative amounts read −€0.5m rather than €-0.5m across the executive story, reports and forecasts; P&L and forecast visuals use the same EUR m/k notation as the rest of the dashboard; and table sorting recognises the typographic minus. The Operations cockpit now shows the net factory absorption variance — labelled under-, over- or nil absorption — instead of a positive-only under-absorption figure that displayed €0.0m when both factories over-absorbed. On phones the report header is compacted to return space to content. This is presentation only: ledger values, statements and control tolerances are unchanged.
 
 Version 0.28.10 makes CAPEX installment schedules tie exactly to approved budgets. One shared schedule, used by the actual ledger, the liquidity forecast and the integrated three-statement forecast, rounds each weighted installment to ledger cents and sets the final installment to the remaining approved budget. This removes cent-level rounding differences between project spend and budget; it is an arithmetic allocation of the approved plan, not a balancing entry. The budget-overrun control is now exact (zero overrun allowed) and a new control fails the close if any project CIP, PPE, accumulated depreciation or net book value is negative, even below the GL reconciliation tolerance.
 

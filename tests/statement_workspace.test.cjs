@@ -115,3 +115,25 @@ test('source evidence preserves losses and missing comparisons',()=>{
   assert.equal(parts[0].actual,-5);assert.equal(parts[0].prior,null);assert.equal(parts[0].change.delta,null);
   assert.equal(PnlVisual.rows(undefined,undefined,FinanceReport).length,10);
 });
+
+test('operations absorption KPI reports the net signed variance and never hides over-absorption',()=>{
+  const state={entity:'all',division:'all'};
+  const end=data.meta.end_month;
+  const months=[...new Set((data.hardware_factory_economics||[]).map(row=>row.month))].filter(month=>month<end).sort();
+  const previous=months.at(-1);
+  const site=(month,factory,variance)=>({month,factory,factory_name:factory,produced_units:100,capacity_units:1000,utilization:.1,actual_fixed_factory_cost:1e6,absorbed_fixed_cost:1e6-variance,absorption_variance:variance,under_absorption:Math.max(variance,0),over_absorption:Math.max(-variance,0)});
+  const card=(rows)=>{
+    const html=global.StatementWorkspace.pages('operations-capex',{...data,hardware_factory_economics:rows},state)[0].html;
+    return html.match(/<button class="sw-kpi" data-sw-focus="op-absorption"[\s\S]*?<\/button>/)[0];
+  };
+  const over=card([site(previous,'CZ01',100000),site(end,'CZ01',-519074.17),site(end,'CN01',-395796.26)]);
+  assert.match(over,/<span>Over-absorption<\/span><strong>€0\.9m<\/strong>/);
+  assert.match(over,/class="favorable">[^<]* under €0\.1m/);
+  assert.doesNotMatch(over,/projects in progress/);
+  const under=card([site(previous,'CZ01',-100000),site(end,'CZ01',300000),site(end,'CN01',200000)]);
+  assert.match(under,/<span>Under-absorption<\/span><strong>€0\.5m<\/strong>/);
+  assert.match(under,/class="unfavorable">[^<]* over €0\.1m/);
+  const nil=card([site(previous,'CZ01',0),site(end,'CZ01',0)]);
+  assert.match(nil,/<span>Absorption variance<\/span><strong>€0\.0m<\/strong>/);
+  assert.match(nil,/class="neutral"/);
+});

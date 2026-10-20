@@ -58,7 +58,7 @@
     const parse=value=>{
       const text=String(value??'').trim();
       if(!text||['—','-'].includes(text))return null;
-      const compact=text.replace(/[€$£,%\s]/g,'').replace(/^\((.*)\)$/,'-$1');
+      const compact=text.replace(/−/g,'-').replace(/[€$£,%\s]/g,'').replace(/^\((.*)\)$/,'-$1');
       const match=compact.match(/^([+-]?(?:\d+(?:\.\d*)?|\.\d+))([KMB])?$/i);
       return match?Number(match[1])*({K:1e3,M:1e6,B:1e9}[match[2]?.toUpperCase()]||1):null;
     };

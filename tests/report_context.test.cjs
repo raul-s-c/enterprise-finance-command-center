@@ -94,3 +94,9 @@ test('table sorting compares compact currency, negatives, percentages and numeri
   assert.ok(model.compareDisplay('—','0',true)>0);
   assert.ok(model.compareDisplay('SKU 9','SKU 10')<0);
 });
+
+test('display sorting reads typographic minus signs and lowercase scale suffixes',()=>{
+  assert.ok(model.compareDisplay('−€0.5m','€0.1m',true)<0);
+  assert.ok(model.compareDisplay('−92.2k','−1.2m',true)>0);
+  assert.equal(model.compareDisplay('€1.5m','1500k',true),0);
+});

@@ -10,7 +10,7 @@
   }
   function render(ac,py,month,scope){
     const M=root.FinanceReport,esc=M.escape,items=rows(ac,py,M),max=Math.max(1,...items.flatMap(r=>[Math.abs(r.start||0),Math.abs(r.end||0)])),deltaMax=Math.max(1,...items.map(r=>Math.abs(r.change.delta||0))),pctMax=Math.max(.01,...items.map(r=>Math.abs(r.change.relative||0)));
-    const amount=v=>M.finite(v)?(Math.abs(v)>=1e6?`${(v/1e6).toFixed(1)}M`:`${(v/1e3).toFixed(1)}K`):'—',signed=v=>M.finite(v)?`${v>0?'+':''}${amount(v)}`:'—';
+    const amount=v=>{if(!M.finite(v))return '—';const text=Math.abs(v)>=1e6?`${(Math.abs(v)/1e6).toFixed(1)}m`:`${(Math.abs(v)/1e3).toFixed(1)}k`;return `${v<0&&Number(text.slice(0,-1))!==0?'−':''}${text}`;},signed=v=>M.finite(v)?`${v>0?'+':''}${amount(v)}`:'—';
     const bar=(start,end,scale,span)=>M.finite(start)&&M.finite(end)?`<i style="left:${50+Math.min(start,end)/scale*span}%;width:${Math.abs(end-start)/scale*span}%"></i>`:'';
     const body=items.map(r=>{
       const tone=r.change.favorable===true?'good':r.change.favorable===false?'bad':'neutral';

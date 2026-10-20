@@ -1,6 +1,6 @@
 const {test,expect}=require('@playwright/test');
 const published=require('../../web/data/dashboard.json');
-const money=value=>`€${(Number(value)/1e6).toFixed(1)}M`;
+const money=value=>{const n=Number(value),text=(Math.abs(n)/1e6).toFixed(1);return `${n<0&&Number(text)!==0?'−':''}€${text}m`;};
 
 test('forecast accuracy shows its full horizon evidence on a laptop',async({page})=>{
   await page.setViewportSize({width:1280,height:720});

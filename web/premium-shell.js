@@ -73,10 +73,16 @@
     document.addEventListener('click',event=>{if(!results.contains(event.target)&&!input.closest('.global-search').contains(event.target))close();});
     if(input.value.trim())paint();
   }
-  root.mountPremiumShell=function(){
+  function paintCloseStatus(dataset){
     const period=document.getElementById('globalPeriod'),control=document.getElementById('globalControl');
-    if(data?.meta?.end_month)period.textContent=data.meta.end_month;
-    if(data?.validation){control.innerHTML=`<i></i> Controls ${data.validation.passed?'passed':'failed'}`;control.classList.toggle('failed',!data.validation.passed);}
+    const passed=dataset?.validation?.passed,known=typeof passed==='boolean';
+    period.textContent=dataset?.meta?.end_month||'No close';
+    control.innerHTML=`<i></i> Controls ${known?(passed?'passed':'failed'):'unavailable'}`;
+    control.classList.toggle('failed',known&&!passed);control.classList.toggle('pending',!known);
+  }
+  root.paintPremiumCloseStatus=paintCloseStatus;
+  root.mountPremiumShell=function(){
+    paintCloseStatus(data);
     setupSearch();
     document.getElementById('globalExport').onclick=exportView;document.getElementById('globalHelp').onclick=openHelp;
   };
