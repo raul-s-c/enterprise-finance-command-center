@@ -59,9 +59,20 @@ test('management-book composition preserves every source section and pairs spars
   assert.match(result[0].title,/Section 1 · Section 2/);
 });
 
-test('mixed-scope compositions disclose group context instead of one misleading filter scope',()=>{
-  const result=B.compose([{title:'A',html:'a',policy:{key:'operating'}},{title:'B',html:'b',policy:{key:'group'}}]);
-  assert.equal(result[0].policy.key,'group');
+test('mixed-scope compositions keep the filtered policy and name their fixed sections',()=>{
+  const operating={key:'operating',dimensions:['entity','division']};
+  const result=B.compose([{title:'A',html:'a',policy:operating},{title:'B',html:'b',policy:{key:'group',dimensions:[]}}]);
+  assert.equal(result[0].policy.key,'mixed');
+  assert.deepEqual(result[0].policy.dimensions,['entity','division']);
+  assert.deepEqual(result[0].policy.fixedSections,['B']);
+});
+
+test('mixed-scope compositions resolve every filtered section, not only the first',()=>{
+  const review={key:'review',dimensions:['entity','division']},action={key:'actions',dimensions:['entity','division']};
+  const result=B.compose([{title:'A',html:'a',policy:review},{title:'B',html:'b',policy:action}]);
+  assert.equal(result[0].policy.key,'mixed');
+  assert.deepEqual(result[0].policy.companions,[action]);
+  assert.deepEqual(result[0].policy.fixedSections,[]);
 });
 
 test('contribution workspaces remain full-screen between composed report sections',()=>{
