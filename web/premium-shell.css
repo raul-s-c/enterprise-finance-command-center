@@ -1,4 +1,4 @@
-:root{--premium-blue:#0867f2;--premium-navy:#0b1f44;--premium-ink:#142440;--premium-muted:#5f6f86;--premium-line:#d9e2ef;--premium-wash:#f5f7fb;--premium-soft:#edf4ff;--premium-good:#079455;--premium-bad:#f04438}
+:root{--premium-blue:#0867f2;--premium-navy:#0b1f44;--premium-ink:#142440;--premium-muted:#5f6f86;--premium-line:#d9e2ef;--premium-wash:#f5f7fb;--premium-soft:#edf4ff;--premium-good:#067d48;--premium-bad:#f04438}
 .report-mode{background:var(--premium-wash);color:var(--premium-ink);font-family:"Segoe UI Variable","Segoe UI",Arial,sans-serif}
 .report-mode .app-shell{grid-template-columns:218px minmax(0,1fr);padding:18px 24px;background:var(--premium-wash);gap:0}
 .report-mode .sidebar{background:#fff!important;border:1px solid var(--premium-line)!important;border-right:0!important;border-radius:4px 0 0 4px;padding:0 10px 10px;box-shadow:0 8px 28px rgba(28,49,79,.04)}
