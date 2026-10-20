@@ -89,46 +89,68 @@
     const content=document.getElementById('content'),phone=root.matchMedia?.('(max-width:600px)');
     if(!content||!phone||content.dataset.chromeBound)return;
     content.dataset.chromeBound='1';
-    const body=document.body,SETTLE=250,INTENT=1000;
-    let last=content.scrollTop,anchor=last,direction=0,lockUntil=0,intentUntil=0,settleTimer=0;
-    const resync=()=>{last=anchor=content.scrollTop;direction=0;};
-    const chromeHeight=()=>[...document.querySelectorAll(CHROME)].reduce((sum,el)=>sum+el.getBoundingClientRect().height,0);
+    const body=document.body,SETTLE=250,INTENT=1000,TRAVEL=24;
+    // Report views scroll #content or an inner pane (statement grids, table wrappers), and many phone layouts fit
+    // with little or no overflow. Scrolls are therefore observed in the capture phase per scrolling element, and a
+    // downward wheel/swipe at the end of the pane under the pointer also asks for the room the chrome occupies.
+    let scroller=content,last=0,anchor=0,direction=0,lockUntil=0,intentUntil=0,settleTimer=0,touchY=null,push=0;
+    const isCollapsed=()=>body.classList.contains('mobile-chrome-collapsed');
+    const resync=()=>{last=anchor=scroller.isConnected?scroller.scrollTop:0;direction=0;push=0;};
     const set=collapsed=>{
-      if(body.classList.contains('mobile-chrome-collapsed')===collapsed)return;
+      if(isCollapsed()===collapsed)return;
       body.classList.toggle('mobile-chrome-collapsed',collapsed);
       lockUntil=performance.now()+SETTLE;clearTimeout(settleTimer);settleTimer=setTimeout(resync,SETTLE);
     };
+    // Browsers latch a wheel or touch gesture to the nearest scroll container, so that pane decides whether the
+    // gesture still scrolls content or has run out of room.
+    const nearestScroller=target=>{
+      for(let el=target instanceof Element?target:content;el&&el!==content&&content.contains(el);el=el.parentElement)
+        if(el.scrollHeight-el.clientHeight>1&&/(auto|scroll)/.test(getComputedStyle(el).overflowY))return el;
+      return content;
+    };
+    const atEnd=el=>el.scrollTop+el.clientHeight>=el.scrollHeight-2;
+    const gesture=(target,dy)=>{
+      if(!phone.matches||!dy||performance.now()<lockUntil)return;
+      if(Math.sign(dy)!==Math.sign(push))push=0;
+      push+=dy;
+      if(push>TRAVEL&&!isCollapsed()&&atEnd(nearestScroller(target)))set(true);
+      else if(push<-TRAVEL&&isCollapsed()&&nearestScroller(target).scrollTop<=0)set(false);
+    };
     const markIntent=()=>{intentUntil=performance.now()+INTENT;};
-    content.addEventListener('wheel',markIntent,{passive:true});
-    content.addEventListener('touchstart',markIntent,{passive:true});
-    content.addEventListener('touchmove',markIntent,{passive:true});
-    content.addEventListener('touchend',markIntent,{passive:true});
-    content.addEventListener('pointerdown',event=>{if(event.target===content)markIntent();});
+    content.addEventListener('wheel',event=>{markIntent();if(!event.ctrlKey&&Math.abs(event.deltaY)>Math.abs(event.deltaX))gesture(event.target,event.deltaY);},{passive:true});
+    content.addEventListener('touchstart',event=>{markIntent();touchY=event.touches.length===1?event.touches[0].clientY:null;push=0;},{passive:true});
+    content.addEventListener('touchmove',event=>{
+      markIntent();
+      if(touchY===null||event.touches.length!==1)return;
+      const y=event.touches[0].clientY;gesture(event.target,touchY-y);touchY=y;
+    },{passive:true});
+    content.addEventListener('touchend',()=>{markIntent();touchY=null;},{passive:true});
+    content.addEventListener('pointerdown',event=>{if(event.target.scrollHeight>event.target.clientHeight)markIntent();});
     content.addEventListener('keydown',event=>{
       if(event.target.closest('input,select,textarea,[contenteditable]'))return;
       if(['PageDown','PageUp','ArrowDown','ArrowUp','Home','End',' '].includes(event.key))markIntent();
     });
-    content.addEventListener('scroll',()=>{
+    content.addEventListener('scroll',event=>{
       if(!phone.matches)return;
-      const now=performance.now(),top=content.scrollTop;
-      if(now<lockUntil){last=anchor=top;return;}
-      if(top<40){set(false);last=anchor=top;return;}
-      if(now>intentUntil){last=anchor=top;return;}
+      const el=event.target;
+      if(!(el instanceof Element))return;
+      const now=performance.now(),top=el.scrollTop;
+      if(el!==scroller){scroller=el;last=anchor=top;direction=0;return;}
+      if(top===last)return; // horizontal scroll of a wide table
+      if(now<lockUntil||now>intentUntil){last=anchor=top;return;} // layout clamp after a toggle, or an app scroll
       intentUntil=Math.max(intentUntil,now+150);
       const step=Math.sign(top-last);
-      if(step&&step!==direction){anchor=last;direction=step;}
+      if(step!==direction){anchor=last;direction=step;}
       last=top;
-      if(direction>0&&top>80&&top-anchor>24){
-        // Collapse only when the report keeps room to scroll afterwards; otherwise the clamp would bounce it back.
-        if(content.scrollHeight-content.clientHeight-chromeHeight()>80)set(true);
-      }else if(direction<0&&anchor-top>24)set(false);
-    },{passive:true});
+      if(direction<0&&(top<40||anchor-top>TRAVEL))set(false);
+      else if(direction>0&&top>80&&top-anchor>TRAVEL)set(true);
+    },{capture:true,passive:true});
     document.addEventListener('focusin',event=>{if(event.target.closest?.(CHROME))set(false);});
     phone.addEventListener?.('change',event=>{if(!event.matches)set(false);});
     let routeKey='';
     const observeRoute=()=>{
       const key=`${state.view}|${typeof reportState==='object'?reportState.page:''}`;
-      if(key!==routeKey){routeKey=key;set(false);resync();}
+      if(key!==routeKey){routeKey=key;set(false);scroller=content;resync();}
     };
     const title=document.getElementById('viewTitle');
     if(title)new MutationObserver(observeRoute).observe(title,{childList:true,characterData:true,subtree:true});
