@@ -193,7 +193,7 @@
     const analytics=tower.querySelector('.tower-analytics');
     const compact=window.innerWidth<=1100;
     const regions=[analytics?.querySelector('.story-trend'),analytics?.querySelector('.tower-contribution'),analytics?.querySelector('.tower-drivers'),tower.querySelector('.story-timeline'),...(!compact?[tower.querySelector('.tower-actions')]:[])].filter(Boolean);
-    if(analytics&&regions.length>1&&(window.innerWidth<=900||window.innerHeight<=650)){
+    if(analytics&&regions.length>1&&(compact||window.innerHeight<=650)){
       const switcher=document.createElement('nav');switcher.className='tower-region-switch';switcher.setAttribute('aria-label','Executive overview regions');
       const labels=['Performance trend','EBIT contribution','Cash drivers','Company story','Management priorities'];
       const selected=Math.min(executiveRegionIndex,regions.length-1);
