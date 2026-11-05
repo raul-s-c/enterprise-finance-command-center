@@ -26,7 +26,7 @@ test('compact NWC flow retains all three signed components and record actions',a
     await expect(flow).toBeVisible();
     await expect(flow.locator('button')).toHaveCount(4);
     for(const name of ['Receivables','Inventory','Payables'])await expect(flow).toContainText(name);
-    await expect(flow.getByRole('button',{name:/Payables/})).toContainText('-€');
+    await expect(flow.getByRole('button',{name:/Payables/})).toContainText('−€');
     await expect(page.locator('.cx-flow')).toContainText('Signed components sum to NWC');
     const fit=await flow.evaluate(node=>({buttons:[...node.querySelectorAll('button')].every(button=>button.scrollHeight<=button.clientHeight+1&&button.scrollWidth<=button.clientWidth+1),flowOverflow:node.closest('.cx-flow').scrollHeight-node.closest('.cx-flow').clientHeight}));
     expect(fit.buttons).toBe(true);

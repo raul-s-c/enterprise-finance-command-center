@@ -22,7 +22,7 @@ test('forecast bridge preserves signed month values and source table',()=>{
   const rows=[{month:'2026-09',action_ebit_impact:-1250,action_revenue_impact:500,active_action_count:2},{month:'2026-10',action_ebit_impact:3000,action_revenue_impact:900,active_action_count:3}];
   const html=visual.bridge(rows,'<table id="source"></table>');
   assert.match(html,/aev-bar-negative/);
-  assert.match(html,/-€1,250/);
+  assert.match(html,/−€1,250/);
   assert.match(html,/data-aev-month="2026-10"/);
   assert.match(html,/complete 2-month additive bridge/);
   assert.match(html,/id="source"/);
@@ -41,7 +41,7 @@ test('intervention mix counts plans and period cards sum signed monthly EBIT',()
   const months=[-100,200,300,-500].map((value,index)=>({month:`2027-0${index+1}`,action_ebit_impact:value,action_revenue_impact:0,active_action_count:1}));
   const bridge=visual.bridge(months,'<table></table>');
   assert.match(bridge,/Months 1–3[\s\S]*?€400/);
-  assert.match(bridge,/Months 4–4[\s\S]*?-€500/);
+  assert.match(bridge,/Months 4–4[\s\S]*?−€500/);
 });
 
 test('actual impact distinguishes pre-effective zero from later signed activity',()=>{

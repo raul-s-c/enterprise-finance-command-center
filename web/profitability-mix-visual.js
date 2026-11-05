@@ -2,7 +2,7 @@
 (function(root){
   const escape=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
   const value=row=>Number(row?.[metric])||0;
-  const money=amount=>`${amount<0?'-':''}€${(Math.abs(amount)/1e6).toFixed(1)}m`;
+  const money=amount=>`${amount<0?'−':''}€${(Math.abs(amount)/1e6).toFixed(1)}m`;
   let metric='revenue';
   function controls(){
     return `<div class="pm-switch" role="group" aria-label="Compare profitability measure"><button type="button" data-pm-metric="revenue" aria-pressed="${metric==='revenue'}">Revenue</button><button type="button" data-pm-metric="operating_contribution" aria-pressed="${metric==='operating_contribution'}">Operating contribution</button></div>`;

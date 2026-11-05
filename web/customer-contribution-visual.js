@@ -4,7 +4,7 @@ globalThis.CustomerContributionVisual = (()=>{
   const esc=value=>FinanceReport.escape(String(value??''));
   const key=row=>`${row.entity}|${row.division}|${row.customer}`;
   const money=value=>`${Number(value)<0?'−':''}€${(Math.abs(Number(value)||0)/1e6).toFixed(2)}m`;
-  const exact=value=>new Intl.NumberFormat('en-US',{style:'currency',currency:'EUR'}).format(Number(value)||0);
+  const exact=value=>new Intl.NumberFormat('en-US',{style:'currency',currency:'EUR'}).format(Number(value)||0).replace(/^-/,'−');
   const pct=value=>`${(100*(Number(value)||0)).toFixed(1)}%`;
   const sum=(items,field)=>items.reduce((n,row)=>n+(Number(row[field])||0),0);
   function page(data,state){

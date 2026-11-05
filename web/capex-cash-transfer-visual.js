@@ -1,7 +1,7 @@
 /* CAPEX event view: SPEND uses cash; GO_LIVE transfers CIP to PPE without cash. */
 (function(root){
   const escape=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-  const money=value=>`${value<0?'-':''}€${(Math.abs(value)/1e6).toFixed(2)}m`;
+  const money=value=>`${value<0?'−':''}€${(Math.abs(value)/1e6).toFixed(2)}m`;
   function projects(rows){
     const map=new Map();
     for(const row of rows||[]){

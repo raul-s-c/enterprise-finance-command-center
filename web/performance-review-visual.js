@@ -2,13 +2,13 @@
 (function(root){
   const esc=value=>root.FinanceReport.escape(String(value??''));
   const amount=value=>{
-    const number=Number(value),absolute=Math.abs(number),sign=number<0?'-':'';
+    const number=Number(value),absolute=Math.abs(number),sign=number<0?'−':'';
     if(!Number.isFinite(number))return '—';
     if(absolute>=1e6)return `${sign}€${(absolute/1e6).toFixed(1)}m`;
     if(absolute>=1e3)return `${sign}€${(absolute/1e3).toFixed(1)}k`;
     return `${sign}€${absolute.toFixed(0)}`;
   };
-  const exact=value=>Number.isFinite(Number(value))?new Intl.NumberFormat('en-GB',{style:'currency',currency:'EUR',maximumFractionDigits:2}).format(Number(value)):'—';
+  const exact=value=>Number.isFinite(Number(value))?new Intl.NumberFormat('en-GB',{style:'currency',currency:'EUR',maximumFractionDigits:2}).format(Number(value)).replace(/^-/,'−'):'—';
   const scope=(rows,selection)=>{
     if(selection.entity==='all'&&selection.division==='all')return rows.filter(row=>row.scope_level==='Group');
     if(selection.entity!=='all'&&selection.division==='all')return rows.filter(row=>row.scope_level==='Entity'&&row.entity===selection.entity);

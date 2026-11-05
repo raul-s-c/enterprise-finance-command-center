@@ -2,7 +2,7 @@
 (function(root){
   const escape=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
   const number=value=>Number(value)||0;
-  const euro=value=>`${value<0?'-':''}€${(Math.abs(value)/1e6).toFixed(2)}m`;
+  const euro=value=>`${value<0?'−':''}€${(Math.abs(value)/1e6).toFixed(2)}m`;
   const percent=value=>`${(value*100).toFixed(1)}%`;
   function factory(rows){
     if(!rows.length)return '<p class="fa-empty">No current factory accounting record.</p>';

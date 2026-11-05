@@ -35,7 +35,7 @@ test('price-volume-mix bars appear only when the published bridge reconciles',()
 });
 
 test('review values keep their financial sign and escape source text',()=>{
-  assert.equal(visual.amount(-1042179.7333),'-€1.0m');
+  assert.equal(visual.amount(-1042179.7333),'−€1.0m');
   assert.equal(visual.amount(593891.01),'€593.9k');
   const changed={...data,performance_review:[{...data.performance_review[0],headline:'<unsafe>'}]};
   assert.doesNotMatch(visual.page(changed,{entity:'all',division:'all'}),/<unsafe>/);

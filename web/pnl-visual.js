@@ -44,7 +44,7 @@
     const M=root.FinanceReport,esc=M.escape,impact=r=>M.finite(r.change?.delta)?r.change.delta*(r.cost?-1:1):null,parts=contributions(data,scope,key,M).sort((a,b)=>Math.abs(impact(b)||0)-Math.abs(impact(a)||0)),visibleParts=parts.filter(r=>!(M.finite(r.actual)&&M.finite(r.prior)&&r.actual===0&&r.prior===0)),zeroActivity=parts.length-visibleParts.length,impactMax=Math.max(1,...visibleParts.map(r=>Math.abs(impact(r)||0)));
     const precise=v=>M.finite(v)?(v/1e6).toLocaleString('en-GB',{minimumFractionDigits:3,maximumFractionDigits:6}):'—';
     const display=v=>{if(!M.finite(v))return '—';const magnitude=Math.abs(v),digits=magnitude>=1e6?1:magnitude>=1e5?2:magnitude>=1e3?3:6;return (v/1e6).toLocaleString('en-GB',{minimumFractionDigits:digits,maximumFractionDigits:digits});};
-    const exactEUR=v=>M.finite(v)?new Intl.NumberFormat('en-GB',{style:'currency',currency:'EUR',maximumFractionDigits:2}).format(v):'Unavailable';
+    const exactEUR=v=>M.finite(v)?new Intl.NumberFormat('en-GB',{style:'currency',currency:'EUR',maximumFractionDigits:2}).format(v).replace(/^-/,'−'):'Unavailable';
     const signedDisplay=v=>M.finite(v)?`${v>0?'+':''}${display(v)}`:'—';
     const valueCell=(v,label)=>`<td title="Exact: ${esc(exactEUR(v))}" aria-label="${label}: ${esc(exactEUR(v))}">${display(v)}</td>`;
     const varianceCell=v=>`<td title="Exact: ${esc(exactEUR(v))}" aria-label="Variance: ${esc(exactEUR(v))}">${signedDisplay(v)}</td>`;
@@ -57,7 +57,7 @@
     const months=M.aggregate(source),actual=months.find(row=>row.month===period),prior=months.find(row=>row.month===M.priorMonth(period));
     const line=rows(actual,prior,M).find(row=>row.key===key);
     if(!line)return '<p>No source-backed P&amp;L line is available for this selection.</p>';
-    const format=value=>M.finite(value)?`${value<0?'-':''}€${Math.abs(value)>=1e6?(Math.abs(value)/1e6).toFixed(1)+'m':(Math.abs(value)/1e3).toFixed(1)+'k'}`:'—';
+    const format=value=>M.finite(value)?`${value<0?'−':''}€${Math.abs(value)>=1e6?(Math.abs(value)/1e6).toFixed(1)+'m':(Math.abs(value)/1e3).toFixed(1)+'k'}`:'—';
     const signed=value=>M.finite(value)?`${value>0?'+':''}${format(value)}`:'—';
     const profitImpact=part=>M.finite(part.change?.delta)?part.change.delta*(part.cost?-1:1):null,parts=contributions(data,scope,key,M).sort((a,b)=>Math.abs(profitImpact(b)||0)-Math.abs(profitImpact(a)||0)),largest=Math.max(1,...parts.map(part=>Math.abs(profitImpact(part)||0)));
     const sourceTotal=parts.reduce((total,part)=>total+(part.actual||0),0),gap=M.finite(line.value)?line.value-sourceTotal:null;

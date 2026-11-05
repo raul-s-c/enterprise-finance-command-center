@@ -1,8 +1,8 @@
 /* Source-tied action execution visuals. Gross cases are never treated as additive impact. */
 (function(root){
   const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-  const amount=value=>new Intl.NumberFormat('en-GB',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(Number(value)||0);
-  const compact=value=>Math.abs(Number(value)||0)<1e6?`€${new Intl.NumberFormat('en-GB',{maximumFractionDigits:0}).format((Number(value)||0)/1e3)}k`:`€${new Intl.NumberFormat('en-GB',{maximumFractionDigits:1,minimumFractionDigits:1}).format((Number(value)||0)/1e6)}m`;
+  const amount=value=>new Intl.NumberFormat('en-GB',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(Number(value)||0).replace(/^-/,'−');
+  const compact=value=>{const number=Number(value)||0,absolute=Math.abs(number);return `${number<0?'−':''}€${absolute<1e6?`${new Intl.NumberFormat('en-GB',{maximumFractionDigits:0}).format(absolute/1e3)}k`:`${new Intl.NumberFormat('en-GB',{maximumFractionDigits:1,minimumFractionDigits:1}).format(absolute/1e6)}m`}`;};
   const monthLabel=value=>new Intl.DateTimeFormat('en-GB',{month:'short',year:'numeric',timeZone:'UTC'}).format(new Date(`${value}-01T00:00:00Z`));
   const stages=['Approved','Implementing','Benefits tracking','Benefits validated'];
 
