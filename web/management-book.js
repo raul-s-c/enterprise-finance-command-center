@@ -192,6 +192,7 @@
     if(!tower)return;
     const analytics=tower.querySelector('.tower-analytics');
     const compact=window.innerWidth<=1100;
+    tower.classList.toggle('tower-compact-regions',compact);
     const regions=[analytics?.querySelector('.story-trend'),analytics?.querySelector('.tower-contribution'),analytics?.querySelector('.tower-drivers'),tower.querySelector('.story-timeline'),...(!compact?[tower.querySelector('.tower-actions')]:[])].filter(Boolean);
     if(analytics&&regions.length>1&&(compact||window.innerHeight<=650)){
       const switcher=document.createElement('nav');switcher.className='tower-region-switch';switcher.setAttribute('aria-label','Executive overview regions');
