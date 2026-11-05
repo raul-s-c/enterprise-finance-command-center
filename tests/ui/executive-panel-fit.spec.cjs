@@ -34,6 +34,7 @@ test('Executive overview gives compact laptops a full-width, reachable region se
   await page.goto('/#view=executive&page=0');
   const switcher=page.getByRole('navigation',{name:'Executive overview regions'});
   await expect(switcher).toBeVisible();
+  await expect(page.locator('.tower-actions')).toBeVisible();
   const labels=['Performance trend','EBIT contribution','Cash drivers','Company story'];
   for(let index=0;index<labels.length;index++){
     await switcher.getByRole('button',{name:labels[index],exact:true}).click();
