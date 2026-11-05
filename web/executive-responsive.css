@@ -16,7 +16,8 @@
 @media(max-width:1100px){
   .report-mode .control-tower .tower-analytics{grid-template-columns:minmax(0,1fr)}
   .report-mode .control-tower .tower-analytics>section{grid-column:1;min-width:0;width:100%}
-  .report-mode .control-tower .tower-analytics>section[hidden]{display:none!important}
+  .report-mode .control-tower .tower-analytics>section[hidden],
+  .report-mode .control-tower .tower-bottom>.story-timeline[hidden]{display:none!important}
   .report-mode .control-tower .tower-bottom{grid-template-columns:minmax(0,1fr)}
 
   .tower-region-switch{display:flex;flex-wrap:wrap;gap:4px;padding:6px 8px;border-bottom:1px solid #d8dee8}
@@ -24,6 +25,13 @@
   .report-mode .tower-region-switch button[aria-pressed=true]{color:#075fc6;background:#e9f3ff;border-color:#9bbce1}
   .report-mode .tower-drivers{display:block}
   .report-mode .story-timeline{display:block}
+}
+
+@media(min-width:901px) and (max-width:1100px) and (min-height:651px){
+  .report-mode .control-tower.tower-story-region-active .tower-canvas{grid-template-rows:minmax(0,1fr) minmax(140px,22vh)}
+  .report-mode .control-tower.tower-story-region-active .tower-bottom{display:grid!important;grid-template-columns:minmax(0,1fr);height:auto;min-height:0}
+  .report-mode .control-tower.tower-story-region-active .tower-actions{display:none}
+  .report-mode .control-tower.tower-story-region-active .tower-bottom>.story-timeline{height:auto;min-height:140px}
 }
 @media(max-width:900px){
   .report-mode .tower-contribution,.report-mode .tower-drivers{display:block}
