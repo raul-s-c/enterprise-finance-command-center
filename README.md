@@ -59,7 +59,9 @@ CFO analytics
 
 P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.29.1
+## Current release: v0.29.2
+
+Version 0.29.2 ships the cross-report zoom and reflow fixes from the 200% and 320px audit. Short screens now keep the report pager reachable, evidence dialogs remain scrollable with Close accessible, and narrow layouts no longer clip scope controls, contribution dimensions or review actions. Negative euro amounts use one typographic minus format throughout. This is a presentation and accessibility release: ledger values, financial calculations and control tolerances are unchanged.
 
 Version 0.29.1 is a presentation release focused on phones and accessibility. On phones the report header (area, report, title, filters, subpage and scope) folds away while the reader scrolls a report down and returns on scroll up, at the top, on keyboard focus and on every view change, giving reports about 88% of the screen. An axe-core WCAG 2.1 AA audit now runs on every subpage of all 18 reports at laptop and phone sizes, with forced favourable and adverse tone variants so the result does not depend on the month's data; it found and fixed insufficient contrast, review badges, a nested-interactive chart and a missing search focus ring, and adds a visible mark wherever colour signalled favourable or adverse without a sign. The shared favourable green is darkened to meet AA on white, and cockpit header actions wrap instead of running off-screen on phones. Ledger values, statements and controls are unchanged.
 

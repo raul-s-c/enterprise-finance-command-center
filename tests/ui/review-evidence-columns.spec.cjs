@@ -8,8 +8,13 @@ test('review evidence leads with variance and accountable action state',async({p
   await expect(panels.first().locator('thead th:visible')).toHaveText(['Metric','Actual','Benchmark','Variance']);
   await expect(panels.last().locator('thead th:visible')).toHaveText(['Trigger / priority','Owner','Due','Status']);
   const drivers=await panels.first().locator('tbody tr').evaluateAll(rows=>rows.map(row=>({metric:row.cells[0]?.textContent?.trim(),variance:row.querySelector('.review-variance')?.className||'',title:row.querySelector('.review-variance')?.title||''})));
-  expect(drivers.find(row=>row.metric==='OPEX')).toMatchObject({variance:expect.stringContaining('is-adverse'),title:'Adverse financial variance'});
-  expect(drivers.find(row=>row.metric==='Revenue')).toMatchObject({variance:expect.stringContaining('is-favorable'),title:'Favorable financial variance'});
+  for(const metric of ['OPEX','Revenue']){
+    const driver=drivers.find(row=>row.metric===metric);
+    expect(driver, `missing ${metric} variance evidence`).toBeTruthy();
+    const tones=['is-adverse','is-favorable'].filter(tone=>driver.variance.includes(tone));
+    expect(tones, `${metric} must expose exactly one financial tone`).toHaveLength(1);
+    expect(driver.title).toBe(tones[0]==='is-adverse'?'Adverse financial variance':'Favorable financial variance');
+  }
   await expect(panels.last().locator('tbody tr').first()).toContainText('Open');
   for(const panel of await panels.all())expect(await panel.evaluate(el=>el.scrollHeight<=el.clientHeight+1)).toBe(true);
   await page.screenshot({path:'test-results/review-evidence-columns.png',fullPage:true});
