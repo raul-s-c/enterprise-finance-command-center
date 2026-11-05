@@ -29,6 +29,24 @@ test('Executive Drivers, Outlook and Actions fit their laptop panels',async({pag
   await expect(page.locator('.story-scenario')).toHaveCount(3);
 });
 
+test('Executive overview gives compact laptops a full-width, reachable region selector',async({page})=>{
+  await page.setViewportSize({width:1024,height:720});
+  await page.goto('/#view=executive&page=0');
+  const switcher=page.getByRole('navigation',{name:'Executive overview regions'});
+  await expect(switcher).toBeVisible();
+  const labels=['Performance trend','EBIT contribution','Cash drivers','Company story'];
+  const analytics=page.locator('.tower-analytics');
+  for(let index=0;index<labels.length;index++){
+    await switcher.getByRole('button',{name:labels[index],exact:true}).click();
+    const region=page.locator(`#executive-region-${index}`);
+    await expect(region).toBeVisible();
+    const layout=await region.evaluate(element=>({width:element.getBoundingClientRect().width,parent:element.parentElement.getBoundingClientRect().width}));
+    expect(layout.width,JSON.stringify({label:labels[index],...layout})).toBeGreaterThanOrEqual(layout.parent-2);
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+  }
+  await expect(page.locator('.tower-actions')).toBeVisible();
+});
+
 test('Executive keeps its responsive chart reachable on mobile',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await page.goto('/#view=executive&page=1');
