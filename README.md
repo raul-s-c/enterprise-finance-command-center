@@ -59,7 +59,9 @@ CFO analytics
 
 P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.29.4
+## Current release: v0.29.5
+
+Version 0.29.5 keeps the shared statement workspace within the available report canvas on compact laptop screens. Cash Flow, Treasury, Balance Sheet and Planning panels now use shrinkable grid tracks between 901 and 1100 CSS pixels, preventing the right-hand reconciliation formula, forecast flow and analysis from being cut off by the navigation shell. Playwright regressions check all four reports at 1040×720, including their formula and forecast flow content. Ledger values, statement calculations and close controls are unchanged.
 
 Version 0.29.4 fixes the intermediate laptop-width band in the graphical P&L. At 901–1100 CSS pixels it retains the complete IBCS comparison view—prior year, actual, variance and variance percent—while tightening column widths to the available report canvas. A focused browser regression checks 1100×720, 1040×720 and 901×720, including the previously clipped 1040px layout. Financial source data, statement values, calculations and control tolerances are unchanged.
 
