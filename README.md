@@ -59,7 +59,9 @@ CFO analytics
 
 P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.29.3
+## Current release: v0.29.4
+
+Version 0.29.4 fixes the intermediate laptop-width band in the graphical P&L. At 901–1100 CSS pixels it retains the complete IBCS comparison view—prior year, actual, variance and variance percent—while tightening column widths to the available report canvas. A focused browser regression checks 1100×720, 1040×720 and 901×720, including the previously clipped 1040px layout. Financial source data, statement values, calculations and control tolerances are unchanged.
 
 Version 0.29.3 makes the Executive overview adapt to compact laptop widths: its performance trend, EBIT contribution, cash drivers and company story become full-width selectable regions, with the management-priority rail alongside the analytical regions and the Company Story available on demand. The Actions subpage remains the full action register. A regression check covers the 1024×720 layout. This builds on v0.29.2's cross-report zoom, 320px reflow, reachable pager, scrollable evidence dialogs and consistent negative euro signs. This is a presentation release: ledger values, financial calculations and control tolerances are unchanged.
 

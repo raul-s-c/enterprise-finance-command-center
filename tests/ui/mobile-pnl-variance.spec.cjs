@@ -59,3 +59,38 @@ test('mobile P&L exposes both actuals and signed variances without sideways scro
   await expect(controls).toBeHidden();
   await expect(statement.locator('.pnl-heading>span:nth-child(4)')).toBeVisible();
 });
+
+
+test('laptop P&L keeps all IBCS comparison columns inside the visible panel',async({page},testInfo)=>{
+  for(const width of [1100,1040,901]){
+    await page.setViewportSize({width,height:720});
+    await page.goto('/#view=pnl&page=0');
+    const statement=page.locator('.pnl-visual');
+    await expect(statement).toBeVisible();
+    await expect(statement.locator('.pnl-heading>span')).toHaveCount(5);
+    const fit=await page.evaluate(()=>{
+      const scroll=document.querySelector('.pnl-scroll');
+      const columns=[...document.querySelectorAll('.pnl-heading>span')];
+      const rowColumnsRight=[...document.querySelectorAll('.pnl-row')].map(row=>row.lastElementChild.getBoundingClientRect().right);
+      return {
+        clientWidth:scroll.clientWidth,
+        scrollWidth:scroll.scrollWidth,
+        right:scroll.getBoundingClientRect().right,
+        lastHeadingRight:columns[4].getBoundingClientRect().right,
+        rowColumnsRight,
+        compactSwitch:getComputedStyle(document.querySelector('.pnl-mobile-switch')).display,
+        visibleColumns:columns.map(column=>getComputedStyle(column).display!=='none')
+      };
+    });
+    expect(fit.scrollWidth,JSON.stringify(fit)).toBeLessThanOrEqual(fit.clientWidth+1);
+    expect(fit.lastHeadingRight,JSON.stringify(fit)).toBeLessThanOrEqual(fit.right+1);
+    expect(fit.rowColumnsRight.every(right=>right<=fit.right+1),JSON.stringify(fit)).toBe(true);
+    expect(fit.compactSwitch).toBe('none');
+    expect(fit.visibleColumns).toEqual([true,true,true,true,true]);
+    if(width===1040){
+      const screenshot=testInfo.outputPath('pnl-laptop-1040x720.png');
+      await page.screenshot({path:screenshot});
+      await testInfo.attach('pnl-laptop-1040x720',{path:screenshot,contentType:'image/png'});
+    }
+  }
+});
