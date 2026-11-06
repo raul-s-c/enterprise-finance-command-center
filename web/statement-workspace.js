@@ -339,6 +339,7 @@
     const panels=['primary','secondary','detail'].map(key=>workspace.querySelector(`.sw-${key}`));
     const reportKey=workspace.querySelector('h2').textContent;
     const selected=analysisFocus.get(reportKey)||0;
+    grid.classList.toggle('analysis-detail-selected',selected===2);
     if(workspace.classList.contains('margin-cockpit'))grid.classList.toggle('margin-detail-selected',selected===2);
     const labels=['Trend & drivers','Bridge & composition','Contribution & detail'];
     panels.forEach((panel,index)=>{
@@ -349,6 +350,7 @@
       panel.classList.toggle('analysis-selected',index===selected);
       button.onclick=()=>{
         analysisFocus.set(reportKey,index);
+        grid.classList.toggle('analysis-detail-selected',index===2);
         panels.forEach(p=>p.classList.toggle('analysis-selected',p===panel));
         if(workspace.classList.contains('margin-cockpit'))grid.classList.toggle('margin-detail-selected',index===2);
         nav.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));

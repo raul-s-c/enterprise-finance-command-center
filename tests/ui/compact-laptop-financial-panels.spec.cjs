@@ -7,32 +7,40 @@ const cockpits=[
   {view:'forecast',selector:'.forecast-cockpit'}
 ];
 
-test('financial cockpit analysis panels fit a compact laptop canvas',async({page},testInfo)=>{
+test('financial cockpit shows linked analysis panels side by side on a compact laptop',async({page},testInfo)=>{
   await page.setViewportSize({width:1040,height:720});
   for(const {view,selector} of cockpits){
     await page.goto(`/#view=${view}&page=0`);
-    const cockpit=page.locator(selector);
-    await expect(cockpit.locator('.sw-grid')).toBeVisible();
+    const cockpit=page.locator(selector),grid=cockpit.locator('.sw-grid');
+    await expect(grid).toBeVisible();
     await expect(cockpit.locator('.sw-primary')).toBeVisible();
     await expect(cockpit.locator('.sw-secondary')).toBeVisible();
     await expect(cockpit.locator('.sw-secondary .sw-formula,.sw-secondary .sw-flow,.sw-secondary .sw-structure').first()).toBeVisible();
-    const fit=await cockpit.locator('.sw-grid').evaluate(grid=>{
-      const gridBox=grid.getBoundingClientRect();
-      const panels=[...grid.querySelectorAll(':scope > .sw-primary, :scope > .sw-secondary')].map(panel=>{
-        const box=panel.getBoundingClientRect();
-        return {right:box.right,scrollWidth:panel.scrollWidth,clientWidth:panel.clientWidth};
+    await expect(cockpit.locator('.sw-detail')).toBeHidden();
+    const fit=await grid.evaluate(node=>{
+      const box=node.getBoundingClientRect();
+      const panels=[...node.querySelectorAll(':scope > .sw-primary,:scope > .sw-secondary')].map(panel=>{
+        const rect=panel.getBoundingClientRect();
+        return {left:rect.left,right:rect.right,scrollWidth:panel.scrollWidth,clientWidth:panel.clientWidth};
       });
-      const analysis=[...grid.querySelectorAll('.sw-secondary .sw-formula,.sw-secondary .sw-flow,.sw-secondary .sw-structure')].map(item=>{
-        const box=item.getBoundingClientRect();
-        const children=[...item.children].map(child=>child.getBoundingClientRect().right);
-        return {right:box.right,scrollWidth:item.scrollWidth,clientWidth:item.clientWidth,childrenRight:children};
+      const analysis=[...node.querySelectorAll('.sw-secondary .sw-formula,.sw-secondary .sw-flow,.sw-secondary .sw-structure')].map(item=>{
+        const rect=item.getBoundingClientRect();
+        return {left:rect.left,right:rect.right,scrollWidth:item.scrollWidth,clientWidth:item.clientWidth,childrenRight:[...item.children].map(child=>child.getBoundingClientRect().right)};
       });
-      return {gridRight:gridBox.right,gridWidth:grid.clientWidth,gridScrollWidth:grid.scrollWidth,panels,analysis};
+      return {left:box.left,right:box.right,width:node.clientWidth,scrollWidth:node.scrollWidth,panels,analysis};
     });
-    expect(fit.gridScrollWidth,JSON.stringify(fit)).toBeLessThanOrEqual(fit.gridWidth+1);
-    expect(fit.panels.every(panel=>panel.right<=fit.gridRight+1&&panel.scrollWidth<=panel.clientWidth+1),JSON.stringify(fit)).toBe(true);
+    expect(fit.scrollWidth,JSON.stringify(fit)).toBeLessThanOrEqual(fit.width+1);
+    expect(fit.panels.every(panel=>panel.left>=fit.left-1&&panel.right<=fit.right+1&&panel.scrollWidth<=panel.clientWidth+1),JSON.stringify(fit)).toBe(true);
     expect(fit.analysis.length,JSON.stringify(fit)).toBeGreaterThan(0);
-    expect(fit.analysis.every(item=>item.right<=fit.gridRight+1&&item.scrollWidth<=item.clientWidth+1&&item.childrenRight.every(right=>right<=item.right+1)),JSON.stringify(fit)).toBe(true);
+    expect(fit.analysis.every(item=>item.left>=fit.left-1&&item.right<=fit.right+1&&item.scrollWidth<=item.clientWidth+1&&item.childrenRight.every(right=>right<=item.right+1)),JSON.stringify(fit)).toBe(true);
+    await expect(cockpit.locator('.sw-analysis-nav button')).toHaveCount(3);
+    await cockpit.locator('.sw-analysis-nav button').nth(2).click();
+    await expect(cockpit.locator('.sw-detail')).toBeVisible();
+    await expect(cockpit.locator('.sw-primary')).toBeHidden();
+    await expect(cockpit.locator('.sw-secondary')).toBeHidden();
+    await cockpit.locator('.sw-analysis-nav button').first().click();
+    await expect(cockpit.locator('.sw-primary')).toBeVisible();
+    await expect(cockpit.locator('.sw-secondary')).toBeVisible();
     expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
     const screenshot=testInfo.outputPath(`${view}-compact-laptop-1040x720.png`);
     await page.screenshot({path:screenshot});

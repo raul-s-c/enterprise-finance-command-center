@@ -244,11 +244,21 @@
   .report-mode .story-kpis{display:flex;overflow-x:auto}
   .report-mode button.story-kpi{flex:1 0 136px;min-width:136px}
 }
-@media(max-width:1500px){
+@media(min-width:901px) and (max-width:1500px){
+  .report-mode .sw-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr);overflow:hidden}
+  .report-mode .sw-grid>.sw-panel{display:flex;flex-direction:column;min-width:0;min-height:0}
+  .report-mode .sw-grid>.sw-inspector,.report-mode .sw-grid>.sw-detail{display:none}
+  .report-mode .sw-grid.analysis-detail-selected{grid-template-columns:minmax(0,1fr)}
+  .report-mode .sw-grid.analysis-detail-selected>.sw-primary,.report-mode .sw-grid.analysis-detail-selected>.sw-secondary{display:none}
+  .report-mode .sw-grid.analysis-detail-selected>.sw-detail{display:flex;grid-column:1;grid-row:1}
+}
+@media(max-width:900px){
   .report-mode .sw-grid{display:flex;flex-direction:column;overflow:auto}
   .report-mode .sw-grid>.sw-panel{display:none}
   .report-mode .sw-grid>.sw-panel.analysis-selected{display:flex;flex-direction:column;flex:1;min-height:240px}
   .report-mode .sw-grid>.sw-inspector{display:none}
+}
+@media(max-width:1500px){
   .report-mode .sw-inspector dl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
   .report-mode .sw-inspector-value{display:none}
   .report-mode .sw-inspector>header{display:none}
