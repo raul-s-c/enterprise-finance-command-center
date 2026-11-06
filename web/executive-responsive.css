@@ -40,3 +40,48 @@
   .tower-analytics .story-trend{height:320px}
   .tower-canvas>.story-timeline{min-height:180px}
 }
+
+
+/* Keep the compact laptop switcher above its selected panel and retain its management rail. */
+@media (min-width:901px) and (max-width:1100px) and (min-height:651px){
+  .report-mode .control-tower.tower-compact-regions .tower-canvas{
+    display:grid;
+    grid-template-rows:auto minmax(0,1fr) minmax(112px,20vh);
+    overflow:hidden;
+  }
+  .report-mode .control-tower.tower-compact-regions .tower-region-switch{
+    grid-row:1;
+    position:relative;
+    z-index:2;
+    min-height:0;
+  }
+  .report-mode .control-tower.tower-compact-regions .tower-canvas .tower-analytics{
+    grid-row:2;
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    min-height:0;
+    overflow:hidden;
+  }
+  .report-mode .control-tower.tower-compact-regions .tower-canvas .tower-bottom{
+    grid-row:3;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr);
+    height:auto;
+    min-height:0;
+    overflow:hidden;
+  }
+  .report-mode .control-tower.tower-compact-regions .tower-bottom .tower-actions{
+    display:block!important;
+    min-height:0;
+  }
+  .report-mode .control-tower.tower-compact-regions.tower-story-region-active .tower-bottom .tower-actions{
+    display:none!important;
+  }
+  .report-mode .control-tower.tower-compact-regions .tower-bottom>.story-timeline[hidden]{
+    display:none!important;
+  }
+  .report-mode .control-tower.tower-compact-regions.tower-story-region-active .tower-bottom>.story-timeline{
+    display:block!important;
+    min-height:0;
+  }
+}
