@@ -86,12 +86,14 @@
   }
 }
 
-/* Let the selected trend chart shrink inside the compact laptop row instead of clipping its plot. */
+
+/* Constrain the implicit grid row and month tiles to the compact trend panel. */
 @media (min-width:901px) and (max-width:1100px) and (min-height:651px){
-  .report-mode .control-tower.tower-compact-regions .tower-analytics .story-trend .report-svg{
-    height:min(180px,45vh);
-    max-height:180px;
-    min-height:0;
-    flex:0 1 auto;
+  .report-mode .control-tower.tower-compact-regions .executive-mini-months{
+    grid-template-rows:minmax(0,1fr);
+    overflow:hidden;
+  }
+  .report-mode .control-tower.tower-compact-regions .executive-mini-month{
+    min-height:0!important;
   }
 }
