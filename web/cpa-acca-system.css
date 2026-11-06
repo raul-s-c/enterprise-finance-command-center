@@ -284,3 +284,10 @@
   .report-mode .filters label{flex:0 1 190px;min-width:0}
   .report-mode .filters select{width:100%;min-width:0}
 }
+
+/* Keep cockpit action buttons reachable beside the title on compact laptops. */
+@media (min-width:901px) and (max-width:1100px){
+  .report-mode .statement-workspace .sw-head{flex-wrap:wrap;align-items:center;row-gap:6px}
+  .report-mode .statement-workspace .sw-head>div:first-child{flex:1 1 100%;min-width:0}
+  .report-mode .statement-workspace .sw-head>div:last-child{flex:1 1 100%;justify-content:flex-end;flex-wrap:wrap;min-width:0}
+}

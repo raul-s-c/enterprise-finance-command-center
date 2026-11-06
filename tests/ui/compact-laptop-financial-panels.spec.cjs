@@ -13,6 +13,15 @@ test('financial cockpit shows linked analysis panels side by side on a compact l
     await page.goto(`/#view=${view}&page=0`);
     const cockpit=page.locator(selector),grid=cockpit.locator('.sw-grid');
     await expect(grid).toBeVisible();
+    const headerFit=await cockpit.locator('.sw-head').evaluate(node=>{
+      const items=[...node.querySelectorAll('h2,button')].filter(item=>getComputedStyle(item).display!=='none').map(item=>{
+        const rect=item.getBoundingClientRect();
+        return {text:item.textContent.trim(),left:rect.left,right:rect.right};
+      });
+      return {viewport:innerWidth,items};
+    });
+    expect(headerFit.items.length,JSON.stringify(headerFit)).toBeGreaterThan(0);
+    expect(headerFit.items.every(item=>item.left>=0&&item.right<=headerFit.viewport+1),JSON.stringify(headerFit)).toBe(true);
     await expect(cockpit.locator('.sw-primary')).toBeVisible();
     await expect(cockpit.locator('.sw-secondary')).toBeVisible();
     await expect(cockpit.locator('.sw-secondary .sw-formula,.sw-secondary .sw-flow,.sw-secondary .sw-structure').first()).toBeVisible();
