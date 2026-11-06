@@ -36,9 +36,10 @@ test('financial cockpit shows linked analysis panels side by side on a compact l
         const rect=item.getBoundingClientRect();
         return {left:rect.left,right:rect.right,scrollWidth:item.scrollWidth,clientWidth:item.clientWidth,childrenRight:[...item.children].map(child=>child.getBoundingClientRect().right)};
       });
-      return {left:box.left,right:box.right,width:node.clientWidth,scrollWidth:node.scrollWidth,panels,analysis};
+      return {left:box.left,right:box.right,width:node.clientWidth,scrollWidth:node.scrollWidth,viewport:innerWidth,panels,analysis};
     });
     expect(fit.scrollWidth,JSON.stringify(fit)).toBeLessThanOrEqual(fit.width+1);
+    expect(fit.right,JSON.stringify(fit)).toBeLessThanOrEqual(fit.viewport+1);
     expect(fit.panels.every(panel=>panel.left>=fit.left-1&&panel.right<=fit.right+1&&panel.scrollWidth<=panel.clientWidth+1),JSON.stringify(fit)).toBe(true);
     expect(fit.analysis.length,JSON.stringify(fit)).toBeGreaterThan(0);
     expect(fit.analysis.every(item=>item.left>=fit.left-1&&item.right<=fit.right+1&&item.scrollWidth<=item.clientWidth+1&&item.childrenRight.every(right=>right<=item.right+1)),JSON.stringify(fit)).toBe(true);
