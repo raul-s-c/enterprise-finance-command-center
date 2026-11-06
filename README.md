@@ -61,7 +61,7 @@ P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbe
 
 ## Current release: v0.29.5
 
-Version 0.29.5 improves the compact-laptop story in Cash Flow, Treasury, Balance Sheet and Planning. Between 901 and 1500 CSS pixels, each cockpit keeps its driver chart beside the linked formula or forecast flow, and opens Contribution & detail as a full-width view. Below 901px, the single-focus mobile pattern remains. Playwright regressions check all four reports at 1040×720, including panel bounds, formula/flow visibility and focus navigation. Ledger values, statement calculations and close controls are unchanged.
+Version 0.29.5 improves the compact-laptop story in Cash Flow, Treasury, Balance Sheet and Planning. Between 901 and 1500 CSS pixels, each cockpit keeps its driver chart beside the linked formula or forecast flow, and opens Contribution & detail as a full-width view. Other workspaces retain their prior responsive layout, and below 901px the single-focus mobile pattern remains. Playwright regressions check all four reports at 1040×720, including panel bounds, formula/flow visibility and focus navigation. Ledger values, statement calculations and close controls are unchanged.
 
 Version 0.29.4 fixes the intermediate laptop-width band in the graphical P&L. At 901–1100 CSS pixels it retains the complete IBCS comparison view—prior year, actual, variance and variance percent—while tightening column widths to the available report canvas. A focused browser regression checks 1100×720, 1040×720 and 901×720, including the previously clipped 1040px layout. Financial source data, statement values, calculations and control tolerances are unchanged.
 
