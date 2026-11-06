@@ -192,14 +192,16 @@
     if(!tower)return;
     const analytics=tower.querySelector('.tower-analytics');
     const compact=window.innerWidth<=1100;
+    tower.classList.toggle('tower-compact-regions',compact);
     const regions=[analytics?.querySelector('.story-trend'),analytics?.querySelector('.tower-contribution'),analytics?.querySelector('.tower-drivers'),tower.querySelector('.story-timeline'),...(!compact?[tower.querySelector('.tower-actions')]:[])].filter(Boolean);
-    if(analytics&&regions.length>1&&(window.innerWidth<=900||window.innerHeight<=650)){
+    if(analytics&&regions.length>1&&(compact||window.innerHeight<=650)){
       const switcher=document.createElement('nav');switcher.className='tower-region-switch';switcher.setAttribute('aria-label','Executive overview regions');
       const labels=['Performance trend','EBIT contribution','Cash drivers','Company story','Management priorities'];
       const selected=Math.min(executiveRegionIndex,regions.length-1);
+      tower.classList.toggle('tower-story-region-active',selected===3);
       switcher.innerHTML=regions.map((region,index)=>`<button type="button" aria-pressed="${index===selected}" aria-controls="executive-region-${index}">${labels[index]}</button>`).join('');
       regions.forEach((region,index)=>{region.id=`executive-region-${index}`;region.hidden=index!==selected;});analytics.before(switcher);
-      [...switcher.children].forEach((button,index)=>button.onclick=()=>{executiveRegionIndex=index;regions.forEach((region,i)=>region.hidden=i!==index);[...switcher.children].forEach((item,i)=>item.setAttribute('aria-pressed',String(i===index)));regions[index].querySelector('button,select,input,[tabindex]')?.focus({preventScroll:true});});
+      [...switcher.children].forEach((button,index)=>button.onclick=()=>{executiveRegionIndex=index;tower.classList.toggle('tower-story-region-active',index===3);regions.forEach((region,i)=>region.hidden=i!==index);[...switcher.children].forEach((item,i)=>item.setAttribute('aria-pressed',String(i===index)));regions[index].querySelector('button,select,input,[tabindex]')?.focus({preventScroll:true});});
     }
     tower.addEventListener('click',event=>{
       if(!event.target.closest('[data-story-focus]')||(window.innerWidth>=1440&&window.innerHeight>=900))return;

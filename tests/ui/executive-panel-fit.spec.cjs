@@ -29,6 +29,29 @@ test('Executive Drivers, Outlook and Actions fit their laptop panels',async({pag
   await expect(page.locator('.story-scenario')).toHaveCount(3);
 });
 
+test('Executive overview gives compact laptops a full-width, reachable region selector',async({page})=>{
+  await page.setViewportSize({width:1024,height:720});
+  await page.goto('/#view=executive&page=0');
+  const switcher=page.getByRole('navigation',{name:'Executive overview regions'});
+  await expect(switcher).toBeVisible();
+  await expect(page.locator('.tower-actions')).toBeVisible();
+  const labels=['Performance trend','EBIT contribution','Cash drivers','Company story'];
+  for(let index=0;index<labels.length;index++){
+    await switcher.getByRole('button',{name:labels[index],exact:true}).click();
+    const region=page.locator(`#executive-region-${index}`);
+    await expect(region).toBeVisible();
+    const layout=await region.evaluate(element=>({width:element.getBoundingClientRect().width,parent:element.parentElement.getBoundingClientRect().width}));
+    expect(layout.width,JSON.stringify({label:labels[index],...layout})).toBeGreaterThanOrEqual(layout.parent-2);
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+    if(index===3){
+      await expect(region).toBeInViewport();
+      const fit=await region.evaluate(element=>({scroll:element.scrollHeight,client:element.clientHeight,bottom:element.getBoundingClientRect().bottom,parent:element.parentElement.getBoundingClientRect().bottom}));
+      expect(fit.scroll,JSON.stringify(fit)).toBeLessThanOrEqual(fit.client+1);
+      expect(fit.bottom).toBeLessThanOrEqual(fit.parent+1);
+    }
+  }
+});
+
 test('Executive keeps its responsive chart reachable on mobile',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await page.goto('/#view=executive&page=1');

@@ -14,15 +14,99 @@
   .report-mode .tower-region-switch button[aria-pressed=true]{color:#075fc6;background:#e9f3ff;border-color:#9bbce1}
 }
 @media(max-width:1100px){
+  .report-mode .control-tower .tower-layout .tower-canvas .tower-analytics{grid-template-columns:minmax(0,1fr)}
+  .report-mode .control-tower .tower-analytics>section{grid-column:1;min-width:0;width:100%}
+  .report-mode .control-tower .tower-analytics>section[hidden],
+  .report-mode .control-tower .tower-bottom>.story-timeline[hidden]{display:none!important}
+  .report-mode .control-tower .tower-layout .tower-canvas .tower-bottom{grid-template-columns:minmax(0,1fr)}
+
   .tower-region-switch{display:flex;flex-wrap:wrap;gap:4px;padding:6px 8px;border-bottom:1px solid #d8dee8}
   .report-mode .tower-region-switch button{min-height:32px;padding:5px 9px;font-size:11px}
   .report-mode .tower-region-switch button[aria-pressed=true]{color:#075fc6;background:#e9f3ff;border-color:#9bbce1}
   .report-mode .tower-drivers{display:block}
   .report-mode .story-timeline{display:block}
 }
+
+@media(min-width:901px) and (max-width:1100px) and (min-height:651px){
+  .report-mode .control-tower.tower-compact-regions .tower-canvas{grid-template-rows:minmax(0,1fr) minmax(140px,22vh)}
+  .report-mode .control-tower.tower-compact-regions .tower-bottom{display:grid!important;grid-template-columns:minmax(0,1fr);height:auto;min-height:0}
+  .report-mode .control-tower.tower-story-region-active .tower-actions{display:none}
+  .report-mode .control-tower.tower-compact-regions .tower-bottom>.story-timeline[hidden]{display:none!important}
+  .report-mode .control-tower.tower-story-region-active .tower-bottom>.story-timeline{height:auto;min-height:140px}
+}
 @media(max-width:900px){
   .report-mode .tower-contribution,.report-mode .tower-drivers{display:block}
   .tower-analytics .story-trend,.tower-analytics .tower-contribution,.tower-analytics .tower-drivers,.tower-canvas>.story-timeline{height:auto;min-height:270px;padding:12px 14px;border-right:0;border-bottom:1px solid #d8dee8}
   .tower-analytics .story-trend{height:320px}
   .tower-canvas>.story-timeline{min-height:180px}
+}
+
+
+/* Keep the compact laptop switcher above its selected panel and retain its management rail. */
+@media (min-width:901px) and (max-width:1100px) and (min-height:651px){
+  .report-mode .control-tower.tower-compact-regions .tower-canvas{
+    display:grid;
+    grid-template-rows:auto minmax(0,1fr) minmax(112px,20vh);
+    overflow:hidden;
+  }
+  .report-mode .control-tower.tower-compact-regions .tower-region-switch{
+    grid-row:1;
+    position:relative;
+    z-index:2;
+    min-height:0;
+  }
+  .report-mode .control-tower.tower-compact-regions .tower-canvas .tower-analytics{
+    grid-row:2;
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    min-height:0;
+    overflow:hidden;
+  }
+  .report-mode .control-tower.tower-compact-regions .tower-canvas .tower-bottom{
+    grid-row:3;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr);
+    height:auto;
+    min-height:0;
+    overflow:hidden;
+  }
+  .report-mode .control-tower.tower-compact-regions .tower-bottom .tower-actions{
+    display:block!important;
+    min-height:0;
+  }
+  .report-mode .control-tower.tower-compact-regions.tower-story-region-active .tower-bottom .tower-actions{
+    display:none!important;
+  }
+  .report-mode .control-tower.tower-compact-regions .tower-bottom>.story-timeline[hidden]{
+    display:none!important;
+  }
+  .report-mode .control-tower.tower-compact-regions.tower-story-region-active .tower-bottom>.story-timeline{
+    display:block!important;
+    min-height:0;
+  }
+}
+
+
+/* Constrain the implicit grid row and month tiles to the compact trend panel. */
+@media (min-width:901px) and (max-width:1100px) and (min-height:651px){
+  .report-mode .control-tower.tower-compact-regions .executive-mini-months{
+    grid-template-rows:minmax(0,1fr);
+    overflow:hidden;
+  }
+  .report-mode .control-tower.tower-compact-regions .executive-mini-month{
+    min-height:0!important;
+  }
+}
+
+
+/* Preserve the executive storyline while reclaiming vertical space on 720px laptop viewports. */
+@media (min-width:901px) and (max-width:1100px) and (min-height:651px) and (max-height:740px){
+  .report-mode .control-tower .story-narrative-result,
+  .report-mode .control-tower .story-narrative-step{padding:4px 7px;gap:2px}
+  .report-mode .control-tower .story-narrative-result h2{font-size:15px;line-height:1.05}
+  .report-mode .control-tower .story-narrative-result p{display:none}
+  .report-mode .control-tower .story-narrative-step>span{font-size:8px}
+  .report-mode .control-tower .story-narrative-step strong{font-size:10px;line-height:1.15}
+  .report-mode .control-tower .story-narrative-step small,
+  .report-mode .control-tower .story-narrative-step button{display:none}
 }

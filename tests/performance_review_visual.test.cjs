@@ -16,7 +16,9 @@ test('review overview uses the selected published scope, not overlapping levels'
   assert.match(groupPage,/Revenue bridge · PY to actual/);
   assert.match(groupPage,/FY EBIT vs budget/);
   assert.doesNotMatch(hardwarePage,/Revenue bridge · PY to actual|FY EBIT vs budget/);
-  assert.match(hardwarePage,/US01 \/ Hardware OPEX/);
+  assert.match(hardwarePage,/6 reviewed drivers/);
+  const hardwareSources=[...new Set(hardware.map(row=>row.source_dataset))];
+  assert.ok(hardwareSources.every(source=>hardwarePage.includes(source)));
 });
 
 test('price-volume-mix bars appear only when the published bridge reconciles',()=>{
