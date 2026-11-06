@@ -327,3 +327,8 @@
   .report-mode .spw-actions{margin-top:3px}
   .report-mode .spw-actions button{min-height:22px;padding-top:2px;padding-bottom:2px}
 }
+
+/* Sub-pixel safety margin for the action bridge on short laptop canvases. */
+@media (min-width:901px) and (max-width:1100px) and (max-height:760px){
+  .report-mode .content{padding-bottom:2px}
+}
