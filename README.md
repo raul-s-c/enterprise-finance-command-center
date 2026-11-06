@@ -59,7 +59,9 @@ CFO analytics
 
 P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.29.5
+## Current release: v0.29.6
+
+Version 0.29.6 keeps entity and division filters on a dedicated row on 901–1100px laptop canvases so the selectors remain visible. The P&L regression now checks the full page and filter bounds as well as the internal statement grid. Financial values and controls are unchanged.
 
 Version 0.29.5 improves the compact-laptop story in Cash Flow, Treasury, Balance Sheet and Planning. Between 901 and 1500 CSS pixels, each cockpit keeps its driver chart beside the linked formula or forecast flow, and opens Contribution & detail as a full-width view. Other workspaces retain their prior responsive layout, and below 901px the single-focus mobile pattern remains. Playwright regressions check all four reports at 1040×720, including panel bounds, formula/flow visibility and focus navigation. Ledger values, statement calculations and close controls are unchanged.
 

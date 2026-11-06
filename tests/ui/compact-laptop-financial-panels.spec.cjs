@@ -13,6 +13,15 @@ test('financial cockpit shows linked analysis panels side by side on a compact l
     await page.goto(`/#view=${view}&page=0`);
     const cockpit=page.locator(selector),grid=cockpit.locator('.sw-grid');
     await expect(grid).toBeVisible();
+    const headerFit=await cockpit.locator('.sw-head').evaluate(node=>{
+      const items=[...node.querySelectorAll('h2,button')].filter(item=>getComputedStyle(item).display!=='none').map(item=>{
+        const rect=item.getBoundingClientRect();
+        return {text:item.textContent.trim(),left:rect.left,right:rect.right};
+      });
+      return {viewport:innerWidth,items};
+    });
+    expect(headerFit.items.length,JSON.stringify(headerFit)).toBeGreaterThan(0);
+    expect(headerFit.items.every(item=>item.left>=0&&item.right<=headerFit.viewport+1),JSON.stringify(headerFit)).toBe(true);
     await expect(cockpit.locator('.sw-primary')).toBeVisible();
     await expect(cockpit.locator('.sw-secondary')).toBeVisible();
     await expect(cockpit.locator('.sw-secondary .sw-formula,.sw-secondary .sw-flow,.sw-secondary .sw-structure').first()).toBeVisible();
@@ -27,9 +36,10 @@ test('financial cockpit shows linked analysis panels side by side on a compact l
         const rect=item.getBoundingClientRect();
         return {left:rect.left,right:rect.right,scrollWidth:item.scrollWidth,clientWidth:item.clientWidth,childrenRight:[...item.children].map(child=>child.getBoundingClientRect().right)};
       });
-      return {left:box.left,right:box.right,width:node.clientWidth,scrollWidth:node.scrollWidth,panels,analysis};
+      return {left:box.left,right:box.right,width:node.clientWidth,scrollWidth:node.scrollWidth,viewport:innerWidth,panels,analysis};
     });
     expect(fit.scrollWidth,JSON.stringify(fit)).toBeLessThanOrEqual(fit.width+1);
+    expect(fit.right,JSON.stringify(fit)).toBeLessThanOrEqual(fit.viewport+1);
     expect(fit.panels.every(panel=>panel.left>=fit.left-1&&panel.right<=fit.right+1&&panel.scrollWidth<=panel.clientWidth+1),JSON.stringify(fit)).toBe(true);
     expect(fit.analysis.length,JSON.stringify(fit)).toBeGreaterThan(0);
     expect(fit.analysis.every(item=>item.left>=fit.left-1&&item.right<=fit.right+1&&item.scrollWidth<=item.clientWidth+1&&item.childrenRight.every(right=>right<=item.right+1)),JSON.stringify(fit)).toBe(true);

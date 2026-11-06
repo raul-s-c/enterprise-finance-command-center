@@ -274,3 +274,61 @@
   .report-mode .pnl-heading,.report-mode button.pnl-row{grid-template-columns:minmax(260px,1.15fr) 72px minmax(300px,1.3fr) minmax(160px,.75fr) minmax(145px,.7fr);gap:10px}
   .report-mode button.pnl-row,.report-mode .pnl-row>span:first-child,.report-mode .pnl-track b,.report-mode .pnl-delta b,.report-mode .pnl-percent b{font-size:14px}
 }
+
+
+/* Keep laptop filters on a dedicated row so both selectors remain visible. */
+@media (min-width:901px) and (max-width:1100px){
+  .report-mode .topbar{flex-wrap:wrap;align-items:center;row-gap:6px}
+  .report-mode .topbar>div:first-child{flex:1 1 100%;min-width:0}
+  .report-mode .filters{flex:1 1 100%;justify-content:flex-start;flex-wrap:wrap;min-width:0}
+  .report-mode .filters label{flex:0 1 190px;min-width:0}
+  .report-mode .filters select{width:100%;min-width:0}
+}
+
+/* Keep cockpit action buttons reachable beside the title on compact laptops. */
+@media (min-width:901px) and (max-width:1100px){
+  .report-mode .statement-workspace .sw-head{flex-wrap:wrap;align-items:center;row-gap:6px}
+  .report-mode .statement-workspace .sw-head>div:first-child{flex:1 1 100%;min-width:0}
+  .report-mode .statement-workspace .sw-head>div:last-child{flex:1 1 100%;justify-content:flex-end;flex-wrap:wrap;min-width:0}
+}
+
+/* The full compact-laptop statement canvas must not extend beyond the browser viewport. */
+@media (min-width:901px) and (max-width:1100px){
+  .report-mode .statement-workspace{width:100%;min-width:0;max-width:100%;box-sizing:border-box}
+  .report-mode .statement-workspace .sw-grid{width:100%;min-width:0;max-width:100%;box-sizing:border-box}
+  .report-mode .statement-workspace .sw-primary,.report-mode .statement-workspace .sw-secondary{min-width:0}
+}
+
+/* Reclaim the extra filter row on short laptop screens so analysis stays in view. */
+@media (min-width:901px) and (max-width:1100px) and (max-height:760px){
+  .report-mode .topbar{min-height:76px;padding-top:4px;padding-bottom:4px;row-gap:3px}
+  .report-mode .filters{gap:8px}
+  .report-mode .filters label{display:flex;align-items:center;gap:5px;flex:0 1 190px;min-width:0;font-size:9px}
+  .report-mode .filters select{flex:1;min-width:0;width:auto;min-height:26px;padding:3px 20px 3px 6px;font-size:10px}
+  .report-subnav{height:42px}
+  .report-context{padding-top:4px;padding-bottom:4px}
+  .report-mode .content{padding-top:8px;padding-bottom:8px}
+  .report-mode .report-footer{height:38px;padding-top:4px;padding-bottom:4px}
+}
+
+/* Tighten short laptop workspaces without hiding source notes or bridge values. */
+@media (min-width:901px) and (max-width:1100px) and (max-height:760px){
+  .report-mode .content{padding-top:4px;padding-bottom:4px}
+  .report-subnav{height:38px}
+  .report-mode .ccv-summary{min-height:52px}
+  .report-mode .ccv-ranking,.report-mode .ccv-inspector{padding-top:5px;padding-bottom:5px}
+  .report-mode .ccv-bridge span{padding-top:3px;padding-bottom:3px}
+  .report-mode .ccv-ratios{margin-top:5px;margin-bottom:5px}
+  .report-mode .ccv-source{font-size:9px;line-height:1.15}
+  .report-mode .spw-summary{min-height:52px}
+  .report-mode .spw-ranking,.report-mode .spw-inspector{padding-top:5px;padding-bottom:5px}
+  .report-mode .spw-identity{padding-top:1px;padding-bottom:3px}
+  .report-mode .spw-bridge span{min-height:20px;padding-top:1px;padding-bottom:1px}
+  .report-mode .spw-actions{margin-top:3px}
+  .report-mode .spw-actions button{min-height:22px;padding-top:2px;padding-bottom:2px}
+}
+
+/* Sub-pixel safety margin for the action bridge on short laptop canvases. */
+@media (min-width:901px) and (max-width:1100px) and (max-height:760px){
+  .report-mode .content{padding-bottom:2px}
+}
