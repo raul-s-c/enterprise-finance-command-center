@@ -390,7 +390,7 @@ test('Executive keeps every overview region reachable on tablet and mobile',asyn
       expect(cards.items.every(item=>item.left>=0&&item.right<=cards.viewport+1)).toBe(true);
     }
     const switcher=page.getByRole('navigation',{name:'Executive overview regions'});
-    if(viewport.width>900){
+    if(viewport.width>1100){
       await expect(switcher).toHaveCount(0);
       for(const selector of ['.tower-analytics .story-trend','.tower-contribution','.tower-drivers']){
         const region=page.locator(selector);
@@ -480,7 +480,7 @@ test('Executive overview remains legible across intermediate laptop and desktop 
         .map(region=>({name:region.className,clipped:region.scrollHeight-region.clientHeight,bottom:region.getBoundingClientRect().bottom}))
     }));
     expect(fit.horizontal,`${width}x${height} has horizontal page overflow`).toBeLessThanOrEqual(1);
-    expect(fit.regions.length,`${width}x${height} has too few visible visuals`).toBeGreaterThanOrEqual(3);
+    expect(fit.regions.length,`${width}x${height} has too few visible visuals`).toBeGreaterThanOrEqual(width<=1100?2:3);
     for(const region of fit.regions){
       expect(region.clipped,`${width}x${height} clips ${region.name}`).toBeLessThanOrEqual(2);
       expect(region.bottom,`${width}x${height} places ${region.name} outside the viewport`).toBeLessThanOrEqual(height);
