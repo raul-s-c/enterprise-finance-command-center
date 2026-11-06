@@ -16,15 +16,15 @@
       "fallback": "deterministic calibrated series",
       "official_rows": 36,
       "fallback_rows": 0,
-      "latest_official_month": "2026-09"
+      "latest_official_month": "2026-10"
     },
     "industrial_index": {
       "unit": "2021=100",
       "preferred_source": "Eurostat industrial production",
       "source_url": "https://ec.europa.eu/eurostat/databrowser/view/sts_inpr_m/default/table",
       "fallback": "deterministic calibrated series",
-      "official_rows": 35,
-      "fallback_rows": 1,
+      "official_rows": 34,
+      "fallback_rows": 2,
       "latest_official_month": "2026-08"
     },
     "energy_index": {
@@ -34,7 +34,7 @@
       "fallback": "deterministic calibrated series",
       "official_rows": 36,
       "fallback_rows": 0,
-      "latest_official_month": "2026-09"
+      "latest_official_month": "2026-10"
     },
     "policy_rate": {
       "unit": "Annual rate",
@@ -43,7 +43,7 @@
       "fallback": "deterministic calibrated series",
       "official_rows": 36,
       "fallback_rows": 0,
-      "latest_official_month": "2026-09"
+      "latest_official_month": "2026-10"
     },
     "USD": {
       "unit": "EUR per currency unit",
@@ -52,7 +52,7 @@
       "fallback": "deterministic calibrated series",
       "official_rows": 36,
       "fallback_rows": 0,
-      "latest_official_month": "2026-09"
+      "latest_official_month": "2026-10"
     },
     "JPY": {
       "unit": "EUR per currency unit",
@@ -61,7 +61,7 @@
       "fallback": "deterministic calibrated series",
       "official_rows": 36,
       "fallback_rows": 0,
-      "latest_official_month": "2026-09"
+      "latest_official_month": "2026-10"
     },
     "CNY": {
       "unit": "EUR per currency unit",
@@ -70,7 +70,7 @@
       "fallback": "deterministic calibrated series",
       "official_rows": 36,
       "fallback_rows": 0,
-      "latest_official_month": "2026-09"
+      "latest_official_month": "2026-10"
     },
     "CZK": {
       "unit": "EUR per currency unit",
@@ -79,7 +79,7 @@
       "fallback": "deterministic calibrated series",
       "official_rows": 36,
       "fallback_rows": 0,
-      "latest_official_month": "2026-09"
+      "latest_official_month": "2026-10"
     }
   }
 }
