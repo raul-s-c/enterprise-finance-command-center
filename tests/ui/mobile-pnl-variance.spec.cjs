@@ -87,6 +87,21 @@ test('laptop P&L keeps all IBCS comparison columns inside the visible panel',asy
     expect(fit.rowColumnsRight.every(right=>right<=fit.right+1),JSON.stringify(fit)).toBe(true);
     expect(fit.compactSwitch).toBe('none');
     expect(fit.visibleColumns).toEqual([true,true,true,true,true]);
+    const pageFit=await page.evaluate(()=>{
+      const selectors=['.topbar','.filters','#entityFilter','#divisionFilter','.pnl-analysis-layout','.pnl-visual','.pnl-scroll','.pnl-heading>span:last-child'];
+      return {
+        viewport:innerWidth,
+        documentWidth:document.documentElement.scrollWidth,
+        edges:selectors.map(selector=>{
+          const element=document.querySelector(selector);
+          if(!element)return {selector,missing:true};
+          const rect=element.getBoundingClientRect();
+          return {selector,right:rect.right,visible:getComputedStyle(element).display!=='none'};
+        })
+      };
+    });
+    expect(pageFit.documentWidth,JSON.stringify(pageFit)).toBeLessThanOrEqual(pageFit.viewport);
+    expect(pageFit.edges.filter(edge=>edge.visible&&!edge.missing).every(edge=>edge.right<=pageFit.viewport+1),JSON.stringify(pageFit)).toBe(true);
     if(width===1040){
       const screenshot=testInfo.outputPath('pnl-laptop-1040x720.png');
       await page.screenshot({path:screenshot});
