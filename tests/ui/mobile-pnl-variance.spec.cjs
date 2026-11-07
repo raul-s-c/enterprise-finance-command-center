@@ -1,6 +1,6 @@
 const {test,expect}=require('@playwright/test');
 
-test('mobile P&L exposes both actuals and signed variances without sideways scrolling',async({page})=>{
+test('mobile P&L exposes both actuals and signed variances in one vertical report scroll',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await page.goto('/#view=pnl&page=0');
   await expect(page.locator('[data-pnl-key]')).toHaveCount(10);
@@ -20,10 +20,24 @@ test('mobile P&L exposes both actuals and signed variances without sideways scro
   await expect(statement.locator('[data-pnl-key="revenue"] .pnl-percent')).toBeVisible();
   expect(await statement.locator('.pnl-scroll').evaluate(node=>node.scrollWidth>node.clientWidth+1)).toBe(false);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
-  const last=await statement.locator('[data-pnl-key]').last().boundingBox();
-  const footer=await page.locator('.report-footer').boundingBox();
-  expect(last.y+last.height).toBeLessThanOrEqual(footer.y);
-  await page.screenshot({path:'test-results/mobile-pnl-variance.png'});
+  const content=page.locator('#content');
+  await content.evaluate(node=>node.scrollTo({top:node.scrollHeight,behavior:'instant'}));
+  const mobileFit=await page.evaluate(()=>{
+    const content=document.querySelector('#content'),scroll=document.querySelector('.pnl-scroll');
+    const last=document.querySelector('[data-pnl-key]:last-of-type')||[...document.querySelectorAll('[data-pnl-key]')].at(-1);
+    const note=document.querySelector('.pnl-note'),footer=document.querySelector('.report-footer');
+    return {innerYOverflow:scroll.scrollHeight-scroll.clientHeight,innerXOverflow:scroll.scrollWidth-scroll.clientWidth,
+      lastBottom:last.getBoundingClientRect().bottom,noteBottom:note.getBoundingClientRect().bottom,
+      contentBottom:content.getBoundingClientRect().bottom,footerTop:footer.getBoundingClientRect().top,
+      pageXOverflow:document.documentElement.scrollWidth-innerWidth};
+  });
+  expect(mobileFit.innerYOverflow,JSON.stringify(mobileFit)).toBeLessThanOrEqual(1);
+  expect(mobileFit.innerXOverflow,JSON.stringify(mobileFit)).toBeLessThanOrEqual(1);
+  expect(mobileFit.lastBottom,JSON.stringify(mobileFit)).toBeLessThanOrEqual(mobileFit.contentBottom+1);
+  expect(mobileFit.noteBottom,JSON.stringify(mobileFit)).toBeLessThanOrEqual(mobileFit.contentBottom+1);
+  expect(mobileFit.noteBottom,JSON.stringify(mobileFit)).toBeLessThanOrEqual(mobileFit.footerTop+1);
+  expect(mobileFit.pageXOverflow).toBeLessThanOrEqual(1);
+  await page.screenshot({path:'test-results/mobile-pnl-single-scroll.png'});
   await controls.getByRole('button',{name:'Values'}).click();
   await expect(statement.locator('.pnl-heading>span:nth-child(2)')).toBeVisible();
   await expect(statement.locator('.pnl-heading>span:nth-child(4)')).toBeHidden();
@@ -46,6 +60,13 @@ test('mobile P&L exposes both actuals and signed variances without sideways scro
     await expect(evidence).toBeVisible();
     expect(await evidence.locator('.pnl-source-detail table').evaluate(node=>node.scrollWidth>node.clientWidth+1)).toBe(false);
     await page.locator('#reportDialogClose').click();
+  }
+
+  for(const width of [320,390,600,700]){
+    await page.setViewportSize({width,height:844});
+    const scroll=statement.locator('.pnl-scroll');
+    expect(await scroll.evaluate(node=>node.scrollHeight-node.clientHeight)).toBeLessThanOrEqual(1);
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(1);
   }
 
   await page.setViewportSize({width:768,height:720});
