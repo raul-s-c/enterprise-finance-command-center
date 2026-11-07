@@ -11,19 +11,26 @@ def jobs():
     return yaml.safe_load(WORKFLOW.read_text(encoding="utf-8"))["jobs"]
 
 
-def test_publication_requires_all_independent_validation_jobs():
+def test_publication_requires_finance_checks_and_visual_after_build():
     workflow = jobs()
     assert "needs" not in workflow["build"]
     assert "needs" not in workflow["continuity"]
-    assert "needs" not in workflow["visual"]
+    assert workflow["visual"]["needs"] == ["build"]
     assert set(workflow["publish"]["needs"]) == {"build", "continuity", "visual"}
     assert workflow["publish"]["if"] == "github.ref == 'refs/heads/main'"
     assert workflow["deploy"]["needs"] == ["publish"]
     assert workflow["deploy"]["if"] == "github.ref == 'refs/heads/main'"
 
 
-def test_visual_job_runs_browser_regressions_and_retains_evidence():
-    steps = jobs()["visual"]["steps"]
+def test_visual_job_reuses_the_validated_close_and_runs_browser_regressions():
+    workflow = jobs()
+    steps = workflow["visual"]["steps"]
+    download = next(step for step in steps
+                    if step.get("uses", "").startswith("actions/download-artifact@"))
+    assert download["with"] == {"name": "finance-close-candidate", "path": "."}
+    assert steps.index(download) > 0
+    assert not any(step.get("run") == "python -m enterprise_finance.cli build --offline-macro"
+                   for step in steps)
     commands = [step.get("run") for step in steps]
     assert "npm ci --ignore-scripts" in commands
     assert "npx playwright install --with-deps chromium" in commands
@@ -35,13 +42,13 @@ def test_visual_job_runs_browser_regressions_and_retains_evidence():
     assert evidence["with"]["if-no-files-found"] == "error"
 
 
-def test_build_stages_same_run_candidate_without_persistent_publication():
+def test_build_stages_same_run_candidate_for_publication_and_visual_regression():
     steps = jobs()["build"]["steps"]
     assert not any("git push" in step.get("run", "") for step in steps)
     assert not any("upload-pages-artifact" in step.get("uses", "") for step in steps)
     candidate = next(step for step in steps
                      if step.get("uses", "").startswith("actions/upload-artifact@"))
-    assert candidate["if"] == "github.ref == 'refs/heads/main'"
+    assert candidate["if"] == "github.ref == 'refs/heads/main' || github.event_name == 'pull_request'"
     assert candidate["with"]["name"] == "finance-close-candidate"
     assert candidate["with"]["path"].split() == ["data/processed", "web"]
     assert candidate["with"]["if-no-files-found"] == "error"
