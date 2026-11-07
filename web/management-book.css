@@ -62,3 +62,20 @@
   .report-mode .control-tower .story-region-head h3{font-size:13px}
   .report-mode .control-tower .story-region-head small{font-size:11px}
 }
+
+/* Keep executive priorities readable inside the fixed one-screen dashboard at desktop heights. */
+@media (min-width:901px){
+  .report-mode .control-tower .tower-actions{padding-top:7px;padding-bottom:7px}
+  .report-mode .control-tower .story-action{min-height:29px!important;padding:3px 0!important}
+}
+@media (min-width:901px) and (max-height:760px){
+  .report-mode .control-tower .tower-actions .story-region-head{align-items:center;margin-bottom:2px}
+  .report-mode .control-tower .tower-actions .story-region-head small{display:none}
+  .report-mode .control-tower .tower-actions .story-region-head button{min-height:18px!important;line-height:1}
+  .report-mode .control-tower .story-action{min-height:22px!important;padding:1px 0!important;gap:5px}
+  .report-mode .control-tower .story-action>b{height:14px;line-height:14px;align-self:center}
+  .report-mode .control-tower .story-action span{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 6px;align-items:center}
+  .report-mode .control-tower .story-action span strong{font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .report-mode .control-tower .story-action span em{grid-column:2;grid-row:1;font-size:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .report-mode .control-tower .story-action>i{font-size:7px;white-space:nowrap}
+}
