@@ -30,6 +30,13 @@
 .report-subnav{height:42px;padding:0 20px}.report-mode .report-subnav nav button{font-size:11px}.report-context{padding:6px 20px;background:#fbfcfe;color:var(--premium-muted);font-size:9px}.report-mode .content{padding:12px 20px}.report-mode .report-footer{height:34px;padding:3px 18px;border-top-color:var(--premium-line);font-size:9px}
 .report-mode .favorable{color:var(--premium-good);fill:var(--premium-good)}.report-mode .unfavorable{color:var(--premium-bad);fill:var(--premium-bad)}
 .report-mode :focus-visible{outline-color:var(--premium-blue)}
+.help-tour{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:0 0 18px;padding:16px;border:1px solid #c8dcff;border-left:4px solid var(--premium-blue);border-radius:4px;background:linear-gradient(110deg,#f3f8ff,#fff)}
+.help-tour strong{display:block;color:var(--premium-navy);font-size:14px}
+.help-tour p{margin:5px 0 0;color:var(--premium-muted);font-size:12px;line-height:1.5}
+.report-mode .help-tour button{flex:none;min-height:38px;padding:8px 12px;border:1px solid var(--premium-blue);background:var(--premium-blue);color:#fff;font-size:12px;font-weight:650}
+.report-mode .help-tour button:hover{background:#075bd6}
+.help-tour button span{margin-left:6px}
+@media(max-width:600px){.help-tour{align-items:stretch;flex-direction:column;gap:12px;padding:12px}.report-mode .help-tour button{width:100%}}
 .report-mode.contribution-active .topbar{min-height:62px;padding-block:7px}
 .report-mode.contribution-active .report-subnav,.report-mode.contribution-active .report-context{display:none}
 .report-mode.contribution-active .content{padding-top:10px}
