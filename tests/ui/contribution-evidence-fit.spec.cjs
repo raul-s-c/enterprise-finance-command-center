@@ -67,3 +67,25 @@ test('NWC resize threshold never hides the flow or advertised evidence rows',asy
     expect(fit.last).toBeLessThanOrEqual(fit.wrap+1);
   }
 });
+
+test('mobile contribution focus survives changing the working-capital dimension',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.goto('/#view=working-capital&page=0');
+  const focus=page.locator('.cx-analysis-nav');
+  await expect(focus).toBeVisible();
+  await expect(focus).toHaveCount(1);
+  await expect(focus.getByRole('button',{name:'Contribution'})).toHaveAttribute('aria-pressed','true');
+
+  await page.locator('.cx-dimensions').getByRole('button',{name:'Component'}).click();
+  await expect(focus).toBeVisible();
+  await expect(focus).toHaveCount(1);
+  await expect(focus.getByRole('button',{name:'Contribution'})).toHaveAttribute('aria-pressed','true');
+  await expect(page.locator('.cx-ranking')).toBeVisible();
+  await expect(page.locator('.cx-ranking .contribution-row')).not.toHaveCount(0);
+
+  await focus.getByRole('button',{name:'Underlying records'}).click();
+  const evidence=page.locator('.cx-evidence');
+  await expect(evidence).toBeVisible();
+  await expect(evidence.locator('tbody tr')).not.toHaveCount(0);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+});
