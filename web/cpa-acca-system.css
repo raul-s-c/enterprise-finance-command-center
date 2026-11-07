@@ -336,3 +336,15 @@
   .report-mode .content{padding-bottom:2px}
 }
 
+/* Mobile P&L uses the report canvas as its only vertical scroller. This keeps
+   every statement line and the accounting note reachable without nested scrollbars. */
+@media (max-width:900px){
+  .report-mode .content:has(.pnl-analysis-layout)>.financial-report{height:auto;min-height:100%}
+  .report-mode .pnl-analysis-layout{height:auto;min-height:0;flex:none}
+  .report-mode .pnl-analysis-layout>.pnl-visual,
+  .report-mode .pnl-visual{height:auto;min-height:0;overflow:visible}
+  .report-mode .pnl-scroll{flex:none;height:auto;min-height:0;max-height:none;overflow-x:clip;overflow-y:visible;scrollbar-gutter:auto}
+  .report-mode .pnl-grid{height:auto}
+  .report-mode .pnl-heading,
+  .report-mode button.pnl-row{flex:none}
+}
