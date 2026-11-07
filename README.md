@@ -59,9 +59,9 @@ CFO analytics
 
 P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.29.7
+## Current release: v0.29.8
 
-Version 0.29.7 makes the five executive headline measures easier to scan on phones. The first four KPIs use a balanced two-column grid; consolidated Free Cash Flow and Net Working Capital remain readable, with the fifth measure using a full-width summary row. A responsive regression checks 360px and 390px screens for clipping, overflow and KPI alignment. Financial values and controls are unchanged. See [v0.29.7 status](docs/v0.29.7-status.md).
+Version 0.29.8 removes nested vertical scrolling from the mobile P&L so all ten statement lines and the accounting note follow one report scroll. The compact Values / Δ PY switch remains available, while laptop comparison columns and financial calculations are unchanged. The Executive overview also keeps its management-priority rail within one screen at short laptop and desktop heights, retaining trigger, owner, due date and status. Visual regressions reuse the validated close artifact and cover phone widths plus Executive layouts from 1024×720 through 1920×820. See [v0.29.8 status](docs/v0.29.8-status.md).
 
 Version 0.29.6 keeps entity and division filters on a dedicated row on 901–1100px laptop canvases so the selectors remain visible. The P&L regression now checks the full page and filter bounds as well as the internal statement grid. Financial values and controls are unchanged.
 
