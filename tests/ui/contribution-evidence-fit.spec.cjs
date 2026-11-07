@@ -87,5 +87,16 @@ test('mobile contribution focus survives changing the working-capital dimension'
   const evidence=page.locator('.cx-evidence');
   await expect(evidence).toBeVisible();
   await expect(evidence.locator('tbody tr')).not.toHaveCount(0);
+  const tableRegion=evidence.locator('.cx-table-wrap');
+  await expect(tableRegion).toHaveAttribute('role','region');
+  await expect(tableRegion).toHaveAttribute('tabindex','0');
+  const hasOverflow=await tableRegion.evaluate(node=>node.scrollWidth>node.clientWidth+1);
+  expect(hasOverflow).toBe(true);
+  const scrollHint=evidence.locator('.cx-table-scroll-hint');
+  await expect(scrollHint).toBeVisible();
+  await expect(scrollHint).toContainText('remaining columns');
+  await tableRegion.focus();
+  await tableRegion.press('ArrowRight');
+  expect(await tableRegion.evaluate(node=>node.scrollLeft)).toBeGreaterThan(0);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });
