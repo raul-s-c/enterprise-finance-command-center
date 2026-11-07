@@ -59,7 +59,9 @@ CFO analytics
 
 P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.29.11
+## Current release: v0.29.12
+
+Version 0.29.12 makes the interactive close walkthrough a clear first step from Help on every report. The tour opens at Drivers, follows the monthly close through its controls and source evidence, and stays reachable from desktop and mobile. Financial calculations and release tolerances are unchanged. See [v0.29.12 status](docs/v0.29.12-status.md).
 
 Version 0.29.11 adds accessible navigation for horizontally clipped contribution evidence. The table is keyboard focusable, arrow keys scroll the evidence area, and a concise hint appears only when columns extend beyond the viewport. Source records and amounts remain unchanged. See [v0.29.11 status](docs/v0.29.11-status.md).
 
