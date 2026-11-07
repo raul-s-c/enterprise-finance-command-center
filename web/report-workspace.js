@@ -224,7 +224,7 @@ function setupNav(){
     document.getElementById('reportDialog').close();
     globalThis.CloseJourney?.reset();
     state.view='close-journey';reportState.page=0;reportState.section=null;render();
-    document.querySelector('.cj-steps [aria-current="step"]')?.focus({preventScroll:true});
+    requestAnimationFrame(()=>document.querySelector('.cj-steps [aria-current="step"]')?.focus({preventScroll:true}));
   });
   document.getElementById('reportReset').onclick=()=>{reportState.requested=null;state.entity=state.division='all';document.getElementById('entityFilter').value='all';document.getElementById('divisionFilter').value='all';render();};
   document.getElementById('reportArea').onchange=event=>{const area=RN.areas.find(item=>item.id===event.target.value);state.view=area.landing;reportState.page=0;render();};
