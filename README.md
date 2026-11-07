@@ -59,9 +59,9 @@ CFO analytics
 
 P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.29.10
+## Current release: v0.29.11
 
-Version 0.29.10 fixes mobile and tablet contribution pages after changing a breakdown dimension: the focus controls and selected analysis panel now survive redraws, keeping contribution rows and source evidence accessible. See [v0.29.10 status](docs/v0.29.10-status.md).
+Version 0.29.11 adds accessible navigation for horizontally clipped contribution evidence. The table is keyboard focusable, arrow keys scroll the evidence area, and a concise hint appears only when columns extend beyond the viewport. Source records and amounts remain unchanged. See [v0.29.11 status](docs/v0.29.11-status.md).
 
 Version 0.29.9 refines mobile financial KPI strips with snap-aligned cards, no visible scrollbar track, and keyboard focus that brings each measure into view. This makes the Cash Flow and other financial cockpit metrics easier to discover on narrow screens. See [v0.29.9 status](docs/v0.29.9-status.md).
 
