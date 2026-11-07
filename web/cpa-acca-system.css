@@ -172,10 +172,13 @@
   .report-mode .global-bar{padding-inline:10px}
   .report-mode .global-search{width:min(54vw,300px)}
   .report-mode .global-utilities{gap:7px}
-  .report-mode .story-kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));overflow:visible;scroll-snap-type:none}
-  .report-mode button.story-kpi{grid-column:span 2;min-width:0;flex:none}
-  .report-mode button.story-kpi:nth-child(4){grid-column:2/span 2}
-  .report-mode button.story-kpi:nth-child(5){grid-column:4/span 2}
+  .report-mode .story-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));overflow:visible;scroll-snap-type:none}
+  .report-mode button.story-kpi{grid-column:auto;min-width:0;flex:none}
+  .report-mode button.story-kpi:nth-child(5){grid-column:1/-1;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:2px 8px;padding:7px 10px}
+  .report-mode button.story-kpi:nth-child(5)>span{grid-column:1;grid-row:1}
+  .report-mode button.story-kpi:nth-child(5)>strong{grid-column:2;grid-row:1}
+  .report-mode button.story-kpi:nth-child(5)>small{grid-column:1;grid-row:2}
+  .report-mode button.story-kpi:nth-child(5)>i{grid-column:2;grid-row:1/3;align-self:center}
   .report-mode .story-kpi strong{font-size:clamp(14px,4.2vw,17px);white-space:normal}
   .report-mode .topbar{padding:8px 12px}
   .report-mode .topbar h1{font-size:20px}
@@ -332,3 +335,4 @@
 @media (min-width:901px) and (max-width:1100px) and (max-height:760px){
   .report-mode .content{padding-bottom:2px}
 }
+

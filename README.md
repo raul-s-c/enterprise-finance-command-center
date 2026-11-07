@@ -59,7 +59,9 @@ CFO analytics
 
 P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.29.6
+## Current release: v0.29.7
+
+Version 0.29.7 makes the five executive headline measures easier to scan on phones. The first four KPIs use a balanced two-column grid; consolidated Free Cash Flow and Net Working Capital remain readable, with the fifth measure using a full-width summary row. A responsive regression checks 360px and 390px screens for clipping, overflow and KPI alignment. Financial values and controls are unchanged. See [v0.29.7 status](docs/v0.29.7-status.md).
 
 Version 0.29.6 keeps entity and division filters on a dedicated row on 901–1100px laptop canvases so the selectors remain visible. The P&L regression now checks the full page and filter bounds as well as the internal statement grid. Financial values and controls are unchanged.
 
@@ -599,3 +601,4 @@ Aureon Systems Group is fictional. Company names, customers, suppliers, products
 # Planning outlook visual
 
 The YTD performance page compares monthly Actual and frozen Annual Budget with visible AC − Budget deltas, sourced from `budget_performance`. The FY outlook evolution page compares the frozen Budget, FC-6, FC-3, FC-1 and latest full-year outlook as published totals for the selected entity/division. Revenue/EBIT switches are visual only: they reuse `budget_performance` and `fy_plan_bridge`, preserving source values behind expandable disclosures. Revenue-free cost centers open EBIT and disable the unavailable Revenue choice rather than presenting a blank chart. Historical vintages are not additive bridge steps; positive variance signs do not automatically mean favorable cost performance.
+
