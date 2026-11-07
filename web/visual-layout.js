@@ -8,6 +8,8 @@
     positionCharts();
     const workspace=document.querySelector('.cx-workspace');
     if(!workspace)return;
+    const priorNav=workspace.previousElementSibling;
+    if(priorNav?.classList.contains('cx-analysis-nav'))priorNav.remove();
     const nav=document.createElement('nav');
     nav.className='sw-analysis-nav cx-analysis-nav';nav.setAttribute('aria-label','Contribution analysis focus');
     const sections=[['cx-ranking','Contribution'],['cx-flow','Value flow'],['cx-evidence','Underlying records'],['cx-inspector','Selected detail']];
