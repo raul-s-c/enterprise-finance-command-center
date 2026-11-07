@@ -279,6 +279,7 @@
       };
       document.getElementById('cx-prev').onclick=()=>{s.page--;s.selected=null;paint();};document.getElementById('cx-next').onclick=()=>{s.page++;s.selected=null;paint();};document.getElementById('cx-search').oninput=event=>{s.query=event.target.value.toLowerCase();paint();document.getElementById('cx-search').focus();};
       document.getElementById('cx-method').onclick=()=>reportDialog(key==='nwc'?'Variance, calculation & coverage':'Calculation, source & coverage',`<div class="help-pages"><p>Source: dashboard.json → ${e(sourceName)}. ${e(def.period)} ending ${e(s.month)}. The displayed total is the exact signed sum of ${e(s.metric)} grouped by ${e(s.dimension)}.</p><p>${e(note(data,key))} Missing dimensions and measures are never allocated, replaced or balanced.</p></div>`);document.getElementById('cx-trace').onclick=()=>showRecords(selectedRows.length?selectedRows:rows);document.getElementById('cx-change').onclick=()=>{s.dimension=dimensionOptions[(dimensionOptions.indexOf(s.dimension)+1)%dimensionOptions.length];s.page=0;s.selected=null;paint();};document.getElementById('cx-export').onclick=()=>document.getElementById('globalExport')?.click();
+      root.VisualLayout?.mount();
     }
     function sourceDetailDialog(title,body){reportDialog(title,body);const dialog=document.getElementById('reportDialog');dialog.classList.add('cx-source-detail-dialog-shell');dialog.onclose=()=>dialog.classList.remove('cx-source-detail-dialog-shell');}
     function showInvoiceList(invoiceRows,applicationRows,basis){
