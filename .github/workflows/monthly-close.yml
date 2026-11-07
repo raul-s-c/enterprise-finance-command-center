@@ -23,15 +23,15 @@ concurrency:
 
 jobs:
   visual:
+    needs: [build]
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
+      - name: Retrieve validated close candidate
+        uses: actions/download-artifact@v8
         with:
-          python-version: "3.11"
-          cache: pip
-      - run: python -m pip install -e ".[dev]"
-      - run: python -m enterprise_finance.cli build --offline-macro
+          name: finance-close-candidate
+          path: .
       - uses: actions/setup-node@v7
         with:
           node-version: "22"
@@ -74,7 +74,7 @@ jobs:
       - run: pytest -m 'not integration'
       - run: python -m enterprise_finance.cli build
       - name: Stage validated close candidate
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
         uses: actions/upload-artifact@v7
         with:
           name: finance-close-candidate
@@ -106,7 +106,7 @@ jobs:
       - name: Commit generated finance data
         run: |
           git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.email "41898282+raul-s-c@users.noreply.github.com"
           git add data/processed web/data
           git diff --cached --quiet || git commit -m "data: monthly synthetic finance close"
           git push origin HEAD:main
