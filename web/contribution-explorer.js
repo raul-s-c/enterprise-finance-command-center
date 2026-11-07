@@ -178,7 +178,7 @@
         evidenceHint.id='cx-table-scroll-hint';evidenceHint.className='cx-table-scroll-hint';
         evidenceHint.textContent='Scroll horizontally for remaining columns. Select a row to inspect the full source record.';evidenceHint.hidden=true;
         evidenceScroll.tabIndex=0;evidenceScroll.setAttribute('role','region');
-        evidenceScroll.setAttribute('aria-label',cashLineageAvailable?'Cash movement lineage evidence. Use left and right arrow keys or the horizontal scrollbar to view all columns.':'Published financial source evidence. Use left and right arrow keys or the horizontal scrollbar to view all columns.');
+        evidenceScroll.setAttribute('aria-label',cashLineageAvailable?'Cash movement lineage evidence. Use arrow keys or horizontal scrollbar to view all columns.':'Published financial source evidence. Use arrow keys or horizontal scrollbar to view all columns.');
         evidenceScroll.after(evidenceHint);
         const updateEvidenceOverflow=()=>{
           const hasOverflow=evidenceScroll.scrollWidth>evidenceScroll.clientWidth+1;
