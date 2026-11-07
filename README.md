@@ -61,7 +61,7 @@ P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbe
 
 ## Current release: v0.29.8
 
-Version 0.29.8 removes nested vertical scrolling from the mobile P&L so all ten statement lines and the accounting note follow one report scroll. The compact Values / Δ PY switch remains available, while laptop comparison columns and financial calculations are unchanged. See [v0.29.8 status](docs/v0.29.8-status.md).
+Version 0.29.8 removes nested vertical scrolling from the mobile P&L so all ten statement lines and the accounting note follow one report scroll. The compact Values / Δ PY switch remains available, while laptop comparison columns and financial calculations are unchanged. The Executive overview also keeps its management-priority rail within one screen at short laptop and desktop heights, retaining trigger, owner, due date and status. Visual regressions reuse the validated close artifact and cover phone widths plus Executive layouts from 1024×720 through 1920×820. See [v0.29.8 status](docs/v0.29.8-status.md).
 
 Version 0.29.6 keeps entity and division filters on a dedicated row on 901–1100px laptop canvases so the selectors remain visible. The P&L regression now checks the full page and filter bounds as well as the internal statement grid. Financial values and controls are unchanged.
 
