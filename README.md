@@ -59,7 +59,9 @@ CFO analytics
 
 P&L, Balance Sheet and Cash Flow are not independently generated dashboard numbers. They are consequences of connected operating, accounting and financing events.
 
-## Current release: v0.29.12
+## Current release: v0.29.13
+
+Version 0.29.13 makes the Cash Flow story reconcile visibly from operating and investing cash to free cash flow, financing and net cash movement, then ties opening cash plus the movement to closing Balance Sheet cash. The tie-out uses the immediately prior published month and displays the €0.05 tolerance; a difference outside tolerance is flagged for review. No ledger values or accounting controls change. See [v0.29.13 status](docs/v0.29.13-status.md).
 
 Version 0.29.12 makes the interactive close walkthrough a clear first step from Help on every report. The tour opens at Drivers, follows the monthly close through its controls and source evidence, and stays reachable from desktop and mobile. Financial calculations and release tolerances are unchanged. See [v0.29.12 status](docs/v0.29.12-status.md).
 

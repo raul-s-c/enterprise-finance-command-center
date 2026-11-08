@@ -1,4 +1,8 @@
 /* Read the signed cash trend beside its accounting identity on laptop screens. */
+.report-mode .cash-cockpit .sw-secondary .sw-formula{margin:5px 0}
+.report-mode .cash-cockpit .sw-secondary .sw-formula span{padding:5px 4px}
+.report-mode .cash-cockpit .sw-secondary .sw-cash-equation{margin-top:3px}
+.report-mode .cash-cockpit .sw-secondary .sw-cash-equation span{padding-top:5px;padding-bottom:5px}
 @media(min-width:1150px) and (max-width:1500px) and (min-height:651px), (min-width:1501px) and (max-width:1700px) and (min-height:651px) and (max-height:879px){
   .cash-cockpit .sw-analysis-nav{display:flex;gap:4px;padding:8px 0;flex:none}
   .report-mode .cash-cockpit .sw-analysis-nav button{font-size:13px;padding:7px 14px;min-height:34px;background:white;border:1px solid #d9e2ef}
@@ -13,9 +17,7 @@
   .report-mode .cash-cockpit .sw-grid:has(>.sw-detail.analysis-selected)>.sw-primary,
   .report-mode .cash-cockpit .sw-grid:has(>.sw-detail.analysis-selected)>.sw-secondary{display:none}
   .report-mode .cash-cockpit .sw-grid>.sw-detail.analysis-selected{display:flex;flex-direction:column;grid-column:1;border-top:0;min-height:0}
-  .report-mode .cash-cockpit .sw-secondary .sw-formula{margin:10px 0}
-  .report-mode .cash-cockpit .sw-secondary .sw-formula span{padding:8px 4px}
-  .report-mode .cash-cockpit .sw-secondary .sw-flow{margin-top:10px}
+  .report-mode .cash-cockpit .sw-secondary .sw-flow{margin-top:2px}
   .report-mode .cash-cockpit .sw-detail .sw-ranking{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:8px;gap:0 18px}
   .report-mode .cash-cockpit .sw-detail .sw-ranking button{min-height:35px;font-size:11px}
 }
